@@ -214,16 +214,28 @@ export function SettingsPage() {
         .from('media')
         .upload(filePath, file);
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error('Upload error:', uploadError);
+        throw uploadError;
+      }
 
       const { data: { publicUrl } } = supabase.storage
         .from('media')
         .getPublicUrl(filePath);
 
-      setProfileForm({ ...profileForm, avatar_url: publicUrl });
-    } catch (error) {
+      const updatedForm = { ...profileForm, avatar_url: publicUrl };
+      setProfileForm(updatedForm);
+
+      const { error: updateError } = await updateProfile({ avatar_url: publicUrl });
+      if (updateError) {
+        console.error('Profile update error:', updateError);
+        throw updateError;
+      }
+
+      alert('Avatar uploaded successfully!');
+    } catch (error: any) {
       console.error('Error uploading avatar:', error);
-      alert('Failed to upload avatar');
+      alert(`Failed to upload avatar: ${error.message || 'Unknown error'}`);
     } finally {
       setUploadingAvatar(false);
     }
@@ -243,16 +255,28 @@ export function SettingsPage() {
         .from('media')
         .upload(filePath, file);
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error('Upload error:', uploadError);
+        throw uploadError;
+      }
 
       const { data: { publicUrl } } = supabase.storage
         .from('media')
         .getPublicUrl(filePath);
 
-      setProfileForm({ ...profileForm, banner_url: publicUrl, banner_video_url: '' });
-    } catch (error) {
+      const updatedForm = { ...profileForm, banner_url: publicUrl, banner_video_url: '' };
+      setProfileForm(updatedForm);
+
+      const { error: updateError } = await updateProfile({ banner_url: publicUrl, banner_video_url: '' });
+      if (updateError) {
+        console.error('Profile update error:', updateError);
+        throw updateError;
+      }
+
+      alert('Banner uploaded successfully!');
+    } catch (error: any) {
       console.error('Error uploading banner:', error);
-      alert('Failed to upload banner image');
+      alert(`Failed to upload banner: ${error.message || 'Unknown error'}`);
     } finally {
       setUploadingBanner(false);
     }
