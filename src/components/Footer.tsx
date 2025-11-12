@@ -29,7 +29,7 @@ export function Footer() {
             {/* Brand Section */}
             <div className="md:col-span-5">
               <div className="flex items-center gap-3 mb-6">
-                <img src="/sats.jpg" alt="KATOA" className="w-10 h-10 rounded-full" />
+                <img src="/sats.png" alt="KATOA" className="w-10 h-10 rounded-full" />
                 <span className="text-2xl font-bold bg-gradient-to-r from-orange-400 to-yellow-500 bg-clip-text text-transparent">
                   KATOA
                 </span>
