@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<canvas id="c"></canvas>
+<script>
+const c = document.getElementById('c');
+const ctx = c.getContext('2d');
+// Katoa logo - orange square with text
+c.width = 400; c.height = 400;
+ctx.fillStyle = '#f7931a'; ctx.fillRect(0,0,400,400);
+ctx.fillStyle = '#fff'; ctx.font = 'bold 80px Arial'; ctx.textAlign = 'center';
+ctx.fillText('KATOA', 200, 220);
+console.log('Logo:', c.toDataURL());
+// Bitcoin logo
+ctx.clearRect(0,0,400,400);
+ctx.fillStyle = '#f7931a'; ctx.fillRect(0,0,400,400);
+ctx.fillStyle = '#fff'; ctx.font = 'bold 200px Arial';
+ctx.fillText('₿', 200, 280);
+console.log('Bitcoin:', c.toDataURL());
+</script>
