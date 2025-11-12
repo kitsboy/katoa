@@ -18,6 +18,12 @@ export function AuthPage() {
   });
 
   useEffect(() => {
+    if (session) {
+      window.location.href = '/dashboard';
+    }
+  }, [session]);
+
+  useEffect(() => {
     const handleAuthCallback = async () => {
       const params = new URLSearchParams(window.location.search);
       const errorParam = params.get('error');
