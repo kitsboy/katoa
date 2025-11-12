@@ -345,21 +345,21 @@ export function SettingsPage() {
         <div className="space-y-8">
           {/* Profile Section */}
           <div>
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div>
-                <h2 className="text-2xl font-bold text-white mb-2">Profile</h2>
-                <p className="text-gray-400">Manage your public profile information</p>
+                <h2 className="text-xl sm:text-2xl font-bold text-white mb-1 sm:mb-2">Profile</h2>
+                <p className="text-sm sm:text-base text-gray-400">Manage your public profile information</p>
               </div>
-              <Button onClick={() => setShowProfileModal(true)}>
-                <Edit size={20} className="mr-2" />
+              <Button onClick={() => setShowProfileModal(true)} className="w-full sm:w-auto">
+                <Edit size={18} className="mr-2" />
                 Edit Profile
               </Button>
             </div>
 
             <Card className="overflow-hidden">
               {/* Banner Section */}
-              {(profile?.banner_url || profile?.banner_video_url) && (
-                <div className="relative w-full aspect-[21/9] max-h-64 bg-gradient-to-br from-slate-700 to-slate-800">
+              {(profile?.banner_url || profile?.banner_video_url) ? (
+                <div className="relative w-full h-48 sm:h-64 bg-gradient-to-br from-slate-700 to-slate-800">
                   {profile.banner_video_url ? (
                     <video
                       src={profile.banner_video_url}
@@ -377,48 +377,73 @@ export function SettingsPage() {
                     />
                   )}
                 </div>
+              ) : (
+                <div className="relative w-full h-32 sm:h-40 bg-gradient-to-br from-slate-700 to-slate-800"></div>
               )}
 
-              <div className="p-6">
-                <div className="flex flex-col sm:flex-row items-start gap-6">
-                  <div className="relative -mt-16 sm:-mt-20">
-                    {profile?.avatar_url ? (
-                      <img
-                        src={profile.avatar_url}
-                        alt={profile.username}
-                        className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-slate-800 shadow-xl"
-                      />
-                    ) : (
-                      <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-orange-500 to-yellow-600 flex items-center justify-center border-4 border-slate-800 shadow-xl">
-                        <User size={40} className="text-white" />
-                      </div>
-                    )}
+              <div className="p-4 sm:p-6">
+                <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6">
+                  <div className="relative group">
+                    <div className={`${(profile?.banner_url || profile?.banner_video_url) ? '-mt-12 sm:-mt-16' : '-mt-8 sm:-mt-12'}`}>
+                      {profile?.avatar_url ? (
+                        <img
+                          src={profile.avatar_url}
+                          alt={profile.username}
+                          className="w-20 h-20 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-slate-800 shadow-xl"
+                        />
+                      ) : (
+                        <div className="w-20 h-20 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-orange-500 to-yellow-600 flex items-center justify-center border-4 border-slate-800 shadow-xl">
+                          <User size={32} className="text-white sm:w-10 sm:h-10" />
+                        </div>
+                      )}
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        const input = document.createElement('input');
+                        input.type = 'file';
+                        input.accept = 'image/*';
+                        input.onchange = async (e) => {
+                          const file = (e.target as HTMLInputElement).files?.[0];
+                          if (file) {
+                            await handleAvatarUpload([file]);
+                            const { error } = await updateProfile({ avatar_url: profileForm.avatar_url });
+                            if (!error) window.location.reload();
+                          }
+                        };
+                        input.click();
+                      }}
+                      className="absolute bottom-0 right-0 bg-orange-500 hover:bg-orange-600 text-white rounded-full p-2 shadow-lg transition-colors"
+                      title="Change profile picture"
+                    >
+                      <Upload size={16} />
+                    </button>
                   </div>
 
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 break-words">@{profile?.username}</h3>
-                    <p className="text-gray-400 mb-4 break-words">{profile?.bio || 'No bio yet'}</p>
-                    <div className="flex flex-wrap gap-4">
+                  <div className="flex-1 min-w-0 w-full">
+                    <h3 className="text-lg sm:text-2xl font-bold text-white mb-1 sm:mb-2 break-words">@{profile?.username}</h3>
+                    <p className="text-sm sm:text-base text-gray-400 mb-3 sm:mb-4 break-words">{profile?.bio || 'No bio yet'}</p>
+                    <div className="flex flex-wrap gap-3 sm:gap-4">
                       {profile?.lightning_address && (
-                        <div className="flex items-center gap-2 text-sm">
-                          <Zap size={16} className="text-orange-500 flex-shrink-0" />
-                          <span className="text-gray-300 truncate">{profile.lightning_address}</span>
+                        <div className="flex items-center gap-2 text-xs sm:text-sm">
+                          <Zap size={14} className="text-orange-500 flex-shrink-0 sm:w-4 sm:h-4" />
+                          <span className="text-gray-300 truncate max-w-[200px] sm:max-w-none">{profile.lightning_address}</span>
                         </div>
                       )}
                       {profile?.nostr_pubkey && (
-                        <div className="flex items-center gap-2 text-sm">
-                          <Shield size={16} className="text-purple-500 flex-shrink-0" />
+                        <div className="flex items-center gap-2 text-xs sm:text-sm">
+                          <Shield size={14} className="text-purple-500 flex-shrink-0 sm:w-4 sm:h-4" />
                           <span className="text-gray-300 truncate">{profile.nostr_pubkey.slice(0, 16)}...</span>
-                          {nostrVerified && <CheckCircle size={16} className="text-green-400 flex-shrink-0" />}
+                          {nostrVerified && <CheckCircle size={14} className="text-green-400 flex-shrink-0 sm:w-4 sm:h-4" />}
                         </div>
                       )}
                     </div>
 
                     {/* Profile Video */}
                     {profile?.profile_video_url && (
-                      <div className="mt-6">
+                      <div className="mt-4 sm:mt-6">
                         <div className="flex items-center justify-between mb-2">
-                          <h4 className="text-sm font-semibold text-white">
+                          <h4 className="text-xs sm:text-sm font-semibold text-white">
                             {profile.video_title || 'My Video'}
                           </h4>
                           {profile.video_date && (
@@ -427,7 +452,7 @@ export function SettingsPage() {
                             </span>
                           )}
                         </div>
-                        <div className="rounded-lg overflow-hidden max-w-md">
+                        <div className="rounded-lg overflow-hidden w-full max-w-md">
                           <video
                             src={profile.profile_video_url}
                             className="w-full"
@@ -446,16 +471,16 @@ export function SettingsPage() {
           <WalletAddressManager />
 
           <div>
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6">
               <div>
-                <h2 className="text-2xl font-bold text-white mb-2">Shipping Addresses</h2>
-                <p className="text-gray-400">Manage where your gifts will be shipped</p>
-                <p className="text-sm text-amber-500 mt-1">
+                <h2 className="text-xl sm:text-2xl font-bold text-white mb-1 sm:mb-2">Shipping Addresses</h2>
+                <p className="text-sm sm:text-base text-gray-400">Manage where your gifts will be shipped</p>
+                <p className="text-xs sm:text-sm text-amber-500 mt-1">
                   🔒 Private - Only you can see your addresses
                 </p>
               </div>
-              <Button onClick={() => openAddressModal()}>
-                <Plus size={20} className="mr-2" />
+              <Button onClick={() => openAddressModal()} className="w-full sm:w-auto flex-shrink-0">
+                <Plus size={18} className="mr-2" />
                 Add Address
               </Button>
             </div>
