@@ -26,13 +26,15 @@ export function AuthPage() {
       if (errorParam) {
         setError(errorDescription || 'Authentication failed. Please try again.');
         window.history.replaceState({}, document.title, '/auth');
-      } else if (session) {
-        window.location.href = '/dashboard';
+      } else if (session && !loading) {
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 100);
       }
     };
 
     handleAuthCallback();
-  }, [session]);
+  }, [session, loading]);
 
   async function handleEmailAuth(e: React.FormEvent) {
     e.preventDefault();
@@ -52,10 +54,15 @@ export function AuthPage() {
 
       if (result.error) {
         setError(result.error.message);
+        setLoading(false);
+      } else if (!isSignUp) {
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 500);
       }
     } catch (err: any) {
+      console.error('Auth error:', err);
       setError(err.message || 'An error occurred');
-    } finally {
       setLoading(false);
     }
   }
