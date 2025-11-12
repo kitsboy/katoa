@@ -10,6 +10,11 @@ interface Profile {
   lightning_address: string | null;
   nostr_pubkey: string | null;
   bio: string;
+  banner_url: string | null;
+  banner_video_url: string | null;
+  profile_video_url: string | null;
+  video_title: string | null;
+  video_date: string | null;
 }
 
 interface AuthContextType {

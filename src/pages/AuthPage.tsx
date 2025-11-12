@@ -18,12 +18,6 @@ export function AuthPage() {
   });
 
   useEffect(() => {
-    if (session) {
-      window.location.href = '/dashboard';
-    }
-  }, [session]);
-
-  useEffect(() => {
     const handleAuthCallback = async () => {
       const params = new URLSearchParams(window.location.search);
       const errorParam = params.get('error');
@@ -32,11 +26,13 @@ export function AuthPage() {
       if (errorParam) {
         setError(errorDescription || 'Authentication failed. Please try again.');
         window.history.replaceState({}, document.title, '/auth');
+      } else if (session) {
+        window.location.href = '/dashboard';
       }
     };
 
     handleAuthCallback();
-  }, []);
+  }, [session]);
 
   async function handleEmailAuth(e: React.FormEvent) {
     e.preventDefault();

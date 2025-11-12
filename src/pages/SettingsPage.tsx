@@ -32,10 +32,17 @@ export function SettingsPage() {
     lightning_address: '',
     nostr_pubkey: '',
     preferred_currency: 'USD',
+    banner_url: '',
+    banner_video_url: '',
+    profile_video_url: '',
+    video_title: '',
+    video_date: '',
   });
   const [verifyingNostr, setVerifyingNostr] = useState(false);
   const [nostrVerified, setNostrVerified] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [uploadingBanner, setUploadingBanner] = useState(false);
+  const [uploadingVideo, setUploadingVideo] = useState(false);
   const [addresses, setAddresses] = useState<ShippingAddress[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddressModal, setShowAddressModal] = useState(false);
@@ -65,6 +72,11 @@ export function SettingsPage() {
         lightning_address: profile.lightning_address || '',
         nostr_pubkey: profile.nostr_pubkey || '',
         preferred_currency: (profile as any).preferred_currency || 'USD',
+        banner_url: profile.banner_url || '',
+        banner_video_url: profile.banner_video_url || '',
+        profile_video_url: profile.profile_video_url || '',
+        video_title: profile.video_title || '',
+        video_date: profile.video_date || '',
       });
       setNostrVerified((profile as any).nostr_pubkey_verified || false);
     }
@@ -211,6 +223,93 @@ export function SettingsPage() {
     }
   }
 
+  async function handleBannerUpload(files: File[]) {
+    if (files.length === 0 || !user) return;
+
+    setUploadingBanner(true);
+    try {
+      const file = files[0];
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}-banner-${Math.random()}.${fileExt}`;
+      const filePath = `banners/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('media')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('media')
+        .getPublicUrl(filePath);
+
+      setProfileForm({ ...profileForm, banner_url: publicUrl, banner_video_url: '' });
+    } catch (error) {
+      console.error('Error uploading banner:', error);
+      alert('Failed to upload banner image');
+    } finally {
+      setUploadingBanner(false);
+    }
+  }
+
+  async function handleBannerVideoUpload(files: File[]) {
+    if (files.length === 0 || !user) return;
+
+    setUploadingBanner(true);
+    try {
+      const file = files[0];
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}-banner-video-${Math.random()}.${fileExt}`;
+      const filePath = `banner-videos/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('media')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('media')
+        .getPublicUrl(filePath);
+
+      setProfileForm({ ...profileForm, banner_video_url: publicUrl, banner_url: '' });
+    } catch (error) {
+      console.error('Error uploading banner video:', error);
+      alert('Failed to upload banner video');
+    } finally {
+      setUploadingBanner(false);
+    }
+  }
+
+  async function handleProfileVideoUpload(files: File[]) {
+    if (files.length === 0 || !user) return;
+
+    setUploadingVideo(true);
+    try {
+      const file = files[0];
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}-profile-video-${Math.random()}.${fileExt}`;
+      const filePath = `profile-videos/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('media')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('media')
+        .getPublicUrl(filePath);
+
+      setProfileForm({ ...profileForm, profile_video_url: publicUrl });
+    } catch (error) {
+      console.error('Error uploading profile video:', error);
+      alert('Failed to upload profile video');
+    } finally {
+      setUploadingVideo(false);
+    }
+  }
+
   async function handleSaveProfile(e: React.FormEvent) {
     e.preventDefault();
     setProcessing(true);
@@ -257,36 +356,84 @@ export function SettingsPage() {
               </Button>
             </div>
 
-            <Card className="p-6">
-              <div className="flex items-start gap-6">
-                <div className="relative">
-                  {profile?.avatar_url ? (
-                    <img
-                      src={profile.avatar_url}
-                      alt={profile.username}
-                      className="w-24 h-24 rounded-full object-cover border-2 border-orange-500"
+            <Card className="overflow-hidden">
+              {/* Banner Section */}
+              {(profile?.banner_url || profile?.banner_video_url) && (
+                <div className="relative w-full aspect-[21/9] max-h-64 bg-gradient-to-br from-slate-700 to-slate-800">
+                  {profile.banner_video_url ? (
+                    <video
+                      src={profile.banner_video_url}
+                      className="w-full h-full object-cover"
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
                     />
                   ) : (
-                    <div className="w-24 h-24 rounded-full bg-gradient-to-br from-orange-500 to-yellow-600 flex items-center justify-center">
-                      <User size={40} className="text-white" />
-                    </div>
+                    <img
+                      src={profile.banner_url}
+                      alt="Profile Banner"
+                      className="w-full h-full object-cover"
+                    />
                   )}
                 </div>
-                <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-white mb-2">@{profile?.username}</h3>
-                  <p className="text-gray-400 mb-4">{profile?.bio || 'No bio yet'}</p>
-                  <div className="flex flex-wrap gap-4">
-                    {profile?.lightning_address && (
-                      <div className="flex items-center gap-2 text-sm">
-                        <Zap size={16} className="text-orange-500" />
-                        <span className="text-gray-300">{profile.lightning_address}</span>
+              )}
+
+              <div className="p-6">
+                <div className="flex flex-col sm:flex-row items-start gap-6">
+                  <div className="relative -mt-16 sm:-mt-20">
+                    {profile?.avatar_url ? (
+                      <img
+                        src={profile.avatar_url}
+                        alt={profile.username}
+                        className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-slate-800 shadow-xl"
+                      />
+                    ) : (
+                      <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-orange-500 to-yellow-600 flex items-center justify-center border-4 border-slate-800 shadow-xl">
+                        <User size={40} className="text-white" />
                       </div>
                     )}
-                    {profile?.nostr_pubkey && (
-                      <div className="flex items-center gap-2 text-sm">
-                        <Shield size={16} className="text-purple-500" />
-                        <span className="text-gray-300">{profile.nostr_pubkey.slice(0, 16)}...</span>
-                        {nostrVerified && <CheckCircle size={16} className="text-green-400" />}
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 break-words">@{profile?.username}</h3>
+                    <p className="text-gray-400 mb-4 break-words">{profile?.bio || 'No bio yet'}</p>
+                    <div className="flex flex-wrap gap-4">
+                      {profile?.lightning_address && (
+                        <div className="flex items-center gap-2 text-sm">
+                          <Zap size={16} className="text-orange-500 flex-shrink-0" />
+                          <span className="text-gray-300 truncate">{profile.lightning_address}</span>
+                        </div>
+                      )}
+                      {profile?.nostr_pubkey && (
+                        <div className="flex items-center gap-2 text-sm">
+                          <Shield size={16} className="text-purple-500 flex-shrink-0" />
+                          <span className="text-gray-300 truncate">{profile.nostr_pubkey.slice(0, 16)}...</span>
+                          {nostrVerified && <CheckCircle size={16} className="text-green-400 flex-shrink-0" />}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Profile Video */}
+                    {profile?.profile_video_url && (
+                      <div className="mt-6">
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="text-sm font-semibold text-white">
+                            {profile.video_title || 'My Video'}
+                          </h4>
+                          {profile.video_date && (
+                            <span className="text-xs text-gray-500">
+                              {new Date(profile.video_date).toLocaleDateString()}
+                            </span>
+                          )}
+                        </div>
+                        <div className="rounded-lg overflow-hidden max-w-md">
+                          <video
+                            src={profile.profile_video_url}
+                            className="w-full"
+                            controls
+                          />
+                        </div>
                       </div>
                     )}
                   </div>
@@ -514,6 +661,93 @@ export function SettingsPage() {
                 {uploadingAvatar && <p className="text-sm text-orange-500 mt-2">Uploading...</p>}
               </div>
             </div>
+          </div>
+
+          {/* Banner Upload */}
+          <div className="border-t border-gray-700 pt-6">
+            <label className="block text-sm font-medium text-gray-300 mb-3">Profile Banner</label>
+            {(profileForm.banner_url || profileForm.banner_video_url) && (
+              <div className="mb-4 rounded-lg overflow-hidden aspect-[21/9] max-h-48">
+                {profileForm.banner_video_url ? (
+                  <video
+                    src={profileForm.banner_video_url}
+                    className="w-full h-full object-cover"
+                    autoPlay
+                    muted
+                    loop
+                  />
+                ) : (
+                  <img
+                    src={profileForm.banner_url}
+                    alt="Banner"
+                    className="w-full h-full object-cover"
+                  />
+                )}
+              </div>
+            )}
+            <div className="space-y-3">
+              <div>
+                <p className="text-xs text-gray-400 mb-2">Upload Banner Image (recommended: 2100x900px)</p>
+                <MediaUpload
+                  onFilesSelected={handleBannerUpload}
+                  accept="image/*"
+                  maxFiles={1}
+                  maxSizeMB={10}
+                />
+              </div>
+              <div>
+                <p className="text-xs text-gray-400 mb-2">Or Upload Banner Video (max 50MB, MP4/WebM)</p>
+                <MediaUpload
+                  onFilesSelected={handleBannerVideoUpload}
+                  accept="video/*"
+                  maxFiles={1}
+                  maxSizeMB={50}
+                />
+              </div>
+              {uploadingBanner && <p className="text-sm text-orange-500">Uploading banner...</p>}
+            </div>
+          </div>
+
+          {/* Profile Video */}
+          <div className="border-t border-gray-700 pt-6">
+            <label className="block text-sm font-medium text-gray-300 mb-3">Profile Video (Optional)</label>
+            <p className="text-xs text-gray-400 mb-3">Add a short intro video to your profile</p>
+            {profileForm.profile_video_url && (
+              <div className="mb-4 rounded-lg overflow-hidden max-w-md">
+                <video
+                  src={profileForm.profile_video_url}
+                  className="w-full"
+                  controls
+                />
+              </div>
+            )}
+            <MediaUpload
+              onFilesSelected={handleProfileVideoUpload}
+              accept="video/*"
+              maxFiles={1}
+              maxSizeMB={100}
+            />
+            {uploadingVideo && <p className="text-sm text-orange-500 mt-2">Uploading video...</p>}
+
+            {profileForm.profile_video_url && (
+              <div className="mt-4 space-y-3">
+                <Input
+                  label="Video Title"
+                  value={profileForm.video_title}
+                  onChange={(e) => setProfileForm({ ...profileForm, video_title: e.target.value })}
+                  placeholder="My Story"
+                />
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Video Date</label>
+                  <input
+                    type="date"
+                    value={profileForm.video_date}
+                    onChange={(e) => setProfileForm({ ...profileForm, video_date: e.target.value })}
+                    className="w-full px-4 py-3 bg-slate-700 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+            )}
           </div>
 
           <Input

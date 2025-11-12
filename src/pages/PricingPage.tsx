@@ -52,7 +52,7 @@ export function PricingPage() {
             </Button>
           </Card>
 
-          <Card className="p-8 border-orange-500 border-2 relative">
+          <Card className="p-8 border-orange-500 border-2 relative mt-6">
             <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-orange-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
               Most Popular
             </div>
