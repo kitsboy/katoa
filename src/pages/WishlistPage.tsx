@@ -368,8 +368,8 @@ export function WishlistPage({ slug }: { slug: string }) {
                           className="w-full h-48 object-cover"
                         />
                         {item.is_funded && (
-                          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                            <div className="bg-green-500 rounded-full p-4 shadow-xl">
+                          <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px] flex items-center justify-center">
+                            <div className="bg-green-500 rounded-full p-4 shadow-2xl ring-4 ring-white/30">
                               <Check size={32} className="text-white" />
                             </div>
                           </div>
