@@ -249,19 +249,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function updateProfile(updates: Partial<Profile>) {
-    if (!user) return { error: new Error('Not authenticated') };
+    if (!user) {
+      console.error('Update profile failed: Not authenticated');
+      return { error: new Error('Not authenticated') };
+    }
 
     try {
-      const { error } = await supabase
+      console.log('Updating profile with:', updates);
+      console.log('User ID:', user.id);
+
+      const { data, error } = await supabase
         .from('profiles')
         .update(updates)
-        .eq('id', user.id);
+        .eq('id', user.id)
+        .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase update error:', error);
+        throw error;
+      }
 
+      console.log('Profile updated successfully:', data);
       await loadProfile(user.id);
       return { error: null };
     } catch (error) {
+      console.error('Update profile error:', error);
       return { error: error as Error };
     }
   }
