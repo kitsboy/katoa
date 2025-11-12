@@ -14,7 +14,7 @@ export function PricingPage() {
           <p className="text-xl text-gray-400">{t('pricing.subtitle')}</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 mt-8">
           <Card className="p-8 hover:border-orange-500 transition-colors">
             <div className="text-center mb-6">
               <h3 className="text-2xl font-bold text-white mb-2">Free</h3>
@@ -52,8 +52,8 @@ export function PricingPage() {
             </Button>
           </Card>
 
-          <Card className="p-8 border-orange-500 border-2 relative mt-6">
-            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-orange-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
+          <Card className="p-8 border-orange-500 border-2 relative">
+            <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-orange-500 text-white px-4 py-1 rounded-full text-sm font-semibold whitespace-nowrap">
               Most Popular
             </div>
 
