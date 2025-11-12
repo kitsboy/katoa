@@ -185,12 +185,21 @@ export function Navbar() {
               </div>
               {user ? (
                 <>
-                  <Link href="/dashboard" className="block text-gray-300 hover:text-white py-2">
+                  <Link href="/dashboard" className="flex items-center gap-2 text-gray-300 hover:text-white py-2">
+                    <LayoutDashboard size={18} />
                     Dashboard
                   </Link>
-                  <Button variant="ghost" size="sm" onClick={() => signOut()} className="w-full">
-                    Sign Out
-                  </Button>
+                  <Link href="/settings" className="flex items-center gap-2 text-gray-300 hover:text-white py-2">
+                    <Settings size={18} />
+                    Settings & Profile
+                  </Link>
+                  <div className="pt-2 border-t border-gray-800">
+                    <p className="text-xs text-gray-500 mb-2">Account: {profile?.username}</p>
+                    <Button variant="ghost" size="sm" onClick={() => signOut()} className="w-full">
+                      <LogOut size={18} className="mr-2" />
+                      Sign Out
+                    </Button>
+                  </div>
                 </>
               ) : (
                 <>

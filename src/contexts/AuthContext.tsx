@@ -15,6 +15,9 @@ interface Profile {
   profile_video_url: string | null;
   video_title: string | null;
   video_date: string | null;
+  social_feed_url: string | null;
+  social_feed_title: string | null;
+  social_feed_height: string | null;
 }
 
 interface AuthContextType {

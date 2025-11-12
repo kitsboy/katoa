@@ -37,6 +37,9 @@ export function SettingsPage() {
     profile_video_url: '',
     video_title: '',
     video_date: '',
+    social_feed_url: '',
+    social_feed_title: 'My Social Feed',
+    social_feed_height: '600px',
   });
   const [verifyingNostr, setVerifyingNostr] = useState(false);
   const [nostrVerified, setNostrVerified] = useState(false);
@@ -77,6 +80,9 @@ export function SettingsPage() {
         profile_video_url: profile.profile_video_url || '',
         video_title: profile.video_title || '',
         video_date: profile.video_date || '',
+        social_feed_url: profile.social_feed_url || '',
+        social_feed_title: profile.social_feed_title || 'My Social Feed',
+        social_feed_height: profile.social_feed_height || '600px',
       });
       setNostrVerified((profile as any).nostr_pubkey_verified || false);
     }
@@ -469,6 +475,56 @@ export function SettingsPage() {
 
           {/* Wallet Addresses Section */}
           <WalletAddressManager />
+
+          {/* Social Feed Section */}
+          <div>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+              <div>
+                <h2 className="text-xl sm:text-2xl font-bold text-white mb-1 sm:mb-2">Social Feed</h2>
+                <p className="text-sm sm:text-base text-gray-400">Embed your social media feed or any iframe content</p>
+              </div>
+            </div>
+
+            {profile?.social_feed_url && (
+              <Card className="mb-6">
+                <div className="p-4 border-b border-slate-700 flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-white">{profile.social_feed_title || 'Social Feed'}</h3>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={async () => {
+                      const { error } = await updateProfile({
+                        social_feed_url: null,
+                        social_feed_title: null,
+                        social_feed_height: null,
+                      });
+                      if (!error) window.location.reload();
+                    }}
+                  >
+                    Remove Feed
+                  </Button>
+                </div>
+                <div className="relative" style={{ height: profile.social_feed_height || '600px' }}>
+                  <iframe
+                    src={profile.social_feed_url}
+                    title={profile.social_feed_title || 'Social Feed'}
+                    className="w-full h-full border-0"
+                    sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+                    loading="lazy"
+                  />
+                </div>
+              </Card>
+            )}
+
+            {!profile?.social_feed_url && (
+              <Card className="p-6">
+                <p className="text-gray-400 mb-4">No social feed configured. Add one in your profile settings.</p>
+                <Button onClick={() => setShowProfileModal(true)}>
+                  Add Social Feed
+                </Button>
+              </Card>
+            )}
+          </div>
 
           <div>
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6">
@@ -877,6 +933,51 @@ export function SettingsPage() {
             <p className="text-xs text-gray-500 mt-1">
               Used for displaying Bitcoin prices on your pages
             </p>
+          </div>
+
+          {/* Social Feed Integration */}
+          <div className="border-t border-gray-700 pt-6">
+            <label className="block text-sm font-medium text-gray-300 mb-3">Social Feed Integration (Optional)</label>
+            <p className="text-xs text-gray-400 mb-4">
+              Embed your social media feed, NOSTR feed, or any iframe-compatible content on your profile
+            </p>
+
+            <Input
+              label="Feed URL"
+              value={profileForm.social_feed_url}
+              onChange={(e) => setProfileForm({ ...profileForm, social_feed_url: e.target.value })}
+              placeholder="https://example.com/your-feed"
+              helperText="Enter the URL of your social feed or embeddable content"
+            />
+
+            <div className="mt-4 space-y-4">
+              <Input
+                label="Feed Title"
+                value={profileForm.social_feed_title}
+                onChange={(e) => setProfileForm({ ...profileForm, social_feed_title: e.target.value })}
+                placeholder="My Social Feed"
+              />
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Feed Height</label>
+                <select
+                  value={profileForm.social_feed_height}
+                  onChange={(e) => setProfileForm({ ...profileForm, social_feed_height: e.target.value })}
+                  className="w-full px-4 py-3 bg-slate-700 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                >
+                  <option value="400px">Small (400px)</option>
+                  <option value="600px">Medium (600px)</option>
+                  <option value="800px">Large (800px)</option>
+                  <option value="1000px">Extra Large (1000px)</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="mt-4 bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
+              <p className="text-xs text-blue-400">
+                📱 Coming Soon: Integration with NOSTR social feeds, Twitter timelines, Instagram embeds, and more!
+              </p>
+            </div>
           </div>
 
           <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
