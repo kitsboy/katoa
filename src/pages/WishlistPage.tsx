@@ -359,13 +359,22 @@ export function WishlistPage({ slug }: { slug: string }) {
                 const itemProgress = (item.sats_raised / item.price_sats) * 100;
 
                 return (
-                  <Card key={item.id} className="overflow-hidden">
+                  <Card key={item.id} className={`overflow-hidden ${item.is_funded ? 'border-green-500/50' : ''}`}>
                     {item.image_url && (
-                      <img
-                        src={item.image_url}
-                        alt={item.title}
-                        className="w-full h-48 object-cover"
-                      />
+                      <div className="relative">
+                        <img
+                          src={item.image_url}
+                          alt={item.title}
+                          className="w-full h-48 object-cover"
+                        />
+                        {item.is_funded && (
+                          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                            <div className="bg-green-500 rounded-full p-4 shadow-xl">
+                              <Check size={32} className="text-white" />
+                            </div>
+                          </div>
+                        )}
+                      </div>
                     )}
                     <div className="p-6 space-y-4">
                       <div>
