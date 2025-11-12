@@ -176,7 +176,7 @@ export function Footer() {
               <div className="flex-shrink-0">
                 <div className="w-36 h-36 bg-white p-2 rounded-lg">
                   <img
-                    src="/donation-qr.png"
+                    src="/donations-qr.png"
                     alt="Donation QR Code"
                     className="w-full h-full object-contain"
                     style={{ imageRendering: 'crisp-edges' }}
