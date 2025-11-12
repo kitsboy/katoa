@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gradient-to-br from-gray-50 via-orange-50 to-amber-50;
+    @apply text-gray-900;
+  }
+
+  body.dark-mode {
+    @apply bg-gradient-to-br from-slate-800 via-slate-700 to-slate-800;
+    @apply text-gray-100;
+  }
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #f97316 #fef3c7;
+}
+
+body.dark-mode * {
+  scrollbar-color: #f97316 #1f2937;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #fef3c7;
+}
+
+body.dark-mode *::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(249, 115, 22, 0.1) 50%,
+    transparent 100%
+  );
+  background-size: 1000px 100%;
+}
