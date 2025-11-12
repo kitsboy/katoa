@@ -88,18 +88,18 @@ export function HomePage() {
           {/* Main Heading */}
           <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
             <span className="block text-white mb-2">
-              The Simplest Way to
+              Privacy-First Zero-Fee
             </span>
             <span className="block bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent">
-              Give & Receive Gifts
+              Bitcoin Commerce Platform
             </span>
           </h1>
 
           {/* Subtitle */}
           <p className="text-xl md:text-2xl text-slate-200 max-w-3xl mx-auto mb-12 leading-relaxed">
-            Create wishlists for any occasion. Share instantly with Bitcoin Lightning.
+            Decentralized marketplace powered by Lightning Network and Nostr. Create wishlists, receive gifts, and trade peer-to-peer with complete privacy.
             <br />
-            <span className="text-emerald-400 font-semibold">Fast, private, and global.</span>
+            <span className="text-emerald-400 font-semibold">Zero fees. Instant settlements. Self-sovereign.</span>
           </p>
 
           {/* CTA Buttons */}

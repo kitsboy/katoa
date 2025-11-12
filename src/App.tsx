@@ -13,6 +13,7 @@ import { PricingPage } from './pages/PricingPage';
 import { TermsPage } from './pages/TermsPage';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { AuthPage } from './pages/AuthPage';
+import { FAQPage } from './pages/FAQPage';
 import { useRouter } from './hooks/useRouter';
 
 function App() {
@@ -39,6 +40,8 @@ function App() {
     page = <TermsPage />;
   } else if (path === '/privacy') {
     page = <PrivacyPage />;
+  } else if (path === '/faq') {
+    page = <FAQPage />;
   } else if (path.startsWith('/wishlist/')) {
     const slug = path.split('/')[2];
     page = <WishlistPage slug={slug} />;

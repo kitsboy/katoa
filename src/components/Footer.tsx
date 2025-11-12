@@ -100,6 +100,11 @@ export function Footer() {
                       Dashboard
                     </Link>
                   </li>
+                  <li>
+                    <Link href="/faq" className="text-gray-400 hover:text-orange-500 text-sm transition-colors duration-200">
+                      FAQ
+                    </Link>
+                  </li>
                 </ul>
               </div>
 
