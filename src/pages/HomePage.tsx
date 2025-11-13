@@ -58,6 +58,8 @@ export function HomePage() {
             Zero fees. Instant Bitcoin payments. Global reach.
             <br />
             <span className="text-night-blue-shadow font-semibold">While competitors take 10-20%, we take nothing.</span>
+            <br />
+            <span className="text-night-blue-600 font-bold">True free market commerce for the first time in history. Everyone is invited. Peer 2 Peer.</span>
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 px-4">
