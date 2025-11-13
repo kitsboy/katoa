@@ -60,7 +60,7 @@ export function FeeComparison() {
       fees: 0,
       net: amount,
       platform: 'KATOA',
-      color: 'from-emerald-500 to-cyan-600',
+      color: 'from-orange-500 to-amber-600',
     };
 
     return { throne, linktree, onlyfans, katoa };
@@ -141,7 +141,7 @@ export function FeeComparison() {
             <div
               key={platform.platform}
               className={`relative p-6 rounded-xl bg-gradient-to-br ${platform.color} ${
-                platform.platform === 'KATOA' ? 'ring-4 ring-emerald-400 scale-105' : ''
+                platform.platform === 'KATOA' ? 'ring-4 ring-orange-500 shadow-[0_0_30px_rgba(255,135,0,0.5)] scale-105' : ''
               } transition-transform hover:scale-105`}
             >
               {platform.platform === 'KATOA' && (
@@ -153,7 +153,12 @@ export function FeeComparison() {
               )}
 
               <h3 className="text-white font-bold text-xl mb-4 flex items-center justify-between">
-                <span>{platform.platform}</span>
+                <span className="flex items-center gap-2">
+                  {platform.platform === 'KATOA' && (
+                    <img src="/sats.svg" alt="KATOA" className="w-6 h-6" />
+                  )}
+                  {platform.platform}
+                </span>
                 <Tooltip
                   content={
                     platform.platform === 'KATOA'
