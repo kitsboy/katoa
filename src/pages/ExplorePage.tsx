@@ -8,7 +8,7 @@ import { TrendingBadge } from '../components/TrendingBadge';
 import { ProgressBar } from '../components/ProgressBar';
 import { supabase } from '../lib/supabase';
 import { mockWishlists } from '../data/mockWishlists';
-import { Gift, Search, MapPin, Globe, SlidersHorizontal, Star, TrendingUp } from 'lucide-react';
+import { Gift, Search, MapPin, Globe, SlidersHorizontal, Star } from 'lucide-react';
 
 interface Wishlist {
   id: string;
@@ -63,14 +63,14 @@ export function ExplorePage() {
   }
 
   useEffect(() => {
-    let filtered = wishlists;
+    let filtered = [...wishlists];
 
     if (searchTerm) {
       filtered = filtered.filter(
         (w) =>
-          w.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          w.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          w.creator.username.toLowerCase().includes(searchTerm.toLowerCase())
+          w.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          w.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          w.creator?.username?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -84,7 +84,7 @@ export function ExplorePage() {
 
     switch (sortBy) {
       case 'trending':
-        filtered.sort((a, b) => b.total_sats_raised - a.total_sats_raised);
+        filtered.sort((a, b) => (b.total_sats_raised || 0) - (a.total_sats_raised || 0));
         break;
       case 'funded':
         filtered.sort((a, b) => {
@@ -94,14 +94,14 @@ export function ExplorePage() {
         });
         break;
       case 'goal':
-        filtered.sort((a, b) => b.total_sats_goal - a.total_sats_goal);
+        filtered.sort((a, b) => (b.total_sats_goal || 0) - (a.total_sats_goal || 0));
         break;
       default:
         break;
     }
 
     setFilteredWishlists(filtered);
-  }, [searchTerm, selectedCountry, wishlists]);
+  }, [searchTerm, selectedCountry, selectedCategory, sortBy, wishlists]);
 
   async function loadWishlists() {
     try {
@@ -121,6 +121,7 @@ export function ExplorePage() {
           latitude,
           longitude,
           visibility,
+          created_at,
           creator:profiles!wishlists_creator_id_fkey(username, avatar_url)
         `)
         .eq('visibility', 'public')
@@ -128,7 +129,7 @@ export function ExplorePage() {
 
       if (error) throw error;
 
-      const dbWishlists = (data as unknown as Wishlist[]) || [];
+      const dbWishlists = ((data || []) as unknown as Wishlist[]).filter(w => w.creator && w.creator.username);
       const allWishlists = [...mockWishlists, ...dbWishlists];
 
       setWishlists(allWishlists);
@@ -142,14 +143,8 @@ export function ExplorePage() {
     }
   }
 
-  function formatSats(sats: number): string {
-    if (sats >= 100000000) {
-      return `${(sats / 100000000).toFixed(2)} BTC`;
-    }
-    return `${(sats / 1000).toFixed(0)}k sats`;
-  }
 
-  const countries = Array.from(new Set(wishlists.map((w) => w.country).filter(Boolean))).sort();
+  const countries = Array.from(new Set(wishlists.map((w) => w.country).filter(Boolean) as string[])).sort();
 
   const wishlistsWithLocation = filteredWishlists.filter(
     (w) => w.latitude && w.longitude
@@ -225,7 +220,7 @@ export function ExplorePage() {
 
               <div className="flex gap-2">
                 <Button
-                  variant={showFilters ? 'default' : 'outline'}
+                  variant={showFilters ? 'primary' : 'outline'}
                   onClick={() => setShowFilters(!showFilters)}
                   className="border-night-blue-500"
                 >
@@ -234,7 +229,7 @@ export function ExplorePage() {
                 </Button>
 
                 <Button
-                  variant={showMap ? 'default' : 'outline'}
+                  variant={showMap ? 'primary' : 'outline'}
                   onClick={() => setShowMap(!showMap)}
                   className="border-night-blue-500"
                 >
@@ -421,9 +416,9 @@ export function ExplorePage() {
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-night-blue-shadow-700/80 via-night-blue-shadow-700/20 to-transparent"></div>
 
-                      {wishlist.country_flag && (
+                      {(wishlist as any).country_flag && (
                         <div className="absolute top-3 right-3 text-3xl drop-shadow-lg">
-                          {wishlist.country_flag}
+                          {(wishlist as any).country_flag}
                         </div>
                       )}
 
@@ -458,17 +453,19 @@ export function ExplorePage() {
                         )}
                       </div>
 
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gradient-to-r from-emerald-500 to-cyan-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
-                          {wishlist.creator.username[0].toUpperCase()}
+                      {wishlist.creator && wishlist.creator.username && (
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-gradient-to-r from-emerald-500 to-cyan-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
+                            {wishlist.creator.username[0].toUpperCase()}
+                          </div>
+                          <div>
+                            <span className="text-sm text-white font-medium block">
+                              {wishlist.creator.username}
+                            </span>
+                            <span className="text-xs text-night-blue-400">Creator</span>
+                          </div>
                         </div>
-                        <div>
-                          <span className="text-sm text-white font-medium block">
-                            {wishlist.creator.username}
-                          </span>
-                          <span className="text-xs text-night-blue-400">Creator</span>
-                        </div>
-                      </div>
+                      )}
 
                       {wishlist.total_sats_goal > 0 && (
                         <ProgressBar
