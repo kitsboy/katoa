@@ -3,6 +3,7 @@ import { Button } from '../components/Button';
 import { Card } from '../components/Card';
 import { Link } from '../components/Link';
 import { BitcoinStats } from '../components/BitcoinStats';
+import { FeeComparison } from '../components/FeeComparison';
 import { useLanguage } from '../contexts/LanguageContext';
 import { supabase } from '../lib/supabase';
 import {
@@ -291,8 +292,15 @@ export function HomePage() {
         </div>
       </section>
 
+      {/* Fee Comparison Calculator */}
+      <section className="py-32 bg-gradient-to-b from-slate-700 to-slate-800">
+        <div className="max-w-7xl mx-auto px-6">
+          <FeeComparison />
+        </div>
+      </section>
+
       {/* Bitcoin Stats - Centered */}
-      <section className="py-20 bg-slate-700">
+      <section className="py-20 bg-slate-800">
         <div className="max-w-4xl mx-auto px-6">
           <BitcoinStats />
         </div>

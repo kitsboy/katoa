@@ -88,6 +88,9 @@ export function Navbar() {
               <Link href="/explore" className="text-gray-300 hover:text-white transition-colors">
                 {t('nav.explore')}
               </Link>
+              <Link href="/compare" className="text-gray-300 hover:text-emerald-400 transition-colors font-semibold">
+                Why KATOA?
+              </Link>
 
               <div className="relative">
                 <button

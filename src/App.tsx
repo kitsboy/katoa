@@ -10,6 +10,7 @@ import { SettingsPage } from './pages/SettingsPage';
 import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
 import { PricingPage } from './pages/PricingPage';
+import { ComparisonPage } from './pages/ComparisonPage';
 import { TermsPage } from './pages/TermsPage';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { AuthPage } from './pages/AuthPage';
@@ -36,6 +37,8 @@ function App() {
     page = <ContactPage />;
   } else if (path === '/pricing') {
     page = <PricingPage />;
+  } else if (path === '/compare' || path === '/comparison') {
+    page = <ComparisonPage />;
   } else if (path === '/terms') {
     page = <TermsPage />;
   } else if (path === '/privacy') {
