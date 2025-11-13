@@ -201,20 +201,14 @@ export function SettingsPage() {
   }
 
   async function handleAvatarUpload(files: File[]) {
-    if (files.length === 0 || !user) {
-      console.log('Avatar upload: No files or no user');
-      return null;
-    }
+    if (files.length === 0 || !user) return null;
 
-    console.log('Starting avatar upload, file:', files[0].name);
     setUploadingAvatar(true);
     try {
       const file = files[0];
       const fileExt = file.name.split('.').pop();
       const fileName = `${user.id}-${Math.random()}.${fileExt}`;
       const filePath = `avatars/${fileName}`;
-
-      console.log('Uploading to path:', filePath);
 
       const { error: uploadError } = await supabase.storage
         .from('media')
@@ -229,7 +223,6 @@ export function SettingsPage() {
         .from('media')
         .getPublicUrl(filePath);
 
-      console.log('Avatar uploaded successfully, URL:', publicUrl);
       return publicUrl;
     } catch (error: any) {
       console.error('Error uploading avatar:', error);
@@ -340,9 +333,6 @@ export function SettingsPage() {
     e.preventDefault();
     setProcessing(true);
 
-    console.log('handleSaveProfile called');
-    console.log('Current profileForm state:', profileForm);
-
     try {
       const updates: any = {
         username: profileForm.username,
@@ -359,8 +349,6 @@ export function SettingsPage() {
         social_feed_title: profileForm.social_feed_title || 'My Social Feed',
         social_feed_height: profileForm.social_feed_height || '600px',
       };
-
-      console.log('Updates object being sent:', updates);
 
       if (profileForm.video_date) {
         updates.video_date = new Date(profileForm.video_date).toISOString();
@@ -462,21 +450,11 @@ export function SettingsPage() {
                         input.accept = 'image/*';
                         input.onchange = async (e) => {
                           const file = (e.target as HTMLInputElement).files?.[0];
-                          console.log('File selected:', file?.name);
                           if (file) {
                             const avatarUrl = await handleAvatarUpload([file]);
-                            console.log('Returned avatar URL:', avatarUrl);
                             if (avatarUrl) {
-                              console.log('Calling updateProfile with URL:', avatarUrl);
                               const { error } = await updateProfile({ avatar_url: avatarUrl });
-                              if (!error) {
-                                console.log('Profile updated, reloading...');
-                                window.location.reload();
-                              } else {
-                                console.error('Update profile error:', error);
-                              }
-                            } else {
-                              console.error('Avatar URL is null, upload may have failed');
+                              if (!error) window.location.reload();
                             }
                           }
                         };
@@ -810,12 +788,8 @@ export function SettingsPage() {
                 <MediaUpload
                   onFilesSelected={async (files) => {
                     const avatarUrl = await handleAvatarUpload(files);
-                    console.log('Modal upload - Avatar URL received:', avatarUrl);
                     if (avatarUrl) {
-                      setProfileForm(prev => {
-                        console.log('Updating profileForm state with avatar_url:', avatarUrl);
-                        return { ...prev, avatar_url: avatarUrl };
-                      });
+                      setProfileForm(prev => ({ ...prev, avatar_url: avatarUrl }));
                     }
                   }}
                   accept="image/*"
