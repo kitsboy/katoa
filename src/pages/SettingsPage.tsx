@@ -256,7 +256,7 @@ export function SettingsPage() {
         .from('media')
         .getPublicUrl(filePath);
 
-      setProfileForm({ ...profileForm, banner_url: publicUrl, banner_video_url: '' });
+      setProfileForm(prev => ({ ...prev, banner_url: publicUrl, banner_video_url: '' }));
       return publicUrl;
     } catch (error: any) {
       console.error('Error uploading banner:', error);
@@ -287,7 +287,7 @@ export function SettingsPage() {
         .from('media')
         .getPublicUrl(filePath);
 
-      setProfileForm({ ...profileForm, banner_video_url: publicUrl, banner_url: '' });
+      setProfileForm(prev => ({ ...prev, banner_video_url: publicUrl, banner_url: '' }));
       return publicUrl;
     } catch (error) {
       console.error('Error uploading banner video:', error);
@@ -318,7 +318,7 @@ export function SettingsPage() {
         .from('media')
         .getPublicUrl(filePath);
 
-      setProfileForm({ ...profileForm, profile_video_url: publicUrl });
+      setProfileForm(prev => ({ ...prev, profile_video_url: publicUrl }));
       return publicUrl;
     } catch (error) {
       console.error('Error uploading profile video:', error);
