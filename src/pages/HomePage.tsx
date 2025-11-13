@@ -103,7 +103,7 @@ export function HomePage() {
           <div className="grid md:grid-cols-3 gap-6 sm:gap-8">
 
             <Card className="group p-6 sm:p-8 bg-white border-sand-tan-300 hover:border-orange-400 hover:shadow-xl hover:shadow-orange-300/30 transition-all duration-500">
-              <Tooltip content="Lightning Network settles Bitcoin payments in milliseconds with near-zero fees. This revolutionary technology makes micropayments economically viable, enabling new business models impossible with traditional finance. Your money moves at the speed of the internet." position="bottom">
+              <Tooltip content="Lightning Network settles Bitcoin payments in milliseconds with near-zero fees. This revolutionary technology makes micropayments economically viable, enabling new business models impossible with traditional finance. Your money moves at the speed of the internet." position="top">
                 <div className="w-20 h-20 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-3xl flex items-center justify-center mb-6 shadow-2xl shadow-orange-500/50 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                   <Zap size={44} className="text-white" strokeWidth={3} />
                 </div>
@@ -124,7 +124,7 @@ export function HomePage() {
             </Card>
 
             <Card className="group p-6 sm:p-8 bg-white border-sand-tan-300 hover:border-blue-400 hover:shadow-xl hover:shadow-blue-300/30 transition-all duration-300">
-              <Tooltip content="Bitcoin transcends borders and banking systems. Whether you're in New York or Nigeria, Tokyo or Tanzania, your supporters can fund your dreams. No government can shut you down. No bank can deny you service. True financial inclusion for all humanity." position="bottom">
+              <Tooltip content="Bitcoin transcends borders and banking systems. Whether you're in New York or Nigeria, Tokyo or Tanzania, your supporters can fund your dreams. No government can shut you down. No bank can deny you service. True financial inclusion for all humanity." position="top">
                 <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-3xl flex items-center justify-center mb-6 shadow-2xl shadow-blue-500/50 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                   <Globe size={44} className="text-white" strokeWidth={3} />
                 </div>
@@ -145,7 +145,7 @@ export function HomePage() {
             </Card>
 
             <Card className="group p-6 sm:p-8 bg-white border-sand-tan-300 hover:border-green-400 hover:shadow-xl hover:shadow-green-300/30 transition-all duration-300">
-              <Tooltip content="Zero-knowledge cryptography proves transactions without revealing your identity. Nostr protocol encrypts your messages end-to-end. Your data lives on your device, not our servers. We can't sell what we don't have. Privacy is your birthright." position="bottom">
+              <Tooltip content="Zero-knowledge cryptography proves transactions without revealing your identity. Nostr protocol encrypts your messages end-to-end. Your data lives on your device, not our servers. We can't sell what we don't have. Privacy is your birthright." position="top">
                 <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-500 rounded-3xl flex items-center justify-center mb-6 shadow-2xl shadow-green-500/50 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                   <Shield size={44} className="text-white" strokeWidth={3} />
                 </div>
