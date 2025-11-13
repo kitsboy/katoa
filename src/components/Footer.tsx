@@ -43,23 +43,23 @@ export function Footer() {
                   href="https://twitter.com/bitwish"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-10 h-10 rounded-full bg-night-blue-500 border border-night-blue-400 hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 group"
+                  className="flex items-center justify-center w-20 h-20 rounded-full bg-night-blue-500 border border-night-blue-400 hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 group"
                 >
-                  <Twitter size={18} className="text-gray-400 group-hover:text-orange-500 transition-colors" />
+                  <Twitter size={36} className="text-gray-400 group-hover:text-orange-500 transition-colors" />
                 </a>
                 <a
                   href="https://github.com/bitwish"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-10 h-10 rounded-full bg-night-blue-500 border border-night-blue-400 hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 group"
+                  className="flex items-center justify-center w-20 h-20 rounded-full bg-night-blue-500 border border-night-blue-400 hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 group"
                 >
-                  <Github size={18} className="text-gray-400 group-hover:text-orange-500 transition-colors" />
+                  <Github size={36} className="text-gray-400 group-hover:text-orange-500 transition-colors" />
                 </a>
                 <a
                   href="mailto:hello@katoa.org"
-                  className="flex items-center justify-center w-10 h-10 rounded-full bg-night-blue-500 border border-night-blue-400 hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 group"
+                  className="flex items-center justify-center w-20 h-20 rounded-full bg-night-blue-500 border border-night-blue-400 hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 group"
                 >
-                  <Mail size={18} className="text-gray-400 group-hover:text-orange-500 transition-colors" />
+                  <Mail size={36} className="text-gray-400 group-hover:text-orange-500 transition-colors" />
                 </a>
               </div>
             </div>
@@ -67,20 +67,20 @@ export function Footer() {
             {/* Navigation Columns */}
             <div className="md:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8">
               <div>
-                <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Company</h3>
+                <h3 className="text-white font-semibold mb-4 text-lg uppercase tracking-wider">Company</h3>
                 <ul className="space-y-3">
                   <li>
-                    <Link href="/about" className="text-gray-400 hover:text-orange-500 text-sm transition-colors duration-200">
+                    <Link href="/about" className="text-gray-400 hover:text-orange-500 text-lg transition-colors duration-200">
                       About Us
                     </Link>
                   </li>
                   <li>
-                    <Link href="/pricing" className="text-gray-400 hover:text-orange-500 text-sm transition-colors duration-200">
+                    <Link href="/pricing" className="text-gray-400 hover:text-orange-500 text-lg transition-colors duration-200">
                       Pricing
                     </Link>
                   </li>
                   <li>
-                    <Link href="/contact" className="text-gray-400 hover:text-orange-500 text-sm transition-colors duration-200">
+                    <Link href="/contact" className="text-gray-400 hover:text-orange-500 text-lg transition-colors duration-200">
                       Contact
                     </Link>
                   </li>
@@ -88,20 +88,20 @@ export function Footer() {
               </div>
 
               <div>
-                <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Product</h3>
+                <h3 className="text-white font-semibold mb-4 text-lg uppercase tracking-wider">Product</h3>
                 <ul className="space-y-3">
                   <li>
-                    <Link href="/explore" className="text-gray-400 hover:text-orange-500 text-sm transition-colors duration-200">
+                    <Link href="/explore" className="text-gray-400 hover:text-orange-500 text-lg transition-colors duration-200">
                       Explore
                     </Link>
                   </li>
                   <li>
-                    <Link href="/dashboard" className="text-gray-400 hover:text-orange-500 text-sm transition-colors duration-200">
+                    <Link href="/dashboard" className="text-gray-400 hover:text-orange-500 text-lg transition-colors duration-200">
                       Dashboard
                     </Link>
                   </li>
                   <li>
-                    <Link href="/faq" className="text-gray-400 hover:text-orange-500 text-sm transition-colors duration-200">
+                    <Link href="/faq" className="text-gray-400 hover:text-orange-500 text-lg transition-colors duration-200">
                       FAQ
                     </Link>
                   </li>
@@ -109,15 +109,15 @@ export function Footer() {
               </div>
 
               <div>
-                <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Legal</h3>
+                <h3 className="text-white font-semibold mb-4 text-lg uppercase tracking-wider">Legal</h3>
                 <ul className="space-y-3">
                   <li>
-                    <Link href="/terms" className="text-gray-400 hover:text-orange-500 text-sm transition-colors duration-200">
+                    <Link href="/terms" className="text-gray-400 hover:text-orange-500 text-lg transition-colors duration-200">
                       Terms of Service
                     </Link>
                   </li>
                   <li>
-                    <Link href="/privacy" className="text-gray-400 hover:text-orange-500 text-sm transition-colors duration-200">
+                    <Link href="/privacy" className="text-gray-400 hover:text-orange-500 text-lg transition-colors duration-200">
                       Privacy Policy
                     </Link>
                   </li>
@@ -137,12 +137,12 @@ export function Footer() {
 
               <button
                 onClick={() => setShowDonation(!showDonation)}
-                className="flex items-center gap-2 text-sm text-gray-500 hover:text-orange-500 transition-colors duration-200 cursor-pointer group"
+                className="flex items-center gap-3 text-xl text-gray-400 hover:text-orange-500 transition-colors duration-200 cursor-pointer group"
               >
                 <span>Made with</span>
-                <Heart size={14} className="text-orange-500 fill-orange-500 group-hover:animate-pulse" />
+                <Heart size={28} className="text-orange-500 fill-orange-500 group-hover:animate-pulse" />
                 <span>and</span>
-                <Bitcoin size={14} className="text-orange-500" />
+                <Bitcoin size={28} className="text-orange-500" />
               </button>
             </div>
           </div>

@@ -36,7 +36,10 @@ export function WishlistItemsList({ items, onItemClick }: WishlistItemsListProps
 
   return (
     <div className="space-y-3">
-      <h3 className="text-lg font-bold text-white mb-3">Wishlist Items</h3>
+      <h3 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
+        Wishlist Items
+        <span className="text-xs text-sand-tan-500 font-normal">(Click to fund)</span>
+      </h3>
 
       {items.map((item) => {
         const progress = item.price_sats > 0 ? (item.sats_raised / item.price_sats) * 100 : 0;
@@ -44,8 +47,8 @@ export function WishlistItemsList({ items, onItemClick }: WishlistItemsListProps
         return (
           <Card
             key={item.id}
-            className={`p-3 hover:border-orange-500 transition-all cursor-pointer ${
-              item.is_funded ? 'border-green-500 bg-green-500/5' : ''
+            className={`p-3 hover:border-sand-tan-500 hover:shadow-lg hover:shadow-sand-tan-500/20 transition-all cursor-pointer transform hover:scale-[1.02] ${
+              item.is_funded ? 'border-green-500 bg-green-500/5' : 'hover:bg-night-blue-500/30'
             }`}
             onClick={() => onItemClick?.(item)}
           >

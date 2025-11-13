@@ -410,10 +410,13 @@ export function ExplorePage() {
                           src={wishlist.cover_image}
                           alt={wishlist.title}
                           className="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110"
+                          onError={(e) => {
+                            e.currentTarget.src = 'https://images.pexels.com/photos/2599244/pexels-photo-2599244.jpeg?auto=compress&cs=tinysrgb&w=800';
+                          }}
                         />
                       ) : (
-                        <div className="w-full h-56 bg-gradient-to-br from-emerald-500/20 via-cyan-500/20 to-blue-500/20 flex items-center justify-center">
-                          <Gift size={80} className="text-emerald-500/40 animate-float" />
+                        <div className="w-full h-56 bg-gradient-to-br from-sand-tan-500/20 via-night-blue-500/20 to-night-blue-shadow-700/20 flex items-center justify-center">
+                          <Gift size={80} className="text-sand-tan-500/40 animate-float" />
                         </div>
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-night-blue-shadow-700/80 via-night-blue-shadow-700/20 to-transparent"></div>
