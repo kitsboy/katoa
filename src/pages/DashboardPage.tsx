@@ -27,11 +27,17 @@ export function DashboardPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [editingProject, setEditingProject] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     slug: '',
   });
+  const [editFormData, setEditFormData] = useState<{
+    title: string;
+    description: string;
+    visibility: 'public' | 'private' | 'draft';
+  } | null>(null);
   const [processing, setProcessing] = useState(false);
   const [stats, setStats] = useState({
     totalProjects: 0,
@@ -145,6 +151,47 @@ export function DashboardPage() {
     }
   }
 
+  function startEditingProject(project: Project) {
+    setEditingProject(project.id);
+    setEditFormData({
+      title: project.title,
+      description: project.description,
+      visibility: project.visibility,
+    });
+  }
+
+  function cancelEditing() {
+    setEditingProject(null);
+    setEditFormData(null);
+  }
+
+  async function handleUpdateProject(projectId: string) {
+    if (!editFormData) return;
+    setProcessing(true);
+
+    try {
+      const { error } = await supabase
+        .from('projects')
+        .update({
+          title: editFormData.title,
+          description: editFormData.description,
+          visibility: editFormData.visibility,
+        })
+        .eq('id', projectId);
+
+      if (error) throw error;
+
+      setEditingProject(null);
+      setEditFormData(null);
+      loadProjects();
+    } catch (error: any) {
+      console.error('Error updating project:', error);
+      alert(error.message || 'Failed to update project');
+    } finally {
+      setProcessing(false);
+    }
+  }
+
   const formatSats = (sats: number) => {
     return new Intl.NumberFormat().format(sats);
   };
@@ -250,39 +297,91 @@ export function DashboardPage() {
                   />
                 )}
 
-                <div className="flex justify-between items-start mb-3">
-                  <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">
-                    {project.title}
-                  </h3>
-                  {getVisibilityBadge(project.visibility)}
-                </div>
-
-                <p className="text-slate-400 text-sm mb-4 line-clamp-2">
-                  {project.description || 'No description'}
-                </p>
-
-                <div className="flex items-center gap-4 text-sm text-slate-400 mb-4">
-                  <div className="flex items-center gap-1">
-                    <Gift size={16} />
-                    <span>{project.wishlist_count} wishlists</span>
+                {editingProject === project.id && editFormData ? (
+                  <div className="space-y-3">
+                    <Input
+                      value={editFormData.title}
+                      onChange={(e) => setEditFormData({ ...editFormData, title: e.target.value })}
+                      placeholder="Project title"
+                    />
+                    <textarea
+                      value={editFormData.description}
+                      onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
+                      placeholder="Description"
+                      className="w-full px-3 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white text-sm placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+                      rows={3}
+                    />
+                    <select
+                      value={editFormData.visibility}
+                      onChange={(e) => setEditFormData({ ...editFormData, visibility: e.target.value as any })}
+                      className="w-full px-3 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:border-emerald-500"
+                    >
+                      <option value="draft">Draft (only you)</option>
+                      <option value="private">Private (link only)</option>
+                      <option value="public">Public (listed)</option>
+                    </select>
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={() => handleUpdateProject(project.id)}
+                        className="flex-1 bg-emerald-500 hover:bg-emerald-600"
+                        disabled={processing}
+                      >
+                        Save
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={cancelEditing}
+                        className="flex-1"
+                        disabled={processing}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <>
+                    <div className="flex justify-between items-start mb-3">
+                      <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">
+                        {project.title}
+                      </h3>
+                      {getVisibilityBadge(project.visibility)}
+                    </div>
 
-                <div className="flex gap-2">
-                  <Link href={`/project/${project.slug}`} className="flex-1">
-                    <Button variant="outline" className="w-full border-emerald-500/30 hover:border-emerald-500">
-                      <Settings size={16} className="mr-2" />
-                      Manage
-                    </Button>
-                  </Link>
-                  <Button
-                    variant="ghost"
-                    onClick={() => handleDeleteProject(project.id)}
-                    className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
-                  >
-                    <Trash2 size={16} />
-                  </Button>
-                </div>
+                    <p className="text-slate-400 text-sm mb-4 line-clamp-2">
+                      {project.description || 'No description'}
+                    </p>
+
+                    <div className="flex items-center gap-4 text-sm text-slate-400 mb-4">
+                      <div className="flex items-center gap-1">
+                        <Gift size={16} />
+                        <span>{project.wishlist_count} wishlists</span>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <Link href={`/project/${project.slug}`} className="flex-1">
+                        <Button variant="outline" className="w-full border-emerald-500/30 hover:border-emerald-500">
+                          <Settings size={16} className="mr-2" />
+                          Manage
+                        </Button>
+                      </Link>
+                      <Button
+                        variant="ghost"
+                        onClick={() => startEditingProject(project)}
+                        className="text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10"
+                      >
+                        <Edit size={16} />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        onClick={() => handleDeleteProject(project.id)}
+                        className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                      >
+                        <Trash2 size={16} />
+                      </Button>
+                    </div>
+                  </>
+                )}
               </Card>
             ))}
           </div>

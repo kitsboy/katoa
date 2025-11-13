@@ -46,6 +46,7 @@ export function ProjectPage() {
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [showCreateWishlist, setShowCreateWishlist] = useState(false);
+  const [editingWishlist, setEditingWishlist] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -63,6 +64,12 @@ export function ProjectPage() {
     slug: '',
     url: '',
   });
+
+  const [editWishlistForm, setEditWishlistForm] = useState<{
+    title: string;
+    description: string;
+    visibility: 'public' | 'private' | 'draft';
+  } | null>(null);
 
   const [parsingUrl, setParsingUrl] = useState(false);
 
@@ -251,6 +258,47 @@ export function ProjectPage() {
     } catch (error) {
       console.error('Error deleting wishlist:', error);
       alert('Failed to delete wishlist');
+    }
+  }
+
+  function startEditingWishlist(wishlist: Wishlist) {
+    setEditingWishlist(wishlist.id);
+    setEditWishlistForm({
+      title: wishlist.title,
+      description: wishlist.description,
+      visibility: wishlist.visibility,
+    });
+  }
+
+  function cancelWishlistEdit() {
+    setEditingWishlist(null);
+    setEditWishlistForm(null);
+  }
+
+  async function handleUpdateWishlist(wishlistId: string) {
+    if (!editWishlistForm) return;
+    setProcessing(true);
+
+    try {
+      const { error } = await supabase
+        .from('wishlists')
+        .update({
+          title: editWishlistForm.title,
+          description: editWishlistForm.description,
+          visibility: editWishlistForm.visibility,
+        })
+        .eq('id', wishlistId);
+
+      if (error) throw error;
+
+      setEditingWishlist(null);
+      setEditWishlistForm(null);
+      loadWishlists();
+    } catch (error: any) {
+      console.error('Error updating wishlist:', error);
+      alert(error.message || 'Failed to update wishlist');
+    } finally {
+      setProcessing(false);
     }
   }
 
@@ -466,32 +514,84 @@ export function ProjectPage() {
                 key={wishlist.id}
                 className="bg-gradient-to-br from-slate-800 to-slate-700 border border-slate-600 hover:border-emerald-500/50 transition-all group"
               >
-                <div className="flex justify-between items-start mb-3">
-                  <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">
-                    {wishlist.title}
-                  </h3>
-                  {getVisibilityBadge(wishlist.visibility)}
-                </div>
+                {editingWishlist === wishlist.id && editWishlistForm ? (
+                  <div className="space-y-3">
+                    <Input
+                      value={editWishlistForm.title}
+                      onChange={(e) => setEditWishlistForm({ ...editWishlistForm, title: e.target.value })}
+                      placeholder="Wishlist title"
+                    />
+                    <textarea
+                      value={editWishlistForm.description}
+                      onChange={(e) => setEditWishlistForm({ ...editWishlistForm, description: e.target.value })}
+                      placeholder="Description"
+                      className="w-full px-3 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white text-sm placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+                      rows={3}
+                    />
+                    <select
+                      value={editWishlistForm.visibility}
+                      onChange={(e) => setEditWishlistForm({ ...editWishlistForm, visibility: e.target.value as any })}
+                      className="w-full px-3 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:border-emerald-500"
+                    >
+                      <option value="draft">Draft (only you)</option>
+                      <option value="private">Private (link only)</option>
+                      <option value="public">Public (listed)</option>
+                    </select>
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={() => handleUpdateWishlist(wishlist.id)}
+                        className="flex-1 bg-emerald-500 hover:bg-emerald-600"
+                        disabled={processing}
+                      >
+                        Save
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={cancelWishlistEdit}
+                        className="flex-1"
+                        disabled={processing}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex justify-between items-start mb-3">
+                      <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">
+                        {wishlist.title}
+                      </h3>
+                      {getVisibilityBadge(wishlist.visibility)}
+                    </div>
 
-                <p className="text-slate-400 text-sm mb-4 line-clamp-2">
-                  {wishlist.description || 'No description'}
-                </p>
+                    <p className="text-slate-400 text-sm mb-4 line-clamp-2">
+                      {wishlist.description || 'No description'}
+                    </p>
 
-                <div className="flex gap-2">
-                  <Link href={`/wishlist/${wishlist.slug}`} className="flex-1">
-                    <Button variant="outline" className="w-full border-emerald-500/30 hover:border-emerald-500">
-                      <ExternalLink size={16} className="mr-2" />
-                      View
-                    </Button>
-                  </Link>
-                  <Button
-                    variant="ghost"
-                    onClick={() => handleDeleteWishlist(wishlist.id)}
-                    className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
-                  >
-                    <Trash2 size={16} />
-                  </Button>
-                </div>
+                    <div className="flex gap-2">
+                      <Link href={`/wishlist/${wishlist.slug}`} className="flex-1">
+                        <Button variant="outline" className="w-full border-emerald-500/30 hover:border-emerald-500">
+                          <ExternalLink size={16} className="mr-2" />
+                          View
+                        </Button>
+                      </Link>
+                      <Button
+                        variant="ghost"
+                        onClick={() => startEditingWishlist(wishlist)}
+                        className="text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10"
+                      >
+                        <Edit size={16} />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        onClick={() => handleDeleteWishlist(wishlist.id)}
+                        className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                      >
+                        <Trash2 size={16} />
+                      </Button>
+                    </div>
+                  </>
+                )}
               </Card>
             ))}
           </div>
