@@ -218,35 +218,50 @@ export function FeeComparison() {
         </div>
       </Card>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="p-6 bg-night-blue-500/50 border-night-blue-500">
-          <div className="text-4xl mb-3">🌍</div>
-          <h3 className="text-xl font-bold text-white mb-2">195+ Countries</h3>
-          <p className="text-night-blue-300">
-            Throne: ~10 countries with 0% fees
-            <br />
-            <span className="text-emerald-400 font-semibold">KATOA: All countries, always 0%</span>
-          </p>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <Card className="p-10 bg-gradient-to-br from-gray-900 via-gray-800 to-black border-2 border-gray-700 hover:border-blue-500/50 text-center hover:shadow-2xl hover:shadow-blue-500/30 transition-all duration-300 transform hover:-translate-y-2">
+          <div className="w-24 h-24 mx-auto mb-8 bg-gradient-to-br from-blue-500 via-cyan-500 to-teal-500 rounded-full flex items-center justify-center shadow-2xl shadow-blue-500/60 transform hover:scale-110 hover:rotate-12 transition-all duration-300">
+            <DollarSign size={56} className="text-white" strokeWidth={2.5} />
+          </div>
+          <h3 className="text-3xl font-black text-white mb-6 tracking-tight">195+ Countries</h3>
+          <div className="space-y-3">
+            <p className="text-gray-300 text-base font-semibold">
+              Throne: ~10 countries with 0% fees
+            </p>
+            <div className="text-emerald-400 font-bold text-lg bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 py-3 px-5 rounded-xl border border-emerald-500/30">
+              KATOA: All countries, always 0%
+            </div>
+          </div>
         </Card>
 
-        <Card className="p-6 bg-night-blue-500/50 border-night-blue-500">
-          <div className="text-4xl mb-3">⚡</div>
-          <h3 className="text-xl font-bold text-white mb-2">Instant Settlement</h3>
-          <p className="text-night-blue-300">
-            OnlyFans: 7-day rolling payout
-            <br />
-            <span className="text-emerald-400 font-semibold">KATOA: Instant Lightning Network</span>
-          </p>
+        <Card className="p-10 bg-gradient-to-br from-gray-900 via-gray-800 to-black border-2 border-gray-700 hover:border-orange-500/50 text-center hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-300 transform hover:-translate-y-2">
+          <div className="w-24 h-24 mx-auto mb-8 bg-gradient-to-br from-orange-500 via-amber-500 to-yellow-500 rounded-full flex items-center justify-center shadow-2xl shadow-orange-500/60 transform hover:scale-110 hover:rotate-12 transition-all duration-300">
+            <TrendingDown size={56} className="text-white" strokeWidth={2.5} />
+          </div>
+          <h3 className="text-3xl font-black text-white mb-6 tracking-tight">Instant Settlement</h3>
+          <div className="space-y-3">
+            <p className="text-gray-300 text-base font-semibold">
+              OnlyFans: 7-day rolling payout
+            </p>
+            <div className="text-emerald-400 font-bold text-lg bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 py-3 px-5 rounded-xl border border-emerald-500/30">
+              KATOA: Instant Lightning Network
+            </div>
+          </div>
         </Card>
 
-        <Card className="p-6 bg-night-blue-500/50 border-night-blue-500">
-          <div className="text-4xl mb-3">🔐</div>
-          <h3 className="text-xl font-bold text-white mb-2">True Privacy</h3>
-          <p className="text-night-blue-300">
-            Competitors: Server-based data collection
-            <br />
-            <span className="text-emerald-400 font-semibold">KATOA: Zero-knowledge proofs</span>
-          </p>
+        <Card className="p-10 bg-gradient-to-br from-gray-900 via-gray-800 to-black border-2 border-gray-700 hover:border-purple-500/50 text-center hover:shadow-2xl hover:shadow-purple-500/30 transition-all duration-300 transform hover:-translate-y-2">
+          <div className="w-24 h-24 mx-auto mb-8 bg-gradient-to-br from-purple-500 via-pink-500 to-rose-500 rounded-full flex items-center justify-center shadow-2xl shadow-purple-500/60 transform hover:scale-110 hover:rotate-12 transition-all duration-300">
+            <AlertCircle size={56} className="text-white" strokeWidth={2.5} />
+          </div>
+          <h3 className="text-3xl font-black text-white mb-6 tracking-tight">True Privacy</h3>
+          <div className="space-y-3">
+            <p className="text-gray-300 text-base font-semibold">
+              Competitors: Server-based data collection
+            </p>
+            <div className="text-emerald-400 font-bold text-lg bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 py-3 px-5 rounded-xl border border-emerald-500/30">
+              KATOA: Zero-knowledge proofs
+            </div>
+          </div>
         </Card>
       </div>
     </div>
