@@ -32,16 +32,16 @@ export function HomePage() {
     <div className="min-h-screen bg-gradient-to-b from-nightmoon-800 via-nightmoon-700 to-nightmoon-900 text-white">
 
       <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden px-6">
-        <div className="absolute inset-0 overflow-hidden opacity-20">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-jewel-400/30 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-mandarin-400/30 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute inset-0 overflow-hidden opacity-30">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-mandarin-400/40 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-mandarin-500/40 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
         </div>
 
         <div className="relative z-10 max-w-6xl mx-auto text-center">
 
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-nightmoon-600/50 border border-jewel-500/30 rounded-full mb-8 animate-fade-in shadow-sm backdrop-blur-sm">
+          <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-nightmoon-600/50 border border-mandarin-400/50 rounded-full mb-8 animate-fade-in shadow-sm backdrop-blur-sm">
             <div className="w-2 h-2 bg-mandarin-400 rounded-full animate-pulse" />
-            <span className="text-sm font-semibold text-jewel-200">
+            <span className="text-sm font-semibold text-mandarin-300">
               Trusted by creators worldwide
             </span>
           </div>
@@ -100,9 +100,9 @@ export function HomePage() {
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-3 gap-8">
 
-            <Card className="group p-8 bg-nightmoon-700/50 border-jewel-600/30 hover:border-jewel-500 hover:shadow-xl hover:shadow-jewel-500/20 transition-all duration-300 backdrop-blur-sm">
+            <Card className="group p-8 bg-nightmoon-700/50 border-mandarin-600/40 hover:border-mandarin-400 hover:shadow-xl hover:shadow-mandarin-500/30 transition-all duration-300 backdrop-blur-sm">
               <Tooltip content="Bitcoin Lightning Network enables instant settlements with sub-cent fees, making micro-transactions economically viable for the first time.">
-                <div className="w-16 h-16 bg-gradient-to-br from-jewel-500 to-jewel-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <div className="w-16 h-16 bg-gradient-to-br from-mandarin-400 to-mandarin-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-mandarin-500/50 group-hover:scale-110 transition-transform duration-300">
                   <Zap size={32} className="text-white" strokeWidth={2.5} />
                 </div>
               </Tooltip>
@@ -116,14 +116,14 @@ export function HomePage() {
                 Instant Bitcoin payments via Lightning Network. Funds arrive in seconds, not days.
               </p>
 
-              <div className="pt-4 border-t border-jewel-700/30">
-                <div className="text-jewel-300 font-semibold">vs. 7-day payouts elsewhere</div>
+              <div className="pt-4 border-t border-mandarin-700/30">
+                <div className="text-mandarin-300 font-semibold">vs. 7-day payouts elsewhere</div>
               </div>
             </Card>
 
-            <Card className="group p-8 bg-nightmoon-700/50 border-mandarin-600/30 hover:border-mandarin-500 hover:shadow-xl hover:shadow-mandarin-500/20 transition-all duration-300 backdrop-blur-sm">
+            <Card className="group p-8 bg-nightmoon-700/50 border-mandarin-600/40 hover:border-mandarin-400 hover:shadow-xl hover:shadow-mandarin-500/30 transition-all duration-300 backdrop-blur-sm">
               <Tooltip content="Bitcoin has no borders. No banks needed. Works everywhere from Argentina to Zimbabwe.">
-                <div className="w-16 h-16 bg-gradient-to-br from-mandarin-500 to-mandarin-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <div className="w-16 h-16 bg-gradient-to-br from-mandarin-500 to-mandarin-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-mandarin-500/50 group-hover:scale-110 transition-transform duration-300">
                   <Globe size={32} className="text-white" strokeWidth={2.5} />
                 </div>
               </Tooltip>
@@ -142,9 +142,9 @@ export function HomePage() {
               </div>
             </Card>
 
-            <Card className="group p-8 bg-nightmoon-700/50 border-mauve-600/30 hover:border-mauve-500 hover:shadow-xl hover:shadow-mauve-500/20 transition-all duration-300 backdrop-blur-sm">
+            <Card className="group p-8 bg-nightmoon-700/50 border-mandarin-600/40 hover:border-mandarin-400 hover:shadow-xl hover:shadow-mandarin-500/30 transition-all duration-300 backdrop-blur-sm">
               <Tooltip content="Zero-knowledge proofs mean we can verify payments without seeing your data. True privacy by design.">
-                <div className="w-16 h-16 bg-gradient-to-br from-mauve-500 to-mauve-600 rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <div className="w-16 h-16 bg-gradient-to-br from-mandarin-400 to-mandarin-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-mandarin-500/50 group-hover:scale-110 transition-transform duration-300">
                   <Shield size={32} className="text-white" strokeWidth={2.5} />
                 </div>
               </Tooltip>
@@ -158,8 +158,8 @@ export function HomePage() {
                 Zero-knowledge proofs. Encrypted messaging. Your data stays yours.
               </p>
 
-              <div className="pt-4 border-t border-mauve-700/30">
-                <div className="text-mauve-300 font-semibold">vs. server-based data mining</div>
+              <div className="pt-4 border-t border-mandarin-700/30">
+                <div className="text-mandarin-300 font-semibold">vs. server-based data mining</div>
               </div>
             </Card>
           </div>
@@ -182,11 +182,11 @@ export function HomePage() {
 
       <section className="py-20 px-6">
         <div className="max-w-4xl mx-auto text-center">
-          <Card className="p-12 bg-gradient-to-br from-jewel-600 to-jewel-700 border-jewel-500/50 shadow-2xl shadow-jewel-900/50">
+          <Card className="p-12 bg-gradient-to-br from-mandarin-600 to-mandarin-700 border-mandarin-500/50 shadow-2xl shadow-mandarin-900/50">
             <h2 className="text-4xl font-black text-white mb-4">
               Ready to Keep 100% of Your Earnings?
             </h2>
-            <p className="text-xl text-jewel-100 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-orange-100 mb-8 max-w-2xl mx-auto">
               Join thousands of creators who've stopped paying platform fees forever.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
