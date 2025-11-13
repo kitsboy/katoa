@@ -320,22 +320,22 @@ export function ProjectPage() {
   const getVisibilityBadge = (visibility: string) => {
     if (visibility === 'public') {
       return (
-        <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700 border border-emerald-300 flex items-center gap-1">
-          <Globe size={12} />
+        <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 flex items-center gap-1.5 shadow-[0_0_10px_rgba(16,185,129,0.3)] whitespace-nowrap">
+          <Globe size={14} />
           Public
         </span>
       );
     } else if (visibility === 'private') {
       return (
-        <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-blue-100 text-blue-700 border border-blue-300 flex items-center gap-1">
-          <Lock size={12} />
+        <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-blue-500/20 text-blue-400 border border-blue-500/50 flex items-center gap-1.5 shadow-[0_0_10px_rgba(59,130,246,0.3)] whitespace-nowrap">
+          <Lock size={14} />
           Private
         </span>
       );
     } else {
       return (
-        <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-night-blue-100 text-night-blue-500 border border-night-blue-200 flex items-center gap-1">
-          <FileText size={12} />
+        <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-gray-500/20 text-gray-400 border border-gray-500/50 flex items-center gap-1.5 whitespace-nowrap">
+          <FileText size={14} />
           Draft
         </span>
       );
@@ -344,19 +344,26 @@ export function ProjectPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-night-blue-500 via-night-blue-500 to-black flex items-center justify-center">
-        <div className="text-white text-xl">Loading...</div>
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-black flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-orange-500 border-t-transparent mx-auto mb-4"></div>
+          <div className="text-white text-xl font-bold">Loading project...</div>
+        </div>
       </div>
     );
   }
 
   if (!project) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-night-blue-500 via-night-blue-500 to-black flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-black flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-white mb-4">Project not found</h2>
+          <h2 className="text-3xl font-black text-white mb-4">Project Not Found</h2>
+          <p className="text-gray-400 mb-8">This project doesn't exist or you don't have access to it.</p>
           <Link href="/dashboard">
-            <Button>Back to Dashboard</Button>
+            <Button className="bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 font-bold">
+              <ArrowLeft size={18} className="mr-2" />
+              Back to Dashboard
+            </Button>
           </Link>
         </div>
       </div>
@@ -364,7 +371,7 @@ export function ProjectPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-night-blue-500 via-night-blue-500 to-black">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-black">
       <input
         type="file"
         id="project-background-upload"
@@ -413,241 +420,323 @@ export function ProjectPage() {
       </button>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
-        <Link href="/dashboard" className="inline-flex items-center text-night-blue-300 hover:text-white mb-6">
-          <ArrowLeft size={20} className="mr-2" />
-          Back to Projects
+        <Link href="/dashboard" className="inline-flex items-center text-gray-400 hover:text-white mb-8 group transition-colors">
+          <ArrowLeft size={20} className="mr-2 group-hover:-translate-x-1 transition-transform" />
+          <span className="font-bold">Back to Dashboard</span>
         </Link>
 
-        <div className="flex justify-between items-start mb-8">
-          <div className="flex-1">
-            {editing ? (
-              <Input
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="text-4xl font-black mb-2"
-              />
-            ) : (
-              <h1 className="text-4xl font-black text-white mb-2">{project.title}</h1>
-            )}
-            {editing ? (
-              <textarea
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full px-4 py-2 bg-night-blue-500 border border-night-blue-400 rounded-lg text-white"
-                rows={3}
-              />
-            ) : (
-              <p className="text-night-blue-300">{project.description || 'No description'}</p>
-            )}
-          </div>
+        <div className="mb-8">
+          <div className="flex items-start justify-between mb-6">
+            <div className="flex-1">
+              {editing ? (
+                <input
+                  type="text"
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  className="text-5xl font-black text-white bg-transparent border-b-4 border-orange-500 focus:outline-none focus:border-orange-400 w-full mb-4"
+                  placeholder="Project Title"
+                />
+              ) : (
+                <h1 className="text-5xl font-black text-white mb-4 bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
+                  {project.title}
+                </h1>
+              )}
+              {editing ? (
+                <textarea
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  className="w-full px-5 py-4 bg-gray-800/50 border-2 border-gray-700 rounded-xl text-white text-lg placeholder-gray-500 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
+                  rows={3}
+                  placeholder="Describe your project and what you're building..."
+                />
+              ) : (
+                <p className="text-gray-300 text-lg leading-relaxed">{project.description || 'Add a description to tell people about your project'}</p>
+              )}
+            </div>
 
-          <div className="flex gap-2">
-            {getVisibilityBadge(project.visibility)}
-            {editing ? (
-              <>
+            <div className="flex flex-col gap-3 ml-6">
+              {getVisibilityBadge(project.visibility)}
+              {editing ? (
+                <div className="flex gap-2">
+                  <Button
+                    onClick={handleUpdateProject}
+                    className="bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 font-bold shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+                    disabled={processing}
+                  >
+                    <Save size={18} className="mr-2" />
+                    {processing ? 'Saving...' : 'Save'}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setEditing(false);
+                      setFormData({
+                        title: project.title,
+                        description: project.description || '',
+                        wallet_address: project.wallet_address || '',
+                        lightning_address: project.lightning_address || '',
+                        nostr_pubkey: project.nostr_pubkey || '',
+                        visibility: project.visibility,
+                      });
+                    }}
+                    className="border-gray-700 text-gray-300 hover:bg-gray-800"
+                  >
+                    <X size={18} />
+                  </Button>
+                </div>
+              ) : (
                 <Button
-                  onClick={handleUpdateProject}
-                  className="bg-emerald-500 hover:bg-emerald-600"
-                  disabled={processing}
+                  onClick={() => setEditing(true)}
+                  className="bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 font-bold shadow-[0_0_20px_rgba(255,135,0,0.3)]"
                 >
-                  <Save size={16} className="mr-2" />
-                  Save
+                  <Edit size={18} className="mr-2" />
+                  Edit Project
                 </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setEditing(false);
-                    setFormData({
-                      title: project.title,
-                      description: project.description || '',
-                      wallet_address: project.wallet_address || '',
-                      lightning_address: project.lightning_address || '',
-                      nostr_pubkey: project.nostr_pubkey || '',
-                      visibility: project.visibility,
-                    });
-                  }}
-                >
-                  <X size={16} />
-                </Button>
-              </>
-            ) : (
-              <Button
-                variant="outline"
-                onClick={() => setEditing(true)}
-                className="border-emerald-500/30 hover:border-emerald-500"
-              >
-                <Edit size={16} className="mr-2" />
-                Edit
-              </Button>
-            )}
+              )}
+            </div>
           </div>
         </div>
 
         {editing && (
-          <Card className="mb-8 bg-night-blue-500/50 border-night-blue-500">
-            <h3 className="text-xl font-bold text-white mb-4">Project Settings</h3>
-
-            <div className="space-y-4">
-              <div className="p-4 bg-orange-500/10 border border-orange-500/30 rounded-lg">
-                <p className="text-orange-400 text-sm font-medium flex items-center gap-2">
-                  <Camera size={16} />
-                  Click on the banner above to upload or change the background image
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
+            <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-3 bg-orange-500/20 rounded-xl">
+                  <Camera size={24} className="text-orange-500" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-black text-white">Banner Image</h3>
+                  <p className="text-gray-400 text-sm">Project header background</p>
+                </div>
+              </div>
+              <div className="p-5 bg-orange-500/10 border-2 border-orange-500/30 rounded-xl hover:border-orange-500/50 transition-colors">
+                <p className="text-orange-400 font-bold flex items-center gap-2 mb-2">
+                  <Upload size={18} />
+                  How to Update Banner
+                </p>
+                <p className="text-gray-300 text-sm leading-relaxed">
+                  Click on the large banner image at the top of this page to upload or change your project's background image. Recommended size: 1500x400px.
                 </p>
               </div>
+            </Card>
 
-              <Input
-                label="Bitcoin Wallet Address"
-                value={formData.wallet_address}
-                onChange={(e) => setFormData({ ...formData, wallet_address: e.target.value })}
-                placeholder="bc1q..."
-                icon={<Wallet size={16} />}
-              />
-
-              <Input
-                label="Lightning Address"
-                value={formData.lightning_address}
-                onChange={(e) => setFormData({ ...formData, lightning_address: e.target.value })}
-                placeholder="username@wallet.com"
-              />
-
-              <Input
-                label="Nostr Public Key"
-                value={formData.nostr_pubkey}
-                onChange={(e) => setFormData({ ...formData, nostr_pubkey: e.target.value })}
-                placeholder="npub1..."
-              />
-
-              <div>
-                <label className="block text-sm font-medium text-night-blue-200 mb-2">
-                  Visibility
-                </label>
-                <select
-                  value={formData.visibility}
-                  onChange={(e) => setFormData({ ...formData, visibility: e.target.value as any })}
-                  className="w-full px-4 py-2 bg-night-blue-500 border border-night-blue-400 rounded-lg text-white focus:outline-none focus:border-emerald-500"
-                >
-                  <option value="draft">Draft - Only you can see this project</option>
-                  <option value="private">Private - Anyone with the link can view</option>
-                  <option value="public">Public - Listed on Explore page</option>
-                </select>
+            <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="p-3 bg-purple-500/20 rounded-xl">
+                  <Settings size={24} className="text-purple-500" />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-black text-white">Visibility</h3>
+                  <p className="text-gray-400 text-sm">Control who can see this</p>
+                </div>
               </div>
-            </div>
-          </Card>
+              <select
+                value={formData.visibility}
+                onChange={(e) => setFormData({ ...formData, visibility: e.target.value as any })}
+                className="w-full px-5 py-4 bg-black border-2 border-gray-700 rounded-xl text-white font-bold text-lg focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 cursor-pointer hover:border-purple-500/50 transition-colors"
+              >
+                <option value="draft">�� Draft - Only you can see this project</option>
+                <option value="private">🔗 Private - Anyone with the link can view</option>
+                <option value="public">🌍 Public - Listed on Explore page</option>
+              </select>
+              <p className="text-gray-400 text-sm mt-4 leading-relaxed">
+                Choose how your project appears to others. You can change this anytime.
+              </p>
+            </Card>
+          </div>
         )}
 
-        <Card className="mb-8 bg-night-blue-500/50 border-night-blue-500">
-          <div className="flex items-center gap-2 mb-6">
-            <Wallet className="text-emerald-400" size={24} />
-            <h3 className="text-xl font-bold text-white">Payment Methods</h3>
+        <Card className="mb-12 bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 p-8">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-3 bg-emerald-500/20 rounded-xl">
+              <Wallet size={28} className="text-emerald-500" />
+            </div>
+            <div>
+              <h2 className="text-3xl font-black text-white">Payment Methods</h2>
+              <p className="text-gray-400 text-sm">Where supporters send Bitcoin contributions</p>
+            </div>
+          </div>
+          <div className="p-5 bg-blue-500/10 border-2 border-blue-500/30 rounded-xl mb-6">
+            <p className="text-blue-400 font-bold flex items-center gap-2 mb-2">
+              <Wallet size={18} />
+              Why Payment Methods Matter
+            </p>
+            <p className="text-gray-300 text-sm leading-relaxed">
+              Add your Bitcoin addresses and Lightning Network details so supporters can send you sats. You can add multiple payment methods and they'll all be displayed on your public project page.
+            </p>
           </div>
           <PaymentMethodManager projectId={project.id} />
         </Card>
 
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-white">Wishlists</h2>
-          <Button
-            onClick={() => setShowCreateWishlist(true)}
-            className="bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700"
-          >
-            <Plus size={20} className="mr-2" />
-            New Wishlist
-          </Button>
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-purple-500/20 rounded-xl">
+                <Gift size={28} className="text-purple-500" />
+              </div>
+              <div>
+                <h2 className="text-3xl font-black text-white">Wishlists</h2>
+                <p className="text-gray-400">Items and goals within this project</p>
+              </div>
+            </div>
+            <Button
+              onClick={() => setShowCreateWishlist(true)}
+              className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 font-black text-lg px-6 py-3 shadow-[0_0_30px_rgba(168,85,247,0.3)]"
+            >
+              <Plus size={22} className="mr-2" />
+              Create Wishlist
+            </Button>
+          </div>
+          <div className="p-5 bg-purple-500/10 border-2 border-purple-500/30 rounded-xl mb-8">
+            <p className="text-purple-400 font-bold flex items-center gap-2 mb-2">
+              <Gift size={18} />
+              About Wishlists
+            </p>
+            <p className="text-gray-300 text-sm leading-relaxed">
+              Wishlists let you organize specific items, goals, or campaigns within your project. Each wishlist has its own page where supporters can see what you need and contribute directly.
+            </p>
+          </div>
         </div>
 
         {wishlists.length === 0 ? (
-          <Card className="text-center py-16">
-            <Gift size={64} className="mx-auto text-night-blue-400 mb-4" />
-            <h3 className="text-2xl font-bold text-white mb-2">No wishlists yet</h3>
-            <p className="text-night-blue-300 mb-6">Create your first wishlist in this project</p>
+          <Card className="text-center py-20 bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700">
+            <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl mb-6 shadow-[0_0_40px_rgba(168,85,247,0.5)]">
+              <Gift size={48} className="text-white" />
+            </div>
+            <h3 className="text-3xl font-black text-white mb-3">Create Your First Wishlist</h3>
+            <p className="text-gray-300 text-lg mb-8 max-w-md mx-auto leading-relaxed">
+              Wishlists help you organize specific items or goals. Start building your project by creating your first wishlist.
+            </p>
             <Button
               onClick={() => setShowCreateWishlist(true)}
-              className="bg-gradient-to-r from-emerald-500 to-cyan-600"
+              className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 font-black text-lg px-8 py-4 shadow-[0_0_30px_rgba(168,85,247,0.4)]"
             >
-              <Plus size={20} className="mr-2" />
+              <Plus size={24} className="mr-2" />
               Create Wishlist
             </Button>
           </Card>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {wishlists.map((wishlist) => (
               <Card
                 key={wishlist.id}
-                className="bg-gradient-to-br from-night-blue-500 to-night-blue-500 border border-night-blue-400 hover:border-emerald-500/50 transition-all group"
+                className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 hover:border-purple-500/50 transition-all duration-300 p-8 group hover:shadow-[0_0_40px_rgba(168,85,247,0.25)]"
               >
                 {editingWishlist === wishlist.id && editWishlistForm ? (
-                  <div className="space-y-3">
-                    <Input
-                      value={editWishlistForm.title}
-                      onChange={(e) => setEditWishlistForm({ ...editWishlistForm, title: e.target.value })}
-                      placeholder="Wishlist title"
-                    />
-                    <textarea
-                      value={editWishlistForm.description}
-                      onChange={(e) => setEditWishlistForm({ ...editWishlistForm, description: e.target.value })}
-                      placeholder="Description"
-                      className="w-full px-3 py-2 bg-night-blue-shadow-700/50 border border-night-blue-400 rounded-lg text-white text-sm placeholder-night-blue-400 focus:outline-none focus:border-emerald-500"
-                      rows={3}
-                    />
-                    <select
-                      value={editWishlistForm.visibility}
-                      onChange={(e) => setEditWishlistForm({ ...editWishlistForm, visibility: e.target.value as any })}
-                      className="w-full px-3 py-2 bg-night-blue-shadow-700/50 border border-night-blue-400 rounded-lg text-white text-sm focus:outline-none focus:border-emerald-500"
-                    >
-                      <option value="draft">Draft (only you)</option>
-                      <option value="private">Private (link only)</option>
-                      <option value="public">Public (listed)</option>
-                    </select>
-                    <div className="flex gap-2">
+                  <div className="space-y-5">
+                    <div>
+                      <label className="block text-sm font-bold text-gray-300 uppercase tracking-wider mb-3">
+                        Wishlist Title
+                      </label>
+                      <input
+                        type="text"
+                        value={editWishlistForm.title}
+                        onChange={(e) => setEditWishlistForm({ ...editWishlistForm, title: e.target.value })}
+                        placeholder="e.g., Recording Equipment Fund"
+                        className="w-full px-5 py-4 bg-black border-2 border-gray-700 rounded-xl text-white text-lg font-bold placeholder-gray-500 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold text-gray-300 uppercase tracking-wider mb-3">
+                        Description
+                      </label>
+                      <textarea
+                        value={editWishlistForm.description}
+                        onChange={(e) => setEditWishlistForm({ ...editWishlistForm, description: e.target.value })}
+                        placeholder="Tell supporters what this wishlist is for and why it matters..."
+                        className="w-full px-5 py-4 bg-black border-2 border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 leading-relaxed"
+                        rows={4}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold text-gray-300 uppercase tracking-wider mb-3">
+                        Visibility
+                      </label>
+                      <select
+                        value={editWishlistForm.visibility}
+                        onChange={(e) => setEditWishlistForm({ ...editWishlistForm, visibility: e.target.value as any })}
+                        className="w-full px-5 py-4 bg-black border-2 border-gray-700 rounded-xl text-white font-bold text-lg focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 cursor-pointer"
+                      >
+                        <option value="draft">🔒 Draft - Only you can see this</option>
+                        <option value="private">🔗 Private - Anyone with the link</option>
+                        <option value="public">🌍 Public - Listed everywhere</option>
+                      </select>
+                    </div>
+                    <div className="flex gap-3 pt-4 border-t border-gray-700">
                       <Button
                         onClick={() => handleUpdateWishlist(wishlist.id)}
-                        className="flex-1 bg-emerald-500 hover:bg-emerald-600"
+                        className="flex-1 bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 font-black text-lg py-4 shadow-[0_0_20px_rgba(16,185,129,0.3)]"
                         disabled={processing}
                       >
-                        Save
+                        <Save size={20} className="mr-2" />
+                        {processing ? 'Saving...' : 'Save Changes'}
                       </Button>
                       <Button
                         variant="outline"
                         onClick={cancelWishlistEdit}
-                        className="flex-1"
+                        className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800 font-bold text-lg py-4"
                         disabled={processing}
                       >
+                        <X size={20} className="mr-2" />
                         Cancel
                       </Button>
                     </div>
                   </div>
                 ) : (
                   <>
-                    <div className="flex justify-between items-start mb-3">
-                      <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">
-                        {wishlist.title}
-                      </h3>
-                      {getVisibilityBadge(wishlist.visibility)}
+                    <div className="flex justify-between items-start mb-6">
+                      <div className="flex-1">
+                        <h3 className="text-2xl font-black text-white group-hover:text-purple-400 transition-colors mb-2">
+                          {wishlist.title}
+                        </h3>
+                        <p className="text-gray-300 leading-relaxed">
+                          {wishlist.description || 'No description provided'}
+                        </p>
+                      </div>
+                      <div className="ml-4">
+                        {getVisibilityBadge(wishlist.visibility)}
+                      </div>
                     </div>
 
-                    <p className="text-night-blue-300 text-sm mb-4 line-clamp-2">
-                      {wishlist.description || 'No description'}
-                    </p>
+                    {(wishlist.total_sats_goal > 0 || wishlist.total_sats_raised > 0) && (
+                      <div className="mb-6 p-5 bg-black/50 rounded-xl border border-gray-700">
+                        <div className="flex justify-between items-center mb-3">
+                          <span className="text-gray-400 text-sm font-bold uppercase tracking-wider">Progress</span>
+                          <span className="text-white font-bold">
+                            {wishlist.total_sats_raised.toLocaleString()} / {wishlist.total_sats_goal.toLocaleString()} sats
+                          </span>
+                        </div>
+                        <div className="w-full h-3 bg-gray-700 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
+                            style={{
+                              width: `${Math.min((wishlist.total_sats_raised / wishlist.total_sats_goal) * 100, 100)}%`,
+                            }}
+                          />
+                        </div>
+                      </div>
+                    )}
 
-                    <div className="flex gap-2">
+                    <div className="flex gap-3">
                       <Link href={`/wishlist/${wishlist.slug}`} className="flex-1">
-                        <Button variant="outline" className="w-full border-emerald-500/30 hover:border-emerald-500">
-                          <ExternalLink size={16} className="mr-2" />
-                          View
+                        <Button className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 font-bold text-lg py-4">
+                          <ExternalLink size={20} className="mr-2" />
+                          View Wishlist
                         </Button>
                       </Link>
                       <Button
-                        variant="ghost"
+                        variant="outline"
                         onClick={() => startEditingWishlist(wishlist)}
-                        className="text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10"
+                        className="border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-purple-400 hover:border-purple-500/50 px-5"
                       >
-                        <Edit size={16} />
+                        <Edit size={20} />
                       </Button>
                       <Button
-                        variant="ghost"
+                        variant="outline"
                         onClick={() => handleDeleteWishlist(wishlist.id)}
-                        className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                        className="border-gray-700 text-gray-300 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/50 px-5"
                       >
-                        <Trash2 size={16} />
+                        <Trash2 size={20} />
                       </Button>
                     </div>
                   </>
