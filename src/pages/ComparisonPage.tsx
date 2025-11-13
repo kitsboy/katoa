@@ -188,7 +188,7 @@ export function ComparisonPage() {
               <Globe size={40} className="text-white" strokeWidth={2.5} />
             </div>
             <h3 className="text-2xl font-bold text-white mb-4">195+ Countries</h3>
-            <p className="text-gray-300 leading-relaxed mb-6">
+            <p className="text-white leading-relaxed mb-6">
               No bank account? No problem. Bitcoin works everywhere, for everyone. No discrimination.
             </p>
             <div className="text-sand-tan-400 font-bold text-sm">KATOA: All countries, always 0%</div>
@@ -199,7 +199,7 @@ export function ComparisonPage() {
               <Shield size={40} className="text-white" strokeWidth={2.5} />
             </div>
             <h3 className="text-2xl font-bold text-white mb-4">True Privacy</h3>
-            <p className="text-gray-300 leading-relaxed mb-6">
+            <p className="text-white leading-relaxed mb-6">
               Zero-knowledge proofs. Encrypted messaging. Decentralized storage. Your data stays yours.
             </p>
             <div className="text-sand-tan-400 font-bold text-sm">KATOA: Zero-knowledge proofs</div>
@@ -210,7 +210,7 @@ export function ComparisonPage() {
               <Zap size={40} className="text-white" strokeWidth={2.5} />
             </div>
             <h3 className="text-2xl font-bold text-white mb-4">Instant Settlement</h3>
-            <p className="text-gray-300 leading-relaxed mb-6">
+            <p className="text-white leading-relaxed mb-6">
               Keep 100% of your earnings. Scale globally. Build your empire without platform taxes.
             </p>
             <div className="text-sand-tan-400 font-bold text-sm">KATOA: Instant Lightning Network</div>
