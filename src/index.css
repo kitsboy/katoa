@@ -1,35 +1,33 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --digital-lavender: #A78BFA;
+  --mint-green: #75C9B7;
+  --mocha-mousse: #A47864;
+  --soft-peach: #FFD6E0;
+  --cool-slate: #5E6472;
+  --cloud-white: #F7FBFC;
+}
+
 @layer base {
   body {
-    @apply bg-gradient-to-br from-gray-50 via-orange-50 to-amber-50;
-    @apply text-gray-900;
+    @apply bg-cloud-500 text-slate-600;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  }
-
-  body.dark-mode {
-    @apply bg-gradient-to-br from-slate-800 via-slate-700 to-slate-800;
-    @apply text-gray-100;
+    font-size: 1.08rem;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Space Grotesk', 'Inter', sans-serif;
-    font-weight: 700;
-    letter-spacing: -0.02em;
+    font-family: 'DM Serif Display', Georgia, serif;
+    @apply text-slate-800;
+    letter-spacing: -0.01em;
   }
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #f97316 #fef3c7;
-}
-
-body.dark-mode * {
-  scrollbar-color: #f97316 #1f2937;
+  scrollbar-color: #A78BFA #F7FBFC;
 }
 
 *::-webkit-scrollbar {
@@ -38,20 +36,16 @@ body.dark-mode * {
 }
 
 *::-webkit-scrollbar-track {
-  background: #fef3c7;
-}
-
-body.dark-mode *::-webkit-scrollbar-track {
-  background: #1f2937;
+  background: #F7FBFC;
 }
 
 *::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
+  background: linear-gradient(135deg, #A78BFA 0%, #75C9B7 100%);
   border-radius: 4px;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
+  background: linear-gradient(135deg, #8B5CF6 0%, #5DA89C 100%);
 }
 
 @keyframes shimmer {
@@ -68,7 +62,7 @@ body.dark-mode *::-webkit-scrollbar-track {
   background: linear-gradient(
     to right,
     transparent 0%,
-    rgba(249, 115, 22, 0.1) 50%,
+    rgba(167, 139, 250, 0.1) 50%,
     transparent 100%
   );
   background-size: 1000px 100%;
@@ -85,10 +79,10 @@ body.dark-mode *::-webkit-scrollbar-track {
 
 @keyframes glow {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 0 20px rgba(167, 139, 250, 0.3);
   }
   50% {
-    box-shadow: 0 0 40px rgba(16, 185, 129, 0.6);
+    box-shadow: 0 0 40px rgba(167, 139, 250, 0.6);
   }
 }
 
@@ -162,15 +156,15 @@ body.dark-mode *::-webkit-scrollbar-track {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.text-gradient-emerald {
-  background: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+.text-gradient-lavender {
+  background: linear-gradient(135deg, #A78BFA 0%, #75C9B7 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-.text-gradient-orange {
-  background: linear-gradient(135deg, #f97316 0%, #fbbf24 100%);
+.text-gradient-peach {
+  background: linear-gradient(135deg, #FFD6E0 0%, #A47864 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

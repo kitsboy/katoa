@@ -3,6 +3,10 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      fontFamily: {
+        'sans': ['Inter', 'system-ui', 'sans-serif'],
+        'serif': ['DM Serif Display', 'Georgia', 'serif'],
+      },
       colors: {
         'lavender': {
           50: '#F5F3FF',
