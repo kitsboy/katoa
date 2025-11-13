@@ -224,7 +224,6 @@ export function SettingsPage() {
         .getPublicUrl(filePath);
 
       setProfileForm({ ...profileForm, avatar_url: publicUrl });
-      alert('Avatar uploaded! Click "Save Profile" to update your profile.');
     } catch (error: any) {
       console.error('Error uploading avatar:', error);
       alert(`Failed to upload avatar: ${error.message || 'Unknown error'}`);
@@ -257,7 +256,6 @@ export function SettingsPage() {
         .getPublicUrl(filePath);
 
       setProfileForm({ ...profileForm, banner_url: publicUrl, banner_video_url: '' });
-      alert('Banner uploaded! Click "Save Profile" to update your profile.');
     } catch (error: any) {
       console.error('Error uploading banner:', error);
       alert(`Failed to upload banner: ${error.message || 'Unknown error'}`);
@@ -356,8 +354,8 @@ export function SettingsPage() {
         console.error('Update profile error details:', error);
         throw error;
       }
-      alert('Profile updated successfully!');
       setShowProfileModal(false);
+      window.location.reload();
     } catch (error: any) {
       console.error('Error updating profile:', error);
       alert(`Failed to update profile: ${error.message || 'Unknown error'}`);
