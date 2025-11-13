@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,11 +8,18 @@
   body {
     @apply bg-gradient-to-br from-gray-50 via-orange-50 to-amber-50;
     @apply text-gray-900;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
   body.dark-mode {
     @apply bg-gradient-to-br from-slate-800 via-slate-700 to-slate-800;
     @apply text-gray-100;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
   }
 }
 
