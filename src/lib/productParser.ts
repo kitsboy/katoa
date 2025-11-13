@@ -15,16 +15,17 @@ export async function parseProductUrl(url: string): Promise<ParsedProduct | null
     const urlObj = new URL(url);
     const hostname = urlObj.hostname.toLowerCase();
 
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-      }
-    });
+    const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
 
-    const html = await response.text();
+    const response = await fetch(proxyUrl);
+    const data = await response.json();
+
+    if (!data.contents) {
+      throw new Error('Failed to fetch page content');
+    }
+
     const parser = new DOMParser();
-    const doc = parser.parseFromString(html, 'text/html');
+    const doc = parser.parseFromString(data.contents, 'text/html');
 
     let title = '';
     let description = '';

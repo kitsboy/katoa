@@ -55,11 +55,14 @@ export function DashboardPage() {
   const [itemFormData, setItemFormData] = useState({
     title: '',
     description: '',
+    price_usd: '',
     price_sats: '',
     image_url: '',
     product_url: '',
     merchant_link: '',
   });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [stats, setStats] = useState({
     totalRaised: 0,
@@ -250,7 +253,8 @@ export function DashboardPage() {
       if (error) throw error;
 
       await loadItems(selectedWishlist!.id);
-      setItemFormData({ title: '', description: '', price_sats: '', image_url: '', product_url: '', merchant_link: '' });
+      setItemFormData({ title: '', description: '', price_usd: '', price_sats: '', image_url: '', product_url: '', merchant_link: '' });
+      setImageFile(null);
     } catch (error) {
       console.error('Error adding item:', error);
     } finally {
@@ -311,9 +315,12 @@ export function DashboardPage() {
 
   async function handleEditItem(item: WishlistItem) {
     setEditingItem(item);
+    const btcPrice = await getBitcoinPrice();
+    const usd = btcPrice > 0 ? ((item.price_sats / 100_000_000) * btcPrice).toFixed(2) : '';
     setItemFormData({
       title: item.title,
       description: item.description,
+      price_usd: usd,
       price_sats: item.price_sats.toString(),
       image_url: (item as any).image_url || '',
       product_url: (item as any).product_url || '',
@@ -343,7 +350,8 @@ export function DashboardPage() {
 
       await loadItems(selectedWishlist!.id);
       setEditingItem(null);
-      setItemFormData({ title: '', description: '', price_sats: '', image_url: '', product_url: '', merchant_link: '' });
+      setItemFormData({ title: '', description: '', price_usd: '', price_sats: '', image_url: '', product_url: '', merchant_link: '' });
+      setImageFile(null);
     } catch (error) {
       console.error('Error updating item:', error);
       alert('Failed to update item');
@@ -365,6 +373,7 @@ export function DashboardPage() {
         setItemFormData({
           title: product.title || '',
           description: product.description || '',
+          price_usd: product.price_usd?.toString() || '',
           price_sats: product.price_sats?.toString() || '',
           image_url: product.image_url || '',
           product_url: product.product_url || '',
@@ -377,9 +386,61 @@ export function DashboardPage() {
       }
     } catch (error) {
       console.error('Error parsing URL:', error);
-      alert('Failed to parse URL');
+      alert('Failed to parse URL. Try entering the information manually.');
     } finally {
       setParsingUrl(false);
+    }
+  }
+
+  async function handleImageUpload(file: File) {
+    if (!selectedWishlist) return;
+
+    setUploadingImage(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${selectedWishlist.id}/${Date.now()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('media')
+        .upload(fileName, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data } = supabase.storage
+        .from('media')
+        .getPublicUrl(fileName);
+
+      setItemFormData({ ...itemFormData, image_url: data.publicUrl });
+      setImageFile(null);
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      alert('Failed to upload image');
+    } finally {
+      setUploadingImage(false);
+    }
+  }
+
+  async function handlePriceChange(value: string, field: 'usd' | 'sats') {
+    const numValue = parseFloat(value) || 0;
+
+    if (field === 'usd') {
+      setItemFormData({ ...itemFormData, price_usd: value });
+      if (numValue > 0) {
+        const btcPrice = await getBitcoinPrice();
+        if (btcPrice > 0) {
+          const sats = usdToSats(numValue, btcPrice);
+          setItemFormData(prev => ({ ...prev, price_usd: value, price_sats: sats.toString() }));
+        }
+      }
+    } else {
+      setItemFormData({ ...itemFormData, price_sats: value });
+      if (numValue > 0) {
+        const btcPrice = await getBitcoinPrice();
+        if (btcPrice > 0) {
+          const usd = (numValue / 100_000_000) * btcPrice;
+          setItemFormData(prev => ({ ...prev, price_sats: value, price_usd: usd.toFixed(2) }));
+        }
+      }
     }
   }
 
@@ -855,20 +916,35 @@ export function DashboardPage() {
 
           <form onSubmit={editingItem ? handleUpdateItem : handleAddItem} className="space-y-4 p-6 bg-gray-800/50 rounded-lg">
             <h3 className="text-lg font-bold text-white">{editingItem ? 'Edit Item' : 'Add New Item'}</h3>
+            <Input
+              label="Title"
+              value={itemFormData.title}
+              onChange={(e) => setItemFormData({ ...itemFormData, title: e.target.value })}
+              required
+            />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Input
-                label="Title"
-                value={itemFormData.title}
-                onChange={(e) => setItemFormData({ ...itemFormData, title: e.target.value })}
-                required
-              />
-              <Input
-                label="Price (sats)"
-                type="number"
-                value={itemFormData.price_sats}
-                onChange={(e) => setItemFormData({ ...itemFormData, price_sats: e.target.value })}
-                required
-              />
+              <div>
+                <Input
+                  label="Price (USD)"
+                  type="number"
+                  step="0.01"
+                  value={itemFormData.price_usd}
+                  onChange={(e) => handlePriceChange(e.target.value, 'usd')}
+                  placeholder="99.99"
+                />
+                <p className="text-xs text-gray-500 mt-1">Enter price in USD or SATS</p>
+              </div>
+              <div>
+                <Input
+                  label="Price (SATS)"
+                  type="number"
+                  value={itemFormData.price_sats}
+                  onChange={(e) => handlePriceChange(e.target.value, 'sats')}
+                  placeholder="100000"
+                  required
+                />
+                <p className="text-xs text-gray-500 mt-1">Will auto-convert between USD/SATS</p>
+              </div>
             </div>
             <Input
               label="Description"
@@ -881,16 +957,72 @@ export function DashboardPage() {
               onChange={(e) => setItemFormData({ ...itemFormData, product_url: e.target.value })}
               placeholder="https://amazon.com/product/..."
             />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Input
-                label="Image URL (optional)"
-                value={itemFormData.image_url}
-                onChange={(e) => setItemFormData({ ...itemFormData, image_url: e.target.value })}
-              />
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Product Image
+                </label>
+                <div className="space-y-3">
+                  {itemFormData.image_url && (
+                    <div className="relative">
+                      <img
+                        src={itemFormData.image_url}
+                        alt="Product preview"
+                        className="w-32 h-32 object-cover rounded-lg border-2 border-gray-700"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setItemFormData({ ...itemFormData, image_url: '' })}
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  )}
+                  <Input
+                    label="Image URL (paste link)"
+                    value={itemFormData.image_url}
+                    onChange={(e) => setItemFormData({ ...itemFormData, image_url: e.target.value })}
+                    placeholder="https://example.com/image.jpg"
+                  />
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1 border-t border-gray-700"></div>
+                    <span className="text-xs text-gray-500">OR</span>
+                    <div className="flex-1 border-t border-gray-700"></div>
+                  </div>
+                  <div>
+                    <label className="block w-full">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            setImageFile(file);
+                            handleImageUpload(file);
+                          }
+                        }}
+                        className="hidden"
+                      />
+                      <div className="w-full px-4 py-3 bg-gray-800 border-2 border-dashed border-gray-700 rounded-lg text-center cursor-pointer hover:border-orange-500 hover:bg-gray-800/50 transition-colors">
+                        {uploadingImage ? (
+                          <p className="text-gray-400">Uploading image...</p>
+                        ) : (
+                          <>
+                            <p className="text-gray-400">Click to upload image from computer</p>
+                            <p className="text-xs text-gray-600 mt-1">PNG, JPG, GIF up to 5MB</p>
+                          </>
+                        )}
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              </div>
               <Input
                 label="Merchant Link (optional)"
                 value={itemFormData.merchant_link}
                 onChange={(e) => setItemFormData({ ...itemFormData, merchant_link: e.target.value })}
+                placeholder="https://store.com/buy"
               />
             </div>
             <div className="flex gap-2">
@@ -913,7 +1045,8 @@ export function DashboardPage() {
                   variant="outline"
                   onClick={() => {
                     setEditingItem(null);
-                    setItemFormData({ title: '', description: '', price_sats: '', image_url: '', product_url: '', merchant_link: '' });
+                    setItemFormData({ title: '', description: '', price_usd: '', price_sats: '', image_url: '', product_url: '', merchant_link: '' });
+                    setImageFile(null);
                   }}
                 >
                   Cancel
