@@ -372,130 +372,156 @@ export function ProjectPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-black">
-      <input
-        type="file"
-        id="project-background-upload"
-        accept="image/*"
-        onChange={handleBackgroundUpload}
-        className="hidden"
-      />
+      <div className="relative">
+        <input
+          type="file"
+          id="project-background-upload"
+          accept="image/*"
+          onChange={handleBackgroundUpload}
+          className="hidden"
+        />
 
-      <button
-        type="button"
-        onClick={() => document.getElementById('project-background-upload')?.click()}
-        className="w-full relative group/banner cursor-pointer"
-        disabled={processing}
-      >
-        {project.background_url ? (
-          <div
-            className="h-64 bg-cover bg-center relative"
-            style={{ backgroundImage: `url(${project.background_url})` }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-night-blue-500" />
-            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/banner:opacity-100 transition-opacity flex items-center justify-center">
+        <button
+          type="button"
+          onClick={() => document.getElementById('project-background-upload')?.click()}
+          className="w-full relative group/banner cursor-pointer"
+          disabled={processing}
+          title="Click to upload or change banner image"
+        >
+          {project.background_url ? (
+            <div
+              className="h-96 bg-cover bg-center relative"
+              style={{ backgroundImage: `url(${project.background_url})` }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black" />
+              <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/banner:opacity-100 transition-opacity flex items-center justify-center">
+                <div className="text-center">
+                  <Camera size={64} className="mx-auto text-white mb-3" />
+                  <p className="text-white text-xl font-bold">Click to change banner</p>
+                  <p className="text-gray-300 text-sm mt-1">1500x400px recommended</p>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="h-96 bg-gradient-to-br from-gray-800 to-gray-900 relative flex items-center justify-center hover:bg-gradient-to-br hover:from-gray-700 hover:to-gray-800 transition-colors">
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-70" />
+              <div className="text-center relative z-10">
+                <Upload size={80} className="mx-auto text-gray-600 group-hover/banner:text-orange-500 transition-colors mb-3" />
+                <p className="text-gray-500 text-xl font-bold group-hover/banner:text-white transition-colors">Click to upload banner</p>
+                <p className="text-gray-600 text-sm mt-1">1500x400px recommended</p>
+              </div>
+            </div>
+          )}
+          {processing && (
+            <div className="absolute inset-0 bg-black/80 flex items-center justify-center z-50">
               <div className="text-center">
-                <Camera size={64} className="mx-auto text-white mb-3" />
-                <p className="text-white text-xl font-bold">Click to change banner</p>
-                <p className="text-gray-300 text-sm mt-1">1500x400px recommended</p>
+                <div className="animate-spin rounded-full h-16 w-16 border-4 border-orange-500 border-t-transparent mx-auto mb-3"></div>
+                <p className="text-white font-bold">Uploading...</p>
+              </div>
+            </div>
+          )}
+        </button>
+
+        <div className="absolute bottom-0 left-0 right-0 z-10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center text-white/80 hover:text-white mb-6 group transition-colors backdrop-blur-sm bg-black/30 px-4 py-2 rounded-lg"
+              title="Return to your projects dashboard"
+            >
+              <ArrowLeft size={20} className="mr-2 group-hover:-translate-x-1 transition-transform" />
+              <span className="font-bold">Back to Dashboard</span>
+            </Link>
+
+            <div className="flex items-end justify-between">
+              <div className="flex-1">
+                {editing ? (
+                  <input
+                    type="text"
+                    value={formData.title}
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    className="text-5xl font-black text-white bg-black/50 backdrop-blur-md border-b-4 border-orange-500 focus:outline-none focus:border-orange-400 w-full mb-4 px-4 py-2 rounded-t-lg"
+                    placeholder="Project Title"
+                    title="Edit your project title"
+                  />
+                ) : (
+                  <h1
+                    className="text-6xl font-black text-white mb-4 drop-shadow-2xl"
+                    style={{ textShadow: '0 4px 12px rgba(0,0,0,0.8), 0 0 40px rgba(0,0,0,0.5)' }}
+                  >
+                    {project.title}
+                  </h1>
+                )}
+                {editing ? (
+                  <textarea
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    className="w-full px-5 py-4 bg-black/50 backdrop-blur-md border-2 border-gray-700 rounded-xl text-white text-lg placeholder-gray-400 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
+                    rows={3}
+                    placeholder="Describe your project and what you're building..."
+                    title="Edit your project description"
+                  />
+                ) : (
+                  <p
+                    className="text-white/90 text-xl leading-relaxed max-w-3xl backdrop-blur-sm bg-black/20 px-4 py-2 rounded-lg"
+                    style={{ textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}
+                  >
+                    {project.description || 'Add a description to tell people about your project'}
+                  </p>
+                )}
+              </div>
+
+              <div className="flex flex-col gap-3 ml-6">
+                <div title={`This project is ${project.visibility}`}>
+                  {getVisibilityBadge(project.visibility)}
+                </div>
+                {editing ? (
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={handleUpdateProject}
+                      className="bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 font-bold shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+                      disabled={processing}
+                      title="Save your changes"
+                    >
+                      <Save size={18} className="mr-2" />
+                      {processing ? 'Saving...' : 'Save'}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setEditing(false);
+                        setFormData({
+                          title: project.title,
+                          description: project.description || '',
+                          wallet_address: project.wallet_address || '',
+                          lightning_address: project.lightning_address || '',
+                          nostr_pubkey: project.nostr_pubkey || '',
+                          visibility: project.visibility,
+                        });
+                      }}
+                      className="border-gray-700 text-gray-300 hover:bg-gray-800 backdrop-blur-sm bg-black/30"
+                      title="Cancel editing"
+                    >
+                      <X size={18} />
+                    </Button>
+                  </div>
+                ) : (
+                  <Button
+                    onClick={() => setEditing(true)}
+                    className="bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 font-bold shadow-[0_0_20px_rgba(255,135,0,0.3)]"
+                    title="Edit project details and settings"
+                  >
+                    <Edit size={18} className="mr-2" />
+                    Edit Project
+                  </Button>
+                )}
               </div>
             </div>
           </div>
-        ) : (
-          <div className="h-64 bg-gradient-to-br from-gray-800 to-gray-900 relative flex items-center justify-center hover:bg-gradient-to-br hover:from-gray-700 hover:to-gray-800 transition-colors">
-            <div className="text-center">
-              <Upload size={80} className="mx-auto text-gray-600 group-hover/banner:text-orange-500 transition-colors mb-3" />
-              <p className="text-gray-500 text-xl font-bold group-hover/banner:text-white transition-colors">Click to upload banner</p>
-              <p className="text-gray-600 text-sm mt-1">1500x400px recommended</p>
-            </div>
-          </div>
-        )}
-        {processing && (
-          <div className="absolute inset-0 bg-black/80 flex items-center justify-center">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-16 w-16 border-4 border-orange-500 border-t-transparent mx-auto mb-3"></div>
-              <p className="text-white font-bold">Uploading...</p>
-            </div>
-          </div>
-        )}
-      </button>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
-        <Link href="/dashboard" className="inline-flex items-center text-gray-400 hover:text-white mb-8 group transition-colors">
-          <ArrowLeft size={20} className="mr-2 group-hover:-translate-x-1 transition-transform" />
-          <span className="font-bold">Back to Dashboard</span>
-        </Link>
-
-        <div className="mb-8">
-          <div className="flex items-start justify-between mb-6">
-            <div className="flex-1">
-              {editing ? (
-                <input
-                  type="text"
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="text-5xl font-black text-white bg-transparent border-b-4 border-orange-500 focus:outline-none focus:border-orange-400 w-full mb-4"
-                  placeholder="Project Title"
-                />
-              ) : (
-                <h1 className="text-5xl font-black text-white mb-4 bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
-                  {project.title}
-                </h1>
-              )}
-              {editing ? (
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-5 py-4 bg-gray-800/50 border-2 border-gray-700 rounded-xl text-white text-lg placeholder-gray-500 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
-                  rows={3}
-                  placeholder="Describe your project and what you're building..."
-                />
-              ) : (
-                <p className="text-gray-300 text-lg leading-relaxed">{project.description || 'Add a description to tell people about your project'}</p>
-              )}
-            </div>
-
-            <div className="flex flex-col gap-3 ml-6">
-              {getVisibilityBadge(project.visibility)}
-              {editing ? (
-                <div className="flex gap-2">
-                  <Button
-                    onClick={handleUpdateProject}
-                    className="bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 font-bold shadow-[0_0_20px_rgba(16,185,129,0.3)]"
-                    disabled={processing}
-                  >
-                    <Save size={18} className="mr-2" />
-                    {processing ? 'Saving...' : 'Save'}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setEditing(false);
-                      setFormData({
-                        title: project.title,
-                        description: project.description || '',
-                        wallet_address: project.wallet_address || '',
-                        lightning_address: project.lightning_address || '',
-                        nostr_pubkey: project.nostr_pubkey || '',
-                        visibility: project.visibility,
-                      });
-                    }}
-                    className="border-gray-700 text-gray-300 hover:bg-gray-800"
-                  >
-                    <X size={18} />
-                  </Button>
-                </div>
-              ) : (
-                <Button
-                  onClick={() => setEditing(true)}
-                  className="bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 font-bold shadow-[0_0_20px_rgba(255,135,0,0.3)]"
-                >
-                  <Edit size={18} className="mr-2" />
-                  Edit Project
-                </Button>
-              )}
-            </div>
-          </div>
         </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 
         {editing && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
@@ -546,17 +572,17 @@ export function ProjectPage() {
           </div>
         )}
 
-        <Card className="mb-12 bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 p-8">
+        <Card className="mb-12 bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 p-8 group/payment hover:border-emerald-500/50 transition-all duration-300" title="Configure where you receive Bitcoin payments">
           <div className="flex items-center gap-3 mb-6">
-            <div className="p-3 bg-emerald-500/20 rounded-xl">
-              <Wallet size={28} className="text-emerald-500" />
+            <div className="p-3 bg-emerald-500/20 rounded-xl group-hover/payment:bg-emerald-500/30 transition-colors">
+              <Wallet size={28} className="text-emerald-500 group-hover/payment:scale-110 transition-transform" />
             </div>
             <div>
-              <h2 className="text-3xl font-black text-white">Payment Methods</h2>
+              <h2 className="text-3xl font-black text-white group-hover/payment:text-emerald-400 transition-colors">Payment Methods</h2>
               <p className="text-gray-400 text-sm">Where supporters send Bitcoin contributions</p>
             </div>
           </div>
-          <div className="p-5 bg-blue-500/10 border-2 border-blue-500/30 rounded-xl mb-6">
+          <div className="p-5 bg-blue-500/10 border-2 border-blue-500/30 rounded-xl mb-6 hover:border-blue-500/50 transition-colors">
             <p className="text-blue-400 font-bold flex items-center gap-2 mb-2">
               <Wallet size={18} />
               Why Payment Methods Matter
@@ -570,24 +596,25 @@ export function ProjectPage() {
 
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="p-3 bg-purple-500/20 rounded-xl">
-                <Gift size={28} className="text-purple-500" />
+            <div className="flex items-center gap-3 group/wishlist-header">
+              <div className="p-3 bg-purple-500/20 rounded-xl group-hover/wishlist-header:bg-purple-500/30 transition-colors">
+                <Gift size={28} className="text-purple-500 group-hover/wishlist-header:scale-110 transition-transform" />
               </div>
               <div>
-                <h2 className="text-3xl font-black text-white">Wishlists</h2>
+                <h2 className="text-3xl font-black text-white group-hover/wishlist-header:text-purple-400 transition-colors">Wishlists</h2>
                 <p className="text-gray-400">Items and goals within this project</p>
               </div>
             </div>
             <Button
               onClick={() => setShowCreateWishlist(true)}
               className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 font-black text-lg px-6 py-3 shadow-[0_0_30px_rgba(168,85,247,0.3)]"
+              title="Create a new wishlist to organize items or goals"
             >
               <Plus size={22} className="mr-2" />
               Create Wishlist
             </Button>
           </div>
-          <div className="p-5 bg-purple-500/10 border-2 border-purple-500/30 rounded-xl mb-8">
+          <div className="p-5 bg-purple-500/10 border-2 border-purple-500/30 rounded-xl mb-8 hover:border-purple-500/50 transition-colors" title="Learn about wishlists">
             <p className="text-purple-400 font-bold flex items-center gap-2 mb-2">
               <Gift size={18} />
               About Wishlists
