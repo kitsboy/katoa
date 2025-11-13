@@ -11,7 +11,7 @@ import {
   Settings as SettingsIcon, Save, Upload, Camera, Zap, Check, AlertCircle, LayoutDashboard
 } from 'lucide-react';
 
-type Tab = 'profile' | 'wallet' | 'dashboard' | 'shipping' | 'appearance' | 'advanced';
+type Tab = 'profile' | 'wallet' | 'dashboard' | 'shipping' | 'advanced';
 
 export function SettingsPage() {
   const { user, profile, updateProfile } = useAuth();
@@ -132,7 +132,6 @@ export function SettingsPage() {
     { id: 'wallet' as Tab, label: 'Wallet', icon: Wallet, color: 'from-emerald-500 to-cyan-600' },
     { id: 'dashboard' as Tab, label: 'Dashboard', icon: LayoutDashboard, color: 'from-cyan-500 to-blue-600' },
     { id: 'shipping' as Tab, label: 'Shipping', icon: MapPin, color: 'from-purple-500 to-pink-600' },
-    { id: 'appearance' as Tab, label: 'Appearance', icon: ImageIcon, color: 'from-blue-500 to-indigo-600' },
     { id: 'advanced' as Tab, label: 'Advanced', icon: SettingsIcon, color: 'from-gray-500 to-gray-700' },
   ];
 
@@ -191,11 +190,64 @@ export function SettingsPage() {
                   </div>
                   <div>
                     <h2 className="text-3xl font-black text-white">Profile Information</h2>
-                    <p className="text-gray-400">Update your public profile details</p>
+                    <p className="text-gray-400">Update your public profile and appearance</p>
                   </div>
                 </div>
 
                 <form onSubmit={handleSaveProfile} className="space-y-8">
+
+                  {/* Live Profile Preview */}
+                  <div className="p-1 bg-gradient-to-r from-orange-500 to-amber-600 rounded-2xl">
+                    <div className="bg-black rounded-xl overflow-hidden">
+                      <div className="relative">
+                        {profileForm.banner_url ? (
+                          <div
+                            className="w-full h-64 bg-cover bg-center"
+                            style={{ backgroundImage: `url(${profileForm.banner_url})` }}
+                          />
+                        ) : (
+                          <div className="w-full h-64 bg-gradient-to-r from-gray-800 to-gray-900 flex items-center justify-center">
+                            <Camera size={64} className="text-gray-700" />
+                          </div>
+                        )}
+                        <div className="absolute -bottom-16 left-8">
+                          {profileForm.avatar_url ? (
+                            <img
+                              src={profileForm.avatar_url}
+                              alt="Avatar Preview"
+                              className="w-32 h-32 rounded-full object-cover border-4 border-black shadow-2xl"
+                            />
+                          ) : (
+                            <div className="w-32 h-32 rounded-full bg-gradient-to-r from-orange-500 to-amber-600 flex items-center justify-center text-white text-5xl font-black border-4 border-black shadow-2xl">
+                              {profileForm.username?.[0]?.toUpperCase() || '?'}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="pt-20 px-8 pb-6">
+                        <h3 className="text-2xl font-black text-white mb-2">
+                          {profileForm.username || 'Your Username'}
+                        </h3>
+                        {profileForm.bio && (
+                          <p className="text-gray-400 mb-4 leading-relaxed">
+                            {profileForm.bio}
+                          </p>
+                        )}
+                        {profileForm.lightning_address && (
+                          <div className="flex items-center gap-2 text-amber-500">
+                            <Zap size={16} />
+                            <span className="text-sm font-mono">{profileForm.lightning_address}</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="text-center py-4 bg-orange-500/10 rounded-xl border border-orange-500/30">
+                    <p className="text-orange-400 font-bold text-sm">
+                      👆 Live Preview - See your profile as others will see it
+                    </p>
+                  </div>
                   <div className="p-6 bg-black rounded-xl border border-gray-700">
                     <label className="block text-sm font-bold text-gray-200 mb-4 uppercase tracking-wider">
                       Profile Picture
@@ -316,6 +368,23 @@ export function SettingsPage() {
                       placeholder="npub1..."
                       className="bg-black border-gray-700 text-white font-mono"
                     />
+
+                    <div className="p-6 bg-black rounded-xl border border-gray-700">
+                      <label className="block text-sm font-bold text-gray-200 mb-4 uppercase tracking-wider">
+                        Theme Accent Color
+                      </label>
+                      <div className="flex items-center gap-4">
+                        <input
+                          type="color"
+                          className="w-20 h-20 rounded-xl cursor-pointer border-4 border-gray-700 hover:border-orange-500 transition-colors"
+                          defaultValue="#ff8700"
+                        />
+                        <div>
+                          <p className="text-white font-bold mb-1">Choose Your Color</p>
+                          <p className="text-sm text-gray-500">This color will accent your profile</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   <div className="pt-6 border-t border-gray-700">
@@ -447,78 +516,6 @@ export function SettingsPage() {
                     <MapPin size={20} className="mr-2" />
                     Add Address
                   </Button>
-                </div>
-              </Card>
-            )}
-
-            {activeTab === 'appearance' && (
-              <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 p-8">
-                <div className="flex items-center gap-3 mb-8">
-                  <div className="p-3 bg-blue-500/20 rounded-xl">
-                    <ImageIcon size={28} className="text-blue-500" />
-                  </div>
-                  <div>
-                    <h2 className="text-3xl font-black text-white">Appearance</h2>
-                    <p className="text-gray-400">Customize your profile's visual style</p>
-                  </div>
-                </div>
-
-                <div className="space-y-8">
-                  <div className="p-6 bg-black rounded-xl border border-gray-700">
-                    <label className="block text-sm font-bold text-gray-200 mb-4 uppercase tracking-wider">
-                      Profile Banner
-                    </label>
-                    {profileForm.banner_url ? (
-                      <div className="mb-6 relative group">
-                        <img
-                          src={profileForm.banner_url}
-                          alt="Banner"
-                          className="w-full h-64 rounded-xl object-cover border-2 border-gray-700 shadow-lg"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-6">
-                          <Button
-                            onClick={() => setProfileForm({ ...profileForm, banner_url: '' })}
-                            variant="outline"
-                            className="border-red-500 text-red-400 hover:bg-red-500/10"
-                          >
-                            Remove Banner
-                          </Button>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="mb-6 h-64 rounded-xl bg-gradient-to-r from-gray-800 to-gray-900 border-2 border-dashed border-gray-700 flex items-center justify-center">
-                        <div className="text-center">
-                          <Camera size={48} className="mx-auto text-gray-600 mb-3" />
-                          <p className="text-gray-500 font-medium">No banner uploaded</p>
-                        </div>
-                      </div>
-                    )}
-                    <MediaUpload onUpload={handleBannerUpload} maxFiles={1} />
-                    <p className="text-xs text-gray-500 mt-3">Recommended: 1500x500px. JPG or PNG. Max 10MB.</p>
-                    {processing && (
-                      <div className="mt-4 p-3 bg-blue-500/20 border border-blue-500/50 rounded-lg flex items-center gap-2">
-                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-blue-500 border-t-transparent"></div>
-                        <p className="text-blue-400 text-sm font-medium">Uploading banner...</p>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="p-6 bg-black rounded-xl border border-gray-700">
-                    <label className="block text-sm font-bold text-gray-200 mb-4 uppercase tracking-wider">
-                      Theme Accent Color
-                    </label>
-                    <div className="flex items-center gap-4">
-                      <input
-                        type="color"
-                        className="w-20 h-20 rounded-xl cursor-pointer border-4 border-gray-700 hover:border-blue-500 transition-colors"
-                        defaultValue="#ff8700"
-                      />
-                      <div>
-                        <p className="text-white font-bold mb-1">Choose Your Color</p>
-                        <p className="text-sm text-gray-500">This color will accent your profile</p>
-                      </div>
-                    </div>
-                  </div>
                 </div>
               </Card>
             )}
