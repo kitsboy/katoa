@@ -146,8 +146,8 @@ export function ComparisonPage() {
                   <thead>
                     <tr className="border-b border-night-blue-500">
                       <th className="text-left text-white font-semibold pb-4 pr-4">Feature</th>
-                      <th className="text-center text-emerald-400 font-bold pb-4 px-2">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/20 rounded-lg">
+                      <th className="text-center text-emerald-600 font-bold pb-4 px-2">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-600/20 rounded-lg">
                           KATOA
                         </div>
                       </th>
