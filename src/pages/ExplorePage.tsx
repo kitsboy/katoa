@@ -120,9 +120,10 @@ export function ExplorePage() {
           city,
           latitude,
           longitude,
+          visibility,
           creator:profiles!wishlists_creator_id_fkey(username, avatar_url)
         `)
-        .eq('is_public', true)
+        .eq('visibility', 'public')
         .order('created_at', { ascending: false });
 
       if (error) throw error;

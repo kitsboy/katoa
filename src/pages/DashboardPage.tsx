@@ -50,6 +50,7 @@ export function DashboardPage() {
     slug: '',
     total_sats_goal: '',
     wallet_address_id: '',
+    visibility: 'draft' as 'public' | 'private' | 'draft',
   });
   const [walletAddresses, setWalletAddresses] = useState<any[]>([]);
   const [itemFormData, setItemFormData] = useState({
@@ -159,7 +160,7 @@ export function DashboardPage() {
 
       await loadWishlists();
       setShowCreateModal(false);
-      setFormData({ title: '', description: '', slug: '', total_sats_goal: '', wallet_address_id: '' });
+      setFormData({ title: '', description: '', slug: '', total_sats_goal: '', wallet_address_id: '', visibility: 'draft' });
     } catch (error) {
       console.error('Error creating wishlist:', error);
     } finally {
@@ -280,6 +281,7 @@ export function DashboardPage() {
       slug: wishlist.slug,
       total_sats_goal: wishlist.total_sats_goal.toString(),
       wallet_address_id: '',
+      visibility: (wishlist as any).visibility || 'public',
     });
     setShowEditModal(true);
   }
@@ -297,6 +299,7 @@ export function DashboardPage() {
           description: formData.description,
           slug: formData.slug,
           total_sats_goal: parseInt(formData.total_sats_goal) || 0,
+          visibility: formData.visibility,
         })
         .eq('id', selectedWishlist.id);
 
@@ -304,7 +307,7 @@ export function DashboardPage() {
 
       setShowEditModal(false);
       await loadWishlists();
-      setFormData({ title: '', description: '', slug: '', total_sats_goal: '', wallet_address_id: '' });
+      setFormData({ title: '', description: '', slug: '', total_sats_goal: '', wallet_address_id: '', visibility: 'draft' });
     } catch (error) {
       console.error('Error updating wishlist:', error);
       alert('Failed to update wishlist');
@@ -684,13 +687,31 @@ export function DashboardPage() {
                             <p className="text-slate-400 leading-relaxed">{wishlist.description}</p>
                           </div>
                           <div className="flex flex-col gap-2">
-                            <span className={`px-3 py-1.5 rounded-full text-xs font-bold ${
-                              wishlist.is_public
-                                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                                : 'bg-slate-700 text-slate-400 border border-slate-600'
-                            }`}>
-                              {wishlist.is_public ? '👁️ Public' : '🔒 Private'}
-                            </span>
+                            {(() => {
+                              const visibility = (wishlist as any).visibility || 'public';
+                              if (visibility === 'public') {
+                                return (
+                                  <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
+                                    <Globe size={12} />
+                                    Public
+                                  </span>
+                                );
+                              } else if (visibility === 'private') {
+                                return (
+                                  <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30 flex items-center gap-1">
+                                    <Link size={12} />
+                                    Private
+                                  </span>
+                                );
+                              } else {
+                                return (
+                                  <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-orange-500/20 text-orange-400 border border-orange-500/30 flex items-center gap-1">
+                                    <Edit size={12} />
+                                    Draft
+                                  </span>
+                                );
+                              }
+                            })()}
                             {progress >= 100 && (
                               <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">
                                 ✨ Funded
@@ -849,7 +870,7 @@ export function DashboardPage() {
         onClose={() => {
           setShowEditModal(false);
           setSelectedWishlist(null);
-          setFormData({ title: '', description: '', slug: '', total_sats_goal: '', wallet_address_id: '' });
+          setFormData({ title: '', description: '', slug: '', total_sats_goal: '', wallet_address_id: '', visibility: 'draft' });
         }}
         title="Edit Wishlist"
       >
@@ -883,6 +904,62 @@ export function DashboardPage() {
             onChange={(e) => setFormData({ ...formData, total_sats_goal: e.target.value })}
             placeholder="1000000"
           />
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-3">Visibility</label>
+            <div className="space-y-3">
+              <label className="flex items-start gap-3 p-4 bg-gray-800/50 rounded-lg border-2 border-gray-700 cursor-pointer hover:border-emerald-500 transition-colors">
+                <input
+                  type="radio"
+                  name="visibility"
+                  value="public"
+                  checked={formData.visibility === 'public'}
+                  onChange={(e) => setFormData({ ...formData, visibility: e.target.value as any })}
+                  className="mt-1 text-emerald-500 focus:ring-emerald-500"
+                />
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <Globe size={18} className="text-emerald-500" />
+                    <span className="font-semibold text-white">Public</span>
+                  </div>
+                  <p className="text-sm text-gray-400 mt-1">Visible to everyone and appears in explore page</p>
+                </div>
+              </label>
+              <label className="flex items-start gap-3 p-4 bg-gray-800/50 rounded-lg border-2 border-gray-700 cursor-pointer hover:border-blue-500 transition-colors">
+                <input
+                  type="radio"
+                  name="visibility"
+                  value="private"
+                  checked={formData.visibility === 'private'}
+                  onChange={(e) => setFormData({ ...formData, visibility: e.target.value as any })}
+                  className="mt-1 text-blue-500 focus:ring-blue-500"
+                />
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <Link size={18} className="text-blue-500" />
+                    <span className="font-semibold text-white">Private</span>
+                  </div>
+                  <p className="text-sm text-gray-400 mt-1">Only accessible via direct link, hidden from explore</p>
+                </div>
+              </label>
+              <label className="flex items-start gap-3 p-4 bg-gray-800/50 rounded-lg border-2 border-gray-700 cursor-pointer hover:border-orange-500 transition-colors">
+                <input
+                  type="radio"
+                  name="visibility"
+                  value="draft"
+                  checked={formData.visibility === 'draft'}
+                  onChange={(e) => setFormData({ ...formData, visibility: e.target.value as any })}
+                  className="mt-1 text-orange-500 focus:ring-orange-500"
+                />
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <Edit size={18} className="text-orange-500" />
+                    <span className="font-semibold text-white">Draft</span>
+                  </div>
+                  <p className="text-sm text-gray-400 mt-1">Only visible to you, perfect for building before publishing</p>
+                </div>
+              </label>
+            </div>
+          </div>
           <Button type="submit" className="w-full" loading={processing}>
             Update Wishlist
           </Button>
