@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { DollarSign, TrendingDown, AlertCircle } from 'lucide-react';
 import { Card } from './Card';
 import { Button } from './Button';
+import { Tooltip } from './Tooltip';
 
 const currencies = [
   { code: 'USD', symbol: '$', name: 'US Dollar', rate: 1 },
@@ -151,18 +152,39 @@ export function FeeComparison() {
                 </div>
               )}
 
-              <h3 className="text-white font-bold text-xl mb-4">{platform.platform}</h3>
+              <h3 className="text-white font-bold text-xl mb-4 flex items-center gap-2">
+                {platform.platform}
+                <Tooltip
+                  content={platform.platform === 'KATOA' ? 'KATOA charges 0% fees - you keep 100% of your earnings!' : platform.platform === 'OnlyFans' ? 'OnlyFans charges 20% on all earnings.' : platform.platform === 'Throne' ? 'Throne charges approximately 10% in fees.' : 'Linktree charges 9% plus $40/month subscription fee.'}
+                  icon
+                  position="top"
+                />
+              </h3>
 
               <div className="space-y-3">
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
-                  <p className="text-white/70 text-sm">Monthly Fees</p>
+                  <p className="text-white/70 text-sm flex items-center gap-1">
+                    Monthly Fees
+                    <Tooltip
+                      content={platform.platform === 'KATOA' ? 'Zero fees means every dollar you earn is yours to keep.' : `${platform.platform} takes ${formatCurrency(platform.fees)} from your ${formatCurrency(amountInUSD)} monthly earnings.`}
+                      icon
+                      position="top"
+                    />
+                  </p>
                   <p className={`text-2xl font-black ${platform.fees === 0 ? 'text-white' : 'text-red-100'}`}>
                     {formatCurrency(platform.fees)}
                   </p>
                 </div>
 
                 <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3">
-                  <p className="text-white/70 text-sm">You Keep</p>
+                  <p className="text-white/70 text-sm flex items-center gap-1">
+                    You Keep
+                    <Tooltip
+                      content={`After fees, you receive ${formatCurrency(platform.net)} from your ${formatCurrency(amountInUSD)} earnings.`}
+                      icon
+                      position="top"
+                    />
+                  </p>
                   <p className="text-2xl font-black text-white">
                     {formatCurrency(platform.net)}
                   </p>
