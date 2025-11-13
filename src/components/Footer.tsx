@@ -149,12 +149,42 @@ export function Footer() {
         </div>
       </footer>
 
-      {/* QR Expanded Backdrop */}
+      {/* QR Code Modal */}
       {qrExpanded && (
-        <div
-          className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm"
-          onClick={() => setQrExpanded(false)}
-        />
+        <>
+          <div
+            className="fixed inset-0 z-[60] bg-black/80 backdrop-blur-md"
+            onClick={() => setQrExpanded(false)}
+          />
+          <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 pointer-events-none">
+            <div className="pointer-events-auto bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full animate-in fade-in zoom-in duration-300">
+              <div className="text-center mb-6">
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">Scan to Donate</h3>
+                <p className="text-gray-600 text-sm">Use any Bitcoin wallet to scan</p>
+              </div>
+              <div className="bg-white p-4 rounded-xl shadow-inner mb-6">
+                <img
+                  src="/donations-qr copy.png"
+                  alt="Bitcoin Donation QR Code"
+                  className="w-full h-full object-contain"
+                  style={{ imageRendering: 'crisp-edges', maxWidth: '400px', margin: '0 auto', display: 'block' }}
+                />
+              </div>
+              <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-2">Bitcoin Address</p>
+                <code className="text-xs text-gray-800 break-all font-mono block leading-relaxed">
+                  bc1qhm5ndfjhqxdk3cx0pngyps4f5nnwdckulmge6c8keyf2pk0neqtshjn8ad
+                </code>
+              </div>
+              <button
+                onClick={() => setQrExpanded(false)}
+                className="w-full py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-medium transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </>
       )}
 
       {/* Sliding Donation Panel */}
@@ -189,14 +219,16 @@ export function Footer() {
               <div className="flex-shrink-0">
                 <div
                   onClick={() => setQrExpanded(!qrExpanded)}
-                  className={`cursor-pointer transition-all duration-300 ease-in-out ${qrExpanded ? 'fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[70] shadow-2xl' : 'relative'}`}
+                  className="cursor-pointer hover:opacity-80 transition-opacity"
                 >
-                  <img
-                    src="/donations-qr copy.png"
-                    alt="Donation QR Code"
-                    className={`transition-all duration-300 ${qrExpanded ? 'w-96 h-96' : 'w-36 h-36'}`}
-                    style={{ imageRendering: 'pixelated' }}
-                  />
+                  <div className="w-36 h-36 bg-white p-2 rounded-lg shadow-lg">
+                    <img
+                      src="/donations-qr copy.png"
+                      alt="Donation QR Code"
+                      className="w-full h-full object-contain"
+                      style={{ imageRendering: 'crisp-edges' }}
+                    />
+                  </div>
                 </div>
               </div>
 
