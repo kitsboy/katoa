@@ -5,9 +5,11 @@ import { Card } from '../components/Card';
 import { Modal } from '../components/Modal';
 import { Input } from '../components/Input';
 import { Link } from '../components/Link';
+import { StatsCard } from '../components/StatsCard';
+import { ProgressBar } from '../components/ProgressBar';
 import { supabase } from '../lib/supabase';
 import { nostrService } from '../lib/nostr';
-import { Plus, Edit, Trash2, ExternalLink, Settings, Gift, DollarSign, Users, Share2, RefreshCw, Wallet } from 'lucide-react';
+import { Plus, Edit, Trash2, ExternalLink, Settings, Gift, DollarSign, Users, Share2, RefreshCw, Wallet, TrendingUp, Zap, Target } from 'lucide-react';
 
 interface Wishlist {
   id: string;
@@ -306,33 +308,43 @@ export function DashboardPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <DollarSign size={32} className="text-orange-500" />
-            </div>
-            <p className="text-gray-400 text-sm mb-1">Total Raised</p>
-            <p className="text-3xl font-bold text-white">{formatSats(stats.totalRaised)}</p>
-            <p className="text-gray-500 text-xs mt-1">sats</p>
-          </Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <StatsCard
+            title="Total Raised"
+            value={formatSats(stats.totalRaised)}
+            subtitle="sats"
+            icon={DollarSign}
+            gradient="from-emerald-500 to-cyan-600"
+            trend={{ value: 12, isPositive: true }}
+            delay={0}
+          />
 
-          <Card className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <Gift size={32} className="text-orange-500" />
-            </div>
-            <p className="text-gray-400 text-sm mb-1">Wishlists</p>
-            <p className="text-3xl font-bold text-white">{stats.totalWishlists}</p>
-            <p className="text-gray-500 text-xs mt-1">active</p>
-          </Card>
+          <StatsCard
+            title="Wishlists"
+            value={stats.totalWishlists}
+            subtitle="active"
+            icon={Gift}
+            gradient="from-orange-500 to-amber-500"
+            delay={100}
+          />
 
-          <Card className="p-6">
-            <div className="flex items-center justify-between mb-4">
-              <Users size={32} className="text-orange-500" />
-            </div>
-            <p className="text-gray-400 text-sm mb-1">Supporters</p>
-            <p className="text-3xl font-bold text-white">{stats.totalSupporters}</p>
-            <p className="text-gray-500 text-xs mt-1">contributors</p>
-          </Card>
+          <StatsCard
+            title="Supporters"
+            value={stats.totalSupporters}
+            subtitle="contributors"
+            icon={Users}
+            gradient="from-blue-500 to-indigo-600"
+            delay={200}
+          />
+
+          <StatsCard
+            title="Avg. Contribution"
+            value={stats.totalSupporters > 0 ? formatSats(Math.floor(stats.totalRaised / stats.totalSupporters)) : '0'}
+            subtitle="sats"
+            icon={TrendingUp}
+            gradient="from-pink-500 to-rose-600"
+            delay={300}
+          />
         </div>
 
         <div className="space-y-6">
@@ -355,38 +367,45 @@ export function DashboardPage() {
                   : 0;
 
                 return (
-                  <Card key={wishlist.id} className="p-6">
+                  <Card key={wishlist.id} className="p-6 hover-lift bg-gradient-to-br from-slate-800 to-slate-700 border-slate-700 animate-slide-up">
                     <div className="flex flex-col md:flex-row justify-between gap-6">
-                      <div className="flex-1 space-y-3">
+                      <div className="flex-1 space-y-4">
                         <div className="flex items-start justify-between gap-4">
-                          <div>
-                            <h3 className="text-2xl font-bold text-white mb-2">{wishlist.title}</h3>
-                            <p className="text-gray-400">{wishlist.description}</p>
+                          <div className="flex-1">
+                            <h3 className="text-2xl font-bold text-white mb-2 flex items-center gap-2">
+                              {wishlist.title}
+                              {progress >= 100 && (
+                                <span className="text-xl">🎉</span>
+                              )}
+                            </h3>
+                            <p className="text-slate-400 leading-relaxed">{wishlist.description}</p>
                           </div>
-                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                            wishlist.is_public
-                              ? 'bg-green-500/20 text-green-400'
-                              : 'bg-gray-500/20 text-gray-400'
-                          }`}>
-                            {wishlist.is_public ? 'Public' : 'Private'}
-                          </span>
+                          <div className="flex flex-col gap-2">
+                            <span className={`px-3 py-1.5 rounded-full text-xs font-bold ${
+                              wishlist.is_public
+                                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                                : 'bg-slate-700 text-slate-400 border border-slate-600'
+                            }`}>
+                              {wishlist.is_public ? '👁️ Public' : '🔒 Private'}
+                            </span>
+                            {progress >= 100 && (
+                              <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">
+                                ✨ Funded
+                              </span>
+                            )}
+                          </div>
                         </div>
 
                         {wishlist.total_sats_goal > 0 && (
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-between text-sm">
-                              <span className="text-gray-400">
-                                {formatSats(wishlist.total_sats_raised)} / {formatSats(wishlist.total_sats_goal)} sats
-                              </span>
-                              <span className="text-orange-500 font-medium">{progress.toFixed(0)}%</span>
-                            </div>
-                            <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
-                              <div
-                                className="h-full bg-gradient-to-r from-orange-500 to-amber-500 transition-all duration-500"
-                                style={{ width: `${Math.min(progress, 100)}%` }}
-                              />
-                            </div>
-                          </div>
+                          <ProgressBar
+                            current={wishlist.total_sats_raised}
+                            goal={wishlist.total_sats_goal}
+                            showPercentage={true}
+                            showValues={true}
+                            gradient="from-emerald-500 to-cyan-600"
+                            height="md"
+                            animated={true}
+                          />
                         )}
                       </div>
 

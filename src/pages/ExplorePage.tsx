@@ -3,9 +3,12 @@ import { Card } from '../components/Card';
 import { Link } from '../components/Link';
 import { Input } from '../components/Input';
 import { Button } from '../components/Button';
+import { CategoryBadge } from '../components/CategoryBadge';
+import { TrendingBadge } from '../components/TrendingBadge';
+import { ProgressBar } from '../components/ProgressBar';
 import { supabase } from '../lib/supabase';
 import { mockWishlists } from '../data/mockWishlists';
-import { Gift, Search, MapPin, Globe } from 'lucide-react';
+import { Gift, Search, MapPin, Globe, SlidersHorizontal, Star, TrendingUp } from 'lucide-react';
 
 interface Wishlist {
   id: string;
@@ -33,11 +36,30 @@ export function ExplorePage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCountry, setSelectedCountry] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [sortBy, setSortBy] = useState<string>('recent');
   const [showMap, setShowMap] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [categories, setCategories] = useState<any[]>([]);
 
   useEffect(() => {
     loadWishlists();
+    loadCategories();
   }, []);
+
+  async function loadCategories() {
+    try {
+      const { data, error } = await supabase
+        .from('categories')
+        .select('*')
+        .order('name');
+
+      if (error) throw error;
+      setCategories(data || []);
+    } catch (error) {
+      console.error('Error loading categories:', error);
+    }
+  }
 
   useEffect(() => {
     let filtered = wishlists;
@@ -53,6 +75,28 @@ export function ExplorePage() {
 
     if (selectedCountry) {
       filtered = filtered.filter((w) => w.country === selectedCountry);
+    }
+
+    if (selectedCategory) {
+      filtered = filtered.filter((w) => (w as any).category === selectedCategory);
+    }
+
+    switch (sortBy) {
+      case 'trending':
+        filtered.sort((a, b) => b.total_sats_raised - a.total_sats_raised);
+        break;
+      case 'funded':
+        filtered.sort((a, b) => {
+          const aProgress = a.total_sats_goal > 0 ? (a.total_sats_raised / a.total_sats_goal) : 0;
+          const bProgress = b.total_sats_goal > 0 ? (b.total_sats_raised / b.total_sats_goal) : 0;
+          return bProgress - aProgress;
+        });
+        break;
+      case 'goal':
+        filtered.sort((a, b) => b.total_sats_goal - a.total_sats_goal);
+        break;
+      default:
+        break;
     }
 
     setFilteredWishlists(filtered);
@@ -116,39 +160,119 @@ export function ExplorePage() {
           <h1 className="text-4xl font-bold text-white mb-4">Explore Wishlists</h1>
           <p className="text-gray-400 mb-6">Discover amazing creators and support their dreams around the world</p>
 
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
-            <div className="relative flex-1 max-w-xl">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
-              <Input
-                placeholder="Search wishlists..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-12"
-              />
+          <div className="space-y-4 mb-6">
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500" size={20} />
+                <Input
+                  placeholder="Search wishlists, creators, tags..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-12 bg-slate-800 border-slate-700 focus:border-emerald-500"
+                />
+              </div>
+
+              <div className="flex gap-2">
+                <Button
+                  variant={showFilters ? 'default' : 'outline'}
+                  onClick={() => setShowFilters(!showFilters)}
+                  className="border-slate-700"
+                >
+                  <SlidersHorizontal size={20} className="mr-2" />
+                  Filters
+                </Button>
+
+                <Button
+                  variant={showMap ? 'default' : 'outline'}
+                  onClick={() => setShowMap(!showMap)}
+                  className="border-slate-700"
+                >
+                  <Globe size={20} className="mr-2" />
+                  Map
+                </Button>
+              </div>
             </div>
 
-            <div className="flex gap-3">
-              <select
-                value={selectedCountry}
-                onChange={(e) => setSelectedCountry(e.target.value)}
-                className="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
-              >
-                <option value="">All Countries</option>
-                {countries.map((country) => (
-                  <option key={country} value={country}>
-                    {country}
-                  </option>
+            {showFilters && (
+              <Card className="p-4 bg-slate-800/50 border-slate-700 animate-slide-up">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">Sort By</label>
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value)}
+                      className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    >
+                      <option value="recent">Most Recent</option>
+                      <option value="trending">Most Funded</option>
+                      <option value="funded">Highest Progress</option>
+                      <option value="goal">Biggest Goals</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">Category</label>
+                    <select
+                      value={selectedCategory}
+                      onChange={(e) => setSelectedCategory(e.target.value)}
+                      className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    >
+                      <option value="">All Categories</option>
+                      {categories.map((cat) => (
+                        <option key={cat.id} value={cat.slug}>{cat.name}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-slate-300 mb-2">Location</label>
+                    <select
+                      value={selectedCountry}
+                      onChange={(e) => setSelectedCountry(e.target.value)}
+                      className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    >
+                      <option value="">All Countries</option>
+                      {countries.map((country) => (
+                        <option key={country} value={country}>{country}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {(selectedCategory || selectedCountry || sortBy !== 'recent') && (
+                  <div className="mt-4 pt-4 border-t border-slate-700">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setSelectedCategory('');
+                        setSelectedCountry('');
+                        setSortBy('recent');
+                      }}
+                      className="text-slate-400 hover:text-white"
+                    >
+                      Clear All Filters
+                    </Button>
+                  </div>
+                )}
+              </Card>
+            )}
+
+            {categories.length > 0 && !showFilters && (
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-slate-400 text-sm">Quick filters:</span>
+                {categories.slice(0, 6).map((cat) => (
+                  <CategoryBadge
+                    key={cat.id}
+                    name={cat.name}
+                    icon={cat.icon}
+                    color={cat.color}
+                    size="sm"
+                    onClick={() => setSelectedCategory(cat.slug)}
+                  />
                 ))}
-              </select>
-
-              <Button
-                variant={showMap ? 'default' : 'outline'}
-                onClick={() => setShowMap(!showMap)}
-              >
-                <Globe size={20} className="mr-2" />
-                {showMap ? 'Hide' : 'Show'} Map
-              </Button>
-            </div>
+              </div>
+            )}
           </div>
 
           {showMap && wishlistsWithLocation.length > 0 && (
@@ -223,37 +347,57 @@ export function ExplorePage() {
                 ? (wishlist.total_sats_raised / wishlist.total_sats_goal) * 100
                 : 0;
 
+              const isTrending = wishlist.total_sats_raised > 50000;
+              const isNew = new Date(wishlist.created_at).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000;
+
               return (
                 <Link key={wishlist.id} href={`/wishlist/${wishlist.slug}`}>
-                  <Card hover>
-                    <div className="relative">
+                  <Card className="hover-lift overflow-hidden bg-gradient-to-br from-slate-800 to-slate-700 border-slate-700 animate-fade-in">
+                    <div className="relative overflow-hidden group">
                       {wishlist.cover_image ? (
                         <img
                           src={wishlist.cover_image}
                           alt={wishlist.title}
-                          className="w-full h-48 object-cover"
+                          className="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110"
                         />
                       ) : (
-                        <div className="w-full h-48 bg-gradient-to-br from-orange-500/20 to-amber-500/20 flex items-center justify-center">
-                          <Gift size={64} className="text-orange-500/50" />
+                        <div className="w-full h-56 bg-gradient-to-br from-emerald-500/20 via-cyan-500/20 to-blue-500/20 flex items-center justify-center">
+                          <Gift size={80} className="text-emerald-500/40 animate-float" />
                         </div>
                       )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent"></div>
+
                       {wishlist.country_flag && (
-                        <div className="absolute top-3 right-3 text-4xl drop-shadow-lg">
+                        <div className="absolute top-3 right-3 text-3xl drop-shadow-lg">
                           {wishlist.country_flag}
                         </div>
                       )}
+
+                      <div className="absolute top-3 left-3">
+                        {isTrending && <TrendingBadge type="trending" />}
+                        {isNew && !isTrending && <TrendingBadge type="new" />}
+                      </div>
+
+                      {progress >= 100 && (
+                        <div className="absolute bottom-3 left-3">
+                          <div className="px-3 py-1 bg-emerald-500 rounded-full text-white text-xs font-bold flex items-center gap-1">
+                            <Star size={12} className="fill-white" />
+                            Fully Funded
+                          </div>
+                        </div>
+                      )}
                     </div>
+
                     <div className="p-6 space-y-4">
                       <div>
-                        <h3 className="text-xl font-bold text-white mb-2 line-clamp-1">
+                        <h3 className="text-xl font-bold text-white mb-2 line-clamp-1 group-hover:text-emerald-400 transition-colors">
                           {wishlist.title}
                         </h3>
-                        <p className="text-gray-400 text-sm line-clamp-2 mb-2">
+                        <p className="text-slate-400 text-sm line-clamp-2 mb-3 leading-relaxed">
                           {wishlist.description}
                         </p>
                         {wishlist.country && (
-                          <div className="flex items-center gap-1 text-xs text-gray-500">
+                          <div className="flex items-center gap-1.5 text-xs text-slate-500">
                             <MapPin size={12} />
                             <span>{wishlist.city ? `${wishlist.city}, ` : ''}{wishlist.country}</span>
                           </div>
@@ -261,31 +405,26 @@ export function ExplorePage() {
                       </div>
 
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-amber-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                        <div className="w-10 h-10 bg-gradient-to-r from-emerald-500 to-cyan-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
                           {wishlist.creator.username[0].toUpperCase()}
                         </div>
-                        <span className="text-sm text-gray-300">
-                          {wishlist.creator.username}
-                        </span>
+                        <div>
+                          <span className="text-sm text-white font-medium block">
+                            {wishlist.creator.username}
+                          </span>
+                          <span className="text-xs text-slate-500">Creator</span>
+                        </div>
                       </div>
 
                       {wishlist.total_sats_goal > 0 && (
-                        <div className="space-y-2">
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-gray-400">
-                              {formatSats(wishlist.total_sats_raised)} raised
-                            </span>
-                            <span className="text-orange-500 font-medium">
-                              {progress.toFixed(0)}%
-                            </span>
-                          </div>
-                          <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-gradient-to-r from-orange-500 to-amber-500 transition-all duration-500"
-                              style={{ width: `${Math.min(progress, 100)}%` }}
-                            />
-                          </div>
-                        </div>
+                        <ProgressBar
+                          current={wishlist.total_sats_raised}
+                          goal={wishlist.total_sats_goal}
+                          showPercentage={true}
+                          showValues={false}
+                          height="md"
+                          animated={true}
+                        />
                       )}
                     </div>
                   </Card>
