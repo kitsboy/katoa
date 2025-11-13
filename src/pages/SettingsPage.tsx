@@ -236,6 +236,7 @@ export function SettingsPage() {
   async function handleBannerUpload(files: File[]) {
     if (files.length === 0 || !user) return null;
 
+    console.log('Banner upload started, file:', files[0].name);
     setUploadingBanner(true);
     try {
       const file = files[0];
@@ -256,7 +257,11 @@ export function SettingsPage() {
         .from('media')
         .getPublicUrl(filePath);
 
-      setProfileForm(prev => ({ ...prev, banner_url: publicUrl, banner_video_url: '' }));
+      console.log('Banner uploaded, URL:', publicUrl);
+      setProfileForm(prev => {
+        console.log('Setting banner_url in state:', publicUrl);
+        return { ...prev, banner_url: publicUrl, banner_video_url: '' };
+      });
       return publicUrl;
     } catch (error: any) {
       console.error('Error uploading banner:', error);
@@ -333,6 +338,8 @@ export function SettingsPage() {
     e.preventDefault();
     setProcessing(true);
 
+    console.log('Saving profile, current profileForm:', profileForm);
+
     try {
       const updates: any = {
         username: profileForm.username,
@@ -349,6 +356,8 @@ export function SettingsPage() {
         social_feed_title: profileForm.social_feed_title || 'My Social Feed',
         social_feed_height: profileForm.social_feed_height || '600px',
       };
+
+      console.log('Updates being sent:', updates);
 
       if (profileForm.video_date) {
         updates.video_date = new Date(profileForm.video_date).toISOString();
