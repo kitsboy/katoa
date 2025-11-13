@@ -152,23 +152,23 @@ export function FeeComparison() {
                 </div>
               )}
 
-              <h3 className="text-white font-bold text-xl mb-4 flex items-center gap-2">
-                {platform.platform}
+              <h3 className="text-white font-bold text-xl mb-4 flex items-center justify-between">
+                <span>{platform.platform}</span>
                 <Tooltip
-                  content={platform.platform === 'KATOA' ? 'KATOA charges 0% fees - you keep 100% of your earnings!' : platform.platform === 'OnlyFans' ? 'OnlyFans charges 20% on all earnings.' : platform.platform === 'Throne' ? 'Throne charges approximately 10% in fees.' : 'Linktree charges 9% plus $40/month subscription fee.'}
+                  content={platform.platform === 'KATOA' ? 'KATOA charges absolutely zero fees. Every single dollar you earn stays in your pocket. No hidden charges, no percentages taken, no monthly subscriptions.' : platform.platform === 'OnlyFans' ? 'OnlyFans takes a 20% cut from all your earnings. On $10,000, they keep $2,000 and you get $8,000.' : platform.platform === 'Throne' ? 'Throne charges approximately 10% in platform fees. From $10,000 earned, they take $1,000 in fees.' : 'Linktree charges 9% transaction fee PLUS a $40 monthly subscription. From $10,000, you lose $940 total.'}
                   icon
-                  position="top"
+                  position="bottom"
                 />
               </h3>
 
               <div className="space-y-3">
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
-                  <p className="text-white/70 text-sm flex items-center gap-1">
-                    Monthly Fees
+                  <p className="text-white/70 text-sm flex items-center justify-between">
+                    <span>Monthly Fees</span>
                     <Tooltip
-                      content={platform.platform === 'KATOA' ? 'Zero fees means every dollar you earn is yours to keep.' : `${platform.platform} takes ${formatCurrency(platform.fees)} from your ${formatCurrency(amountInUSD)} monthly earnings.`}
+                      content={platform.platform === 'KATOA' ? 'KATOA takes ZERO in fees. This is not a promotional rate - it is permanent. We make money differently so you keep everything you earn.' : `${platform.platform} charges ${formatCurrency(platform.fees)} in fees from your ${formatCurrency(amountInUSD)} monthly earnings. That money goes to them, not you.`}
                       icon
-                      position="top"
+                      position="bottom"
                     />
                   </p>
                   <p className={`text-2xl font-black ${platform.fees === 0 ? 'text-white' : 'text-red-100'}`}>
@@ -177,12 +177,12 @@ export function FeeComparison() {
                 </div>
 
                 <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3">
-                  <p className="text-white/70 text-sm flex items-center gap-1">
-                    You Keep
+                  <p className="text-white/70 text-sm flex items-center justify-between">
+                    <span>You Keep</span>
                     <Tooltip
-                      content={`After fees, you receive ${formatCurrency(platform.net)} from your ${formatCurrency(amountInUSD)} earnings.`}
+                      content={`This is the actual amount that goes into your bank account after ${platform.platform} takes their fees. You earned ${formatCurrency(amountInUSD)} but only receive ${formatCurrency(platform.net)}. ${platform.platform === 'KATOA' ? 'With KATOA, what you earn is what you keep!' : `The difference of ${formatCurrency(platform.fees)} went to ${platform.platform}.`}`}
                       icon
-                      position="top"
+                      position="bottom"
                     />
                   </p>
                   <p className="text-2xl font-black text-white">

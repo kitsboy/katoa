@@ -41,8 +41,8 @@ export function Tooltip({ content, children, icon = false, position = 'top' }: T
           break;
       }
 
-      left = Math.max(10, Math.min(left, window.innerWidth - tooltipRect.width - 10));
-      top = Math.max(10, Math.min(top, window.innerHeight - tooltipRect.height - 10));
+      left = Math.max(16, Math.min(left, window.innerWidth - tooltipRect.width - 16));
+      top = Math.max(16, Math.min(top, window.innerHeight - tooltipRect.height - 16));
 
       setTooltipStyle({
         position: 'fixed',
@@ -79,8 +79,9 @@ export function Tooltip({ content, children, icon = false, position = 'top' }: T
         {children}
         {icon && (
           <HelpCircle
-            size={16}
-            className="text-emerald-400 hover:text-emerald-300 transition-colors ml-1.5 flex-shrink-0"
+            size={20}
+            className="text-white hover:text-emerald-300 transition-colors flex-shrink-0"
+            strokeWidth={2.5}
           />
         )}
       </span>
@@ -91,7 +92,7 @@ export function Tooltip({ content, children, icon = false, position = 'top' }: T
           style={tooltipStyle}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
-          className="px-5 py-4 bg-gradient-to-br from-emerald-600 to-emerald-700 text-white text-sm rounded-xl shadow-2xl border-2 border-emerald-400 w-80 max-w-[90vw] pointer-events-auto"
+          className="px-6 py-5 bg-gradient-to-br from-emerald-600 to-emerald-700 text-white text-base rounded-xl shadow-2xl border-2 border-emerald-400 w-96 max-w-[calc(100vw-32px)] pointer-events-auto"
         >
           <div className="leading-relaxed font-medium">{content}</div>
         </div>
