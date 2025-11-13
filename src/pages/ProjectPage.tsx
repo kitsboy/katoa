@@ -12,7 +12,7 @@ import { parseProductUrl } from '../lib/productParser';
 import {
   Plus, Edit, Trash2, Settings, Gift, ArrowLeft,
   Image as ImageIcon, Wallet, Globe, Lock, FileText,
-  ExternalLink, Save, X
+  ExternalLink, Save, X, Camera, Upload
 } from 'lucide-react';
 
 interface Project {
@@ -162,35 +162,50 @@ export function ProjectPage() {
     }
   }
 
-  async function handleBackgroundUpload(files: File[]) {
-    if (!project || files.length === 0) return;
+  async function handleBackgroundUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = e.target.files;
+    if (!project || !files || files.length === 0) return;
 
+    setProcessing(true);
     try {
       const file = files[0];
       const fileExt = file.name.split('.').pop();
       const fileName = `${project.id}-${Date.now()}.${fileExt}`;
 
+      console.log('Uploading project background:', fileName);
+
       const { error: uploadError } = await supabase.storage
         .from('media')
         .upload(fileName, file);
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error('Upload error:', uploadError);
+        throw uploadError;
+      }
 
       const { data: { publicUrl } } = supabase.storage
         .from('media')
         .getPublicUrl(fileName);
+
+      console.log('Background uploaded, URL:', publicUrl);
 
       const { error: updateError } = await supabase
         .from('projects')
         .update({ background_url: publicUrl })
         .eq('id', project.id);
 
-      if (updateError) throw updateError;
+      if (updateError) {
+        console.error('Update error:', updateError);
+        throw updateError;
+      }
 
-      loadProject();
+      await loadProject();
+      console.log('Project background saved successfully');
     } catch (error) {
       console.error('Error uploading background:', error);
-      alert('Failed to upload background');
+      alert(`Failed to upload background: ${(error as Error).message}`);
+    } finally {
+      setProcessing(false);
     }
   }
 
@@ -350,14 +365,52 @@ export function ProjectPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-night-blue-500 via-night-blue-500 to-black">
-      {project.background_url && (
-        <div
-          className="h-64 bg-cover bg-center relative"
-          style={{ backgroundImage: `url(${project.background_url})` }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-night-blue-500" />
-        </div>
-      )}
+      <input
+        type="file"
+        id="project-background-upload"
+        accept="image/*"
+        onChange={handleBackgroundUpload}
+        className="hidden"
+      />
+
+      <button
+        type="button"
+        onClick={() => document.getElementById('project-background-upload')?.click()}
+        className="w-full relative group/banner cursor-pointer"
+        disabled={processing}
+      >
+        {project.background_url ? (
+          <div
+            className="h-64 bg-cover bg-center relative"
+            style={{ backgroundImage: `url(${project.background_url})` }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-night-blue-500" />
+            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/banner:opacity-100 transition-opacity flex items-center justify-center">
+              <div className="text-center">
+                <Camera size={64} className="mx-auto text-white mb-3" />
+                <p className="text-white text-xl font-bold">Click to change banner</p>
+                <p className="text-gray-300 text-sm mt-1">1500x400px recommended</p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="h-64 bg-gradient-to-br from-gray-800 to-gray-900 relative flex items-center justify-center hover:bg-gradient-to-br hover:from-gray-700 hover:to-gray-800 transition-colors">
+            <div className="text-center">
+              <Upload size={80} className="mx-auto text-gray-600 group-hover/banner:text-orange-500 transition-colors mb-3" />
+              <p className="text-gray-500 text-xl font-bold group-hover/banner:text-white transition-colors">Click to upload banner</p>
+              <p className="text-gray-600 text-sm mt-1">1500x400px recommended</p>
+            </div>
+          </div>
+        )}
+        {processing && (
+          <div className="absolute inset-0 bg-black/80 flex items-center justify-center">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-16 w-16 border-4 border-orange-500 border-t-transparent mx-auto mb-3"></div>
+              <p className="text-white font-bold">Uploading...</p>
+            </div>
+          </div>
+        )}
+      </button>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
         <Link href="/dashboard" className="inline-flex items-center text-night-blue-300 hover:text-white mb-6">
@@ -435,11 +488,11 @@ export function ProjectPage() {
             <h3 className="text-xl font-bold text-white mb-4">Project Settings</h3>
 
             <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-night-blue-200 mb-2">
-                  Background Image
-                </label>
-                <MediaUpload onUpload={handleBackgroundUpload} maxFiles={1} />
+              <div className="p-4 bg-orange-500/10 border border-orange-500/30 rounded-lg">
+                <p className="text-orange-400 text-sm font-medium flex items-center gap-2">
+                  <Camera size={16} />
+                  Click on the banner above to upload or change the background image
+                </p>
               </div>
 
               <Input
@@ -473,9 +526,9 @@ export function ProjectPage() {
                   onChange={(e) => setFormData({ ...formData, visibility: e.target.value as any })}
                   className="w-full px-4 py-2 bg-night-blue-500 border border-night-blue-400 rounded-lg text-white focus:outline-none focus:border-emerald-500"
                 >
-                  <option value="draft">Draft (only you)</option>
-                  <option value="private">Private (link only)</option>
-                  <option value="public">Public (listed)</option>
+                  <option value="draft">Draft - Only you can see this project</option>
+                  <option value="private">Private - Anyone with the link can view</option>
+                  <option value="public">Public - Listed on Explore page</option>
                 </select>
               </div>
             </div>

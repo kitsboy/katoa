@@ -7,7 +7,7 @@ import { Input } from '../components/Input';
 import { Link } from '../components/Link';
 import { StatsCard } from '../components/StatsCard';
 import { supabase } from '../lib/supabase';
-import { Plus, Edit, Trash2, Settings, Gift, DollarSign, Users, FolderOpen, Globe, Lock, FileText, ExternalLink, TrendingUp, Eye, Heart, Filter } from 'lucide-react';
+import { Plus, Edit, Trash2, Settings, Gift, DollarSign, Users, FolderOpen, Globe, Lock, FileText, ExternalLink, TrendingUp, Eye, Heart, Filter, Camera, Upload } from 'lucide-react';
 
 interface Project {
   id: string;
@@ -228,6 +228,53 @@ export function DashboardPage() {
     }
   }
 
+  async function handleBackgroundUpload(e: React.ChangeEvent<HTMLInputElement>, projectId: string) {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setProcessing(true);
+    try {
+      const file = files[0];
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user!.id}-project-${projectId}-${Date.now()}.${fileExt}`;
+
+      console.log('Uploading project background:', fileName);
+
+      const { error: uploadError } = await supabase.storage
+        .from('media')
+        .upload(fileName, file);
+
+      if (uploadError) {
+        console.error('Upload error:', uploadError);
+        throw uploadError;
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('media')
+        .getPublicUrl(fileName);
+
+      console.log('Background uploaded, URL:', publicUrl);
+
+      const { error: updateError } = await supabase
+        .from('projects')
+        .update({ background_url: publicUrl })
+        .eq('id', projectId);
+
+      if (updateError) {
+        console.error('Update error:', updateError);
+        throw updateError;
+      }
+
+      await loadProjects();
+      console.log('Project background saved successfully');
+    } catch (error) {
+      console.error('Error uploading background:', error);
+      alert(`Failed to upload background: ${(error as Error).message}`);
+    } finally {
+      setProcessing(false);
+    }
+  }
+
   function startEditingProject(project: Project) {
     setEditingProject(project.id);
     setEditFormData({
@@ -422,24 +469,45 @@ export function DashboardPage() {
                 key={project.id}
                 className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 hover:border-orange-500/50 transition-all duration-300 overflow-hidden group hover:shadow-[0_0_40px_rgba(255,135,0,0.25)] hover:scale-[1.02]"
               >
-                {project.background_url ? (
-                  <div
-                    className="w-full h-48 bg-cover bg-center relative overflow-hidden"
-                    style={{ backgroundImage: `url(${project.background_url})` }}
-                  >
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
-                    <div className="absolute top-4 right-4">
-                      {getVisibilityBadge(project.visibility)}
+                <input
+                  type="file"
+                  id={`project-bg-${project.id}`}
+                  accept="image/*"
+                  onChange={(e) => handleBackgroundUpload(e, project.id)}
+                  className="hidden"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => document.getElementById(`project-bg-${project.id}`)?.click()}
+                  className="w-full relative group/bg cursor-pointer"
+                  disabled={processing}
+                >
+                  {project.background_url ? (
+                    <div
+                      className="w-full h-48 bg-cover bg-center relative overflow-hidden"
+                      style={{ backgroundImage: `url(${project.background_url})` }}
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/bg:opacity-100 transition-opacity flex items-center justify-center">
+                        <div className="text-center">
+                          <Camera size={48} className="mx-auto text-white mb-2" />
+                          <p className="text-white font-bold">Click to change image</p>
+                        </div>
+                      </div>
+                      <div className="absolute top-4 right-4">
+                        {getVisibilityBadge(project.visibility)}
+                      </div>
                     </div>
-                  </div>
-                ) : (
-                  <div className="w-full h-48 bg-gradient-to-br from-gray-800 to-gray-900 relative flex items-center justify-center overflow-hidden">
-                    <FolderOpen size={80} className="text-gray-700 opacity-50" />
-                    <div className="absolute top-4 right-4">
-                      {getVisibilityBadge(project.visibility)}
+                  ) : (
+                    <div className="w-full h-48 bg-gradient-to-br from-gray-800 to-gray-900 relative flex items-center justify-center overflow-hidden hover:border-orange-500 transition-colors">
+                      <Upload size={64} className="text-gray-600 group-hover/bg:text-orange-500 transition-colors" />
+                      <div className="absolute top-4 right-4">
+                        {getVisibilityBadge(project.visibility)}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </button>
 
                 <div className="p-6">
                   {editingProject === project.id && editFormData ? (
