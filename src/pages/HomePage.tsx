@@ -33,13 +33,15 @@ export function HomePage() {
 
       <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden px-4 sm:px-6">
         <div className="absolute inset-0 overflow-hidden opacity-40">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-sand-tan-400/30 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-night-blue-400/30 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-sand-tan-400/30 to-orange-500/30 rounded-full blur-3xl animate-subtle-pulse" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-night-blue-400/30 to-cyan-500/30 rounded-full blur-3xl animate-subtle-pulse" style={{ animationDelay: '1.5s' }} />
+          <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-gradient-to-br from-emerald-500/20 to-teal-500/20 rounded-full blur-3xl animate-subtle-pulse" style={{ animationDelay: '3s' }} />
         </div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(225,179,130,0.03)_1px,transparent_1px)] bg-[size:32px_32px] opacity-30"></div>
 
         <div className="relative z-10 max-w-6xl mx-auto text-center">
 
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-white border-2 border-sand-tan-600 rounded-full mb-8 animate-fade-in shadow-md backdrop-blur-sm">
+          <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/90 border-2 border-sand-tan-600 rounded-full mb-8 animate-fade-in shadow-lg backdrop-blur-md hover:scale-105 transition-transform duration-300 cursor-default">
             <div className="w-2 h-2 bg-sand-tan-600 rounded-full animate-pulse" />
             <span className="text-sm font-bold text-night-blue-800 tracking-wide">
               Trusted by creators worldwide
@@ -47,7 +49,7 @@ export function HomePage() {
           </div>
 
           <h1 className="text-4xl sm:text-5xl md:text-[4rem] lg:text-[4.75rem] font-bold mb-6 leading-[1.1] tracking-tight text-night-blue-shadow px-2">
-            Keep <span className="bg-gradient-to-r from-sand-tan-600 to-night-blue-600 bg-clip-text text-transparent">100%</span> of
+            Keep <span className="bg-gradient-to-r from-sand-tan-600 via-orange-500 to-night-blue-600 bg-clip-text text-transparent animate-gradient">100%</span> of
             <br />
             Your Earnings
           </h1>
@@ -80,15 +82,15 @@ export function HomePage() {
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-night-blue-500 text-xs sm:text-sm font-bold px-4">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 px-4 py-2 bg-white/50 backdrop-blur-sm rounded-full border border-sand-tan-200 hover:border-sand-tan-400 hover:bg-white/80 transition-all duration-300 hover:scale-105">
               <CheckCircle2 size={18} className="text-sand-tan-600" />
               <span>{stats.volume} sats processed</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 px-4 py-2 bg-white/50 backdrop-blur-sm rounded-full border border-sand-tan-200 hover:border-sand-tan-400 hover:bg-white/80 transition-all duration-300 hover:scale-105">
               <CheckCircle2 size={18} className="text-sand-tan-600" />
               <span>{stats.countries} countries served</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 px-4 py-2 bg-white/50 backdrop-blur-sm rounded-full border border-sand-tan-200 hover:border-sand-tan-400 hover:bg-white/80 transition-all duration-300 hover:scale-105">
               <CheckCircle2 size={18} className="text-sand-tan-600" />
               <span>0% fees forever</span>
             </div>
@@ -100,9 +102,9 @@ export function HomePage() {
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-3 gap-6 sm:gap-8">
 
-            <Card className="group p-6 sm:p-8 bg-white border-sand-tan-300 hover:border-orange-400 hover:shadow-xl hover:shadow-orange-300/30 transition-all duration-300">
+            <Card className="group p-6 sm:p-8 bg-white border-sand-tan-300 hover:border-orange-400 hover:shadow-xl hover:shadow-orange-300/30 transition-all duration-500">
               <Tooltip content="Lightning Network settles Bitcoin payments in milliseconds with near-zero fees. This revolutionary technology makes micropayments economically viable, enabling new business models impossible with traditional finance. Your money moves at the speed of the internet." position="bottom">
-                <div className="w-20 h-20 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-3xl flex items-center justify-center mb-6 shadow-2xl shadow-orange-500/50 group-hover:scale-110 transition-transform duration-300">
+                <div className="w-20 h-20 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-3xl flex items-center justify-center mb-6 shadow-2xl shadow-orange-500/50 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                   <Zap size={44} className="text-white" strokeWidth={3} />
                 </div>
               </Tooltip>
@@ -123,7 +125,7 @@ export function HomePage() {
 
             <Card className="group p-6 sm:p-8 bg-white border-sand-tan-300 hover:border-blue-400 hover:shadow-xl hover:shadow-blue-300/30 transition-all duration-300">
               <Tooltip content="Bitcoin transcends borders and banking systems. Whether you're in New York or Nigeria, Tokyo or Tanzania, your supporters can fund your dreams. No government can shut you down. No bank can deny you service. True financial inclusion for all humanity." position="bottom">
-                <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-3xl flex items-center justify-center mb-6 shadow-2xl shadow-blue-500/50 group-hover:scale-110 transition-transform duration-300">
+                <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-3xl flex items-center justify-center mb-6 shadow-2xl shadow-blue-500/50 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                   <Globe size={44} className="text-white" strokeWidth={3} />
                 </div>
               </Tooltip>
@@ -144,7 +146,7 @@ export function HomePage() {
 
             <Card className="group p-6 sm:p-8 bg-white border-sand-tan-300 hover:border-green-400 hover:shadow-xl hover:shadow-green-300/30 transition-all duration-300">
               <Tooltip content="Zero-knowledge cryptography proves transactions without revealing your identity. Nostr protocol encrypts your messages end-to-end. Your data lives on your device, not our servers. We can't sell what we don't have. Privacy is your birthright." position="bottom">
-                <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-500 rounded-3xl flex items-center justify-center mb-6 shadow-2xl shadow-green-500/50 group-hover:scale-110 transition-transform duration-300">
+                <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-500 rounded-3xl flex items-center justify-center mb-6 shadow-2xl shadow-green-500/50 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                   <Shield size={44} className="text-white" strokeWidth={3} />
                 </div>
               </Tooltip>

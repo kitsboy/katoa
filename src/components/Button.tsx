@@ -16,12 +16,12 @@ export function Button({
   disabled,
   ...props
 }: ButtonProps) {
-  const baseStyles = 'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95';
+  const baseStyles = 'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 transform hover:-translate-y-0.5 relative overflow-hidden group';
 
   const variants = {
-    primary: 'bg-sand-tan-500 hover:bg-sand-tan-600 text-night-blue-shadow font-bold shadow-lg hover:shadow-xl hover:shadow-sand-tan-600/50',
-    secondary: 'bg-night-blue-500 hover:bg-night-blue-700 text-white font-bold shadow-md hover:shadow-lg hover:shadow-night-blue-500/50',
-    outline: 'border-2 border-night-blue-500 text-night-blue-700 hover:bg-night-blue-500 hover:text-white backdrop-blur-sm',
+    primary: 'bg-gradient-to-r from-sand-tan-500 to-sand-tan-600 hover:from-sand-tan-600 hover:to-sand-tan-700 text-night-blue-shadow font-bold shadow-lg hover:shadow-2xl hover:shadow-sand-tan-600/50 before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/0 before:via-white/20 before:to-white/0 before:translate-x-[-100%] hover:before:translate-x-[100%] before:transition-transform before:duration-700',
+    secondary: 'bg-gradient-to-r from-night-blue-500 to-night-blue-600 hover:from-night-blue-600 hover:to-night-blue-700 text-white font-bold shadow-lg hover:shadow-2xl hover:shadow-night-blue-500/50',
+    outline: 'border-2 border-night-blue-500 text-night-blue-700 hover:bg-night-blue-500 hover:text-white hover:border-night-blue-400 backdrop-blur-sm',
     ghost: 'text-night-blue-500 hover:bg-sand-tan-100 hover:text-night-blue-800',
   };
 

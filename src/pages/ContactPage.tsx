@@ -38,7 +38,7 @@ export function ContactPage() {
               <Mail className="text-orange-500" size={24} />
             </div>
             <h3 className="text-lg font-bold text-white mb-2">Email</h3>
-            <p className="text-gray-400 text-sm">support@bitwish.app</p>
+            <p className="text-gray-400 text-sm">support@katoa.org</p>
           </Card>
 
           <Card className="p-6 text-center">
@@ -56,7 +56,7 @@ export function ContactPage() {
               </svg>
             </div>
             <h3 className="text-lg font-bold text-white mb-2">Twitter</h3>
-            <p className="text-gray-400 text-sm">@BitWishApp</p>
+            <p className="text-gray-400 text-sm">@KatoaOrg</p>
           </Card>
         </div>
 
