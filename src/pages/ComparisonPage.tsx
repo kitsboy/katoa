@@ -9,47 +9,75 @@ export function ComparisonPage() {
     {
       category: 'Fees & Costs',
       items: [
-        { feature: 'Platform Fees', katoa: '0%', throne: '2.9% + 0-7%', linktree: '9-10%', onlyfans: '20%' },
-        { feature: 'Monthly Subscription', katoa: '$0', throne: '$0', linktree: '$8-$40', onlyfans: '$0' },
-        { feature: 'Withdrawal Fees', katoa: '0%', throne: '2.9% + $0.30', linktree: 'Varies', onlyfans: 'Included' },
-        { feature: 'Currency Conversion', katoa: '0%', throne: '3-5%', linktree: '3-5%', onlyfans: '3-5%' },
+        { feature: 'Platform Fees', katoa: '0%', throne: '2.9% + 0-7%', linktree: '9-10%', onlyfans: '20%', kickstarter: '5%', indiegogo: '5%' },
+        { feature: 'Payment Processing', katoa: '0%', throne: '2.9% + $0.30', linktree: 'Included', onlyfans: 'Included', kickstarter: '3-5%', indiegogo: '2.9% + $0.30' },
+        { feature: 'Total Fee on $10K', katoa: '$0', throne: '~$1,000', linktree: '$900-1,000', onlyfans: '$2,000', kickstarter: '$800-1,000', indiegogo: '$1,000-1,500' },
+        { feature: 'Monthly Subscription', katoa: '$0', throne: '$0', linktree: '$8-$40', onlyfans: '$0', kickstarter: '$0', indiegogo: '$0' },
+        { feature: 'Withdrawal Fees', katoa: '0%', throne: '2.9% + $0.30', linktree: 'Varies', onlyfans: 'Included', kickstarter: 'Varies', indiegogo: 'Varies' },
+        { feature: 'Hidden Costs', katoa: 'None', throne: 'Currency conversion', linktree: 'Payment fees', onlyfans: 'None', kickstarter: 'Fulfillment $5K-25K+', indiegogo: '5% holdback on flexible' },
+      ],
+    },
+    {
+      category: 'Banking Requirements',
+      items: [
+        { feature: 'Bank Account Required', katoa: false, throne: true, linktree: true, onlyfans: true, kickstarter: true, indiegogo: true },
+        { feature: 'KYC/Identity Verification', katoa: false, throne: true, linktree: true, onlyfans: true, kickstarter: true, indiegogo: true },
+        { feature: 'Works Without Banking', katoa: true, throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: false },
+        { feature: 'Payment Processor Dependent', katoa: false, throne: true, linktree: true, onlyfans: true, kickstarter: true, indiegogo: true },
       ],
     },
     {
       category: 'Global Reach',
       items: [
-        { feature: 'Countries Supported', katoa: '195+', throne: '~10 (0% fees)', linktree: 'Limited', onlyfans: 'Limited' },
-        { feature: 'Banking Required', katoa: false, throne: true, linktree: true, onlyfans: true },
-        { feature: 'Works in Sanctioned Countries', katoa: true, throne: false, linktree: false, onlyfans: false },
-        { feature: 'Instant International Transfers', katoa: true, throne: false, linktree: false, onlyfans: false },
+        { feature: 'Countries Supported', katoa: '195+', throne: '~10 (for 0% fees)', linktree: '~50', onlyfans: 'Limited', kickstarter: '~50', indiegogo: '~50' },
+        { feature: 'Works in Sanctioned Countries', katoa: true, throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: false },
+        { feature: 'Instant International Transfers', katoa: true, throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: false },
+        { feature: 'Currency Conversion Fees', katoa: '0%', throne: '3-5%', linktree: '3-5%', onlyfans: '3-5%', kickstarter: '3-5%', indiegogo: '3-5%' },
+      ],
+    },
+    {
+      category: 'Payout Speed',
+      items: [
+        { feature: 'Payout Time', katoa: 'Instant', throne: '7 days', linktree: 'Varies', onlyfans: '7 days rolling', kickstarter: '14+ days', indiegogo: '14 days' },
+        { feature: 'Instant Settlement', katoa: true, throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: false },
+        { feature: 'Fund Holdback', katoa: false, throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: '5% until delivery' },
+      ],
+    },
+    {
+      category: 'Revenue Models',
+      items: [
+        { feature: 'Crowdfunding/Projects', katoa: true, throne: true, linktree: false, onlyfans: false, kickstarter: true, indiegogo: true },
+        { feature: 'Subscriptions', katoa: true, throne: false, linktree: true, onlyfans: true, kickstarter: false, indiegogo: false },
+        { feature: 'Tips/Donations', katoa: true, throne: true, linktree: true, onlyfans: true, kickstarter: false, indiegogo: false },
+        { feature: 'Digital Products', katoa: true, throne: false, linktree: true, onlyfans: true, kickstarter: false, indiegogo: false },
+        { feature: 'Fulfillment Required', katoa: false, throne: false, linktree: false, onlyfans: false, kickstarter: true, indiegogo: true },
       ],
     },
     {
       category: 'Privacy & Security',
       items: [
-        { feature: 'Zero-Knowledge Proofs', katoa: true, throne: false, linktree: false, onlyfans: false },
-        { feature: 'Encrypted Messaging', katoa: true, throne: false, linktree: false, onlyfans: false },
-        { feature: 'No KYC Required', katoa: true, throne: false, linktree: false, onlyfans: false },
-        { feature: 'Decentralized Infrastructure', katoa: true, throne: false, linktree: false, onlyfans: false },
-        { feature: 'Censorship Resistant', katoa: true, throne: false, linktree: false, onlyfans: false },
+        { feature: 'Zero-Knowledge Proofs', katoa: true, throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: false },
+        { feature: 'Encrypted Messaging', katoa: true, throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: false },
+        { feature: 'Decentralized Infrastructure', katoa: true, throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: false },
+        { feature: 'Censorship Resistant', katoa: true, throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: false },
       ],
     },
     {
       category: 'Payment Features',
       items: [
-        { feature: 'Instant Settlement', katoa: true, throne: false, linktree: false, onlyfans: false },
-        { feature: 'Micropayments Support', katoa: true, throne: false, linktree: false, onlyfans: false },
-        { feature: 'BOLT 12 Subscriptions', katoa: true, throne: false, linktree: false, onlyfans: false },
-        { feature: 'Multiple Revenue Streams', katoa: true, throne: true, linktree: true, onlyfans: true },
+        { feature: 'Micropayments Support', katoa: true, throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: false },
+        { feature: 'BOLT 12 Recurring', katoa: true, throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: false },
+        { feature: 'Lightning Network', katoa: true, throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: false },
+        { feature: 'Multiple Revenue Streams', katoa: true, throne: true, linktree: true, onlyfans: true, kickstarter: false, indiegogo: false },
       ],
     },
     {
       category: 'Platform Control',
       items: [
-        { feature: 'Account Suspension Risk', katoa: false, throne: true, linktree: true, onlyfans: true },
-        { feature: 'Content Censorship', katoa: false, throne: true, linktree: true, onlyfans: true },
-        { feature: 'Own Your Data', katoa: true, throne: false, linktree: false, onlyfans: false },
-        { feature: 'Own Your Keys', katoa: true, throne: false, linktree: false, onlyfans: false },
+        { feature: 'Account Suspension Risk', katoa: false, throne: true, linktree: true, onlyfans: true, kickstarter: true, indiegogo: true },
+        { feature: 'Content Censorship', katoa: false, throne: true, linktree: true, onlyfans: true, kickstarter: true, indiegogo: true },
+        { feature: 'Own Your Data', katoa: true, throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: false },
+        { feature: 'Own Your Keys', katoa: true, throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: false },
       ],
     },
   ];
@@ -118,14 +146,16 @@ export function ComparisonPage() {
                   <thead>
                     <tr className="border-b border-slate-700">
                       <th className="text-left text-slate-400 font-semibold pb-4 pr-4">Feature</th>
-                      <th className="text-center text-emerald-400 font-bold pb-4 px-4">
+                      <th className="text-center text-emerald-400 font-bold pb-4 px-2">
                         <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/20 rounded-lg">
                           KATOA
                         </div>
                       </th>
-                      <th className="text-center text-slate-400 font-semibold pb-4 px-4">Throne</th>
-                      <th className="text-center text-slate-400 font-semibold pb-4 px-4">Linktree</th>
-                      <th className="text-center text-slate-400 font-semibold pb-4 px-4">OnlyFans</th>
+                      <th className="text-center text-slate-400 font-semibold pb-4 px-2 text-sm">Throne</th>
+                      <th className="text-center text-slate-400 font-semibold pb-4 px-2 text-sm">Linktree</th>
+                      <th className="text-center text-slate-400 font-semibold pb-4 px-2 text-sm">OnlyFans</th>
+                      <th className="text-center text-slate-400 font-semibold pb-4 px-2 text-sm">Kickstarter</th>
+                      <th className="text-center text-slate-400 font-semibold pb-4 px-2 text-sm">Indiegogo</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -135,12 +165,14 @@ export function ComparisonPage() {
                         className="border-b border-slate-800 hover:bg-slate-800/50 transition-colors"
                       >
                         <td className="text-slate-300 py-4 pr-4">{item.feature}</td>
-                        <td className="text-center py-4 px-4">
+                        <td className="text-center py-4 px-2">
                           <div className="font-bold">{renderValue(item.katoa)}</div>
                         </td>
-                        <td className="text-center py-4 px-4 text-slate-400">{renderValue(item.throne)}</td>
-                        <td className="text-center py-4 px-4 text-slate-400">{renderValue(item.linktree)}</td>
-                        <td className="text-center py-4 px-4 text-slate-400">{renderValue(item.onlyfans)}</td>
+                        <td className="text-center py-4 px-2 text-slate-400 text-sm">{renderValue(item.throne)}</td>
+                        <td className="text-center py-4 px-2 text-slate-400 text-sm">{renderValue(item.linktree)}</td>
+                        <td className="text-center py-4 px-2 text-slate-400 text-sm">{renderValue(item.onlyfans)}</td>
+                        <td className="text-center py-4 px-2 text-slate-400 text-sm">{renderValue(item.kickstarter)}</td>
+                        <td className="text-center py-4 px-2 text-slate-400 text-sm">{renderValue(item.indiegogo)}</td>
                       </tr>
                     ))}
                   </tbody>

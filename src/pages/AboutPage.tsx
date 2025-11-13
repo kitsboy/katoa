@@ -1,4 +1,4 @@
-import { Shield, Zap, Globe, Users, Heart, TrendingUp, Lock, DollarSign } from 'lucide-react';
+import { Shield, Zap, Globe, Users, Heart, TrendingUp, Lock, DollarSign, X } from 'lucide-react';
 import { Card } from '../components/Card';
 import { Link } from '../components/Link';
 import { Button } from '../components/Button';
@@ -43,40 +43,112 @@ export function AboutPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Card className="p-8 bg-red-900/20 border-red-500/30">
               <div className="text-6xl font-black text-red-400 mb-4">20%</div>
               <h3 className="text-2xl font-bold text-white mb-3">OnlyFans</h3>
-              <p className="text-slate-300 leading-relaxed">
+              <p className="text-slate-300 leading-relaxed mb-3">
                 A $10k/month creator loses <span className="text-red-400 font-bold">$24,000 per year</span> to fees.
               </p>
+              <div className="text-sm text-slate-400 border-t border-red-500/20 pt-3 mt-3">
+                <span className="text-red-300 font-semibold">Requires:</span> Bank account + KYC
+              </div>
             </Card>
 
             <Card className="p-8 bg-orange-900/20 border-orange-500/30">
               <div className="text-6xl font-black text-orange-400 mb-4">10%</div>
               <h3 className="text-2xl font-bold text-white mb-3">Throne</h3>
-              <p className="text-slate-300 leading-relaxed">
-                Plus currency conversion fees. Plus withdrawal delays. Plus limited to 10 countries.
+              <p className="text-slate-300 leading-relaxed mb-3">
+                Plus currency conversion. Plus withdrawal delays. Limited to 10 countries.
               </p>
+              <div className="text-sm text-slate-400 border-t border-orange-500/20 pt-3 mt-3">
+                <span className="text-orange-300 font-semibold">Requires:</span> Bank account + KYC
+              </div>
             </Card>
 
             <Card className="p-8 bg-yellow-900/20 border-yellow-500/30">
               <div className="text-6xl font-black text-yellow-400 mb-4">9%</div>
               <h3 className="text-2xl font-bold text-white mb-3">Linktree</h3>
-              <p className="text-slate-300 leading-relaxed">
+              <p className="text-slate-300 leading-relaxed mb-3">
                 Or pay $40/month for 0% fees. Either way, they're taking your money.
               </p>
+              <div className="text-sm text-slate-400 border-t border-yellow-500/20 pt-3 mt-3">
+                <span className="text-yellow-300 font-semibold">Requires:</span> Bank account + payment processor
+              </div>
+            </Card>
+
+            <Card className="p-8 bg-blue-900/20 border-blue-500/30">
+              <div className="text-6xl font-black text-blue-400 mb-4">8-10%</div>
+              <h3 className="text-2xl font-bold text-white mb-3">Kickstarter</h3>
+              <p className="text-slate-300 leading-relaxed mb-3">
+                Plus <span className="text-blue-400 font-bold">$5K-25K fulfillment costs</span>. All-or-nothing funding.
+              </p>
+              <div className="text-sm text-slate-400 border-t border-blue-500/20 pt-3 mt-3">
+                <span className="text-blue-300 font-semibold">Requires:</span> Bank account + KYC + fulfillment
+              </div>
+            </Card>
+
+            <Card className="p-8 bg-cyan-900/20 border-cyan-500/30">
+              <div className="text-6xl font-black text-cyan-400 mb-4">8-15%</div>
+              <h3 className="text-2xl font-bold text-white mb-3">Indiegogo</h3>
+              <p className="text-slate-300 leading-relaxed mb-3">
+                5% holdback until delivery. 14-day payout delays. Flexible but costly.
+              </p>
+              <div className="text-sm text-slate-400 border-t border-cyan-500/20 pt-3 mt-3">
+                <span className="text-cyan-300 font-semibold">Requires:</span> Bank account + KYC + fulfillment
+              </div>
+            </Card>
+
+            <Card className="p-8 bg-emerald-900/30 border-emerald-500/50 relative overflow-hidden">
+              <div className="absolute top-0 right-0 px-3 py-1 bg-emerald-500 text-white text-xs font-bold rounded-bl-lg">
+                YOU
+              </div>
+              <div className="text-6xl font-black text-emerald-400 mb-4">0%</div>
+              <h3 className="text-2xl font-bold text-white mb-3">KATOA</h3>
+              <p className="text-slate-300 leading-relaxed mb-3">
+                No fees. No delays. <span className="text-emerald-400 font-bold">Keep 100%</span> forever.
+              </p>
+              <div className="text-sm text-emerald-300 border-t border-emerald-500/20 pt-3 mt-3 font-semibold">
+                No bank account needed. No KYC.
+              </div>
             </Card>
           </div>
 
           <div className="text-center mt-12">
-            <div className="inline-flex items-center gap-3 px-8 py-4 bg-slate-900 border-2 border-red-500/30 rounded-2xl">
-              <TrendingUp size={32} className="text-red-400" />
-              <div className="text-left">
-                <div className="text-slate-400 text-sm">Average creator loses</div>
-                <div className="text-3xl font-black text-red-400">$12,000-$24,000/year</div>
+            <Card className="inline-block p-8 bg-slate-900 border-2 border-red-500/30">
+              <div className="flex items-center gap-4 mb-6">
+                <TrendingUp size={40} className="text-red-400" />
+                <div className="text-left">
+                  <div className="text-slate-400 text-sm">Average creator loses</div>
+                  <div className="text-4xl font-black text-red-400">$12,000-$24,000/year</div>
+                </div>
               </div>
-            </div>
+              <div className="text-slate-300 text-lg mb-4">
+                <span className="text-white font-bold">ALL 5 platforms require:</span>
+              </div>
+              <div className="grid grid-cols-2 gap-4 text-left">
+                <div className="flex items-center gap-2 text-slate-400">
+                  <X size={20} className="text-red-400" />
+                  Bank account
+                </div>
+                <div className="flex items-center gap-2 text-slate-400">
+                  <X size={20} className="text-red-400" />
+                  KYC verification
+                </div>
+                <div className="flex items-center gap-2 text-slate-400">
+                  <X size={20} className="text-red-400" />
+                  Payment processors
+                </div>
+                <div className="flex items-center gap-2 text-slate-400">
+                  <X size={20} className="text-red-400" />
+                  Geographic limits
+                </div>
+              </div>
+              <div className="mt-6 pt-6 border-t border-slate-700">
+                <div className="text-emerald-400 font-bold text-xl mb-2">KATOA requires: NOTHING</div>
+                <div className="text-slate-400">Just a Bitcoin Lightning wallet. That's it.</div>
+              </div>
+            </Card>
           </div>
         </div>
       </section>
@@ -199,6 +271,204 @@ export function AboutPage() {
               </Card>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Detailed Competitive Breakdown */}
+      <section className="py-20 px-6 bg-gradient-to-b from-slate-900 to-black">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+              Why Every Competitor Falls Short
+            </h2>
+            <p className="text-xl text-slate-400 max-w-3xl mx-auto">
+              They all have the same fundamental flaw: dependence on traditional banking systems.
+            </p>
+          </div>
+
+          <div className="space-y-8">
+            <Card className="p-8 bg-gradient-to-r from-red-900/20 to-slate-800 border-red-500/30">
+              <div className="flex items-start gap-6">
+                <div className="text-5xl">💰</div>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold text-white mb-3">OnlyFans: 20% Platform Tax</h3>
+                  <p className="text-slate-300 mb-4 leading-relaxed">
+                    A creator making $10K/month loses <span className="text-red-400 font-bold">$2,000 per month</span> ($24K/year).
+                    Plus censorship risk from Mastercard/Visa. Plus account suspension without appeal.
+                  </p>
+                  <div className="grid md:grid-cols-2 gap-4 text-sm">
+                    <div className="flex items-center gap-2 text-slate-400">
+                      <X size={16} className="text-red-400" />
+                      Requires bank account + KYC
+                    </div>
+                    <div className="flex items-center gap-2 text-slate-400">
+                      <X size={16} className="text-red-400" />
+                      7-day payout delays
+                    </div>
+                    <div className="flex items-center gap-2 text-slate-400">
+                      <X size={16} className="text-red-400" />
+                      Payment processor censorship
+                    </div>
+                    <div className="flex items-center gap-2 text-slate-400">
+                      <X size={16} className="text-red-400" />
+                      Limited to supported countries
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-8 bg-gradient-to-r from-blue-900/20 to-slate-800 border-blue-500/30">
+              <div className="flex items-start gap-6">
+                <div className="text-5xl">🚀</div>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold text-white mb-3">Kickstarter: Fulfillment Nightmare</h3>
+                  <p className="text-slate-300 mb-4 leading-relaxed">
+                    8-10% platform fees, plus <span className="text-blue-400 font-bold">$5K-25K+ fulfillment costs</span>.
+                    All-or-nothing funding means if you don't hit your goal, you get $0.
+                  </p>
+                  <div className="grid md:grid-cols-2 gap-4 text-sm">
+                    <div className="flex items-center gap-2 text-slate-400">
+                      <X size={16} className="text-blue-400" />
+                      Requires bank account + KYC
+                    </div>
+                    <div className="flex items-center gap-2 text-slate-400">
+                      <X size={16} className="text-blue-400" />
+                      14+ day payout delays
+                    </div>
+                    <div className="flex items-center gap-2 text-slate-400">
+                      <X size={16} className="text-blue-400" />
+                      Shipping/fulfillment stress
+                    </div>
+                    <div className="flex items-center gap-2 text-slate-400">
+                      <X size={16} className="text-blue-400" />
+                      One-time funding only
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-8 bg-gradient-to-r from-cyan-900/20 to-slate-800 border-cyan-500/30">
+              <div className="flex items-start gap-6">
+                <div className="text-5xl">🎯</div>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold text-white mb-3">Indiegogo: Hidden Holdbacks</h3>
+                  <p className="text-slate-300 mb-4 leading-relaxed">
+                    8-15% total fees including <span className="text-cyan-400 font-bold">5% holdback until delivery</span>.
+                    Flexible funding sounds good until you realize they're holding your money hostage.
+                  </p>
+                  <div className="grid md:grid-cols-2 gap-4 text-sm">
+                    <div className="flex items-center gap-2 text-slate-400">
+                      <X size={16} className="text-cyan-400" />
+                      Requires bank account + KYC
+                    </div>
+                    <div className="flex items-center gap-2 text-slate-400">
+                      <X size={16} className="text-cyan-400" />
+                      14-day payout delays
+                    </div>
+                    <div className="flex items-center gap-2 text-slate-400">
+                      <X size={16} className="text-cyan-400" />
+                      5% held until product delivery
+                    </div>
+                    <div className="flex items-center gap-2 text-slate-400">
+                      <X size={16} className="text-cyan-400" />
+                      Fulfillment required
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-8 bg-gradient-to-r from-yellow-900/20 to-slate-800 border-yellow-500/30">
+              <div className="flex items-start gap-6">
+                <div className="text-5xl">🔗</div>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold text-white mb-3">Linktree: Pay-to-Win Monetization</h3>
+                  <p className="text-slate-300 mb-4 leading-relaxed">
+                    Free tier: 10% fees. Or pay <span className="text-yellow-400 font-bold">$40/month</span> ($480/year) for 0% fees.
+                    Either way, you lose money just to have a landing page.
+                  </p>
+                  <div className="grid md:grid-cols-2 gap-4 text-sm">
+                    <div className="flex items-center gap-2 text-slate-400">
+                      <X size={16} className="text-yellow-400" />
+                      Requires payment processor
+                    </div>
+                    <div className="flex items-center gap-2 text-slate-400">
+                      <X size={16} className="text-yellow-400" />
+                      Geographic restrictions
+                    </div>
+                    <div className="flex items-center gap-2 text-slate-400">
+                      <X size={16} className="text-yellow-400" />
+                      9-10% fees or $480/year
+                    </div>
+                    <div className="flex items-center gap-2 text-slate-400">
+                      <X size={16} className="text-yellow-400" />
+                      Limited to 50 countries
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-8 bg-gradient-to-r from-orange-900/20 to-slate-800 border-orange-500/30">
+              <div className="flex items-start gap-6">
+                <div className="text-5xl">🎁</div>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold text-white mb-3">Throne: False Advertising</h3>
+                  <p className="text-slate-300 mb-4 leading-relaxed">
+                    Advertises "0% fees" but actually charges <span className="text-orange-400 font-bold">~10% total</span>.
+                    True 0% only works in ~10 countries. Rest pay full freight.
+                  </p>
+                  <div className="grid md:grid-cols-2 gap-4 text-sm">
+                    <div className="flex items-center gap-2 text-slate-400">
+                      <X size={16} className="text-orange-400" />
+                      Requires bank account + KYC
+                    </div>
+                    <div className="flex items-center gap-2 text-slate-400">
+                      <X size={16} className="text-orange-400" />
+                      7-day withdrawal delays
+                    </div>
+                    <div className="flex items-center gap-2 text-slate-400">
+                      <X size={16} className="text-orange-400" />
+                      Limited to 10 countries for 0%
+                    </div>
+                    <div className="flex items-center gap-2 text-slate-400">
+                      <X size={16} className="text-orange-400" />
+                      Hidden currency conversion fees
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </div>
+
+          <Card className="mt-12 p-12 bg-gradient-to-br from-emerald-900/30 to-cyan-900/30 border-emerald-500/50 text-center">
+            <Shield size={64} className="text-emerald-400 mx-auto mb-6" />
+            <h3 className="text-3xl font-bold text-white mb-4">KATOA: The Only Real Alternative</h3>
+            <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-8 leading-relaxed">
+              We don't charge fees because we <span className="text-emerald-400 font-bold">can't</span>.
+              Bitcoin Lightning payments go directly to you. No intermediary. No bank. No KYC. No geography limits.
+            </p>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
+              <div className="p-4 bg-slate-800/50 rounded-lg border border-emerald-500/30">
+                <div className="text-emerald-400 font-bold mb-2">✓ 0% Fees Forever</div>
+                <div className="text-sm text-slate-400">Not promotional. How it works.</div>
+              </div>
+              <div className="p-4 bg-slate-800/50 rounded-lg border border-emerald-500/30">
+                <div className="text-emerald-400 font-bold mb-2">✓ Instant Payouts</div>
+                <div className="text-sm text-slate-400">Lightning settles in seconds.</div>
+              </div>
+              <div className="p-4 bg-slate-800/50 rounded-lg border border-emerald-500/30">
+                <div className="text-emerald-400 font-bold mb-2">✓ No Bank Needed</div>
+                <div className="text-sm text-slate-400">Just a Lightning wallet.</div>
+              </div>
+              <div className="p-4 bg-slate-800/50 rounded-lg border border-emerald-500/30">
+                <div className="text-emerald-400 font-bold mb-2">✓ 195+ Countries</div>
+                <div className="text-sm text-slate-400">Works everywhere equally.</div>
+              </div>
+            </div>
+          </Card>
         </div>
       </section>
 
