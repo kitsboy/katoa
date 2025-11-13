@@ -16,19 +16,19 @@ export function Button({
   disabled,
   ...props
 }: ButtonProps) {
-  const baseStyles = 'inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseStyles = 'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95';
 
   const variants = {
-    primary: 'bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white shadow-lg hover:shadow-xl',
-    secondary: 'bg-gray-800 hover:bg-gray-700 text-white',
-    outline: 'border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white',
-    ghost: 'text-gray-300 hover:bg-gray-800',
+    primary: 'bg-gradient-to-r from-lavender-400 to-lavender-500 hover:from-lavender-500 hover:to-lavender-600 text-white shadow-lg hover:shadow-xl hover:shadow-lavender-500/30',
+    secondary: 'bg-mocha-500 hover:bg-mocha-600 text-white shadow-md hover:shadow-lg',
+    outline: 'border-2 border-lavender-400 text-lavender-600 hover:bg-lavender-50 backdrop-blur-sm',
+    ghost: 'text-slate-700 hover:bg-lavender-50 hover:text-lavender-600',
   };
 
   const sizes = {
-    sm: 'px-3 py-1.5 text-sm',
-    md: 'px-5 py-2.5 text-base',
-    lg: 'px-7 py-3.5 text-lg',
+    sm: 'px-4 py-2 text-sm rounded-lg',
+    md: 'px-6 py-3 text-base',
+    lg: 'px-8 py-4 text-lg rounded-2xl',
   };
 
   return (

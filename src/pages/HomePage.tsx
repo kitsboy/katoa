@@ -29,46 +29,41 @@ export function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-slate-100 to-slate-200 text-slate-900">
+    <div className="min-h-screen bg-gradient-to-b from-lavender-50 via-white to-mocha-50 text-slate-900">
 
       {/* Hero Section - Concise & Powerful */}
       <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden px-6">
-        {/* Subtle animated background */}
         <div className="absolute inset-0 overflow-hidden opacity-20">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-400/30 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-400/30 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-lavender-300/40 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-mint-300/40 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
         </div>
 
         <div className="relative z-10 max-w-6xl mx-auto text-center">
 
-          {/* Trust Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-emerald-200 rounded-full mb-8 animate-fade-in shadow-sm">
-            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-            <span className="text-sm font-medium text-emerald-700">
+          <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-lavender-200 rounded-full mb-8 animate-fade-in shadow-sm">
+            <div className="w-2 h-2 bg-lavender-500 rounded-full animate-pulse" />
+            <span className="text-sm font-semibold text-lavender-700">
               Trusted by creators worldwide
             </span>
           </div>
 
-          {/* Main Headline */}
           <h1 className="text-5xl md:text-[4rem] lg:text-[4.75rem] font-black mb-6 leading-[1.1] tracking-tight">
-            Keep <span className="text-gradient-emerald">100%</span> of
+            Keep <span className="bg-gradient-to-r from-lavender-500 to-lavender-600 bg-clip-text text-transparent">100%</span> of
             <br />
             Your Earnings
           </h1>
 
-          {/* Subheadline */}
           <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto mb-10 font-medium leading-relaxed">
             Zero fees. Instant Bitcoin payments. Global reach.
             <br />
             <span className="text-slate-500">While competitors take 10-20%, we take nothing.</span>
           </p>
 
-          {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <Link href="/dashboard">
               <Button
                 size="lg"
-                className="min-w-[240px] h-14 text-lg font-bold bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 shadow-[0_20px_60px_-15px_rgba(16,185,129,0.4)] group"
+                className="min-w-[240px] h-14 text-lg font-bold group"
               >
                 Start Earning 100%
                 <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
@@ -78,25 +73,24 @@ export function HomePage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="min-w-[240px] h-14 text-lg font-bold border-2 border-slate-600 hover:border-emerald-500 hover:bg-emerald-500/5"
+                className="min-w-[240px] h-14 text-lg font-bold"
               >
                 See How We Compare
               </Button>
             </Link>
           </div>
 
-          {/* Social Proof Stats */}
-          <div className="flex flex-wrap items-center justify-center gap-8 text-slate-600 text-sm">
+          <div className="flex flex-wrap items-center justify-center gap-8 text-slate-600 text-sm font-medium">
             <div className="flex items-center gap-2">
-              <CheckCircle2 size={16} className="text-emerald-500" />
+              <CheckCircle2 size={18} className="text-lavender-500" />
               <span>{stats.volume} sats processed</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 size={16} className="text-emerald-500" />
+              <CheckCircle2 size={18} className="text-lavender-500" />
               <span>{stats.countries} countries served</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 size={16} className="text-emerald-500" />
+              <CheckCircle2 size={18} className="text-lavender-500" />
               <span>0% fees forever</span>
             </div>
           </div>
@@ -109,10 +103,10 @@ export function HomePage() {
           <div className="grid md:grid-cols-3 gap-8">
 
             {/* Card 1: Lightning Fast */}
-            <Card className="group p-8 bg-white border-slate-200 hover:border-emerald-400 hover:shadow-lg transition-all duration-300">
+            <Card className="group p-8 bg-white border-lavender-200 hover:border-lavender-400 hover:shadow-xl hover:shadow-lavender-500/10 transition-all duration-300">
               <Tooltip content="Bitcoin Lightning Network enables instant settlements with sub-cent fees, making micro-transactions economically viable for the first time.">
-                <div className="w-14 h-14 bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-2xl flex items-center justify-center mb-6 shadow-md">
-                  <Zap size={28} className="text-white" />
+                <div className="w-16 h-16 bg-gradient-to-br from-lavender-400 to-lavender-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <Zap size={32} className="text-white" strokeWidth={2.5} />
                 </div>
               </Tooltip>
 
@@ -125,16 +119,16 @@ export function HomePage() {
                 Instant Bitcoin payments via Lightning Network. Funds arrive in seconds, not days.
               </p>
 
-              <div className="pt-4 border-t border-slate-200">
-                <div className="text-emerald-600 font-semibold">vs. 7-day payouts elsewhere</div>
+              <div className="pt-4 border-t border-lavender-100">
+                <div className="text-lavender-600 font-semibold">vs. 7-day payouts elsewhere</div>
               </div>
             </Card>
 
             {/* Card 2: Truly Global */}
-            <Card className="group p-8 bg-white border-slate-200 hover:border-blue-400 hover:shadow-lg transition-all duration-300">
+            <Card className="group p-8 bg-white border-mint-200 hover:border-mint-400 hover:shadow-xl hover:shadow-mint-500/10 transition-all duration-300">
               <Tooltip content="Bitcoin has no borders. No banks needed. Works everywhere from Argentina to Zimbabwe.">
-                <div className="w-14 h-14 bg-gradient-to-r from-blue-400 to-blue-500 rounded-2xl flex items-center justify-center mb-6 shadow-md">
-                  <Globe size={28} className="text-white" />
+                <div className="w-16 h-16 bg-gradient-to-br from-mint-400 to-mint-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <Globe size={32} className="text-white" strokeWidth={2.5} />
                 </div>
               </Tooltip>
 
@@ -147,16 +141,16 @@ export function HomePage() {
                 No banks required. Works in 195+ countries. Support anyone, anywhere.
               </p>
 
-              <div className="pt-4 border-t border-slate-200">
-                <div className="text-blue-600 font-semibold">vs. ~10 countries with 10% fees</div>
+              <div className="pt-4 border-t border-mint-100">
+                <div className="text-mint-600 font-semibold">vs. ~10 countries with 10% fees</div>
               </div>
             </Card>
 
             {/* Card 3: Actually Private */}
-            <Card className="group p-8 bg-white border-slate-200 hover:border-violet-400 hover:shadow-lg transition-all duration-300">
+            <Card className="group p-8 bg-white border-mocha-200 hover:border-mocha-400 hover:shadow-xl hover:shadow-mocha-500/10 transition-all duration-300">
               <Tooltip content="Zero-knowledge proofs mean we can verify payments without seeing your data. True privacy by design.">
-                <div className="w-14 h-14 bg-gradient-to-r from-violet-400 to-violet-500 rounded-2xl flex items-center justify-center mb-6 shadow-md">
-                  <Shield size={28} className="text-white" />
+                <div className="w-16 h-16 bg-gradient-to-br from-mocha-400 to-mocha-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                  <Shield size={32} className="text-white" strokeWidth={2.5} />
                 </div>
               </Tooltip>
 
@@ -169,82 +163,61 @@ export function HomePage() {
                 Zero-knowledge proofs. Encrypted messaging. Your data stays yours.
               </p>
 
-              <div className="pt-4 border-t border-slate-200">
-                <div className="text-violet-600 font-semibold">vs. server-based data mining</div>
+              <div className="pt-4 border-t border-mocha-100">
+                <div className="text-mocha-600 font-semibold">vs. server-based data mining</div>
               </div>
             </Card>
           </div>
         </div>
       </section>
 
-      {/* Fee Comparison - The Killer Feature */}
-      <section className="py-20 px-6 bg-gradient-to-b from-slate-800 to-slate-900">
-        <div className="max-w-7xl mx-auto">
+      {/* Fee Comparison */}
+      <section className="py-20 px-6 bg-gradient-to-br from-lavender-50 to-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-black text-slate-900 mb-4">
+              Stop Losing <span className="bg-gradient-to-r from-lavender-500 to-lavender-600 bg-clip-text text-transparent">Thousands</span> to Fees
+            </h2>
+            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+              Traditional platforms take 10-20% of everything you earn. We take nothing.
+            </p>
+          </div>
           <FeeComparison />
         </div>
       </section>
 
-      {/* Use Cases - Quick Overview */}
+      {/* Final CTA */}
       <section className="py-20 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Built for Creators Who Keep 100%
-            </h2>
-            <p className="text-xl text-slate-400 max-w-2xl mx-auto">
-              Everything Throne, Linktree, and OnlyFans offer. Without the fees.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { icon: '🎁', title: 'Wishlists', desc: 'Like Throne, but 0% fees', tooltip: 'Create wishlists for gifts, crowdfund items, instant delivery' },
-              { icon: '⚡', title: 'Subscriptions', desc: 'Unlike OnlyFans, you keep 100%', tooltip: 'BOLT 12 recurring payments on-chain, no intermediary' },
-              { icon: '🔗', title: 'Link-in-Bio', desc: 'Like Linktree, but free', tooltip: 'Unlimited links, full customization, zero monthly fees' },
-              { icon: '💬', title: 'Private DMs', desc: 'Encrypted via Nostr', tooltip: 'End-to-end encrypted messaging, no server surveillance' },
-            ].map((item, idx) => (
-              <Tooltip key={idx} content={item.tooltip} position="bottom">
-                <Card className="p-8 text-center bg-slate-800/50 border-slate-700 hover:border-emerald-500/50 transition-all hover-lift cursor-help flex flex-col items-center justify-start h-full">
-                  <div className="text-5xl mb-6">{item.icon}</div>
-                  <h3 className="text-xl font-bold text-white mb-3 min-h-[2rem] flex items-center">{item.title}</h3>
-                  <p className="text-slate-400 text-sm leading-relaxed">{item.desc}</p>
-                </Card>
-              </Tooltip>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA - Clear & Compelling */}
-      <section className="py-32 px-6 bg-gradient-to-b from-slate-900 to-black">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-emerald-500 to-cyan-600 rounded-2xl mb-8 shadow-[0_20px_60px_-15px_rgba(16,185,129,0.5)] animate-float">
-            <TrendingUp size={40} className="text-white" />
-          </div>
-
-          <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            Stop Losing Money to Platform Fees
-          </h2>
-
-          <p className="text-xl md:text-2xl text-slate-300 mb-10 leading-relaxed">
-            A creator earning $10k/month loses <span className="text-red-400 font-bold">$12,000-$24,000 per year</span> to fees.
-            <br />
-            <span className="text-emerald-400 font-bold">With KATOA? $0.</span>
-          </p>
-
-          <Link href="/dashboard">
-            <Button
-              size="lg"
-              className="h-16 px-12 text-xl font-bold bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 shadow-[0_20px_60px_-15px_rgba(16,185,129,0.5)]"
-            >
-              Create Your Free Account
-              <ArrowRight className="ml-3" size={24} />
-            </Button>
-          </Link>
-
-          <p className="text-slate-500 text-sm mt-6">
-            No credit card. No KYC. No fees. Ever.
-          </p>
+          <Card className="p-12 bg-gradient-to-br from-lavender-500 to-lavender-600 border-0 shadow-2xl">
+            <h2 className="text-4xl font-black text-white mb-4">
+              Ready to Keep 100% of Your Earnings?
+            </h2>
+            <p className="text-xl text-lavender-100 mb-8 max-w-2xl mx-auto">
+              Join thousands of creators who've stopped paying platform fees forever.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/dashboard">
+                <Button
+                  size="lg"
+                  className="min-w-[200px] bg-white text-lavender-600 hover:bg-lavender-50 shadow-xl"
+                >
+                  Get Started Free
+                  <ArrowRight className="ml-2" size={20} />
+                </Button>
+              </Link>
+              <Link href="/explore">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="min-w-[200px] border-2 border-white text-white hover:bg-white/10"
+                >
+                  Browse Campaigns
+                  <TrendingUp className="ml-2" size={20} />
+                </Button>
+              </Link>
+            </div>
+          </Card>
         </div>
       </section>
     </div>
