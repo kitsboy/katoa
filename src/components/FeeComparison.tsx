@@ -155,7 +155,15 @@ export function FeeComparison() {
               <h3 className="text-white font-bold text-xl mb-4 flex items-center justify-between">
                 <span>{platform.platform}</span>
                 <Tooltip
-                  content={platform.platform === 'KATOA' ? '0% fees forever. Every dollar you earn is yours to keep.' : platform.platform === 'OnlyFans' ? '20% platform fee on all earnings.' : platform.platform === 'Throne' ? '10% platform fee on all transactions.' : '9% fee + $40/month subscription.'}
+                  content={
+                    platform.platform === 'KATOA'
+                      ? '0% fees forever. Built on Bitcoin Lightning Network. Every dollar you earn is yours to keep. No hidden costs, no platform taxes, no surprise charges.'
+                      : platform.platform === 'OnlyFans'
+                      ? 'OnlyFans charges 20% platform fee on all earnings. If you earn $10,000, they take $2,000. Plus payment processing fees and currency conversion costs.'
+                      : platform.platform === 'Throne'
+                      ? 'Throne charges 10% platform fee plus 2.9% + $0.30 payment processing. Only available in ~10 countries with 0% promotional rate. Requires bank account and KYC verification.'
+                      : 'Linktree charges 9-10% in fees plus $40/month subscription for Commerce features. Payment processing fees vary by region. Requires bank account.'
+                  }
                   icon
                 />
               </h3>
@@ -165,7 +173,15 @@ export function FeeComparison() {
                   <p className="text-white/70 text-sm flex items-center justify-between">
                     <span>Monthly Fees</span>
                     <Tooltip
-                      content={platform.platform === 'KATOA' ? 'Zero fees means you keep 100% of earnings.' : `${platform.platform} takes ${formatCurrency(platform.fees)} from ${formatCurrency(amountInUSD)}.`}
+                      content={
+                        platform.platform === 'KATOA'
+                          ? 'Zero fees forever. KATOA never takes a cut of your earnings. No monthly subscriptions. No transaction fees. No payment processing fees. What you earn is what you keep.'
+                          : platform.platform === 'OnlyFans'
+                          ? `OnlyFans takes 20% of everything you earn. From ${formatCurrency(amountInUSD)}, they extract ${formatCurrency(platform.fees)}. This applies to subscriptions, tips, PPV, and all other revenue.`
+                          : platform.platform === 'Throne'
+                          ? `Throne charges 10% platform fee on all transactions. From ${formatCurrency(amountInUSD)}, they take ${formatCurrency(platform.fees)}. Additional payment processing fees apply.`
+                          : `Linktree charges approximately 9% in fees plus $40/month subscription. From ${formatCurrency(amountInUSD)}, total cost is ${formatCurrency(platform.fees)}. Payment processor fees vary by location.`
+                      }
                       icon
                     />
                   </p>
@@ -178,7 +194,11 @@ export function FeeComparison() {
                   <p className="text-white/70 text-sm flex items-center justify-between">
                     <span>You Keep</span>
                     <Tooltip
-                      content={`Your actual take-home: ${formatCurrency(platform.net)} from ${formatCurrency(amountInUSD)} earned.`}
+                      content={
+                        platform.platform === 'KATOA'
+                          ? `Your actual take-home: ${formatCurrency(platform.net)} from ${formatCurrency(amountInUSD)} earned. That's 100% of your earnings. Instant settlement via Bitcoin Lightning Network.`
+                          : `Your actual take-home after ${platform.platform} takes their cut: ${formatCurrency(platform.net)} from ${formatCurrency(amountInUSD)} earned. You lose ${formatCurrency(platform.fees)} to platform fees. Payouts take 7-14 days.`
+                      }
                       icon
                     />
                   </p>
