@@ -129,7 +129,20 @@ export function Navbar() {
                     {t('nav.settings')}
                   </Link>
                   <div className="flex items-center gap-3">
-                    <span className="text-sm text-gray-400">{profile?.username}</span>
+                    <Link href="/settings" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                      {profile?.avatar_url ? (
+                        <img
+                          src={profile.avatar_url}
+                          alt={profile.username}
+                          className="w-8 h-8 rounded-full object-cover border-2 border-orange-500/50"
+                        />
+                      ) : (
+                        <div className="w-8 h-8 rounded-full bg-orange-500/20 border-2 border-orange-500/50 flex items-center justify-center">
+                          <User size={16} className="text-orange-500" />
+                        </div>
+                      )}
+                      <span className="text-sm text-gray-400">{profile?.username}</span>
+                    </Link>
                     <Button
                       variant="ghost"
                       size="sm"
@@ -197,7 +210,23 @@ export function Navbar() {
                     Settings & Profile
                   </Link>
                   <div className="pt-2 border-t border-gray-800">
-                    <p className="text-xs text-gray-500 mb-2">Account: {profile?.username}</p>
+                    <div className="flex items-center gap-3 mb-3">
+                      {profile?.avatar_url ? (
+                        <img
+                          src={profile.avatar_url}
+                          alt={profile.username}
+                          className="w-10 h-10 rounded-full object-cover border-2 border-orange-500/50"
+                        />
+                      ) : (
+                        <div className="w-10 h-10 rounded-full bg-orange-500/20 border-2 border-orange-500/50 flex items-center justify-center">
+                          <User size={20} className="text-orange-500" />
+                        </div>
+                      )}
+                      <div>
+                        <p className="text-sm text-white font-medium">{profile?.username}</p>
+                        <p className="text-xs text-gray-500">View Profile</p>
+                      </div>
+                    </div>
                     <Button variant="ghost" size="sm" onClick={() => signOut()} className="w-full">
                       <LogOut size={18} className="mr-2" />
                       Sign Out
