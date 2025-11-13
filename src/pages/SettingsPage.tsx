@@ -5,19 +5,27 @@ import { Card } from '../components/Card';
 import { Input } from '../components/Input';
 import { MediaUpload } from '../components/MediaUpload';
 import { WalletAddressManager } from '../components/WalletAddressManager';
+import { Link } from '../components/Link';
 import { supabase } from '../lib/supabase';
 import {
   User, Wallet, MapPin, Image as ImageIcon,
-  Settings as SettingsIcon, Save, Upload, Camera, Zap, Check, AlertCircle, LayoutDashboard
+  Settings as SettingsIcon, Save, Upload, Camera, Zap, Check, AlertCircle, LayoutDashboard,
+  Heart, TrendingUp, Users, FolderOpen
 } from 'lucide-react';
 
-type Tab = 'profile' | 'wallet' | 'dashboard' | 'shipping' | 'advanced';
+type Tab = 'profile' | 'wallet' | 'projects' | 'shipping' | 'advanced';
 
 export function SettingsPage() {
   const { user, profile, updateProfile } = useAuth();
   const [activeTab, setActiveTab] = useState<Tab>('profile');
   const [processing, setProcessing] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [stats, setStats] = useState({
+    wishlists: 0,
+    following: 0,
+    contributions: 0,
+    projectFollowers: 0,
+  });
 
   const [profileForm, setProfileForm] = useState({
     username: '',
@@ -42,6 +50,34 @@ export function SettingsPage() {
       });
     }
   }, [profile]);
+
+  useEffect(() => {
+    if (user) {
+      loadStats();
+    }
+  }, [user]);
+
+  async function loadStats() {
+    if (!user) return;
+
+    try {
+      const [wishlistsRes, followingRes, contributionsRes, followersRes] = await Promise.all([
+        supabase.from('wishlists').select('id', { count: 'exact', head: true }).eq('creator_id', user.id),
+        supabase.from('user_follows').select('id', { count: 'exact', head: true }).eq('follower_id', user.id),
+        supabase.from('contributions').select('id', { count: 'exact', head: true }).eq('contributor_id', user.id),
+        supabase.from('project_follows').select('id', { count: 'exact', head: true }).eq('project_creator_id', user.id),
+      ]);
+
+      setStats({
+        wishlists: wishlistsRes.count || 0,
+        following: followingRes.count || 0,
+        contributions: contributionsRes.count || 0,
+        projectFollowers: followersRes.count || 0,
+      });
+    } catch (error) {
+      console.error('Error loading stats:', error);
+    }
+  }
 
   async function handleSaveProfile(e: React.FormEvent) {
     e.preventDefault();
@@ -154,7 +190,7 @@ export function SettingsPage() {
   const tabs = [
     { id: 'profile' as Tab, label: 'Profile', icon: User, color: 'from-orange-500 to-amber-600' },
     { id: 'wallet' as Tab, label: 'Wallet', icon: Wallet, color: 'from-emerald-500 to-cyan-600' },
-    { id: 'dashboard' as Tab, label: 'Dashboard', icon: LayoutDashboard, color: 'from-cyan-500 to-blue-600' },
+    { id: 'projects' as Tab, label: 'Projects', icon: LayoutDashboard, color: 'from-cyan-500 to-blue-600' },
     { id: 'shipping' as Tab, label: 'Shipping', icon: MapPin, color: 'from-purple-500 to-pink-600' },
     { id: 'advanced' as Tab, label: 'Advanced', icon: SettingsIcon, color: 'from-gray-500 to-gray-700' },
   ];
@@ -480,80 +516,81 @@ export function SettingsPage() {
               </Card>
             )}
 
-            {activeTab === 'dashboard' && (
+            {activeTab === 'projects' && (
               <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 p-8">
                 <div className="flex items-center gap-3 mb-8">
                   <div className="p-3 bg-cyan-500/20 rounded-xl">
                     <LayoutDashboard size={28} className="text-cyan-500" />
                   </div>
                   <div>
-                    <h2 className="text-3xl font-black text-white">Creator Dashboard</h2>
-                    <p className="text-gray-400">Quick access to your creator dashboard</p>
+                    <h2 className="text-3xl font-black text-white">Projects & Analytics</h2>
+                    <p className="text-gray-400">Overview of your wishlists and activity</p>
                   </div>
                 </div>
 
                 <div className="space-y-6">
-                  <div className="p-6 bg-black rounded-xl border border-gray-700">
-                    <h3 className="text-xl font-bold text-white mb-4">Dashboard Overview</h3>
-                    <p className="text-gray-300 mb-6 leading-relaxed">
-                      Your creator dashboard helps you manage projects, track contributions, and monitor your wishlists all in one place.
-                    </p>
-                    <a href="/#/dashboard" className="inline-block">
-                      <Button className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 font-bold text-lg px-8 py-4 shadow-[0_0_30px_rgba(6,182,212,0.3)]">
-                        <LayoutDashboard size={24} className="mr-3" />
-                        Go to Dashboard
-                      </Button>
-                    </a>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="p-6 bg-gradient-to-br from-orange-500/10 to-orange-600/5 rounded-xl border border-orange-500/30 hover:border-orange-500/50 transition-all">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="p-3 bg-orange-500/20 rounded-lg">
+                          <FolderOpen size={24} className="text-orange-500" />
+                        </div>
+                        <span className="text-4xl font-black text-white">{stats.wishlists}</span>
+                      </div>
+                      <h4 className="text-lg font-bold text-white mb-1">Wishlists</h4>
+                      <p className="text-orange-400 text-sm font-medium">Active projects</p>
+                    </div>
+
+                    <div className="p-6 bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 rounded-xl border border-emerald-500/30 hover:border-emerald-500/50 transition-all">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="p-3 bg-emerald-500/20 rounded-lg">
+                          <Heart size={24} className="text-emerald-500" />
+                        </div>
+                        <span className="text-4xl font-black text-white">{stats.following}</span>
+                      </div>
+                      <h4 className="text-lg font-bold text-white mb-1">Following</h4>
+                      <p className="text-emerald-400 text-sm font-medium">Creators you support</p>
+                    </div>
+
+                    <div className="p-6 bg-gradient-to-br from-cyan-500/10 to-cyan-600/5 rounded-xl border border-cyan-500/30 hover:border-cyan-500/50 transition-all">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="p-3 bg-cyan-500/20 rounded-lg">
+                          <Wallet size={24} className="text-cyan-500" />
+                        </div>
+                        <span className="text-4xl font-black text-white">{stats.contributions}</span>
+                      </div>
+                      <h4 className="text-lg font-bold text-white mb-1">Contributions</h4>
+                      <p className="text-cyan-400 text-sm font-medium">Payments made</p>
+                    </div>
+
+                    <div className="p-6 bg-gradient-to-br from-purple-500/10 to-purple-600/5 rounded-xl border border-purple-500/30 hover:border-purple-500/50 transition-all">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="p-3 bg-purple-500/20 rounded-lg">
+                          <Users size={24} className="text-purple-500" />
+                        </div>
+                        <span className="text-4xl font-black text-white">{stats.projectFollowers}</span>
+                      </div>
+                      <h4 className="text-lg font-bold text-white mb-1">Followers</h4>
+                      <p className="text-purple-400 text-sm font-medium">Project supporters</p>
+                    </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="p-6 bg-black rounded-xl border border-gray-700">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="p-2 bg-orange-500/20 rounded-lg">
-                          <User size={20} className="text-orange-500" />
-                        </div>
-                        <h4 className="text-lg font-bold text-white">Projects</h4>
+                  <div className="p-8 bg-black rounded-xl border border-gray-700">
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className="p-4 bg-cyan-500/20 rounded-xl">
+                        <TrendingUp size={32} className="text-cyan-500" />
                       </div>
-                      <p className="text-gray-400 text-sm">
-                        Create and manage multiple projects to organize your wishlists and campaigns.
-                      </p>
-                    </div>
-
-                    <div className="p-6 bg-black rounded-xl border border-gray-700">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="p-2 bg-emerald-500/20 rounded-lg">
-                          <Wallet size={20} className="text-emerald-500" />
-                        </div>
-                        <h4 className="text-lg font-bold text-white">Contributions</h4>
+                      <div>
+                        <h3 className="text-2xl font-black text-white mb-1">Manage Your Projects</h3>
+                        <p className="text-gray-400">Create, edit, and track all your wishlists and campaigns</p>
                       </div>
-                      <p className="text-gray-400 text-sm">
-                        Track Bitcoin contributions and monitor progress toward your goals.
-                      </p>
                     </div>
-
-                    <div className="p-6 bg-black rounded-xl border border-gray-700">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="p-2 bg-purple-500/20 rounded-lg">
-                          <MapPin size={20} className="text-purple-500" />
-                        </div>
-                        <h4 className="text-lg font-bold text-white">Following</h4>
-                      </div>
-                      <p className="text-gray-400 text-sm">
-                        See what projects, wishlists, and creators you're supporting.
-                      </p>
-                    </div>
-
-                    <div className="p-6 bg-black rounded-xl border border-gray-700">
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="p-2 bg-blue-500/20 rounded-lg">
-                          <ImageIcon size={20} className="text-blue-500" />
-                        </div>
-                        <h4 className="text-lg font-bold text-white">Analytics</h4>
-                      </div>
-                      <p className="text-gray-400 text-sm">
-                        View statistics about your projects and supporter engagement.
-                      </p>
-                    </div>
+                    <Link href="/dashboard">
+                      <Button className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 font-black text-lg py-6 shadow-[0_0_30px_rgba(6,182,212,0.3)]">
+                        <LayoutDashboard size={28} className="mr-3" />
+                        Open Dashboard
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               </Card>
