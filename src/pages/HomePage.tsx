@@ -100,10 +100,10 @@ export function HomePage() {
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-3 gap-8">
 
-            <Card className="group p-8 bg-sand-tan-50 border-sand-tan-300 hover:border-sand-tan-400 hover:shadow-xl hover:shadow-sand-tan-300/30 transition-all duration-300">
+            <Card className="group p-8 bg-white border-sand-tan-300 hover:border-orange-400 hover:shadow-xl hover:shadow-orange-300/30 transition-all duration-300">
               <Tooltip content="Bitcoin Lightning Network enables instant settlements with sub-cent fees, making micro-transactions economically viable for the first time.">
-                <div className="w-16 h-16 bg-gradient-to-br from-sand-tan-400 to-sand-tan-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-sand-tan-400/30 group-hover:scale-110 transition-transform duration-300">
-                  <Zap size={32} className="text-white" strokeWidth={2.5} />
+                <div className="w-20 h-20 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-3xl flex items-center justify-center mb-6 shadow-2xl shadow-orange-500/50 group-hover:scale-110 transition-transform duration-300">
+                  <Zap size={44} className="text-white" strokeWidth={3} />
                 </div>
               </Tooltip>
 
@@ -112,19 +112,19 @@ export function HomePage() {
                 <Tooltip content="Transactions settle in under 1 second, compared to 7+ days on traditional platforms." icon />
               </h3>
 
-              <p className="text-night-blue-500 leading-relaxed text-lg mb-4">
+              <p className="text-night-blue-800 leading-relaxed text-lg mb-4 font-semibold">
                 Instant Bitcoin payments via Lightning Network. Funds arrive in seconds, not days.
               </p>
 
-              <div className="pt-4 border-t border-sand-tan-200">
-                <div className="text-sand-tan-700 font-bold">vs. 7-day payouts elsewhere</div>
+              <div className="pt-4 border-t border-orange-200">
+                <div className="text-white font-bold text-base bg-orange-500 py-2 px-4 rounded-lg inline-block">vs. 7-day payouts elsewhere</div>
               </div>
             </Card>
 
-            <Card className="group p-8 bg-white border-sand-tan-300 hover:border-sand-tan-400 hover:shadow-xl hover:shadow-sand-tan-300/30 transition-all duration-300">
+            <Card className="group p-8 bg-white border-sand-tan-300 hover:border-blue-400 hover:shadow-xl hover:shadow-blue-300/30 transition-all duration-300">
               <Tooltip content="Bitcoin has no borders. No banks needed. Works everywhere from Argentina to Zimbabwe.">
-                <div className="w-16 h-16 bg-gradient-to-br from-night-blue-400 to-night-blue-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-night-blue-400/30 group-hover:scale-110 transition-transform duration-300">
-                  <Globe size={32} className="text-white" strokeWidth={2.5} />
+                <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-3xl flex items-center justify-center mb-6 shadow-2xl shadow-blue-500/50 group-hover:scale-110 transition-transform duration-300">
+                  <Globe size={44} className="text-white" strokeWidth={3} />
                 </div>
               </Tooltip>
 
@@ -133,19 +133,19 @@ export function HomePage() {
                 <Tooltip content="Unlike Stripe/PayPal that block 50+ countries, Bitcoin works everywhere." icon />
               </h3>
 
-              <p className="text-night-blue-700 leading-relaxed text-lg mb-4 font-semibold">
+              <p className="text-night-blue-800 leading-relaxed text-lg mb-4 font-semibold">
                 No banks required. Works in 195+ countries. Support anyone, anywhere.
               </p>
 
-              <div className="pt-4 border-t border-sand-tan-200">
-                <div className="text-night-blue-700 font-bold">vs. ~10 countries with 10% fees</div>
+              <div className="pt-4 border-t border-blue-200">
+                <div className="text-white font-bold text-base bg-blue-500 py-2 px-4 rounded-lg inline-block">vs. ~10 countries with 10% fees</div>
               </div>
             </Card>
 
-            <Card className="group p-8 bg-sand-tan-50 border-sand-tan-300 hover:border-sand-tan-400 hover:shadow-xl hover:shadow-sand-tan-300/30 transition-all duration-300">
+            <Card className="group p-8 bg-white border-sand-tan-300 hover:border-green-400 hover:shadow-xl hover:shadow-green-300/30 transition-all duration-300">
               <Tooltip content="Zero-knowledge proofs mean we can verify payments without seeing your data. True privacy by design.">
-                <div className="w-16 h-16 bg-gradient-to-br from-sand-tan-600 to-night-blue-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-sand-tan-400/30 group-hover:scale-110 transition-transform duration-300">
-                  <Shield size={32} className="text-white" strokeWidth={2.5} />
+                <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-500 rounded-3xl flex items-center justify-center mb-6 shadow-2xl shadow-green-500/50 group-hover:scale-110 transition-transform duration-300">
+                  <Shield size={44} className="text-white" strokeWidth={3} />
                 </div>
               </Tooltip>
 
@@ -154,12 +154,12 @@ export function HomePage() {
                 <Tooltip content="Decentralized means no company owns your data. Encrypted via Nostr protocol." icon />
               </h3>
 
-              <p className="text-night-blue-700 leading-relaxed text-lg mb-4 font-semibold">
+              <p className="text-night-blue-800 leading-relaxed text-lg mb-4 font-semibold">
                 Zero-knowledge proofs. Encrypted messaging. Your data stays yours.
               </p>
 
-              <div className="pt-4 border-t border-sand-tan-200">
-                <div className="text-night-blue-700 font-bold">vs. server-based data mining</div>
+              <div className="pt-4 border-t border-green-200">
+                <div className="text-white font-bold text-base bg-green-500 py-2 px-4 rounded-lg inline-block">vs. server-based data mining</div>
               </div>
             </Card>
           </div>
