@@ -329,12 +329,38 @@ export function SettingsPage() {
     setProcessing(true);
 
     try {
-      const { error } = await updateProfile(profileForm);
-      if (error) throw error;
+      const updates: any = {
+        username: profileForm.username,
+        bio: profileForm.bio,
+        avatar_url: profileForm.avatar_url || null,
+        lightning_address: profileForm.lightning_address || null,
+        nostr_pubkey: profileForm.nostr_pubkey || null,
+        preferred_currency: profileForm.preferred_currency,
+        banner_url: profileForm.banner_url || null,
+        banner_video_url: profileForm.banner_video_url || null,
+        profile_video_url: profileForm.profile_video_url || null,
+        video_title: profileForm.video_title || null,
+        social_feed_url: profileForm.social_feed_url || null,
+        social_feed_title: profileForm.social_feed_title || 'My Social Feed',
+        social_feed_height: profileForm.social_feed_height || '600px',
+      };
+
+      if (profileForm.video_date) {
+        updates.video_date = new Date(profileForm.video_date).toISOString();
+      } else {
+        updates.video_date = null;
+      }
+
+      const { error } = await updateProfile(updates);
+      if (error) {
+        console.error('Update profile error details:', error);
+        throw error;
+      }
+      alert('Profile updated successfully!');
       setShowProfileModal(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error updating profile:', error);
-      alert('Failed to update profile');
+      alert(`Failed to update profile: ${error.message || 'Unknown error'}`);
     } finally {
       setProcessing(false);
     }
