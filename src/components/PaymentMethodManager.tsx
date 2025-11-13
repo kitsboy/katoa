@@ -3,6 +3,7 @@ import { Button } from './Button';
 import { Card } from './Card';
 import { Modal } from './Modal';
 import { Input } from './Input';
+import { QRScanner } from './QRScanner';
 import { supabase } from '../lib/supabase';
 import {
   Plus, Edit, Trash2, Bitcoin, Zap, Hash, Shield, Star,
@@ -37,6 +38,13 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
     derivation_path: "m/84'/0'/0'/0",
     is_primary: false,
   });
+
+  const [showQRScanner, setShowQRScanner] = useState(false);
+
+  function handleQRScan(data: string) {
+    setFormData({ ...formData, address: data });
+    setShowQRScanner(false);
+  }
 
   useEffect(() => {
     loadPaymentMethods();
@@ -335,25 +343,37 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
             required
           />
 
-          <Input
-            label={
-              formData.method_type === 'bitcoin_xpub' ? 'Extended Public Key (xpub)' :
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-2">
+              {formData.method_type === 'bitcoin_xpub' ? 'Extended Public Key (xpub)' :
               formData.method_type === 'lightning' ? 'Lightning Address or LNURL' :
               formData.method_type === 'nostr' ? 'Nostr Public Key (npub)' :
               formData.method_type === 'nym' ? 'Nym/Pynym Address' :
-              'Address'
-            }
-            value={formData.address}
-            onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-            placeholder={
-              formData.method_type === 'bitcoin_xpub' ? 'xpub6...' :
-              formData.method_type === 'lightning' ? 'user@getalby.com' :
-              formData.method_type === 'nostr' ? 'npub1...' :
-              formData.method_type === 'nym' ? 'nym address' :
-              'Enter address'
-            }
-            required
-          />
+              'Address'}
+            </label>
+            <div className="flex gap-2">
+              <Input
+                value={formData.address}
+                onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                placeholder={
+                  formData.method_type === 'bitcoin_xpub' ? 'xpub6...' :
+                  formData.method_type === 'lightning' ? 'user@getalby.com' :
+                  formData.method_type === 'nostr' ? 'npub1...' :
+                  formData.method_type === 'nym' ? 'nym address' :
+                  'Enter address'
+                }
+                required
+              />
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowQRScanner(true)}
+                className="flex-shrink-0"
+              >
+                <Scan size={16} />
+              </Button>
+            </div>
+          </div>
 
           {formData.method_type === 'bitcoin_xpub' && (
             <Input
@@ -397,6 +417,14 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
             </Button>
           </div>
         </form>
+      </Modal>
+
+      <Modal
+        isOpen={showQRScanner}
+        onClose={() => setShowQRScanner(false)}
+        title="Scan QR Code"
+      >
+        <QRScanner onScan={handleQRScan} />
       </Modal>
     </div>
   );

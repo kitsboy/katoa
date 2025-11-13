@@ -29,38 +29,38 @@ export function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-black text-white">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-slate-100 to-slate-200 text-slate-900">
 
       {/* Hero Section - Concise & Powerful */}
       <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden px-6">
         {/* Subtle animated background */}
-        <div className="absolute inset-0 overflow-hidden opacity-30">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute inset-0 overflow-hidden opacity-20">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-400/30 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-400/30 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
         </div>
 
         <div className="relative z-10 max-w-6xl mx-auto text-center">
 
           {/* Trust Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full mb-8 animate-fade-in">
-            <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-            <span className="text-sm font-medium text-emerald-300">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-emerald-200 rounded-full mb-8 animate-fade-in shadow-sm">
+            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+            <span className="text-sm font-medium text-emerald-700">
               Trusted by creators worldwide
             </span>
           </div>
 
           {/* Main Headline */}
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-6 leading-[1.1] tracking-tight">
+          <h1 className="text-5xl md:text-[4rem] lg:text-[4.75rem] font-black mb-6 leading-[1.1] tracking-tight">
             Keep <span className="text-gradient-emerald">100%</span> of
             <br />
             Your Earnings
           </h1>
 
           {/* Subheadline */}
-          <p className="text-xl md:text-2xl text-slate-300 max-w-3xl mx-auto mb-10 font-medium leading-relaxed">
+          <p className="text-xl md:text-2xl text-slate-600 max-w-3xl mx-auto mb-10 font-medium leading-relaxed">
             Zero fees. Instant Bitcoin payments. Global reach.
             <br />
-            <span className="text-slate-400">While competitors take 10-20%, we take nothing.</span>
+            <span className="text-slate-500">While competitors take 10-20%, we take nothing.</span>
           </p>
 
           {/* CTA Buttons */}
@@ -86,17 +86,17 @@ export function HomePage() {
           </div>
 
           {/* Social Proof Stats */}
-          <div className="flex flex-wrap items-center justify-center gap-8 text-slate-400 text-sm">
+          <div className="flex flex-wrap items-center justify-center gap-8 text-slate-600 text-sm">
             <div className="flex items-center gap-2">
-              <CheckCircle2 size={16} className="text-emerald-400" />
+              <CheckCircle2 size={16} className="text-emerald-500" />
               <span>{stats.volume} sats processed</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 size={16} className="text-emerald-400" />
+              <CheckCircle2 size={16} className="text-emerald-500" />
               <span>{stats.countries} countries served</span>
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle2 size={16} className="text-emerald-400" />
+              <CheckCircle2 size={16} className="text-emerald-500" />
               <span>0% fees forever</span>
             </div>
           </div>
@@ -109,68 +109,68 @@ export function HomePage() {
           <div className="grid md:grid-cols-3 gap-8">
 
             {/* Card 1: Lightning Fast */}
-            <Card className="group p-8 bg-gradient-to-br from-slate-800/80 to-slate-700/80 border-slate-700 hover:border-emerald-500/50 transition-all duration-300 hover-lift">
+            <Card className="group p-8 bg-white border-slate-200 hover:border-emerald-400 hover:shadow-lg transition-all duration-300">
               <Tooltip content="Bitcoin Lightning Network enables instant settlements with sub-cent fees, making micro-transactions economically viable for the first time.">
-                <div className="w-14 h-14 bg-gradient-to-r from-emerald-500 to-cyan-600 rounded-2xl flex items-center justify-center mb-6 group-hover:animate-glow">
+                <div className="w-14 h-14 bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-2xl flex items-center justify-center mb-6 shadow-md">
                   <Zap size={28} className="text-white" />
                 </div>
               </Tooltip>
 
-              <h3 className="text-2xl font-bold text-white mb-3">
+              <h3 className="text-2xl font-bold text-slate-900 mb-3">
                 Lightning Fast
                 <Tooltip content="Transactions settle in under 1 second, compared to 7+ days on traditional platforms." icon />
               </h3>
 
-              <p className="text-slate-400 leading-relaxed text-lg mb-4">
+              <p className="text-slate-600 leading-relaxed text-lg mb-4">
                 Instant Bitcoin payments via Lightning Network. Funds arrive in seconds, not days.
               </p>
 
-              <div className="pt-4 border-t border-slate-700">
-                <div className="text-emerald-400 font-semibold">vs. 7-day payouts elsewhere</div>
+              <div className="pt-4 border-t border-slate-200">
+                <div className="text-emerald-600 font-semibold">vs. 7-day payouts elsewhere</div>
               </div>
             </Card>
 
             {/* Card 2: Truly Global */}
-            <Card className="group p-8 bg-gradient-to-br from-slate-800/80 to-slate-700/80 border-slate-700 hover:border-cyan-500/50 transition-all duration-300 hover-lift">
+            <Card className="group p-8 bg-white border-slate-200 hover:border-blue-400 hover:shadow-lg transition-all duration-300">
               <Tooltip content="Bitcoin has no borders. No banks needed. Works everywhere from Argentina to Zimbabwe.">
-                <div className="w-14 h-14 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:animate-glow">
+                <div className="w-14 h-14 bg-gradient-to-r from-blue-400 to-blue-500 rounded-2xl flex items-center justify-center mb-6 shadow-md">
                   <Globe size={28} className="text-white" />
                 </div>
               </Tooltip>
 
-              <h3 className="text-2xl font-bold text-white mb-3">
+              <h3 className="text-2xl font-bold text-slate-900 mb-3">
                 Truly Global
                 <Tooltip content="Unlike Stripe/PayPal that block 50+ countries, Bitcoin works everywhere." icon />
               </h3>
 
-              <p className="text-slate-400 leading-relaxed text-lg mb-4">
+              <p className="text-slate-600 leading-relaxed text-lg mb-4">
                 No banks required. Works in 195+ countries. Support anyone, anywhere.
               </p>
 
-              <div className="pt-4 border-t border-slate-700">
-                <div className="text-cyan-400 font-semibold">vs. ~10 countries with 10% fees</div>
+              <div className="pt-4 border-t border-slate-200">
+                <div className="text-blue-600 font-semibold">vs. ~10 countries with 10% fees</div>
               </div>
             </Card>
 
             {/* Card 3: Actually Private */}
-            <Card className="group p-8 bg-gradient-to-br from-slate-800/80 to-slate-700/80 border-slate-700 hover:border-purple-500/50 transition-all duration-300 hover-lift">
+            <Card className="group p-8 bg-white border-slate-200 hover:border-violet-400 hover:shadow-lg transition-all duration-300">
               <Tooltip content="Zero-knowledge proofs mean we can verify payments without seeing your data. True privacy by design.">
-                <div className="w-14 h-14 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mb-6 group-hover:animate-glow">
+                <div className="w-14 h-14 bg-gradient-to-r from-violet-400 to-violet-500 rounded-2xl flex items-center justify-center mb-6 shadow-md">
                   <Shield size={28} className="text-white" />
                 </div>
               </Tooltip>
 
-              <h3 className="text-2xl font-bold text-white mb-3">
+              <h3 className="text-2xl font-bold text-slate-900 mb-3">
                 Actually Private
                 <Tooltip content="Decentralized means no company owns your data. Encrypted via Nostr protocol." icon />
               </h3>
 
-              <p className="text-slate-400 leading-relaxed text-lg mb-4">
+              <p className="text-slate-600 leading-relaxed text-lg mb-4">
                 Zero-knowledge proofs. Encrypted messaging. Your data stays yours.
               </p>
 
-              <div className="pt-4 border-t border-slate-700">
-                <div className="text-purple-400 font-semibold">vs. server-based data mining</div>
+              <div className="pt-4 border-t border-slate-200">
+                <div className="text-violet-600 font-semibold">vs. server-based data mining</div>
               </div>
             </Card>
           </div>

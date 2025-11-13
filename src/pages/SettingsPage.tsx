@@ -22,6 +22,7 @@ export function SettingsPage() {
     username: '',
     bio: '',
     avatar_url: '',
+    banner_url: '',
     lightning_address: '',
     nostr_pubkey: '',
     preferred_currency: 'USD',
@@ -33,6 +34,7 @@ export function SettingsPage() {
         username: profile.username || '',
         bio: profile.bio || '',
         avatar_url: profile.avatar_url || '',
+        banner_url: (profile as any).banner_url || '',
         lightning_address: profile.lightning_address || '',
         nostr_pubkey: profile.nostr_pubkey || '',
         preferred_currency: (profile as any).preferred_currency || 'USD',
@@ -79,6 +81,40 @@ export function SettingsPage() {
       console.error('Error uploading avatar:', error);
       alert('Failed to upload avatar');
       return null;
+    }
+  }
+
+  async function handleBannerUpload(files: File[]) {
+    if (files.length === 0) return null;
+
+    setProcessing(true);
+    try {
+      const file = files[0];
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user!.id}-banner-${Date.now()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('media')
+        .upload(fileName, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('media')
+        .getPublicUrl(fileName);
+
+      const updatedForm = { ...profileForm, banner_url: publicUrl };
+      setProfileForm(updatedForm);
+
+      await updateProfile(updatedForm);
+      alert('Banner uploaded successfully!');
+      return publicUrl;
+    } catch (error) {
+      console.error('Error uploading banner:', error);
+      alert('Failed to upload banner');
+      return null;
+    } finally {
+      setProcessing(false);
     }
   }
 
@@ -244,7 +280,19 @@ export function SettingsPage() {
                     <label className="block text-sm font-medium text-slate-300 mb-3">
                       Banner Image
                     </label>
-                    <MediaUpload maxFiles={1} />
+                    {profileForm.banner_url && (
+                      <div className="mb-4">
+                        <img
+                          src={profileForm.banner_url}
+                          alt="Banner"
+                          className="w-full h-48 rounded-lg object-cover border-2 border-slate-600"
+                        />
+                      </div>
+                    )}
+                    <MediaUpload onUpload={handleBannerUpload} maxFiles={1} />
+                    {processing && (
+                      <p className="text-emerald-400 text-sm mt-2">Uploading and saving banner...</p>
+                    )}
                   </div>
 
                   <div>

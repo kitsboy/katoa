@@ -303,21 +303,28 @@ export function ProjectPage() {
   }
 
   const getVisibilityBadge = (visibility: string) => {
-    const badges = {
-      public: { icon: Globe, text: 'Public', color: 'emerald' },
-      private: { icon: Lock, text: 'Private', color: 'blue' },
-      draft: { icon: FileText, text: 'Draft', color: 'slate' },
-    };
-
-    const badge = badges[visibility as keyof typeof badges];
-    const Icon = badge.icon;
-
-    return (
-      <span className={`px-3 py-1.5 rounded-full text-xs font-bold bg-${badge.color}-500/20 text-${badge.color}-400 border border-${badge.color}-500/30 flex items-center gap-1`}>
-        <Icon size={12} />
-        {badge.text}
-      </span>
-    );
+    if (visibility === 'public') {
+      return (
+        <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700 border border-emerald-300 flex items-center gap-1">
+          <Globe size={12} />
+          Public
+        </span>
+      );
+    } else if (visibility === 'private') {
+      return (
+        <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-blue-100 text-blue-700 border border-blue-300 flex items-center gap-1">
+          <Lock size={12} />
+          Private
+        </span>
+      );
+    } else {
+      return (
+        <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-slate-200 text-slate-700 border border-slate-300 flex items-center gap-1">
+          <FileText size={12} />
+          Draft
+        </span>
+      );
+    }
   };
 
   if (loading) {
