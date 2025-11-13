@@ -1,4 +1,4 @@
-import { useState, ReactNode } from 'react';
+import { useState, ReactNode, useRef, useEffect } from 'react';
 import { HelpCircle } from 'lucide-react';
 
 interface TooltipProps {
@@ -8,8 +8,50 @@ interface TooltipProps {
   position?: 'top' | 'bottom' | 'left' | 'right';
 }
 
-export function Tooltip({ content, children, icon = false, position = 'bottom' }: TooltipProps) {
+export function Tooltip({ content, children, icon = false, position = 'top' }: TooltipProps) {
   const [isVisible, setIsVisible] = useState(false);
+  const [tooltipStyle, setTooltipStyle] = useState<React.CSSProperties>({});
+  const triggerRef = useRef<HTMLSpanElement>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isVisible && triggerRef.current && tooltipRef.current) {
+      const triggerRect = triggerRef.current.getBoundingClientRect();
+      const tooltipRect = tooltipRef.current.getBoundingClientRect();
+
+      let top = 0;
+      let left = 0;
+
+      switch (position) {
+        case 'top':
+          top = triggerRect.top - tooltipRect.height - 12;
+          left = triggerRect.left + (triggerRect.width / 2) - (tooltipRect.width / 2);
+          break;
+        case 'bottom':
+          top = triggerRect.bottom + 12;
+          left = triggerRect.left + (triggerRect.width / 2) - (tooltipRect.width / 2);
+          break;
+        case 'left':
+          top = triggerRect.top + (triggerRect.height / 2) - (tooltipRect.height / 2);
+          left = triggerRect.left - tooltipRect.width - 12;
+          break;
+        case 'right':
+          top = triggerRect.top + (triggerRect.height / 2) - (tooltipRect.height / 2);
+          left = triggerRect.right + 12;
+          break;
+      }
+
+      left = Math.max(10, Math.min(left, window.innerWidth - tooltipRect.width - 10));
+      top = Math.max(10, Math.min(top, window.innerHeight - tooltipRect.height - 10));
+
+      setTooltipStyle({
+        position: 'fixed',
+        top: `${top}px`,
+        left: `${left}px`,
+        zIndex: 9999,
+      });
+    }
+  }, [isVisible, position]);
 
   const handleMouseEnter = () => {
     setIsVisible(true);
@@ -25,16 +67,10 @@ export function Tooltip({ content, children, icon = false, position = 'bottom' }
     setIsVisible(!isVisible);
   };
 
-  const positionClasses = {
-    top: 'bottom-full left-1/2 -translate-x-1/2 mb-3',
-    bottom: 'top-full left-1/2 -translate-x-1/2 mt-3',
-    left: 'right-full top-1/2 -translate-y-1/2 mr-3',
-    right: 'left-full top-1/2 -translate-y-1/2 ml-3',
-  };
-
   return (
-    <span className="relative inline-block">
+    <>
       <span
+        ref={triggerRef}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         onClick={handleClick}
@@ -44,25 +80,22 @@ export function Tooltip({ content, children, icon = false, position = 'bottom' }
         {icon && (
           <HelpCircle
             size={16}
-            className="text-emerald-500 hover:text-emerald-400 transition-colors ml-1.5 flex-shrink-0"
+            className="text-emerald-400 hover:text-emerald-300 transition-colors ml-1.5 flex-shrink-0"
           />
         )}
       </span>
 
       {isVisible && (
-        <>
-          <div
-            className="fixed inset-0 z-[998]"
-            onClick={() => setIsVisible(false)}
-          />
-          <div
-            className={`absolute z-[999] px-5 py-4 bg-gradient-to-br from-emerald-600 to-emerald-700 text-white text-sm rounded-xl shadow-2xl border-2 border-emerald-400 w-80 max-w-[90vw] ${positionClasses[position]}`}
-          >
-            <div className="leading-relaxed font-medium">{content}</div>
-            <div className="absolute w-3 h-3 bg-emerald-600 border-emerald-400 transform rotate-45 -translate-x-1/2 left-1/2 ${position === 'bottom' ? '-top-1.5 border-l border-t' : '-bottom-1.5 border-r border-b'}"></div>
-          </div>
-        </>
+        <div
+          ref={tooltipRef}
+          style={tooltipStyle}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          className="px-5 py-4 bg-gradient-to-br from-emerald-600 to-emerald-700 text-white text-sm rounded-xl shadow-2xl border-2 border-emerald-400 w-80 max-w-[90vw] pointer-events-auto"
+        >
+          <div className="leading-relaxed font-medium">{content}</div>
+        </div>
       )}
-    </span>
+    </>
   );
 }
