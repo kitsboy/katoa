@@ -6,6 +6,7 @@ import { Modal } from '../components/Modal';
 import { Input } from '../components/Input';
 import { Link } from '../components/Link';
 import { MediaUpload } from '../components/MediaUpload';
+import { PaymentMethodManager } from '../components/PaymentMethodManager';
 import { supabase } from '../lib/supabase';
 import { parseProductUrl } from '../lib/productParser';
 import {
@@ -425,6 +426,14 @@ export function ProjectPage() {
             </div>
           </Card>
         )}
+
+        <Card className="mb-8 bg-slate-800/50 border-slate-700">
+          <div className="flex items-center gap-2 mb-6">
+            <Wallet className="text-emerald-400" size={24} />
+            <h3 className="text-xl font-bold text-white">Payment Methods</h3>
+          </div>
+          <PaymentMethodManager projectId={project.id} />
+        </Card>
 
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-white">Wishlists</h2>
