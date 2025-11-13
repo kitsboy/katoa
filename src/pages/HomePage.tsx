@@ -100,7 +100,7 @@ export function HomePage() {
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-3 gap-8">
 
-            <Card className="group p-8 bg-cloud-500 border-lavender-300 hover:border-lavender-400 hover:shadow-xl hover:shadow-lavender-300/30 transition-all duration-300">
+            <Card className="group p-8 bg-lavender-50 border-lavender-300 hover:border-lavender-400 hover:shadow-xl hover:shadow-lavender-300/30 transition-all duration-300">
               <Tooltip content="Bitcoin Lightning Network enables instant settlements with sub-cent fees, making micro-transactions economically viable for the first time.">
                 <div className="w-16 h-16 bg-gradient-to-br from-lavender-400 to-lavender-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-lavender-400/30 group-hover:scale-110 transition-transform duration-300">
                   <Zap size={32} className="text-white" strokeWidth={2.5} />
@@ -121,7 +121,7 @@ export function HomePage() {
               </div>
             </Card>
 
-            <Card className="group p-8 bg-cloud-500 border-mint-300 hover:border-mint-400 hover:shadow-xl hover:shadow-mint-300/30 transition-all duration-300">
+            <Card className="group p-8 bg-mint-50 border-mint-300 hover:border-mint-400 hover:shadow-xl hover:shadow-mint-300/30 transition-all duration-300">
               <Tooltip content="Bitcoin has no borders. No banks needed. Works everywhere from Argentina to Zimbabwe.">
                 <div className="w-16 h-16 bg-gradient-to-br from-mint-400 to-mint-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-mint-400/30 group-hover:scale-110 transition-transform duration-300">
                   <Globe size={32} className="text-white" strokeWidth={2.5} />
@@ -142,7 +142,7 @@ export function HomePage() {
               </div>
             </Card>
 
-            <Card className="group p-8 bg-cloud-500 border-mocha-300 hover:border-mocha-400 hover:shadow-xl hover:shadow-mocha-300/30 transition-all duration-300">
+            <Card className="group p-8 bg-mocha-50 border-mocha-300 hover:border-mocha-400 hover:shadow-xl hover:shadow-mocha-300/30 transition-all duration-300">
               <Tooltip content="Zero-knowledge proofs mean we can verify payments without seeing your data. True privacy by design.">
                 <div className="w-16 h-16 bg-gradient-to-br from-mocha-400 to-mocha-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-mocha-400/30 group-hover:scale-110 transition-transform duration-300">
                   <Shield size={32} className="text-white" strokeWidth={2.5} />
