@@ -24,6 +24,7 @@ interface Wishlist {
   city?: string;
   latitude?: number;
   longitude?: number;
+  created_at?: string;
   creator: {
     username: string;
     avatar_url: string | null;
@@ -397,7 +398,7 @@ export function ExplorePage() {
                 : 0;
 
               const isTrending = wishlist.total_sats_raised > 50000;
-              const isNew = new Date(wishlist.created_at).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000;
+              const isNew = wishlist.created_at ? new Date(wishlist.created_at).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000 : false;
 
               return (
                 <Link key={wishlist.id} href={`/wishlist/${wishlist.slug}`}>

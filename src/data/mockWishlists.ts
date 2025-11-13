@@ -225,6 +225,7 @@ export const mockWishlists = [
     id: 'mock-001',
     title: 'School in Guatemala Needs Textbooks',
     description: 'Help provide educational materials for 50 students in rural Guatemala. These textbooks will enable children to continue their education and build a better future.',
+    created_at: '2025-10-15T10:00:00Z',
     full_story: `Our school, Escuela Esperanza, serves a rural community in the highlands near Antigua, Guatemala. For the past three years, our 50 students have been sharing 10 outdated textbooks between them. Many children cannot complete their homework because they don't have access to the materials they need.
 
 The children here are incredibly motivated to learn. They wake up at 5 AM and walk up to two hours through mountain paths to reach our school. They deserve to have the proper tools to succeed. With your help, we can purchase 25 mathematics textbooks, 25 science books, reading materials for all grade levels, and essential writing supplies.
@@ -251,6 +252,7 @@ Our teacher, María López, has been teaching here for 15 years with minimal res
     id: 'mock-002',
     title: 'Paul the Artist Needs a Guitar',
     description: 'I am a street musician in Nashville trying to save up for a quality acoustic guitar. Music is my passion and livelihood. Any support appreciated!',
+    created_at: '2025-10-18T14:30:00Z',
     full_story: `Hey there! My name is Paul Henderson, and I've been playing music on the streets of Nashville for the past five years. Music has always been my calling, but my current guitar is falling apart after years of daily use. The neck is warped, several frets are worn down, and it barely stays in tune anymore.
 
 I perform six days a week on Broadway, sharing original songs and classic covers with tourists and locals alike. Music is not just my passion—it's how I make my living and connect with people. I've played through rain, snow, and scorching heat because I believe in the power of live music to bring joy to people's lives.
@@ -277,6 +279,7 @@ I'm not asking for handouts—I work hard every single day. But saving up while 
     id: 'mock-003',
     title: 'Medical Supplies for Kenya Clinic',
     description: 'Our rural clinic serves 2,000 families but lacks basic medical supplies. Help us stock essential medicines and equipment.',
+    created_at: '2025-10-20T09:15:00Z',
     full_story: `Jambo! The Tumaini Health Clinic serves a rural community of over 2,000 families in the outskirts of Nairobi, Kenya. We are the only medical facility within a 30-kilometer radius, and families often walk for hours to reach us. Despite the tremendous need, we operate with critically low supplies.
 
 Our clinic sees an average of 80 patients per day, ranging from children with malaria to mothers in labor to elderly patients with chronic conditions. Too often, we must turn patients away or provide inadequate care because we lack basic medicines, first aid supplies, and diagnostic equipment.
@@ -305,6 +308,7 @@ Your contribution will directly impact the health and wellbeing of an entire com
     id: 'mock-004',
     title: 'Maria Dreams of Becoming a Developer',
     description: 'I am a 19-year-old from Brazil learning to code. I need a laptop to complete my studies and start freelancing. This will change my life!',
+    created_at: '2025-10-25T16:45:00Z',
     full_story: `Olá! My name is Maria Silva, and I'm a 19-year-old aspiring software developer from São Paulo, Brazil. I discovered programming two years ago at a free community coding workshop, and it completely changed my life. For the first time, I felt like I had found something I was truly good at and passionate about.
 
 Since then, I've been learning everything I can through free online resources, completing courses on freeCodeCamp, and practicing coding challenges. But I've been doing all of this on borrowed computers at the public library and internet cafes, which limits my learning time to just a few hours per week.
@@ -333,6 +337,7 @@ This isn't just about getting a laptop. It's about breaking the cycle of poverty
     id: 'mock-005',
     title: 'Clean Water Project - Nigeria',
     description: 'Building a well to provide clean drinking water for a village of 300 people. Every satoshi brings us closer to clean water for all.',
+    created_at: '2025-11-01T11:20:00Z',
     full_story: `Welcome! Water For Life Nigeria is a community-led initiative working to bring clean drinking water to rural villages. Our current project focuses on Oke Village, home to approximately 300 people who currently have no access to clean water.
 
 The nearest clean water source is 5 kilometers away, and villagers—mostly women and children—make this journey twice a day carrying heavy containers. This exhausting routine prevents children from attending school regularly and exposes everyone to dangers along the route. Many families resort to drinking from contaminated streams, leading to frequent outbreaks of waterborne diseases.
@@ -363,6 +368,7 @@ Every contribution brings us closer to breaking ground on this well. Join us in 
     id: 'mock-006',
     title: 'Tokyo Startup Needs Design Tools',
     description: 'Small tech startup building accessibility tools for visually impaired users. Need design software licenses to complete our MVP.',
+    created_at: '2025-11-05T08:00:00Z',
     full_story: `こんにちは (Konnichiwa)! We are AccessTech Tokyo, a small startup team of three developers passionate about making technology more accessible for people with visual impairments. Our flagship product, VoiceNav, is a screen reader that uses AI to provide more natural and context-aware audio descriptions of digital content.
 
 Our team includes Yuki (our lead developer who is herself visually impaired), Hiroshi (AI specialist), and Kenji (UX researcher). We've been working on VoiceNav for the past year, mostly after our day jobs and on weekends. We've built a functional prototype that's already being tested by 50 beta users, and the feedback has been overwhelmingly positive.
@@ -393,6 +399,7 @@ Every contribution brings us closer to making the internet a more accessible pla
     id: 'mock-007',
     title: 'Wildlife Conservation in Australia',
     description: 'Protecting endangered species in the Outback. Funds will go toward camera equipment for monitoring wildlife populations.',
+    created_at: '2025-11-08T13:30:00Z',
     full_story: `G'day! I'm Steve Morrison, a wildlife conservationist working in the Australian Outback for the past 12 years. My team and I are dedicated to protecting endangered species in one of the most remote and harsh environments on Earth.
 
 The Australian Outback is home to incredible biodiversity, but many species are under threat from climate change, habitat loss, and invasive species. We focus on monitoring and protecting several critically endangered species including the Bilby, the Greater Stick-nest Rat, and various native bird species.
@@ -423,6 +430,7 @@ We're a small nonprofit running on passion and minimal funding. Every dollar goe
     id: 'mock-008',
     title: 'Community Garden in Berlin',
     description: 'Creating an urban garden to teach kids about sustainability and healthy eating. Need seeds, tools, and supplies to get started.',
+    created_at: '2025-11-10T10:00:00Z',
     full_story: `Guten Tag! I'm Anna Schmidt, a community organizer in Berlin, Germany. For the past three years, I've been working with local families to transform an abandoned lot in our neighborhood into a thriving community garden where children can learn about sustainable food production and healthy eating.
 
 Our neighborhood, Neukölln, is a vibrant multicultural area with many young families, but it's heavily urbanized with limited green space. Children here grow up surrounded by concrete, with little understanding of where their food comes from or how to grow it themselves.
