@@ -319,7 +319,7 @@ export function ProjectPage() {
       );
     } else {
       return (
-        <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-slate-200 text-slate-700 border border-slate-300 flex items-center gap-1">
+        <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-night-blue-100 text-night-blue-500 border border-night-blue-200 flex items-center gap-1">
           <FileText size={12} />
           Draft
         </span>
@@ -329,7 +329,7 @@ export function ProjectPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-800 via-slate-700 to-black flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-b from-night-blue-500 via-night-blue-500 to-black flex items-center justify-center">
         <div className="text-white text-xl">Loading...</div>
       </div>
     );
@@ -337,7 +337,7 @@ export function ProjectPage() {
 
   if (!project) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-800 via-slate-700 to-black flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-b from-night-blue-500 via-night-blue-500 to-black flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-white mb-4">Project not found</h2>
           <Link href="/dashboard">
@@ -349,18 +349,18 @@ export function ProjectPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-800 via-slate-700 to-black">
+    <div className="min-h-screen bg-gradient-to-b from-night-blue-500 via-night-blue-500 to-black">
       {project.background_url && (
         <div
           className="h-64 bg-cover bg-center relative"
           style={{ backgroundImage: `url(${project.background_url})` }}
         >
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-800" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-night-blue-500" />
         </div>
       )}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
-        <Link href="/dashboard" className="inline-flex items-center text-slate-400 hover:text-white mb-6">
+        <Link href="/dashboard" className="inline-flex items-center text-night-blue-300 hover:text-white mb-6">
           <ArrowLeft size={20} className="mr-2" />
           Back to Projects
         </Link>
@@ -380,11 +380,11 @@ export function ProjectPage() {
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full px-4 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white"
+                className="w-full px-4 py-2 bg-night-blue-500 border border-night-blue-400 rounded-lg text-white"
                 rows={3}
               />
             ) : (
-              <p className="text-slate-400">{project.description || 'No description'}</p>
+              <p className="text-night-blue-300">{project.description || 'No description'}</p>
             )}
           </div>
 
@@ -431,12 +431,12 @@ export function ProjectPage() {
         </div>
 
         {editing && (
-          <Card className="mb-8 bg-slate-800/50 border-slate-700">
+          <Card className="mb-8 bg-night-blue-500/50 border-night-blue-500">
             <h3 className="text-xl font-bold text-white mb-4">Project Settings</h3>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
+                <label className="block text-sm font-medium text-night-blue-200 mb-2">
                   Background Image
                 </label>
                 <MediaUpload onUpload={handleBackgroundUpload} maxFiles={1} />
@@ -465,13 +465,13 @@ export function ProjectPage() {
               />
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
+                <label className="block text-sm font-medium text-night-blue-200 mb-2">
                   Visibility
                 </label>
                 <select
                   value={formData.visibility}
                   onChange={(e) => setFormData({ ...formData, visibility: e.target.value as any })}
-                  className="w-full px-4 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-emerald-500"
+                  className="w-full px-4 py-2 bg-night-blue-500 border border-night-blue-400 rounded-lg text-white focus:outline-none focus:border-emerald-500"
                 >
                   <option value="draft">Draft (only you)</option>
                   <option value="private">Private (link only)</option>
@@ -482,7 +482,7 @@ export function ProjectPage() {
           </Card>
         )}
 
-        <Card className="mb-8 bg-slate-800/50 border-slate-700">
+        <Card className="mb-8 bg-night-blue-500/50 border-night-blue-500">
           <div className="flex items-center gap-2 mb-6">
             <Wallet className="text-emerald-400" size={24} />
             <h3 className="text-xl font-bold text-white">Payment Methods</h3>
@@ -503,9 +503,9 @@ export function ProjectPage() {
 
         {wishlists.length === 0 ? (
           <Card className="text-center py-16">
-            <Gift size={64} className="mx-auto text-slate-600 mb-4" />
+            <Gift size={64} className="mx-auto text-night-blue-400 mb-4" />
             <h3 className="text-2xl font-bold text-white mb-2">No wishlists yet</h3>
-            <p className="text-slate-400 mb-6">Create your first wishlist in this project</p>
+            <p className="text-night-blue-300 mb-6">Create your first wishlist in this project</p>
             <Button
               onClick={() => setShowCreateWishlist(true)}
               className="bg-gradient-to-r from-emerald-500 to-cyan-600"
@@ -519,7 +519,7 @@ export function ProjectPage() {
             {wishlists.map((wishlist) => (
               <Card
                 key={wishlist.id}
-                className="bg-gradient-to-br from-slate-800 to-slate-700 border border-slate-600 hover:border-emerald-500/50 transition-all group"
+                className="bg-gradient-to-br from-night-blue-500 to-night-blue-500 border border-night-blue-400 hover:border-emerald-500/50 transition-all group"
               >
                 {editingWishlist === wishlist.id && editWishlistForm ? (
                   <div className="space-y-3">
@@ -532,13 +532,13 @@ export function ProjectPage() {
                       value={editWishlistForm.description}
                       onChange={(e) => setEditWishlistForm({ ...editWishlistForm, description: e.target.value })}
                       placeholder="Description"
-                      className="w-full px-3 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white text-sm placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+                      className="w-full px-3 py-2 bg-night-blue-shadow-700/50 border border-night-blue-400 rounded-lg text-white text-sm placeholder-night-blue-400 focus:outline-none focus:border-emerald-500"
                       rows={3}
                     />
                     <select
                       value={editWishlistForm.visibility}
                       onChange={(e) => setEditWishlistForm({ ...editWishlistForm, visibility: e.target.value as any })}
-                      className="w-full px-3 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:border-emerald-500"
+                      className="w-full px-3 py-2 bg-night-blue-shadow-700/50 border border-night-blue-400 rounded-lg text-white text-sm focus:outline-none focus:border-emerald-500"
                     >
                       <option value="draft">Draft (only you)</option>
                       <option value="private">Private (link only)</option>
@@ -571,7 +571,7 @@ export function ProjectPage() {
                       {getVisibilityBadge(wishlist.visibility)}
                     </div>
 
-                    <p className="text-slate-400 text-sm mb-4 line-clamp-2">
+                    <p className="text-night-blue-300 text-sm mb-4 line-clamp-2">
                       {wishlist.description || 'No description'}
                     </p>
 
@@ -649,14 +649,14 @@ export function ProjectPage() {
           />
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
+            <label className="block text-sm font-medium text-night-blue-200 mb-2">
               Description
             </label>
             <textarea
               value={wishlistForm.description}
               onChange={(e) => setWishlistForm({ ...wishlistForm, description: e.target.value })}
               placeholder="What is this wishlist for?"
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+              className="w-full px-4 py-2 bg-night-blue-500 border border-night-blue-400 rounded-lg text-white placeholder-night-blue-400 focus:outline-none focus:border-emerald-500"
               rows={4}
             />
           </div>

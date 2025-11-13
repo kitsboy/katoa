@@ -37,7 +37,7 @@ export function ContributionCard({
   const getRankBadge = (rankNum: number) => {
     const badges = {
       1: { emoji: '🥇', color: 'from-yellow-400 to-orange-500', label: 'Top Supporter' },
-      2: { emoji: '🥈', color: 'from-slate-300 to-slate-400', label: '2nd Place' },
+      2: { emoji: '🥈', color: 'from-night-blue-200 to-night-blue-300', label: '2nd Place' },
       3: { emoji: '🥉', color: 'from-amber-600 to-amber-700', label: '3rd Place' },
     };
     return badges[rankNum as keyof typeof badges];
@@ -46,7 +46,7 @@ export function ContributionCard({
   const rankBadge = rank && rank <= 3 ? getRankBadge(rank) : null;
 
   return (
-    <div className="bg-gradient-to-br from-slate-800 to-slate-700 border border-slate-700 rounded-xl p-5 hover-lift animate-scale-in">
+    <div className="bg-gradient-to-br from-night-blue-500 to-night-blue-500 border border-night-blue-500 rounded-xl p-5 hover-lift animate-scale-in">
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-cyan-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
@@ -66,7 +66,7 @@ export function ContributionCard({
                 </div>
               )}
             </div>
-            <div className="flex items-center gap-2 text-xs text-slate-400 mt-1">
+            <div className="flex items-center gap-2 text-xs text-night-blue-300 mt-1">
               <Clock size={12} />
               <span>{formatDate(timestamp)}</span>
             </div>
@@ -76,12 +76,12 @@ export function ContributionCard({
           <div className="text-emerald-400 font-bold text-lg">
             {formatSats(amountSats)}
           </div>
-          <div className="text-slate-500 text-xs">sats</div>
+          <div className="text-night-blue-400 text-xs">sats</div>
         </div>
       </div>
       {message && (
-        <div className="mt-3 pt-3 border-t border-slate-700">
-          <p className="text-slate-300 text-sm italic flex items-start gap-2">
+        <div className="mt-3 pt-3 border-t border-night-blue-500">
+          <p className="text-night-blue-200 text-sm italic flex items-start gap-2">
             <Heart size={14} className="text-pink-500 flex-shrink-0 mt-0.5" />
             <span>"{message}"</span>
           </p>

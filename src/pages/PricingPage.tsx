@@ -7,7 +7,7 @@ export function PricingPage() {
   const { t } = useLanguage();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-800 via-slate-700 to-black">
+    <div className="min-h-screen bg-gradient-to-b from-night-blue-500 via-night-blue-500 to-black">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold text-white mb-4">{t('pricing.title')}</h1>
@@ -175,7 +175,7 @@ export function PricingPage() {
             </div>
           </div>
 
-          <div className="mt-8 p-6 bg-slate-700 rounded-lg border border-gray-700 text-center">
+          <div className="mt-8 p-6 bg-night-blue-500 rounded-lg border border-gray-700 text-center">
             <p className="text-gray-300">
               <span className="font-bold text-white">No hidden fees.</span> We only charge when you receive
               donations. Network fees (Lightning) are minimal and paid by supporters.

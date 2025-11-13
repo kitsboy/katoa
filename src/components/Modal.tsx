@@ -36,7 +36,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
         className="absolute inset-0 bg-black/70 backdrop-blur-sm"
         onClick={onClose}
       />
-      <div className={`relative w-full ${sizes[size]} bg-slate-700 border border-gray-800 rounded-xl shadow-2xl max-h-[90vh] overflow-y-auto`}>
+      <div className={`relative w-full ${sizes[size]} bg-night-blue-500 border border-gray-800 rounded-xl shadow-2xl max-h-[90vh] overflow-y-auto`}>
         {title && (
           <div className="flex items-center justify-between p-6 border-b border-gray-800">
             <h2 className="text-2xl font-bold text-white">{title}</h2>

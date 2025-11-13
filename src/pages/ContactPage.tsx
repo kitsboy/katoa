@@ -25,7 +25,7 @@ export function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-800 via-slate-700 to-black">
+    <div className="min-h-screen bg-gradient-to-b from-night-blue-500 via-night-blue-500 to-black">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold text-white mb-4">{t('contact.title')}</h1>

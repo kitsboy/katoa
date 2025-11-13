@@ -86,12 +86,12 @@ export function FeeComparison() {
         <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
           The True Cost of Platform Fees
         </h2>
-        <p className="text-xl text-slate-400 max-w-3xl mx-auto">
+        <p className="text-xl text-night-blue-300 max-w-3xl mx-auto">
           See how much you're losing to competitors' fees. KATOA keeps it simple: 0% forever.
         </p>
       </div>
 
-      <Card className="p-8 bg-gradient-to-br from-slate-800 to-slate-700 border-slate-700">
+      <Card className="p-8 bg-gradient-to-br from-night-blue-500 to-night-blue-500 border-night-blue-500">
         <div className="mb-8">
           <label className="block text-lg font-semibold text-white mb-4">
             What's your monthly earnings goal?
@@ -99,17 +99,17 @@ export function FeeComparison() {
 
           <div className="relative max-w-2xl mx-auto">
             <div className="absolute -inset-0.5 bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 rounded-xl opacity-75 blur-sm animate-pulse"></div>
-            <div className="relative bg-slate-900 rounded-xl overflow-hidden border-2 border-orange-500/30 shadow-lg shadow-orange-500/20">
-              <div className="flex items-stretch divide-x divide-slate-700">
-                <div className="flex-shrink-0 bg-slate-800/50">
+            <div className="relative bg-night-blue-shadow-700 rounded-xl overflow-hidden border-2 border-orange-500/30 shadow-lg shadow-orange-500/20">
+              <div className="flex items-stretch divide-x divide-night-blue-500">
+                <div className="flex-shrink-0 bg-night-blue-500/50">
                   <select
                     value={currency.code}
                     onChange={(e) => setCurrency(currencies.find(c => c.code === e.target.value) || currencies[0])}
-                    className="h-full px-4 py-3 bg-transparent text-white text-sm font-semibold focus:outline-none cursor-pointer appearance-none hover:bg-slate-800/80 transition-colors"
+                    className="h-full px-4 py-3 bg-transparent text-white text-sm font-semibold focus:outline-none cursor-pointer appearance-none hover:bg-night-blue-500/80 transition-colors"
                     style={{ minWidth: '140px' }}
                   >
                     {currencies.map((curr) => (
-                      <option key={curr.code} value={curr.code} className="bg-slate-900">
+                      <option key={curr.code} value={curr.code} className="bg-night-blue-shadow-700">
                         {curr.symbol} {curr.code}
                       </option>
                     ))}
@@ -117,14 +117,14 @@ export function FeeComparison() {
                 </div>
 
                 <div className="flex-1 flex items-center px-4">
-                  <span className="text-slate-400 text-xl font-bold mr-2">
+                  <span className="text-night-blue-300 text-xl font-bold mr-2">
                     {currency.symbol}
                   </span>
                   <input
                     type="text"
                     value={displayValue}
                     onChange={(e) => handleInputChange(e.target.value)}
-                    className="flex-1 bg-transparent text-white text-2xl font-bold focus:outline-none placeholder-slate-600"
+                    className="flex-1 bg-transparent text-white text-2xl font-bold focus:outline-none placeholder-night-blue-400"
                     placeholder="10,000"
                   />
                 </div>
@@ -132,7 +132,7 @@ export function FeeComparison() {
             </div>
           </div>
 
-          <p className="text-xs text-slate-500 text-center mt-3">Amounts converted to USD for comparison</p>
+          <p className="text-xs text-night-blue-400 text-center mt-3">Amounts converted to USD for comparison</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -145,7 +145,7 @@ export function FeeComparison() {
             >
               {platform.platform === 'KATOA' && (
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                  <span className="px-4 py-1 bg-yellow-400 text-slate-900 text-xs font-bold rounded-full shadow-lg">
+                  <span className="px-4 py-1 bg-yellow-400 text-night-blue-shadow-700 text-xs font-bold rounded-full shadow-lg">
                     BEST VALUE
                   </span>
                 </div>
@@ -219,30 +219,30 @@ export function FeeComparison() {
       </Card>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="p-6 bg-slate-800/50 border-slate-700">
+        <Card className="p-6 bg-night-blue-500/50 border-night-blue-500">
           <div className="text-4xl mb-3">🌍</div>
           <h3 className="text-xl font-bold text-white mb-2">195+ Countries</h3>
-          <p className="text-slate-400">
+          <p className="text-night-blue-300">
             Throne: ~10 countries with 0% fees
             <br />
             <span className="text-emerald-400 font-semibold">KATOA: All countries, always 0%</span>
           </p>
         </Card>
 
-        <Card className="p-6 bg-slate-800/50 border-slate-700">
+        <Card className="p-6 bg-night-blue-500/50 border-night-blue-500">
           <div className="text-4xl mb-3">⚡</div>
           <h3 className="text-xl font-bold text-white mb-2">Instant Settlement</h3>
-          <p className="text-slate-400">
+          <p className="text-night-blue-300">
             OnlyFans: 7-day rolling payout
             <br />
             <span className="text-emerald-400 font-semibold">KATOA: Instant Lightning Network</span>
           </p>
         </Card>
 
-        <Card className="p-6 bg-slate-800/50 border-slate-700">
+        <Card className="p-6 bg-night-blue-500/50 border-night-blue-500">
           <div className="text-4xl mb-3">🔐</div>
           <h3 className="text-xl font-bold text-white mb-2">True Privacy</h3>
-          <p className="text-slate-400">
+          <p className="text-night-blue-300">
             Competitors: Server-based data collection
             <br />
             <span className="text-emerald-400 font-semibold">KATOA: Zero-knowledge proofs</span>

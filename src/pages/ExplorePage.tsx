@@ -156,11 +156,11 @@ export function ExplorePage() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-800 via-slate-700 to-black">
+    <div className="min-h-screen bg-gradient-to-b from-night-blue-500 via-night-blue-500 to-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
 
         {/* Hero Featured Wishlist */}
-        <Card className="mb-8 overflow-hidden bg-gradient-to-br from-slate-800 to-slate-700 border-slate-700 animate-slide-up">
+        <Card className="mb-8 overflow-hidden bg-gradient-to-br from-night-blue-500 to-night-blue-500 border-night-blue-500 animate-slide-up">
           <div className="grid md:grid-cols-2 gap-0">
             <div className="relative h-64 md:h-auto overflow-hidden">
               <img
@@ -168,7 +168,7 @@ export function ExplorePage() {
                 alt="Skateboard Park Colombia"
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-slate-900/80 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-night-blue-shadow-700/80 to-transparent" />
               <div className="absolute top-4 left-4">
                 <TrendingBadge type="featured" />
               </div>
@@ -177,7 +177,7 @@ export function ExplorePage() {
               <h2 className="text-3xl font-bold text-white mb-3">
                 Skateboard Park for Medellín Youth
               </h2>
-              <p className="text-slate-300 mb-4 leading-relaxed">
+              <p className="text-night-blue-200 mb-4 leading-relaxed">
                 Help us build a safe community space where kids can skate, learn, and grow together.
                 This project will provide free skateboarding lessons and mentorship to 500+ youth in Medellín, Colombia.
               </p>
@@ -198,7 +198,7 @@ export function ExplorePage() {
                 >
                   Support This Project
                 </Button>
-                <div className="flex items-center gap-2 text-slate-400 text-sm">
+                <div className="flex items-center gap-2 text-night-blue-300 text-sm">
                   <MapPin size={16} />
                   <span>Medellín, Colombia 🇨🇴</span>
                 </div>
@@ -214,12 +214,12 @@ export function ExplorePage() {
           <div className="space-y-4 mb-6">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="relative flex-1">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-500" size={20} />
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-night-blue-400" size={20} />
                 <Input
                   placeholder="Search wishlists, creators, tags..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-12 bg-slate-800 border-slate-700 focus:border-emerald-500"
+                  className="pl-12 bg-night-blue-500 border-night-blue-500 focus:border-emerald-500"
                 />
               </div>
 
@@ -227,7 +227,7 @@ export function ExplorePage() {
                 <Button
                   variant={showFilters ? 'default' : 'outline'}
                   onClick={() => setShowFilters(!showFilters)}
-                  className="border-slate-700"
+                  className="border-night-blue-500"
                 >
                   <SlidersHorizontal size={20} className="mr-2" />
                   Filters
@@ -236,7 +236,7 @@ export function ExplorePage() {
                 <Button
                   variant={showMap ? 'default' : 'outline'}
                   onClick={() => setShowMap(!showMap)}
-                  className="border-slate-700"
+                  className="border-night-blue-500"
                 >
                   <Globe size={20} className="mr-2" />
                   Map
@@ -245,14 +245,14 @@ export function ExplorePage() {
             </div>
 
             {showFilters && (
-              <Card className="p-4 bg-slate-800/50 border-slate-700 animate-slide-up">
+              <Card className="p-4 bg-night-blue-500/50 border-night-blue-500 animate-slide-up">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">Sort By</label>
+                    <label className="block text-sm font-medium text-night-blue-200 mb-2">Sort By</label>
                     <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value)}
-                      className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      className="w-full px-4 py-2 bg-night-blue-500 border border-night-blue-400 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     >
                       <option value="recent">Most Recent</option>
                       <option value="trending">Most Funded</option>
@@ -262,11 +262,11 @@ export function ExplorePage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">Category</label>
+                    <label className="block text-sm font-medium text-night-blue-200 mb-2">Category</label>
                     <select
                       value={selectedCategory}
                       onChange={(e) => setSelectedCategory(e.target.value)}
-                      className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      className="w-full px-4 py-2 bg-night-blue-500 border border-night-blue-400 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     >
                       <option value="">All Categories</option>
                       {categories.map((cat) => (
@@ -276,11 +276,11 @@ export function ExplorePage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">Location</label>
+                    <label className="block text-sm font-medium text-night-blue-200 mb-2">Location</label>
                     <select
                       value={selectedCountry}
                       onChange={(e) => setSelectedCountry(e.target.value)}
-                      className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      className="w-full px-4 py-2 bg-night-blue-500 border border-night-blue-400 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                     >
                       <option value="">All Countries</option>
                       {countries.map((country) => (
@@ -291,7 +291,7 @@ export function ExplorePage() {
                 </div>
 
                 {(selectedCategory || selectedCountry || sortBy !== 'recent') && (
-                  <div className="mt-4 pt-4 border-t border-slate-700">
+                  <div className="mt-4 pt-4 border-t border-night-blue-500">
                     <Button
                       variant="ghost"
                       size="sm"
@@ -300,7 +300,7 @@ export function ExplorePage() {
                         setSelectedCountry('');
                         setSortBy('recent');
                       }}
-                      className="text-slate-400 hover:text-white"
+                      className="text-night-blue-300 hover:text-white"
                     >
                       Clear All Filters
                     </Button>
@@ -311,7 +311,7 @@ export function ExplorePage() {
 
             {categories.length > 0 && !showFilters && (
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-slate-400 text-sm">Quick filters:</span>
+                <span className="text-night-blue-300 text-sm">Quick filters:</span>
                 {categories.slice(0, 6).map((cat) => (
                   <CategoryBadge
                     key={cat.id}
@@ -332,7 +332,7 @@ export function ExplorePage() {
                 <MapPin size={24} className="text-orange-500" />
                 Wishlists Around the World
               </h2>
-              <div className="bg-slate-700 rounded-lg p-8 min-h-[400px] relative overflow-hidden">
+              <div className="bg-night-blue-500 rounded-lg p-8 min-h-[400px] relative overflow-hidden">
                 <div className="absolute inset-0 opacity-20">
                   <svg viewBox="0 0 1000 500" className="w-full h-full">
                     <rect width="1000" height="500" fill="#1a1a1a" />
@@ -403,7 +403,7 @@ export function ExplorePage() {
 
               return (
                 <Link key={wishlist.id} href={`/wishlist/${wishlist.slug}`}>
-                  <Card className="hover-lift overflow-hidden bg-gradient-to-br from-slate-800 to-slate-700 border-slate-700 animate-fade-in">
+                  <Card className="hover-lift overflow-hidden bg-gradient-to-br from-night-blue-500 to-night-blue-500 border-night-blue-500 animate-fade-in">
                     <div className="relative overflow-hidden group">
                       {wishlist.cover_image ? (
                         <img
@@ -416,7 +416,7 @@ export function ExplorePage() {
                           <Gift size={80} className="text-emerald-500/40 animate-float" />
                         </div>
                       )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-slate-900/20 to-transparent"></div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-night-blue-shadow-700/80 via-night-blue-shadow-700/20 to-transparent"></div>
 
                       {wishlist.country_flag && (
                         <div className="absolute top-3 right-3 text-3xl drop-shadow-lg">
@@ -444,11 +444,11 @@ export function ExplorePage() {
                         <h3 className="text-xl font-bold text-white mb-2 line-clamp-1 group-hover:text-emerald-400 transition-colors">
                           {wishlist.title}
                         </h3>
-                        <p className="text-slate-400 text-sm line-clamp-2 mb-3 leading-relaxed">
+                        <p className="text-night-blue-300 text-sm line-clamp-2 mb-3 leading-relaxed">
                           {wishlist.description}
                         </p>
                         {wishlist.country && (
-                          <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                          <div className="flex items-center gap-1.5 text-xs text-night-blue-400">
                             <MapPin size={12} />
                             <span>{wishlist.city ? `${wishlist.city}, ` : ''}{wishlist.country}</span>
                           </div>
@@ -463,7 +463,7 @@ export function ExplorePage() {
                           <span className="text-sm text-white font-medium block">
                             {wishlist.creator.username}
                           </span>
-                          <span className="text-xs text-slate-500">Creator</span>
+                          <span className="text-xs text-night-blue-400">Creator</span>
                         </div>
                       </div>
 

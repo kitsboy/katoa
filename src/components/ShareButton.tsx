@@ -55,7 +55,7 @@ export function ShareButton({ url, title, description, className = '' }: ShareBu
             className="fixed inset-0 z-40"
             onClick={() => setShowMenu(false)}
           />
-          <div className="absolute right-0 mt-2 w-64 bg-slate-700 border border-gray-700 rounded-lg shadow-xl py-2 z-50">
+          <div className="absolute right-0 mt-2 w-64 bg-night-blue-500 border border-gray-700 rounded-lg shadow-xl py-2 z-50">
             <div className="px-4 py-2 border-b border-gray-700">
               <p className="text-sm font-semibold text-white">Share this wishlist</p>
             </div>

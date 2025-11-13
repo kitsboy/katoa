@@ -70,7 +70,7 @@ export function BitcoinStats() {
   return (
     <div className="flex flex-wrap items-center justify-center gap-6 text-sm">
       {/* Bitcoin Price */}
-      <div className="flex items-center gap-2 px-4 py-2 bg-slate-700/50 border border-gray-800 rounded-lg backdrop-blur-sm">
+      <div className="flex items-center gap-2 px-4 py-2 bg-night-blue-500/50 border border-gray-800 rounded-lg backdrop-blur-sm">
         <span className="text-gray-500 font-medium">BTC</span>
         {loading ? (
           <span className="text-gray-400">Loading...</span>
@@ -90,7 +90,7 @@ export function BitcoinStats() {
       </div>
 
       {/* Hash Rate */}
-      <div className="flex items-center gap-2 px-4 py-2 bg-slate-700/50 border border-gray-800 rounded-lg backdrop-blur-sm">
+      <div className="flex items-center gap-2 px-4 py-2 bg-night-blue-500/50 border border-gray-800 rounded-lg backdrop-blur-sm">
         <Activity size={16} className="text-orange-500" />
         <span className="text-gray-500 font-medium">Hash Rate</span>
         <span className="text-white font-bold">{data.hashrate}</span>

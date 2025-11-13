@@ -149,14 +149,14 @@ export function WalletAddressManager() {
   if (loading) {
     return (
       <Card className="p-6">
-        <div className="text-center text-slate-400">Loading addresses...</div>
+        <div className="text-center text-night-blue-300">Loading addresses...</div>
       </Card>
     );
   }
 
   return (
     <div className="space-y-6">
-      <Card className="p-6 bg-gradient-to-br from-slate-600 to-slate-700 border-slate-500">
+      <Card className="p-6 bg-gradient-to-br from-night-blue-400 to-night-blue-500 border-night-blue-400">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-cyan-600 rounded-xl flex items-center justify-center">
@@ -164,7 +164,7 @@ export function WalletAddressManager() {
             </div>
             <div>
               <h3 className="text-xl font-bold text-white">Payment Addresses</h3>
-              <p className="text-sm text-slate-300">Manage your Bitcoin payment methods</p>
+              <p className="text-sm text-night-blue-200">Manage your Bitcoin payment methods</p>
             </div>
           </div>
           {!showAddForm && (
@@ -179,10 +179,10 @@ export function WalletAddressManager() {
         </div>
 
         {showAddForm && (
-          <div className="mb-6 p-4 bg-slate-700 rounded-lg border border-slate-600">
+          <div className="mb-6 p-4 bg-night-blue-500 rounded-lg border border-night-blue-400">
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
+                <label className="block text-sm font-medium text-night-blue-200 mb-2">
                   Address Type
                 </label>
                 <select
@@ -190,7 +190,7 @@ export function WalletAddressManager() {
                   onChange={(e) =>
                     setFormData({ ...formData, address_type: e.target.value as any })
                   }
-                  className="w-full px-4 py-3 bg-slate-600 border border-slate-500 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-4 py-3 bg-night-blue-400 border border-night-blue-400 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 >
                   <option value="lightning">Lightning Address</option>
                   <option value="xpub">XPUB Address</option>
@@ -199,7 +199,7 @@ export function WalletAddressManager() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
+                <label className="block text-sm font-medium text-night-blue-200 mb-2">
                   Address / Code
                 </label>
                 <div className="flex gap-2">
@@ -216,7 +216,7 @@ export function WalletAddressManager() {
                         ? 'xpub...'
                         : 'PM8T...'
                     }
-                    className="flex-1 px-4 py-3 bg-slate-600 border border-slate-500 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="flex-1 px-4 py-3 bg-night-blue-400 border border-night-blue-400 rounded-lg text-white placeholder-night-blue-300 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   />
                   <Button
                     onClick={() => setShowScanner(true)}
@@ -229,7 +229,7 @@ export function WalletAddressManager() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
+                <label className="block text-sm font-medium text-night-blue-200 mb-2">
                   Label (optional)
                 </label>
                 <input
@@ -237,7 +237,7 @@ export function WalletAddressManager() {
                   value={formData.label}
                   onChange={(e) => setFormData({ ...formData, label: e.target.value })}
                   placeholder="My main wallet"
-                  className="w-full px-4 py-3 bg-slate-600 border border-slate-500 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-4 py-3 bg-night-blue-400 border border-night-blue-400 rounded-lg text-white placeholder-night-blue-300 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
               </div>
 
@@ -265,9 +265,9 @@ export function WalletAddressManager() {
 
         {addresses.length === 0 ? (
           <div className="text-center py-12">
-            <Wallet size={48} className="mx-auto text-slate-500 mb-4" />
-            <p className="text-slate-400 mb-2">No payment addresses yet</p>
-            <p className="text-sm text-slate-500">
+            <Wallet size={48} className="mx-auto text-night-blue-400 mb-4" />
+            <p className="text-night-blue-300 mb-2">No payment addresses yet</p>
+            <p className="text-sm text-night-blue-400">
               Add your first address to start receiving Bitcoin payments
             </p>
           </div>
@@ -278,15 +278,15 @@ export function WalletAddressManager() {
                 key={address.id}
                 className={`p-4 rounded-lg border transition-all ${
                   address.is_active
-                    ? 'bg-slate-600 border-slate-500'
-                    : 'bg-slate-700/50 border-slate-600 opacity-60'
+                    ? 'bg-night-blue-400 border-night-blue-400'
+                    : 'bg-night-blue-500/50 border-night-blue-400 opacity-60'
                 }`}
               >
                 <div className="flex items-start gap-3">
                   <div className="mt-1">{getAddressIcon(address.address_type)}</div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-sm font-medium text-slate-300">
+                      <span className="text-sm font-medium text-night-blue-200">
                         {getAddressTypeName(address.address_type)}
                       </span>
                       {address.is_active && (
@@ -306,16 +306,16 @@ export function WalletAddressManager() {
                             handleUpdateLabel(address.id, e.currentTarget.value);
                           }
                         }}
-                        className="w-full px-2 py-1 mb-2 bg-slate-700 border border-slate-600 rounded text-sm text-white"
+                        className="w-full px-2 py-1 mb-2 bg-night-blue-500 border border-night-blue-400 rounded text-sm text-white"
                         autoFocus
                       />
                     ) : (
                       address.label && (
-                        <p className="text-sm text-slate-400 mb-2">{address.label}</p>
+                        <p className="text-sm text-night-blue-300 mb-2">{address.label}</p>
                       )
                     )}
 
-                    <code className="block text-xs text-slate-300 bg-slate-700 px-2 py-1 rounded break-all">
+                    <code className="block text-xs text-night-blue-200 bg-night-blue-500 px-2 py-1 rounded break-all">
                       {address.address_value}
                     </code>
                   </div>
@@ -323,21 +323,21 @@ export function WalletAddressManager() {
                   <div className="flex gap-1">
                     <button
                       onClick={() => setEditingId(address.id)}
-                      className="p-2 text-slate-400 hover:text-white transition-colors"
+                      className="p-2 text-night-blue-300 hover:text-white transition-colors"
                       title="Edit label"
                     >
                       <Edit2 size={16} />
                     </button>
                     <button
                       onClick={() => handleToggleActive(address.id, address.is_active)}
-                      className="p-2 text-slate-400 hover:text-emerald-400 transition-colors"
+                      className="p-2 text-night-blue-300 hover:text-emerald-400 transition-colors"
                       title={address.is_active ? 'Deactivate' : 'Activate'}
                     >
                       {address.is_active ? <Check size={16} /> : <X size={16} />}
                     </button>
                     <button
                       onClick={() => handleDeleteAddress(address.id)}
-                      className="p-2 text-slate-400 hover:text-red-400 transition-colors"
+                      className="p-2 text-night-blue-300 hover:text-red-400 transition-colors"
                       title="Delete"
                     >
                       <Trash2 size={16} />

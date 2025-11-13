@@ -27,18 +27,18 @@ export function Tooltip({ content, children, icon = false, position = 'top' }: T
       >
         {children}
         {icon && (
-          <HelpCircle size={16} className="text-slate-400 hover:text-emerald-400 transition-colors ml-1" />
+          <HelpCircle size={16} className="text-night-blue-300 hover:text-emerald-400 transition-colors ml-1" />
         )}
       </div>
 
       {show && (
         <div
-          className={`absolute z-50 px-4 py-3 bg-slate-900 border border-emerald-500/30 rounded-lg shadow-2xl text-sm text-white max-w-xs ${positionClasses[position]} animate-fade-in`}
+          className={`absolute z-50 px-4 py-3 bg-night-blue-shadow-700 border border-emerald-500/30 rounded-lg shadow-2xl text-sm text-white max-w-xs ${positionClasses[position]} animate-fade-in`}
         >
           <div className="relative">
             {content}
             <div
-              className={`absolute w-2 h-2 bg-slate-900 border-emerald-500/30 transform rotate-45 ${
+              className={`absolute w-2 h-2 bg-night-blue-shadow-700 border-emerald-500/30 transform rotate-45 ${
                 position === 'top' ? 'bottom-[-5px] left-1/2 -translate-x-1/2 border-b border-r' :
                 position === 'bottom' ? 'top-[-5px] left-1/2 -translate-x-1/2 border-t border-l' :
                 position === 'left' ? 'right-[-5px] top-1/2 -translate-y-1/2 border-t border-r' :

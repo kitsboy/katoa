@@ -97,7 +97,7 @@ export function SubscriptionTiers({
         <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
           Support {creatorName}
         </h2>
-        <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-6">
+        <p className="text-xl text-night-blue-300 max-w-2xl mx-auto mb-6">
           Choose your tier and support with Bitcoin Lightning. Instant, private, and 0% fees.
         </p>
         <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/20 border border-emerald-500/30 rounded-full">
@@ -117,7 +117,7 @@ export function SubscriptionTiers({
               className={`relative p-8 hover-lift transition-all duration-300 ${
                 tier.popular
                   ? 'bg-gradient-to-br from-purple-900/50 to-pink-900/50 border-purple-500 scale-105'
-                  : 'bg-gradient-to-br from-slate-800 to-slate-700 border-slate-700'
+                  : 'bg-gradient-to-br from-night-blue-500 to-night-blue-500 border-night-blue-500'
               } animate-slide-up`}
               style={{ animationDelay: `${index * 100}ms` }}
             >
@@ -137,13 +137,13 @@ export function SubscriptionTiers({
                   <Icon size={32} className="text-white" />
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-2">{tier.name}</h3>
-                <p className="text-slate-400 text-sm mb-4">{tier.description}</p>
+                <p className="text-night-blue-300 text-sm mb-4">{tier.description}</p>
 
                 <div className="mb-4">
                   <div className="text-4xl font-black text-white mb-1">
                     {tier.price_sats.toLocaleString()}
                   </div>
-                  <div className="text-slate-400 text-sm">
+                  <div className="text-night-blue-300 text-sm">
                     sats/month (~${tier.price_usd})
                   </div>
                 </div>
@@ -159,7 +159,7 @@ export function SubscriptionTiers({
                     <div className="w-5 h-5 bg-emerald-500/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                       <Check size={14} className="text-emerald-400" />
                     </div>
-                    <span className="text-slate-300 text-sm leading-relaxed">{feature}</span>
+                    <span className="text-night-blue-200 text-sm leading-relaxed">{feature}</span>
                   </li>
                 ))}
               </ul>
@@ -175,7 +175,7 @@ export function SubscriptionTiers({
                 Subscribe with Lightning
               </Button>
 
-              <div className="mt-4 text-center text-xs text-slate-500">
+              <div className="mt-4 text-center text-xs text-night-blue-400">
                 Cancel anytime • Instant activation
               </div>
             </Card>
@@ -184,7 +184,7 @@ export function SubscriptionTiers({
       </div>
 
       {showBolt12 && selectedTier && (
-        <Card className="max-w-2xl mx-auto p-8 bg-gradient-to-br from-slate-800 to-slate-700 border-slate-700 animate-scale-in">
+        <Card className="max-w-2xl mx-auto p-8 bg-gradient-to-br from-night-blue-500 to-night-blue-500 border-night-blue-500 animate-scale-in">
           <div className="text-center">
             <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-r from-emerald-500 to-cyan-600 rounded-2xl flex items-center justify-center animate-glow">
               <Zap size={40} className="text-white" />
@@ -193,13 +193,13 @@ export function SubscriptionTiers({
             <h3 className="text-2xl font-bold text-white mb-2">
               BOLT 12 Subscription Setup
             </h3>
-            <p className="text-slate-400 mb-6">
+            <p className="text-night-blue-300 mb-6">
               Scan this QR code with your Lightning wallet to set up recurring payments
             </p>
 
             <div className="bg-white rounded-2xl p-8 mb-6">
-              <div className="w-64 h-64 mx-auto bg-slate-200 rounded-xl flex items-center justify-center">
-                <div className="text-center text-slate-600">
+              <div className="w-64 h-64 mx-auto bg-night-blue-100 rounded-xl flex items-center justify-center">
+                <div className="text-center text-night-blue-400">
                   <Zap size={48} className="mx-auto mb-2 text-emerald-500" />
                   <p className="text-sm font-semibold">BOLT 12 Offer QR</p>
                   <p className="text-xs">(Integration pending)</p>
@@ -207,14 +207,14 @@ export function SubscriptionTiers({
               </div>
             </div>
 
-            <div className="bg-slate-900 rounded-xl p-4 mb-6">
-              <p className="text-xs text-slate-500 mb-2">BOLT 12 Offer String</p>
+            <div className="bg-night-blue-shadow-700 rounded-xl p-4 mb-6">
+              <p className="text-xs text-night-blue-400 mb-2">BOLT 12 Offer String</p>
               <code className="text-emerald-400 text-sm break-all font-mono">
                 lno1pg257enxv4ezqcneype82um50ynhxgrwdajx293pqe7y75t...
               </code>
             </div>
 
-            <div className="space-y-2 text-sm text-slate-400 text-left">
+            <div className="space-y-2 text-sm text-night-blue-300 text-left">
               <div className="flex items-center gap-2">
                 <Check size={16} className="text-emerald-400" />
                 <span>Recurring monthly payment automatically</span>
@@ -248,7 +248,7 @@ export function SubscriptionTiers({
       )}
 
       <div className="text-center">
-        <p className="text-slate-500 text-sm">
+        <p className="text-night-blue-400 text-sm">
           Powered by Bitcoin Lightning Network • BOLT 12 Native • Zero-Knowledge Privacy
         </p>
       </div>

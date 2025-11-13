@@ -46,10 +46,10 @@ export function QRScanner({ onScan, onClose }: QRScannerProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
-      <div className="relative bg-slate-700 rounded-2xl p-6 max-w-md w-full mx-4 border border-slate-600">
+      <div className="relative bg-night-blue-500 rounded-2xl p-6 max-w-md w-full mx-4 border border-night-blue-400">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors"
+          className="absolute top-4 right-4 text-night-blue-300 hover:text-white transition-colors"
         >
           <X size={24} />
         </button>
@@ -59,7 +59,7 @@ export function QRScanner({ onScan, onClose }: QRScannerProps) {
             <Camera size={32} className="text-white" />
           </div>
           <h3 className="text-2xl font-bold text-white mb-2">Scan QR Code</h3>
-          <p className="text-slate-300 text-sm">
+          <p className="text-night-blue-200 text-sm">
             Upload an image containing a QR code or paste the address manually
           </p>
         </div>
@@ -84,16 +84,16 @@ export function QRScanner({ onScan, onClose }: QRScannerProps) {
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-600"></div>
+              <div className="w-full border-t border-night-blue-400"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-slate-700 text-slate-400">Or paste manually</span>
+              <span className="px-4 bg-night-blue-500 text-night-blue-300">Or paste manually</span>
             </div>
           </div>
 
           <textarea
             placeholder="Paste your address here..."
-            className="w-full px-4 py-3 bg-slate-600 border border-slate-500 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"
+            className="w-full px-4 py-3 bg-night-blue-400 border border-night-blue-400 rounded-lg text-white placeholder-night-blue-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent resize-none"
             rows={3}
             onChange={(e) => {
               if (e.target.value.trim()) {

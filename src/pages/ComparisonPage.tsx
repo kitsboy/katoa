@@ -94,7 +94,7 @@ export function ComparisonPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-800 via-slate-700 to-black">
+    <div className="min-h-screen bg-gradient-to-b from-night-blue-500 via-night-blue-500 to-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
         <div className="text-center mb-16 animate-slide-up">
           <div className="inline-flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-emerald-500/30 rounded-full mb-6">
@@ -111,7 +111,7 @@ export function ComparisonPage() {
             </span>
           </h1>
 
-          <p className="text-xl md:text-2xl text-slate-300 max-w-4xl mx-auto mb-8 leading-relaxed">
+          <p className="text-xl md:text-2xl text-night-blue-200 max-w-4xl mx-auto mb-8 leading-relaxed">
             We're not just another creator platform. We're built on Bitcoin Lightning, designed for global creators,
             and committed to 0% fees forever. Here's how we stack up.
           </p>
@@ -127,7 +127,7 @@ export function ComparisonPage() {
           {features.map((category, idx) => (
             <Card
               key={category.category}
-              className="p-8 bg-gradient-to-br from-slate-800 to-slate-700 border-slate-700 animate-slide-up"
+              className="p-8 bg-gradient-to-br from-night-blue-500 to-night-blue-500 border-night-blue-500 animate-slide-up"
               style={{ animationDelay: `${idx * 100}ms` }}
             >
               <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
@@ -144,35 +144,35 @@ export function ComparisonPage() {
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-slate-700">
-                      <th className="text-left text-slate-400 font-semibold pb-4 pr-4">Feature</th>
+                    <tr className="border-b border-night-blue-500">
+                      <th className="text-left text-night-blue-300 font-semibold pb-4 pr-4">Feature</th>
                       <th className="text-center text-emerald-400 font-bold pb-4 px-2">
                         <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/20 rounded-lg">
                           KATOA
                         </div>
                       </th>
-                      <th className="text-center text-slate-400 font-semibold pb-4 px-2 text-sm">Throne</th>
-                      <th className="text-center text-slate-400 font-semibold pb-4 px-2 text-sm">Linktree</th>
-                      <th className="text-center text-slate-400 font-semibold pb-4 px-2 text-sm">OnlyFans</th>
-                      <th className="text-center text-slate-400 font-semibold pb-4 px-2 text-sm">Kickstarter</th>
-                      <th className="text-center text-slate-400 font-semibold pb-4 px-2 text-sm">Indiegogo</th>
+                      <th className="text-center text-night-blue-300 font-semibold pb-4 px-2 text-sm">Throne</th>
+                      <th className="text-center text-night-blue-300 font-semibold pb-4 px-2 text-sm">Linktree</th>
+                      <th className="text-center text-night-blue-300 font-semibold pb-4 px-2 text-sm">OnlyFans</th>
+                      <th className="text-center text-night-blue-300 font-semibold pb-4 px-2 text-sm">Kickstarter</th>
+                      <th className="text-center text-night-blue-300 font-semibold pb-4 px-2 text-sm">Indiegogo</th>
                     </tr>
                   </thead>
                   <tbody>
                     {category.items.map((item, itemIdx) => (
                       <tr
                         key={itemIdx}
-                        className="border-b border-slate-800 hover:bg-slate-800/50 transition-colors"
+                        className="border-b border-night-blue-500 hover:bg-night-blue-500/50 transition-colors"
                       >
-                        <td className="text-slate-300 py-4 pr-4">{item.feature}</td>
+                        <td className="text-night-blue-200 py-4 pr-4">{item.feature}</td>
                         <td className="text-center py-4 px-2">
                           <div className="font-bold">{renderValue(item.katoa)}</div>
                         </td>
-                        <td className="text-center py-4 px-2 text-slate-400 text-sm">{renderValue(item.throne)}</td>
-                        <td className="text-center py-4 px-2 text-slate-400 text-sm">{renderValue(item.linktree)}</td>
-                        <td className="text-center py-4 px-2 text-slate-400 text-sm">{renderValue(item.onlyfans)}</td>
-                        <td className="text-center py-4 px-2 text-slate-400 text-sm">{renderValue(item.kickstarter)}</td>
-                        <td className="text-center py-4 px-2 text-slate-400 text-sm">{renderValue(item.indiegogo)}</td>
+                        <td className="text-center py-4 px-2 text-night-blue-300 text-sm">{renderValue(item.throne)}</td>
+                        <td className="text-center py-4 px-2 text-night-blue-300 text-sm">{renderValue(item.linktree)}</td>
+                        <td className="text-center py-4 px-2 text-night-blue-300 text-sm">{renderValue(item.onlyfans)}</td>
+                        <td className="text-center py-4 px-2 text-night-blue-300 text-sm">{renderValue(item.kickstarter)}</td>
+                        <td className="text-center py-4 px-2 text-night-blue-300 text-sm">{renderValue(item.indiegogo)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -188,7 +188,7 @@ export function ComparisonPage() {
               <Shield size={32} className="text-white" />
             </div>
             <h3 className="text-2xl font-bold text-white mb-4">For the Unbanked</h3>
-            <p className="text-slate-300 leading-relaxed mb-6">
+            <p className="text-night-blue-200 leading-relaxed mb-6">
               No bank account? No problem. Bitcoin works everywhere, for everyone. No discrimination.
             </p>
             <div className="text-emerald-400 font-bold text-sm">195+ Countries Supported</div>
@@ -199,7 +199,7 @@ export function ComparisonPage() {
               <Lock size={32} className="text-white" />
             </div>
             <h3 className="text-2xl font-bold text-white mb-4">For the Private</h3>
-            <p className="text-slate-300 leading-relaxed mb-6">
+            <p className="text-night-blue-200 leading-relaxed mb-6">
               Zero-knowledge proofs. Encrypted messaging. Decentralized storage. Your data stays yours.
             </p>
             <div className="text-purple-400 font-bold text-sm">Military-Grade Privacy</div>
@@ -210,7 +210,7 @@ export function ComparisonPage() {
               <Zap size={32} className="text-white" />
             </div>
             <h3 className="text-2xl font-bold text-white mb-4">For the Ambitious</h3>
-            <p className="text-slate-300 leading-relaxed mb-6">
+            <p className="text-night-blue-200 leading-relaxed mb-6">
               Keep 100% of your earnings. Scale globally. Build your empire without platform taxes.
             </p>
             <div className="text-orange-400 font-bold text-sm">0% Fees Forever</div>
@@ -222,7 +222,7 @@ export function ComparisonPage() {
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
               Ready to Keep 100%?
             </h2>
-            <p className="text-xl text-slate-300 max-w-2xl mx-auto mb-8">
+            <p className="text-xl text-night-blue-200 max-w-2xl mx-auto mb-8">
               Join thousands of creators who've stopped paying platform fees and started earning what they deserve.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -238,7 +238,7 @@ export function ComparisonPage() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-2 border-slate-600 hover:border-emerald-500 text-lg font-bold px-12"
+                  className="border-2 border-night-blue-400 hover:border-emerald-500 text-lg font-bold px-12"
                 >
                   See Pricing (Spoiler: $0)
                 </Button>

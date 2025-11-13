@@ -6,7 +6,7 @@ export function PrivacyPage() {
   const lastUpdated = "October 27, 2025";
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-800 via-slate-700 to-black text-white pt-24 pb-16">
+    <div className="min-h-screen bg-gradient-to-b from-night-blue-500 via-night-blue-500 to-black text-white pt-24 pb-16">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-cyan-600 mb-4">
@@ -80,7 +80,7 @@ export function PrivacyPage() {
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <p>We use the information we collect to:</p>
 
-              <div className="bg-slate-700/50 border border-gray-800 rounded-xl p-6 space-y-3">
+              <div className="bg-night-blue-500/50 border border-gray-800 rounded-xl p-6 space-y-3">
                 <div className="flex items-start gap-3">
                   <span className="text-blue-500 font-bold">•</span>
                   <p><strong className="text-white">Provide and Improve Services:</strong> Operate the platform, process wishlists, enable donations</p>
@@ -263,7 +263,7 @@ export function PrivacyPage() {
                 <li>Provide security features</li>
               </ul>
 
-              <div className="bg-slate-700/50 border border-gray-800 rounded-xl p-6 mt-4 space-y-3">
+              <div className="bg-night-blue-500/50 border border-gray-800 rounded-xl p-6 mt-4 space-y-3">
                 <div>
                   <h4 className="font-semibold text-white mb-1">Essential Cookies</h4>
                   <p className="text-sm">Required for the platform to function (authentication, security)</p>
@@ -369,7 +369,7 @@ export function PrivacyPage() {
                 <li>Right to lodge a complaint with a supervisory authority</li>
               </ul>
 
-              <div className="bg-slate-700/50 border border-gray-800 rounded-xl p-6 mt-4">
+              <div className="bg-night-blue-500/50 border border-gray-800 rounded-xl p-6 mt-4">
                 <h4 className="font-semibold text-white mb-2">Legal Basis for Processing</h4>
                 <p className="text-sm">We process your data based on:</p>
                 <ul className="list-disc list-inside space-y-1 ml-4 text-sm mt-2">
@@ -410,7 +410,7 @@ export function PrivacyPage() {
                 If you have questions, concerns, or requests regarding this Privacy Policy or our data practices,
                 please contact us:
               </p>
-              <div className="bg-slate-700/50 border border-gray-800 rounded-xl p-6 mt-4">
+              <div className="bg-night-blue-500/50 border border-gray-800 rounded-xl p-6 mt-4">
                 <p className="font-semibold text-white mb-3">BitWish Privacy Team</p>
                 <p><strong className="text-white">Email:</strong> privacy@katoa.org</p>
                 <p><strong className="text-white">Website:</strong> https://katoa.org/contact</p>

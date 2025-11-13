@@ -127,14 +127,14 @@ export function SettingsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-800 via-slate-700 to-black">
+    <div className="min-h-screen bg-gradient-to-b from-night-blue-500 via-night-blue-500 to-black">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
         <h1 className="text-4xl font-black text-white mb-2">Settings</h1>
-        <p className="text-slate-400 mb-8">Manage your account settings and preferences</p>
+        <p className="text-night-blue-300 mb-8">Manage your account settings and preferences</p>
 
         <div className="flex flex-col lg:flex-row gap-6">
           <div className="lg:w-64 flex-shrink-0">
-            <Card className="bg-slate-800/50 border-slate-700 sticky top-24">
+            <Card className="bg-night-blue-500/50 border-night-blue-500 sticky top-24">
               <nav className="space-y-1">
                 {tabs.map((tab) => {
                   const Icon = tab.icon;
@@ -145,7 +145,7 @@ export function SettingsPage() {
                       className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-all ${
                         activeTab === tab.id
                           ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                          : 'text-slate-400 hover:text-white hover:bg-slate-700/50'
+                          : 'text-night-blue-300 hover:text-white hover:bg-night-blue-500/50'
                       }`}
                     >
                       <Icon size={20} />
@@ -159,11 +159,11 @@ export function SettingsPage() {
 
           <div className="flex-1">
             {activeTab === 'profile' && (
-              <Card className="bg-slate-800/50 border-slate-700">
+              <Card className="bg-night-blue-500/50 border-night-blue-500">
                 <h2 className="text-2xl font-bold text-white mb-6">Profile Information</h2>
                 <form onSubmit={handleSaveProfile} className="space-y-6">
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-3">
+                    <label className="block text-sm font-medium text-night-blue-200 mb-3">
                       Avatar
                     </label>
                     {profileForm.avatar_url && (
@@ -171,7 +171,7 @@ export function SettingsPage() {
                         <img
                           src={profileForm.avatar_url}
                           alt="Avatar"
-                          className="w-24 h-24 rounded-full object-cover border-2 border-slate-600"
+                          className="w-24 h-24 rounded-full object-cover border-2 border-night-blue-400"
                         />
                       </div>
                     )}
@@ -187,14 +187,14 @@ export function SettingsPage() {
                   />
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                    <label className="block text-sm font-medium text-night-blue-200 mb-2">
                       Bio
                     </label>
                     <textarea
                       value={profileForm.bio}
                       onChange={(e) => setProfileForm({ ...profileForm, bio: e.target.value })}
                       placeholder="Tell us about yourself..."
-                      className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                      className="w-full px-4 py-3 bg-night-blue-shadow-700/50 border border-night-blue-400 rounded-lg text-white placeholder-night-blue-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
                       rows={4}
                     />
                   </div>
@@ -215,13 +215,13 @@ export function SettingsPage() {
                   />
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                    <label className="block text-sm font-medium text-night-blue-200 mb-2">
                       Preferred Currency
                     </label>
                     <select
                       value={profileForm.preferred_currency}
                       onChange={(e) => setProfileForm({ ...profileForm, preferred_currency: e.target.value })}
-                      className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                      className="w-full px-4 py-3 bg-night-blue-shadow-700/50 border border-night-blue-400 rounded-lg text-white focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
                     >
                       <option value="USD">USD</option>
                       <option value="EUR">EUR</option>
@@ -243,9 +243,9 @@ export function SettingsPage() {
             )}
 
             {activeTab === 'wallet' && (
-              <Card className="bg-slate-800/50 border-slate-700">
+              <Card className="bg-night-blue-500/50 border-night-blue-500">
                 <h2 className="text-2xl font-bold text-white mb-6">Bitcoin Wallets</h2>
-                <p className="text-slate-400 mb-6">
+                <p className="text-night-blue-300 mb-6">
                   Manage your Bitcoin wallet addresses for receiving payments
                 </p>
                 <WalletAddressManager />
@@ -253,14 +253,14 @@ export function SettingsPage() {
             )}
 
             {activeTab === 'shipping' && (
-              <Card className="bg-slate-800/50 border-slate-700">
+              <Card className="bg-night-blue-500/50 border-night-blue-500">
                 <h2 className="text-2xl font-bold text-white mb-6">Shipping Addresses</h2>
-                <p className="text-slate-400 mb-6">
+                <p className="text-night-blue-300 mb-6">
                   Add addresses where you can receive physical gifts
                 </p>
                 <div className="text-center py-8">
-                  <MapPin size={48} className="mx-auto text-slate-600 mb-3" />
-                  <p className="text-slate-400">No shipping addresses yet</p>
+                  <MapPin size={48} className="mx-auto text-night-blue-400 mb-3" />
+                  <p className="text-night-blue-300">No shipping addresses yet</p>
                   <Button className="mt-4">
                     <MapPin size={16} className="mr-2" />
                     Add Address
@@ -270,14 +270,14 @@ export function SettingsPage() {
             )}
 
             {activeTab === 'appearance' && (
-              <Card className="bg-slate-800/50 border-slate-700">
+              <Card className="bg-night-blue-500/50 border-night-blue-500">
                 <h2 className="text-2xl font-bold text-white mb-6">Appearance</h2>
-                <p className="text-slate-400 mb-6">
+                <p className="text-night-blue-300 mb-6">
                   Customize how your profile looks to others
                 </p>
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-3">
+                    <label className="block text-sm font-medium text-night-blue-200 mb-3">
                       Banner Image
                     </label>
                     {profileForm.banner_url && (
@@ -285,7 +285,7 @@ export function SettingsPage() {
                         <img
                           src={profileForm.banner_url}
                           alt="Banner"
-                          className="w-full h-48 rounded-lg object-cover border-2 border-slate-600"
+                          className="w-full h-48 rounded-lg object-cover border-2 border-night-blue-400"
                         />
                       </div>
                     )}
@@ -296,7 +296,7 @@ export function SettingsPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-slate-300 mb-2">
+                    <label className="block text-sm font-medium text-night-blue-200 mb-2">
                       Theme Color
                     </label>
                     <input
@@ -310,17 +310,17 @@ export function SettingsPage() {
             )}
 
             {activeTab === 'advanced' && (
-              <Card className="bg-slate-800/50 border-slate-700">
+              <Card className="bg-night-blue-500/50 border-night-blue-500">
                 <h2 className="text-2xl font-bold text-white mb-6">Advanced Settings</h2>
 
                 <div className="space-y-6">
                   <div>
                     <h3 className="text-lg font-semibold text-white mb-3">Account</h3>
                     <div className="space-y-3">
-                      <div className="flex items-center justify-between p-4 bg-slate-900/50 rounded-lg border border-slate-600">
+                      <div className="flex items-center justify-between p-4 bg-night-blue-shadow-700/50 rounded-lg border border-night-blue-400">
                         <div>
                           <p className="text-white font-medium">Email</p>
-                          <p className="text-sm text-slate-400">{user?.email}</p>
+                          <p className="text-sm text-night-blue-300">{user?.email}</p>
                         </div>
                       </div>
                     </div>

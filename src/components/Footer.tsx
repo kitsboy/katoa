@@ -20,7 +20,7 @@ export function Footer() {
 
   return (
     <>
-      <footer className="relative bg-gradient-to-b from-slate-800 to-slate-700 border-t border-slate-700">
+      <footer className="relative bg-gradient-to-b from-night-blue-500 to-night-blue-500 border-t border-night-blue-500">
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-orange-500/5 to-transparent pointer-events-none"></div>
 
@@ -43,7 +43,7 @@ export function Footer() {
                   href="https://twitter.com/bitwish"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-10 h-10 rounded-full bg-slate-700 border border-slate-600 hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 group"
+                  className="flex items-center justify-center w-10 h-10 rounded-full bg-night-blue-500 border border-night-blue-400 hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 group"
                 >
                   <Twitter size={18} className="text-gray-400 group-hover:text-orange-500 transition-colors" />
                 </a>
@@ -51,13 +51,13 @@ export function Footer() {
                   href="https://github.com/bitwish"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-10 h-10 rounded-full bg-slate-700 border border-slate-600 hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 group"
+                  className="flex items-center justify-center w-10 h-10 rounded-full bg-night-blue-500 border border-night-blue-400 hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 group"
                 >
                   <Github size={18} className="text-gray-400 group-hover:text-orange-500 transition-colors" />
                 </a>
                 <a
                   href="mailto:hello@katoa.org"
-                  className="flex items-center justify-center w-10 h-10 rounded-full bg-slate-700 border border-slate-600 hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 group"
+                  className="flex items-center justify-center w-10 h-10 rounded-full bg-night-blue-500 border border-night-blue-400 hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 group"
                 >
                   <Mail size={18} className="text-gray-400 group-hover:text-orange-500 transition-colors" />
                 </a>
@@ -127,7 +127,7 @@ export function Footer() {
           </div>
 
           {/* Bottom Section */}
-          <div className="pt-8 border-t border-slate-700">
+          <div className="pt-8 border-t border-night-blue-500">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <div className="flex items-center gap-3 text-sm text-gray-500">
                 <span>&copy; {new Date().getFullYear()} KATOA (katoa.org). All rights reserved.</span>
@@ -155,11 +155,11 @@ export function Footer() {
           showDonation ? 'translate-y-0' : 'translate-y-full'
         }`}
       >
-        <div className="relative bg-gradient-to-t from-slate-700 via-slate-600 to-slate-700 border-t-2 border-orange-500/50 shadow-[0_-10px_50px_rgba(249,115,22,0.3)]">
+        <div className="relative bg-gradient-to-t from-night-blue-500 via-night-blue-400 to-night-blue-500 border-t-2 border-orange-500/50 shadow-[0_-10px_50px_rgba(249,115,22,0.3)]">
           {/* Close Button */}
           <button
             onClick={() => setShowDonation(false)}
-            className="absolute top-4 right-4 flex items-center justify-center w-8 h-8 rounded-full bg-slate-700 hover:bg-orange-500/20 border border-slate-600 hover:border-orange-500 text-gray-400 hover:text-orange-500 transition-all duration-200"
+            className="absolute top-4 right-4 flex items-center justify-center w-8 h-8 rounded-full bg-night-blue-500 hover:bg-orange-500/20 border border-night-blue-400 hover:border-orange-500 text-gray-400 hover:text-orange-500 transition-all duration-200"
           >
             <ChevronDown size={20} />
           </button>
@@ -192,7 +192,7 @@ export function Footer() {
               {/* Content */}
               <div className="flex-1 min-w-0">
                 {/* BOLT12 Address */}
-                <div className="bg-slate-600/80 border border-slate-700 rounded-lg p-3 mb-3">
+                <div className="bg-night-blue-400/80 border border-night-blue-500 rounded-lg p-3 mb-3">
                   <div className="flex items-center justify-between gap-2 mb-1">
                     <span className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">BOLT12</span>
                     <button

@@ -203,7 +203,7 @@ export function WishlistPage({ slug }: { slug: string }) {
     : 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-800 via-slate-700 to-black">
+    <div className="min-h-screen bg-gradient-to-b from-night-blue-500 via-night-blue-500 to-black">
       {wishlist.cover_image ? (
         <div className="relative h-80 overflow-hidden">
           <img
@@ -211,7 +211,7 @@ export function WishlistPage({ slug }: { slug: string }) {
             alt={wishlist.title}
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-800 via-black/50 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-night-blue-500 via-black/50 to-transparent" />
         </div>
       ) : (
         <div
@@ -223,7 +223,7 @@ export function WishlistPage({ slug }: { slug: string }) {
           <div className="absolute inset-0 flex items-center justify-center">
             <Gift size={128} className="text-white/10" />
           </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-800 via-black/50 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-night-blue-500 via-black/50 to-transparent" />
         </div>
       )}
 
@@ -292,7 +292,7 @@ export function WishlistPage({ slug }: { slug: string }) {
                         {totalProgress.toFixed(0)}%
                       </span>
                     </div>
-                    <div className="w-full h-3 bg-slate-700 rounded-full overflow-hidden">
+                    <div className="w-full h-3 bg-night-blue-500 rounded-full overflow-hidden">
                       <div
                         className="h-full bg-gradient-to-r from-orange-500 to-amber-500 transition-all duration-500"
                         style={{ width: `${Math.min(totalProgress, 100)}%` }}
@@ -482,7 +482,7 @@ export function WishlistPage({ slug }: { slug: string }) {
       >
         <div className="space-y-6">
           <div className="bg-white p-6 rounded-lg">
-            <div className="w-full aspect-square bg-slate-700 flex items-center justify-center text-white text-xs p-4 break-all">
+            <div className="w-full aspect-square bg-night-blue-500 flex items-center justify-center text-white text-xs p-4 break-all">
               QR CODE: {mockInvoice}
             </div>
           </div>

@@ -207,13 +207,13 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
   };
 
   if (loading) {
-    return <div className="text-slate-400">Loading payment methods...</div>;
+    return <div className="text-night-blue-300">Loading payment methods...</div>;
   }
 
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center mb-4">
-        <p className="text-slate-400 text-sm">
+        <p className="text-night-blue-300 text-sm">
           Add multiple payment methods to accept Bitcoin via different networks
         </p>
         <Button
@@ -226,9 +226,9 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
       </div>
 
       {methods.length === 0 ? (
-        <Card className="text-center py-8 bg-slate-900/50 border-slate-700">
-          <Bitcoin size={48} className="mx-auto text-slate-600 mb-3" />
-          <p className="text-slate-400 mb-4">No payment methods configured</p>
+        <Card className="text-center py-8 bg-night-blue-shadow-700/50 border-night-blue-500">
+          <Bitcoin size={48} className="mx-auto text-night-blue-400 mb-3" />
+          <p className="text-night-blue-300 mb-4">No payment methods configured</p>
           <Button onClick={() => openModal()} variant="outline">
             <Plus size={16} className="mr-2" />
             Add Your First Payment Method
@@ -239,7 +239,7 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
           {methods.map((method) => (
             <Card
               key={method.id}
-              className={`bg-slate-900/50 border-slate-700 transition-all ${
+              className={`bg-night-blue-shadow-700/50 border-night-blue-500 transition-all ${
                 !method.is_active && 'opacity-50'
               }`}
             >
@@ -261,16 +261,16 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
                           Active
                         </span>
                       ) : (
-                        <span className="px-2 py-0.5 bg-slate-500/20 text-slate-400 text-xs font-bold rounded-full flex items-center gap-1">
+                        <span className="px-2 py-0.5 bg-night-blue-400/20 text-night-blue-300 text-xs font-bold rounded-full flex items-center gap-1">
                           <X size={10} />
                           Disabled
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-slate-500 mb-2">
+                    <p className="text-xs text-night-blue-400 mb-2">
                       {getMethodLabel(method.method_type)}
                     </p>
-                    <code className="text-xs text-slate-400 bg-slate-800 px-2 py-1 rounded break-all block">
+                    <code className="text-xs text-night-blue-300 bg-night-blue-500 px-2 py-1 rounded break-all block">
                       {method.address.length > 60
                         ? `${method.address.slice(0, 30)}...${method.address.slice(-30)}`
                         : method.address}
@@ -283,7 +283,7 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
                     size="sm"
                     variant="ghost"
                     onClick={() => toggleActive(method)}
-                    className="text-slate-400 hover:text-white"
+                    className="text-night-blue-300 hover:text-white"
                   >
                     {method.is_active ? <X size={16} /> : <Check size={16} />}
                   </Button>
@@ -291,7 +291,7 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
                     size="sm"
                     variant="ghost"
                     onClick={() => openModal(method)}
-                    className="text-slate-400 hover:text-emerald-400"
+                    className="text-night-blue-300 hover:text-emerald-400"
                   >
                     <Edit size={16} />
                   </Button>
@@ -317,13 +317,13 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
       >
         <form onSubmit={handleSaveMethod} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
+            <label className="block text-sm font-medium text-night-blue-200 mb-2">
               Payment Method Type
             </label>
             <select
               value={formData.method_type}
               onChange={(e) => setFormData({ ...formData, method_type: e.target.value as any })}
-              className="w-full px-4 py-3 bg-slate-900/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:border-emerald-500"
+              className="w-full px-4 py-3 bg-night-blue-shadow-700/50 border border-night-blue-400 rounded-lg text-white focus:outline-none focus:border-emerald-500"
               disabled={!!editingMethod}
             >
               <option value="bitcoin_address">Bitcoin Address</option>
@@ -344,7 +344,7 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
           />
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
+            <label className="block text-sm font-medium text-night-blue-200 mb-2">
               {formData.method_type === 'bitcoin_xpub' ? 'Extended Public Key (xpub)' :
               formData.method_type === 'lightning' ? 'Lightning Address or LNURL' :
               formData.method_type === 'nostr' ? 'Nostr Public Key (npub)' :
@@ -385,15 +385,15 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
             />
           )}
 
-          <div className="flex items-center gap-3 p-4 bg-slate-900/50 rounded-lg border border-slate-600">
+          <div className="flex items-center gap-3 p-4 bg-night-blue-shadow-700/50 rounded-lg border border-night-blue-400">
             <input
               type="checkbox"
               id="is_primary"
               checked={formData.is_primary}
               onChange={(e) => setFormData({ ...formData, is_primary: e.target.checked })}
-              className="w-4 h-4 rounded border-slate-600 text-emerald-500 focus:ring-emerald-500"
+              className="w-4 h-4 rounded border-night-blue-400 text-emerald-500 focus:ring-emerald-500"
             />
-            <label htmlFor="is_primary" className="text-sm text-slate-300">
+            <label htmlFor="is_primary" className="text-sm text-night-blue-200">
               Set as primary payment method
             </label>
           </div>

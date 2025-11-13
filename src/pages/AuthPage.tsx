@@ -101,7 +101,7 @@ export function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-700 via-slate-600 to-slate-700 flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-b from-night-blue-500 via-night-blue-400 to-night-blue-500 flex items-center justify-center px-4 py-12">
       {/* Background effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-400/8 rounded-full blur-3xl"></div>
@@ -110,12 +110,12 @@ export function AuthPage() {
 
       <div className="relative w-full max-w-md">
         {/* Back to Home */}
-        <Link href="/" className="inline-flex items-center gap-2 text-slate-400 hover:text-white mb-6 transition-colors">
+        <Link href="/" className="inline-flex items-center gap-2 text-night-blue-300 hover:text-white mb-6 transition-colors">
           <ArrowLeft size={20} />
           <span>Back to Home</span>
         </Link>
 
-        <Card className="p-8 bg-gradient-to-br from-slate-600 to-slate-700 border-slate-500">
+        <Card className="p-8 bg-gradient-to-br from-night-blue-400 to-night-blue-500 border-night-blue-400">
           {/* Header */}
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-emerald-500 to-cyan-600 rounded-2xl mb-4">
@@ -124,7 +124,7 @@ export function AuthPage() {
             <h1 className="text-3xl font-bold text-white mb-2">
               {isSignUp ? 'Create Account' : 'Welcome Back'}
             </h1>
-            <p className="text-slate-400">
+            <p className="text-night-blue-300">
               {isSignUp ? 'Start creating your wishlists today' : 'Sign in to continue to your dashboard'}
             </p>
           </div>
@@ -179,10 +179,10 @@ export function AuthPage() {
           {/* Divider */}
           <div className="relative mb-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-700"></div>
+              <div className="w-full border-t border-night-blue-500"></div>
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-slate-700 text-slate-400">Or continue with email</span>
+              <span className="px-4 bg-night-blue-500 text-night-blue-300">Or continue with email</span>
             </div>
           </div>
 
@@ -190,16 +190,16 @@ export function AuthPage() {
           <form onSubmit={handleEmailAuth} className="space-y-4">
             {isSignUp && (
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
+                <label className="block text-sm font-medium text-night-blue-200 mb-2">
                   Username
                 </label>
                 <div className="relative">
-                  <User size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                  <User size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-night-blue-400" />
                   <input
                     type="text"
                     value={formData.username}
                     onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                    className="w-full pl-10 pr-4 py-3 bg-slate-600 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                    className="w-full pl-10 pr-4 py-3 bg-night-blue-400 border border-night-blue-500 rounded-lg text-white placeholder-night-blue-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                     placeholder="johndoe"
                     required
                   />
@@ -208,16 +208,16 @@ export function AuthPage() {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">
+              <label className="block text-sm font-medium text-night-blue-200 mb-2">
                 Email
               </label>
               <div className="relative">
-                <Mail size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                <Mail size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-night-blue-400" />
                 <input
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full pl-10 pr-4 py-3 bg-slate-600 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-3 bg-night-blue-400 border border-night-blue-500 rounded-lg text-white placeholder-night-blue-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                   placeholder="you@example.com"
                   required
                 />
@@ -225,16 +225,16 @@ export function AuthPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">
+              <label className="block text-sm font-medium text-night-blue-200 mb-2">
                 Password
               </label>
               <div className="relative">
-                <Lock size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                <Lock size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-night-blue-400" />
                 <input
                   type="password"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="w-full pl-10 pr-4 py-3 bg-slate-600 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-3 bg-night-blue-400 border border-night-blue-500 rounded-lg text-white placeholder-night-blue-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
                   placeholder="••••••••"
                   required
                   minLength={6}
@@ -258,7 +258,7 @@ export function AuthPage() {
                 setIsSignUp(!isSignUp);
                 setError('');
               }}
-              className="text-slate-400 hover:text-white transition-colors"
+              className="text-night-blue-300 hover:text-white transition-colors"
             >
               {isSignUp ? (
                 <>
@@ -274,8 +274,8 @@ export function AuthPage() {
 
           {/* Lightning Benefits */}
           {isSignUp && (
-            <div className="mt-8 pt-6 border-t border-slate-700">
-              <div className="flex items-start gap-3 text-sm text-slate-400">
+            <div className="mt-8 pt-6 border-t border-night-blue-500">
+              <div className="flex items-start gap-3 text-sm text-night-blue-300">
                 <Zap size={20} className="text-emerald-400 flex-shrink-0 mt-0.5" />
                 <p>
                   With BitWish, you can receive instant Bitcoin donations via Lightning Network.

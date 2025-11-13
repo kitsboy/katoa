@@ -122,7 +122,7 @@ export function FAQPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-b from-night-blue-shadow-700 via-night-blue-500 to-night-blue-shadow-700">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
@@ -146,7 +146,7 @@ export function FAQPage() {
             className={`px-4 py-2 rounded-lg transition-colors ${
               selectedCategory === 'all'
                 ? 'bg-orange-500 text-white'
-                : 'bg-slate-700 text-gray-300 hover:bg-slate-600'
+                : 'bg-night-blue-500 text-gray-300 hover:bg-night-blue-400'
             }`}
           >
             All
@@ -158,7 +158,7 @@ export function FAQPage() {
               className={`px-4 py-2 rounded-lg transition-colors ${
                 selectedCategory === category
                   ? 'bg-orange-500 text-white'
-                  : 'bg-slate-700 text-gray-300 hover:bg-slate-600'
+                  : 'bg-night-blue-500 text-gray-300 hover:bg-night-blue-400'
               }`}
             >
               {category}
@@ -170,11 +170,11 @@ export function FAQPage() {
           {filteredFAQs.map((faq, index) => (
             <div
               key={index}
-              className="bg-slate-800 rounded-lg border border-slate-700 overflow-hidden"
+              className="bg-night-blue-500 rounded-lg border border-night-blue-500 overflow-hidden"
             >
               <button
                 onClick={() => toggleFAQ(index)}
-                className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-slate-700/50 transition-colors"
+                className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-night-blue-500/50 transition-colors"
               >
                 <div>
                   <div className="text-xs text-orange-400 mb-1">{faq.category}</div>
@@ -187,7 +187,7 @@ export function FAQPage() {
                 )}
               </button>
               {openIndex === index && (
-                <div className="px-6 py-4 bg-slate-900/50 border-t border-slate-700">
+                <div className="px-6 py-4 bg-night-blue-shadow-700/50 border-t border-night-blue-500">
                   <p className="text-gray-300 leading-relaxed">{faq.answer}</p>
                 </div>
               )}
@@ -211,7 +211,7 @@ export function FAQPage() {
               href="https://github.com/katoa"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-medium transition-colors"
+              className="px-6 py-3 bg-night-blue-500 hover:bg-night-blue-400 text-white rounded-lg font-medium transition-colors"
             >
               GitHub Community
             </a>

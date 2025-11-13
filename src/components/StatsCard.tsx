@@ -24,7 +24,7 @@ export function StatsCard({
 }: StatsCardProps) {
   return (
     <div
-      className="bg-gradient-to-br from-slate-800 to-slate-700 border border-slate-700 rounded-2xl p-6 hover-lift animate-slide-up"
+      className="bg-gradient-to-br from-night-blue-500 to-night-blue-500 border border-night-blue-500 rounded-2xl p-6 hover-lift animate-slide-up"
       style={{ animationDelay: `${delay}ms` }}
     >
       <div className="flex items-start justify-between mb-4">
@@ -39,10 +39,10 @@ export function StatsCard({
           </div>
         )}
       </div>
-      <h3 className="text-slate-400 text-sm font-medium mb-2">{title}</h3>
+      <h3 className="text-night-blue-300 text-sm font-medium mb-2">{title}</h3>
       <div className="flex items-baseline gap-2">
         <p className="text-4xl font-black text-white">{value}</p>
-        {subtitle && <span className="text-slate-500 text-sm">{subtitle}</span>}
+        {subtitle && <span className="text-night-blue-400 text-sm">{subtitle}</span>}
       </div>
     </div>
   );

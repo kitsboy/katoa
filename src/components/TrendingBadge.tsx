@@ -40,7 +40,7 @@ export function TrendingBadge({ type = 'trending', animated = true }: TrendingBa
     <div
       className={`
         inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full
-        bg-slate-800/90 backdrop-blur-sm border border-slate-700
+        bg-night-blue-500/90 backdrop-blur-sm border border-night-blue-500
         ${animated ? 'animate-pulse' : ''}
       `}
     >

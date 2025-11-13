@@ -213,7 +213,7 @@ export function DashboardPage() {
       );
     } else {
       return (
-        <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-slate-500/20 text-slate-400 border border-slate-500/30 flex items-center gap-1">
+        <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-night-blue-400/20 text-night-blue-300 border border-night-blue-400/30 flex items-center gap-1">
           <FileText size={12} />
           Draft
         </span>
@@ -223,14 +223,14 @@ export function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-800 via-slate-700 to-black flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-b from-night-blue-500 via-night-blue-500 to-black flex items-center justify-center">
         <div className="text-white text-xl">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-800 via-slate-700 to-black">
+    <div className="min-h-screen bg-gradient-to-b from-night-blue-500 via-night-blue-500 to-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -259,7 +259,7 @@ export function DashboardPage() {
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-4xl font-black text-white mb-2">My Projects</h1>
-            <p className="text-slate-400">Organize your wishlists into projects</p>
+            <p className="text-night-blue-300">Organize your wishlists into projects</p>
           </div>
           <Button
             onClick={() => setShowCreateModal(true)}
@@ -272,9 +272,9 @@ export function DashboardPage() {
 
         {projects.length === 0 ? (
           <Card className="text-center py-16">
-            <FolderOpen size={64} className="mx-auto text-slate-600 mb-4" />
+            <FolderOpen size={64} className="mx-auto text-night-blue-400 mb-4" />
             <h3 className="text-2xl font-bold text-white mb-2">No projects yet</h3>
-            <p className="text-slate-400 mb-6">Create your first project to get started</p>
+            <p className="text-night-blue-300 mb-6">Create your first project to get started</p>
             <Button
               onClick={() => setShowCreateModal(true)}
               className="bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700"
@@ -288,7 +288,7 @@ export function DashboardPage() {
             {projects.map((project) => (
               <Card
                 key={project.id}
-                className="bg-gradient-to-br from-slate-800 to-slate-700 border border-slate-600 hover:border-emerald-500/50 transition-all group"
+                className="bg-gradient-to-br from-night-blue-500 to-night-blue-500 border border-night-blue-400 hover:border-emerald-500/50 transition-all group"
               >
                 {project.background_url && (
                   <div
@@ -308,13 +308,13 @@ export function DashboardPage() {
                       value={editFormData.description}
                       onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
                       placeholder="Description"
-                      className="w-full px-3 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white text-sm placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+                      className="w-full px-3 py-2 bg-night-blue-shadow-700/50 border border-night-blue-400 rounded-lg text-white text-sm placeholder-night-blue-400 focus:outline-none focus:border-emerald-500"
                       rows={3}
                     />
                     <select
                       value={editFormData.visibility}
                       onChange={(e) => setEditFormData({ ...editFormData, visibility: e.target.value as any })}
-                      className="w-full px-3 py-2 bg-slate-900/50 border border-slate-600 rounded-lg text-white text-sm focus:outline-none focus:border-emerald-500"
+                      className="w-full px-3 py-2 bg-night-blue-shadow-700/50 border border-night-blue-400 rounded-lg text-white text-sm focus:outline-none focus:border-emerald-500"
                     >
                       <option value="draft">Draft (only you)</option>
                       <option value="private">Private (link only)</option>
@@ -347,11 +347,11 @@ export function DashboardPage() {
                       {getVisibilityBadge(project.visibility)}
                     </div>
 
-                    <p className="text-slate-400 text-sm mb-4 line-clamp-2">
+                    <p className="text-night-blue-300 text-sm mb-4 line-clamp-2">
                       {project.description || 'No description'}
                     </p>
 
-                    <div className="flex items-center gap-4 text-sm text-slate-400 mb-4">
+                    <div className="flex items-center gap-4 text-sm text-night-blue-300 mb-4">
                       <div className="flex items-center gap-1">
                         <Gift size={16} />
                         <span>{project.wishlist_count} wishlists</span>
@@ -411,14 +411,14 @@ export function DashboardPage() {
           />
 
           <div>
-            <label className="block text-sm font-medium text-slate-300 mb-2">
+            <label className="block text-sm font-medium text-night-blue-200 mb-2">
               Description
             </label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               placeholder="What is this project about?"
-              className="w-full px-4 py-2 bg-slate-800 border border-slate-600 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-emerald-500"
+              className="w-full px-4 py-2 bg-night-blue-500 border border-night-blue-400 rounded-lg text-white placeholder-night-blue-400 focus:outline-none focus:border-emerald-500"
               rows={4}
             />
           </div>
