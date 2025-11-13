@@ -8,105 +8,86 @@ interface TooltipProps {
   position?: 'top' | 'bottom' | 'left' | 'right';
 }
 
-export function Tooltip({ content, children, icon = false, position = 'top' }: TooltipProps) {
+export function Tooltip({ content, children, icon = false, position = 'bottom' }: TooltipProps) {
   const [isVisible, setIsVisible] = useState(false);
-  const [adjustedPosition, setAdjustedPosition] = useState(position);
+  const [style, setStyle] = useState<React.CSSProperties>({});
   const triggerRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     if (isVisible && triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect();
-      const tooltipWidth = 280;
-      const tooltipHeight = 120;
-      const padding = 16;
+      const tooltipWidth = 320;
+      const tooltipHeight = 100;
+      const gap = 8;
 
-      let newPosition = position;
+      let top = 0;
+      let left = 0;
 
-      if (position === 'bottom' || position === 'top') {
-        if (rect.bottom + tooltipHeight + padding > window.innerHeight) {
-          newPosition = 'top';
-        }
-        if (rect.top - tooltipHeight - padding < 0) {
-          newPosition = 'bottom';
-        }
+      if (position === 'bottom') {
+        top = rect.bottom + gap;
+        left = rect.left + (rect.width / 2) - (tooltipWidth / 2);
+      } else if (position === 'top') {
+        top = rect.top - tooltipHeight - gap;
+        left = rect.left + (rect.width / 2) - (tooltipWidth / 2);
       }
 
-      if (position === 'left' || position === 'right') {
-        if (rect.right + tooltipWidth + padding > window.innerWidth) {
-          newPosition = 'left';
-        }
-        if (rect.left - tooltipWidth - padding < 0) {
-          newPosition = 'right';
-        }
+      if (left < 10) left = 10;
+      if (left + tooltipWidth > window.innerWidth - 10) {
+        left = window.innerWidth - tooltipWidth - 10;
       }
 
-      setAdjustedPosition(newPosition);
+      if (top < 10) {
+        top = rect.bottom + gap;
+      }
+      if (top + tooltipHeight > window.innerHeight - 10) {
+        top = rect.top - tooltipHeight - gap;
+      }
+
+      setStyle({
+        position: 'fixed',
+        top: `${top}px`,
+        left: `${left}px`,
+        zIndex: 999999,
+      });
     }
   }, [isVisible, position]);
 
-  const getPositionClasses = () => {
-    switch (adjustedPosition) {
-      case 'top':
-        return 'bottom-full mb-2 left-1/2 -translate-x-1/2';
-      case 'bottom':
-        return 'top-full mt-2 left-1/2 -translate-x-1/2';
-      case 'left':
-        return 'right-full mr-2 top-1/2 -translate-y-1/2';
-      case 'right':
-        return 'left-full ml-2 top-1/2 -translate-y-1/2';
-      default:
-        return 'top-full mt-2 left-1/2 -translate-x-1/2';
-    }
-  };
-
-  const getArrowClasses = () => {
-    switch (adjustedPosition) {
-      case 'top':
-        return 'top-full left-1/2 -translate-x-1/2 -mt-1 border-t-2 border-l-2 rotate-[225deg]';
-      case 'bottom':
-        return 'bottom-full left-1/2 -translate-x-1/2 -mb-1 border-t-2 border-l-2 rotate-45';
-      case 'left':
-        return 'left-full top-1/2 -translate-y-1/2 -ml-1 border-t-2 border-l-2 rotate-[315deg]';
-      case 'right':
-        return 'right-full top-1/2 -translate-y-1/2 -mr-1 border-t-2 border-l-2 rotate-[135deg]';
-      default:
-        return 'bottom-full left-1/2 -translate-x-1/2 -mb-1 border-t-2 border-l-2 rotate-45';
-    }
-  };
-
   return (
-    <span className="relative inline-flex items-center group">
+    <>
       <span
         ref={triggerRef}
         onMouseEnter={() => setIsVisible(true)}
         onMouseLeave={() => setIsVisible(false)}
-        onClick={() => setIsVisible(!isVisible)}
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsVisible(!isVisible);
+        }}
         className="inline-flex items-center cursor-help"
       >
         {children}
         {icon && (
           <Info
-            size={18}
-            className="text-white/90 hover:text-emerald-300 transition-colors ml-1 flex-shrink-0"
+            size={20}
+            className="text-white/90 hover:text-white transition-colors ml-1 flex-shrink-0"
             strokeWidth={2.5}
           />
         )}
       </span>
 
       {isVisible && (
-        <div className={`absolute ${getPositionClasses()} z-[10000] w-[280px]`}>
-          <div
-            className="bg-night-blue-shadow-800 border-2 border-emerald-500 rounded-lg px-4 py-3 shadow-2xl"
-            onMouseEnter={() => setIsVisible(true)}
-            onMouseLeave={() => setIsVisible(false)}
-          >
-            <p className="text-white text-sm leading-relaxed font-normal">
+        <div
+          style={style}
+          className="w-[320px] pointer-events-auto"
+          onMouseEnter={() => setIsVisible(true)}
+          onMouseLeave={() => setIsVisible(false)}
+        >
+          <div className="bg-gradient-to-br from-night-blue-shadow-900 to-night-blue-shadow-800 border-2 border-emerald-400 rounded-xl px-5 py-4 shadow-2xl">
+            <p className="text-white text-sm leading-relaxed font-medium">
               {content}
             </p>
-            <div className={`absolute ${getArrowClasses()} w-4 h-4 bg-night-blue-shadow-800 border-emerald-500`}></div>
           </div>
         </div>
       )}
-    </span>
+    </>
   );
 }
