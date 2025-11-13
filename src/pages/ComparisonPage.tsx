@@ -145,17 +145,17 @@ export function ComparisonPage() {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-night-blue-500">
-                      <th className="text-left text-night-blue-300 font-semibold pb-4 pr-4">Feature</th>
+                      <th className="text-left text-white font-semibold pb-4 pr-4">Feature</th>
                       <th className="text-center text-emerald-400 font-bold pb-4 px-2">
                         <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/20 rounded-lg">
                           KATOA
                         </div>
                       </th>
-                      <th className="text-center text-night-blue-300 font-semibold pb-4 px-2 text-sm">Throne</th>
-                      <th className="text-center text-night-blue-300 font-semibold pb-4 px-2 text-sm">Linktree</th>
-                      <th className="text-center text-night-blue-300 font-semibold pb-4 px-2 text-sm">OnlyFans</th>
-                      <th className="text-center text-night-blue-300 font-semibold pb-4 px-2 text-sm">Kickstarter</th>
-                      <th className="text-center text-night-blue-300 font-semibold pb-4 px-2 text-sm">Indiegogo</th>
+                      <th className="text-center text-white font-semibold pb-4 px-2 text-sm">Throne</th>
+                      <th className="text-center text-white font-semibold pb-4 px-2 text-sm">Linktree</th>
+                      <th className="text-center text-white font-semibold pb-4 px-2 text-sm">OnlyFans</th>
+                      <th className="text-center text-white font-semibold pb-4 px-2 text-sm">Kickstarter</th>
+                      <th className="text-center text-white font-semibold pb-4 px-2 text-sm">Indiegogo</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -164,15 +164,15 @@ export function ComparisonPage() {
                         key={itemIdx}
                         className="border-b border-night-blue-500 hover:bg-night-blue-500/50 transition-colors"
                       >
-                        <td className="text-night-blue-200 py-4 pr-4">{item.feature}</td>
+                        <td className="text-white py-4 pr-4">{item.feature}</td>
                         <td className="text-center py-4 px-2">
                           <div className="font-bold">{renderValue(item.katoa)}</div>
                         </td>
-                        <td className="text-center py-4 px-2 text-night-blue-300 text-sm">{renderValue(item.throne)}</td>
-                        <td className="text-center py-4 px-2 text-night-blue-300 text-sm">{renderValue(item.linktree)}</td>
-                        <td className="text-center py-4 px-2 text-night-blue-300 text-sm">{renderValue(item.onlyfans)}</td>
-                        <td className="text-center py-4 px-2 text-night-blue-300 text-sm">{renderValue(item.kickstarter)}</td>
-                        <td className="text-center py-4 px-2 text-night-blue-300 text-sm">{renderValue(item.indiegogo)}</td>
+                        <td className="text-center py-4 px-2 text-white text-sm">{renderValue(item.throne)}</td>
+                        <td className="text-center py-4 px-2 text-white text-sm">{renderValue(item.linktree)}</td>
+                        <td className="text-center py-4 px-2 text-white text-sm">{renderValue(item.onlyfans)}</td>
+                        <td className="text-center py-4 px-2 text-white text-sm">{renderValue(item.kickstarter)}</td>
+                        <td className="text-center py-4 px-2 text-white text-sm">{renderValue(item.indiegogo)}</td>
                       </tr>
                     ))}
                   </tbody>
