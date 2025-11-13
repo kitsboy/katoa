@@ -208,7 +208,7 @@ export function FAQPage() {
               Contact Us
             </a>
             <a
-              href="https://github.com/katoa"
+              href="https://github.com/kitsboy/Katoa"
               target="_blank"
               rel="noopener noreferrer"
               className="px-6 py-3 bg-night-blue-500 hover:bg-night-blue-400 text-white rounded-lg font-medium transition-colors"

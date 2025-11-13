@@ -40,7 +40,7 @@ export function Footer() {
               {/* Social Links */}
               <div className="flex items-center gap-3">
                 <a
-                  href="https://twitter.com/katoa"
+                  href="https://x.com/give_bit"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center w-14 h-14 rounded-full bg-night-blue-500 border border-night-blue-400 hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 group"
@@ -48,7 +48,7 @@ export function Footer() {
                   <Twitter size={24} className="text-gray-400 group-hover:text-orange-500 transition-colors" />
                 </a>
                 <a
-                  href="https://github.com/katoa"
+                  href="https://github.com/kitsboy/Katoa"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center w-14 h-14 rounded-full bg-night-blue-500 border border-night-blue-400 hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 group"

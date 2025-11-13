@@ -19,7 +19,7 @@ export function ShareButton({ url, title, description, className = '' }: ShareBu
   const encodedDescription = encodeURIComponent(description || title);
 
   const shareLinks = {
-    twitter: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}%20-%20Support%20this%20wishlist%20with%20Bitcoin!`,
+    twitter: `https://x.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}%20-%20Support%20this%20wishlist%20with%20Bitcoin!`,
     facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
     linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
     whatsapp: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`,
