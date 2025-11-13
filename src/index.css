@@ -21,6 +21,14 @@
     @apply text-night-blue-shadow-700;
     letter-spacing: -0.01em;
   }
+
+  a {
+    @apply text-sand-tan-600 hover:text-sand-tan-700 transition-colors;
+  }
+
+  a:visited {
+    @apply text-sand-tan-700;
+  }
 }
 
 * {

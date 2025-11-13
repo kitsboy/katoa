@@ -121,14 +121,14 @@ export function HomePage() {
               </div>
             </Card>
 
-            <Card className="group p-8 bg-night-blue-50 border-night-blue-300 hover:border-night-blue-400 hover:shadow-xl hover:shadow-night-blue-300/30 transition-all duration-300">
+            <Card className="group p-8 bg-white border-sand-tan-300 hover:border-sand-tan-400 hover:shadow-xl hover:shadow-sand-tan-300/30 transition-all duration-300">
               <Tooltip content="Bitcoin has no borders. No banks needed. Works everywhere from Argentina to Zimbabwe.">
                 <div className="w-16 h-16 bg-gradient-to-br from-night-blue-400 to-night-blue-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-night-blue-400/30 group-hover:scale-110 transition-transform duration-300">
                   <Globe size={32} className="text-white" strokeWidth={2.5} />
                 </div>
               </Tooltip>
 
-              <h3 className="text-2xl font-bold text-night-blue-shadow mb-3">
+              <h3 className="text-2xl font-bold text-night-blue-shadow-700 mb-3">
                 Truly Global
                 <Tooltip content="Unlike Stripe/PayPal that block 50+ countries, Bitcoin works everywhere." icon />
               </h3>
@@ -137,8 +137,8 @@ export function HomePage() {
                 No banks required. Works in 195+ countries. Support anyone, anywhere.
               </p>
 
-              <div className="pt-4 border-t border-night-blue-200">
-                <div className="text-night-blue-700 font-bold">vs. ~10 countries with 10% fees</div>
+              <div className="pt-4 border-t border-sand-tan-200">
+                <div className="text-sand-tan-700 font-bold">vs. ~10 countries with 10% fees</div>
               </div>
             </Card>
 
