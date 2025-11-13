@@ -189,13 +189,13 @@ export function Footer() {
               <div className="flex-shrink-0">
                 <div
                   onClick={() => setQrExpanded(!qrExpanded)}
-                  className={`cursor-pointer transition-all duration-300 ease-in-out ${qrExpanded ? 'fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[70]' : 'relative'}`}
+                  className={`cursor-pointer transition-all duration-300 ease-in-out ${qrExpanded ? 'fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[70] shadow-2xl' : 'relative'}`}
                 >
                   <img
                     src="/donations-qr copy.png"
                     alt="Donation QR Code"
-                    className={`object-contain transition-all duration-300 ${qrExpanded ? 'w-80 h-80' : 'w-36 h-36'}`}
-                    style={{ imageRendering: 'crisp-edges' }}
+                    className={`transition-all duration-300 ${qrExpanded ? 'w-96 h-96' : 'w-36 h-36'}`}
+                    style={{ imageRendering: 'pixelated' }}
                   />
                 </div>
               </div>
@@ -232,8 +232,8 @@ export function Footer() {
                 <p className="text-xs text-gray-400 leading-relaxed mb-2">
                   Your <span className="text-orange-500 font-semibold">sats</span> help us build free tools for the Bitcoin community.
                 </p>
-                <p className="text-[10px] text-gray-500">
-                  Scan with your Lightning wallet
+                <p className="text-[10px] text-white font-medium">
+                  Scan with any Bitcoin wallet
                 </p>
               </div>
             </div>
