@@ -101,7 +101,7 @@ export function HomePage() {
           <div className="grid md:grid-cols-3 gap-8">
 
             <Card className="group p-8 bg-white border-sand-tan-300 hover:border-orange-400 hover:shadow-xl hover:shadow-orange-300/30 transition-all duration-300">
-              <Tooltip content="Bitcoin Lightning Network enables instant settlements with sub-cent fees, making micro-transactions economically viable for the first time.">
+              <Tooltip content="Lightning Network settles Bitcoin payments in milliseconds with near-zero fees. This revolutionary technology makes micropayments economically viable, enabling new business models impossible with traditional finance. Your money moves at the speed of the internet." position="bottom">
                 <div className="w-20 h-20 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-3xl flex items-center justify-center mb-6 shadow-2xl shadow-orange-500/50 group-hover:scale-110 transition-transform duration-300">
                   <Zap size={44} className="text-white" strokeWidth={3} />
                 </div>
@@ -109,7 +109,7 @@ export function HomePage() {
 
               <h3 className="text-2xl font-bold text-night-blue-shadow mb-3">
                 Lightning Fast
-                <Tooltip content="Transactions settle in under 1 second, compared to 7+ days on traditional platforms." icon />
+                <Tooltip content="Settlement in seconds, not weeks. While traditional platforms hold your money for 7-14 days, Lightning Network delivers instant access to your earnings. Build your financial freedom without waiting." icon position="bottom" />
               </h3>
 
               <p className="text-night-blue-800 leading-relaxed text-lg mb-4 font-semibold">
@@ -122,7 +122,7 @@ export function HomePage() {
             </Card>
 
             <Card className="group p-8 bg-white border-sand-tan-300 hover:border-blue-400 hover:shadow-xl hover:shadow-blue-300/30 transition-all duration-300">
-              <Tooltip content="Bitcoin has no borders. No banks needed. Works everywhere from Argentina to Zimbabwe.">
+              <Tooltip content="Bitcoin transcends borders and banking systems. Whether you're in New York or Nigeria, Tokyo or Tanzania, your supporters can fund your dreams. No government can shut you down. No bank can deny you service. True financial inclusion for all humanity." position="bottom">
                 <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-3xl flex items-center justify-center mb-6 shadow-2xl shadow-blue-500/50 group-hover:scale-110 transition-transform duration-300">
                   <Globe size={44} className="text-white" strokeWidth={3} />
                 </div>
@@ -130,7 +130,7 @@ export function HomePage() {
 
               <h3 className="text-2xl font-bold text-night-blue-shadow-700 mb-3">
                 Truly Global
-                <Tooltip content="Unlike Stripe/PayPal that block 50+ countries, Bitcoin works everywhere." icon />
+                <Tooltip content="195+ countries. Zero discrimination. While competitors cherry-pick wealthy nations and charge 10-20% fees, Bitcoin serves everyone equally. The unbanked are no longer excluded. This is financial democracy." icon position="bottom" />
               </h3>
 
               <p className="text-night-blue-800 leading-relaxed text-lg mb-4 font-semibold">
@@ -143,7 +143,7 @@ export function HomePage() {
             </Card>
 
             <Card className="group p-8 bg-white border-sand-tan-300 hover:border-green-400 hover:shadow-xl hover:shadow-green-300/30 transition-all duration-300">
-              <Tooltip content="Zero-knowledge proofs mean we can verify payments without seeing your data. True privacy by design.">
+              <Tooltip content="Zero-knowledge cryptography proves transactions without revealing your identity. Nostr protocol encrypts your messages end-to-end. Your data lives on your device, not our servers. We can't sell what we don't have. Privacy is your birthright." position="bottom">
                 <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-500 rounded-3xl flex items-center justify-center mb-6 shadow-2xl shadow-green-500/50 group-hover:scale-110 transition-transform duration-300">
                   <Shield size={44} className="text-white" strokeWidth={3} />
                 </div>
@@ -151,7 +151,7 @@ export function HomePage() {
 
               <h3 className="text-2xl font-bold text-night-blue-shadow mb-3">
                 Actually Private
-                <Tooltip content="Decentralized means no company owns your data. Encrypted via Nostr protocol." icon />
+                <Tooltip content="Decentralized architecture means no central authority controls your account. No CEO can delete you. No government can freeze you. Your identity, your data, your rules. This is sovereignty in the digital age." icon position="bottom" />
               </h3>
 
               <p className="text-night-blue-800 leading-relaxed text-lg mb-4 font-semibold">
