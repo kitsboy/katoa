@@ -184,36 +184,36 @@ export function ComparisonPage() {
 
         <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
           <Card className="p-8 bg-gradient-to-br from-slate-700 to-slate-800 border-slate-600 text-center hover:shadow-xl hover:shadow-sand-tan-500/20 transition-all duration-300">
-            <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-sand-tan-400 to-sand-tan-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-sand-tan-500/50 transform hover:scale-110 transition-transform duration-300">
-              <Globe size={40} className="text-white" strokeWidth={2.5} />
+            <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-emerald-500 to-cyan-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-emerald-500/50 transform hover:scale-110 transition-transform duration-300">
+              <Globe size={48} className="text-white" strokeWidth={3} />
             </div>
             <h3 className="text-2xl font-bold text-white mb-4">195+ Countries</h3>
             <p className="text-white text-lg leading-relaxed mb-6 font-medium">
               No bank account? No problem. Bitcoin works everywhere, for everyone. No discrimination.
             </p>
-            <div className="text-sand-tan-400 font-bold text-lg">KATOA: All countries, always 0%</div>
+            <div className="text-white font-bold text-lg bg-emerald-500/20 py-2 px-4 rounded-lg">KATOA: All countries, always 0%</div>
           </Card>
 
           <Card className="p-8 bg-gradient-to-br from-slate-700 to-slate-800 border-slate-600 text-center hover:shadow-xl hover:shadow-sand-tan-500/20 transition-all duration-300">
-            <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-sand-tan-400 to-sand-tan-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-sand-tan-500/50 transform hover:scale-110 transition-transform duration-300">
-              <Shield size={40} className="text-white" strokeWidth={2.5} />
+            <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-emerald-500 to-cyan-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-emerald-500/50 transform hover:scale-110 transition-transform duration-300">
+              <Shield size={48} className="text-white" strokeWidth={3} />
             </div>
             <h3 className="text-2xl font-bold text-white mb-4">True Privacy</h3>
             <p className="text-white text-lg leading-relaxed mb-6 font-medium">
               Zero-knowledge proofs. Encrypted messaging. Decentralized storage. Your data stays yours.
             </p>
-            <div className="text-sand-tan-400 font-bold text-lg">KATOA: Zero-knowledge proofs</div>
+            <div className="text-white font-bold text-lg bg-emerald-500/20 py-2 px-4 rounded-lg">KATOA: Zero-knowledge proofs</div>
           </Card>
 
           <Card className="p-8 bg-gradient-to-br from-slate-700 to-slate-800 border-slate-600 text-center hover:shadow-xl hover:shadow-sand-tan-500/20 transition-all duration-300">
-            <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-sand-tan-400 to-sand-tan-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-sand-tan-500/50 transform hover:scale-110 transition-transform duration-300">
-              <Zap size={40} className="text-white" strokeWidth={2.5} />
+            <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-emerald-500 to-cyan-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-emerald-500/50 transform hover:scale-110 transition-transform duration-300">
+              <Zap size={48} className="text-white" strokeWidth={3} />
             </div>
             <h3 className="text-2xl font-bold text-white mb-4">Instant Settlement</h3>
             <p className="text-white text-lg leading-relaxed mb-6 font-medium">
               Keep 100% of your earnings. Scale globally. Build your empire without platform taxes.
             </p>
-            <div className="text-sand-tan-400 font-bold text-lg">KATOA: Instant Lightning Network</div>
+            <div className="text-white font-bold text-lg bg-emerald-500/20 py-2 px-4 rounded-lg">KATOA: Instant Lightning Network</div>
           </Card>
         </div>
 
