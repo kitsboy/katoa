@@ -9,7 +9,9 @@ import { StatsCard } from '../components/StatsCard';
 import { ProgressBar } from '../components/ProgressBar';
 import { supabase } from '../lib/supabase';
 import { nostrService } from '../lib/nostr';
-import { Plus, Edit, Trash2, ExternalLink, Settings, Gift, DollarSign, Users, Share2, RefreshCw, Wallet, TrendingUp, Zap, Target } from 'lucide-react';
+import { parseProductUrl, isValidUrl } from '../lib/productParser';
+import { getBitcoinPrice, usdToSats, formatSats as formatSatsUtil, formatUsd } from '../lib/bitcoinPrice';
+import { Plus, Edit, Trash2, ExternalLink, Settings, Gift, DollarSign, Users, Share2, RefreshCw, Wallet, TrendingUp, Zap, Target, Heart, UserPlus } from 'lucide-react';
 
 interface Wishlist {
   id: string;
@@ -64,12 +66,18 @@ export function DashboardPage() {
     totalWishlists: 0,
     totalSupporters: 0,
   });
+  const [editingItem, setEditingItem] = useState<WishlistItem | null>(null);
+  const [urlInput, setUrlInput] = useState('');
+  const [parsingUrl, setParsingUrl] = useState(false);
+  const [following, setFollowing] = useState<any[]>([]);
+  const [loadingFollowing, setLoadingFollowing] = useState(false);
 
   useEffect(() => {
     if (user) {
       loadWishlists();
       loadStats();
       loadWalletAddresses();
+      loadFollowing();
     }
   }, [user]);
 
@@ -260,6 +268,175 @@ export function DashboardPage() {
     }
   }
 
+  async function handleEditWishlist(wishlist: Wishlist) {
+    setSelectedWishlist(wishlist);
+    setFormData({
+      title: wishlist.title,
+      description: wishlist.description,
+      slug: wishlist.slug,
+      total_sats_goal: wishlist.total_sats_goal.toString(),
+      wallet_address_id: '',
+    });
+    setShowEditModal(true);
+  }
+
+  async function handleUpdateWishlist(e: React.FormEvent) {
+    e.preventDefault();
+    if (!selectedWishlist) return;
+
+    setProcessing(true);
+    try {
+      const { error } = await supabase
+        .from('wishlists')
+        .update({
+          title: formData.title,
+          description: formData.description,
+          slug: formData.slug,
+          total_sats_goal: parseInt(formData.total_sats_goal) || 0,
+        })
+        .eq('id', selectedWishlist.id);
+
+      if (error) throw error;
+
+      setShowEditModal(false);
+      await loadWishlists();
+      setFormData({ title: '', description: '', slug: '', total_sats_goal: '', wallet_address_id: '' });
+    } catch (error) {
+      console.error('Error updating wishlist:', error);
+      alert('Failed to update wishlist');
+    } finally {
+      setProcessing(false);
+    }
+  }
+
+  async function handleEditItem(item: WishlistItem) {
+    setEditingItem(item);
+    setItemFormData({
+      title: item.title,
+      description: item.description,
+      price_sats: item.price_sats.toString(),
+      image_url: (item as any).image_url || '',
+      product_url: (item as any).product_url || '',
+      merchant_link: (item as any).merchant_link || '',
+    });
+  }
+
+  async function handleUpdateItem(e: React.FormEvent) {
+    e.preventDefault();
+    if (!editingItem) return;
+
+    setProcessing(true);
+    try {
+      const { error } = await supabase
+        .from('wishlist_items')
+        .update({
+          title: itemFormData.title,
+          description: itemFormData.description,
+          price_sats: parseInt(itemFormData.price_sats),
+          image_url: itemFormData.image_url || null,
+          product_url: itemFormData.product_url || null,
+          merchant_link: itemFormData.merchant_link || null,
+        })
+        .eq('id', editingItem.id);
+
+      if (error) throw error;
+
+      await loadItems(selectedWishlist!.id);
+      setEditingItem(null);
+      setItemFormData({ title: '', description: '', price_sats: '', image_url: '', product_url: '', merchant_link: '' });
+    } catch (error) {
+      console.error('Error updating item:', error);
+      alert('Failed to update item');
+    } finally {
+      setProcessing(false);
+    }
+  }
+
+  async function handleParseUrl() {
+    if (!urlInput || !isValidUrl(urlInput)) {
+      alert('Please enter a valid URL');
+      return;
+    }
+
+    setParsingUrl(true);
+    try {
+      const product = await parseProductUrl(urlInput);
+      if (product) {
+        setItemFormData({
+          title: product.title || '',
+          description: product.description || '',
+          price_sats: product.price_sats?.toString() || '',
+          image_url: product.image_url || '',
+          product_url: product.product_url || '',
+          merchant_link: product.product_url || '',
+        });
+        setUrlInput('');
+        alert('Product info extracted! Review and save.');
+      } else {
+        alert('Could not extract product information from this URL');
+      }
+    } catch (error) {
+      console.error('Error parsing URL:', error);
+      alert('Failed to parse URL');
+    } finally {
+      setParsingUrl(false);
+    }
+  }
+
+  async function loadFollowing() {
+    if (!user) return;
+
+    setLoadingFollowing(true);
+    try {
+      const { data: profileFollows, error: profileError } = await supabase
+        .from('follows')
+        .select(`
+          following_id,
+          profiles:following_id (
+            id,
+            username,
+            avatar_url,
+            bio
+          )
+        `)
+        .eq('follower_id', user.id);
+
+      if (profileError) throw profileError;
+
+      const { data: wishlistFollows, error: wishlistError } = await supabase
+        .from('wishlist_follows')
+        .select(`
+          wishlist_id,
+          wishlists:wishlist_id (
+            id,
+            title,
+            description,
+            slug,
+            total_sats_raised,
+            total_sats_goal,
+            profiles:creator_id (
+              username,
+              avatar_url
+            )
+          )
+        `)
+        .eq('user_id', user.id);
+
+      if (wishlistError) throw wishlistError;
+
+      const combined = [
+        ...(profileFollows || []).map(f => ({ type: 'profile', data: f.profiles })),
+        ...(wishlistFollows || []).map(f => ({ type: 'wishlist', data: f.wishlists }))
+      ];
+
+      setFollowing(combined);
+    } catch (error) {
+      console.error('Error loading following:', error);
+    } finally {
+      setLoadingFollowing(false);
+    }
+  }
+
   function formatSats(sats: number): string {
     return new Intl.NumberFormat().format(sats);
   }
@@ -347,6 +524,71 @@ export function DashboardPage() {
           />
         </div>
 
+        {following.length > 0 && (
+          <div className="mb-8">
+            <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+              <Heart className="text-red-500" size={24} />
+              Following
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {following.map((item, idx) => (
+                <Card key={idx} className="p-4 hover-lift bg-gradient-to-br from-slate-800 to-slate-700 border-slate-700">
+                  {item.type === 'profile' ? (
+                    <Link href={`/profile/${item.data.username}`} className="block">
+                      <div className="flex items-center gap-3">
+                        {item.data.avatar_url ? (
+                          <img
+                            src={item.data.avatar_url}
+                            alt={item.data.username}
+                            className="w-12 h-12 rounded-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-12 h-12 rounded-full bg-orange-500/20 flex items-center justify-center">
+                            <UserPlus className="text-orange-500" size={20} />
+                          </div>
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-white font-medium truncate">{item.data.username}</p>
+                          {item.data.bio && (
+                            <p className="text-gray-400 text-sm truncate">{item.data.bio}</p>
+                          )}
+                        </div>
+                      </div>
+                    </Link>
+                  ) : (
+                    <Link href={`/wishlist/${item.data.slug}`} className="block">
+                      <div className="flex items-center gap-3 mb-2">
+                        {item.data.profiles?.avatar_url ? (
+                          <img
+                            src={item.data.profiles.avatar_url}
+                            alt={item.data.profiles.username}
+                            className="w-8 h-8 rounded-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center">
+                            <Gift className="text-orange-500" size={14} />
+                          </div>
+                        )}
+                        <p className="text-xs text-gray-400">{item.data.profiles?.username}</p>
+                      </div>
+                      <h3 className="text-white font-medium mb-2 line-clamp-2">{item.data.title}</h3>
+                      {item.data.total_sats_goal > 0 && (
+                        <ProgressBar
+                          current={item.data.total_sats_raised}
+                          goal={item.data.total_sats_goal}
+                          showPercentage={true}
+                          gradient="from-emerald-500 to-cyan-600"
+                          height="sm"
+                        />
+                      )}
+                    </Link>
+                  )}
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="space-y-6">
           <h2 className="text-2xl font-bold text-white">Your Wishlists</h2>
 
@@ -415,6 +657,15 @@ export function DashboardPage() {
                             <ExternalLink size={16} />
                           </Button>
                         </Link>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleEditWishlist(wishlist)}
+                          className="flex-1 md:flex-none text-blue-400 hover:text-blue-300"
+                          title="Edit Wishlist"
+                        >
+                          <Edit size={16} />
+                        </Button>
                         {profile?.nostr_pubkey && (
                           <Button
                             variant="outline"
@@ -533,14 +784,77 @@ export function DashboardPage() {
       </Modal>
 
       <Modal
+        isOpen={showEditModal}
+        onClose={() => {
+          setShowEditModal(false);
+          setSelectedWishlist(null);
+          setFormData({ title: '', description: '', slug: '', total_sats_goal: '', wallet_address_id: '' });
+        }}
+        title="Edit Wishlist"
+      >
+        <form onSubmit={handleUpdateWishlist} className="space-y-4">
+          <Input
+            label="Title"
+            value={formData.title}
+            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            required
+          />
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Description</label>
+            <textarea
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              className="w-full px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"
+              rows={3}
+            />
+          </div>
+          <Input
+            label="URL Slug"
+            value={formData.slug}
+            onChange={(e) => setFormData({ ...formData, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '') })}
+            placeholder="my-wishlist"
+            required
+          />
+          <Input
+            label="Funding Goal (sats, optional)"
+            type="number"
+            value={formData.total_sats_goal}
+            onChange={(e) => setFormData({ ...formData, total_sats_goal: e.target.value })}
+            placeholder="1000000"
+          />
+          <Button type="submit" className="w-full" loading={processing}>
+            Update Wishlist
+          </Button>
+        </form>
+      </Modal>
+
+      <Modal
         isOpen={showItemsModal}
         onClose={() => setShowItemsModal(false)}
         title={`Manage Items - ${selectedWishlist?.title}`}
         size="xl"
       >
         <div className="space-y-6">
-          <form onSubmit={handleAddItem} className="space-y-4 p-6 bg-gray-800/50 rounded-lg">
-            <h3 className="text-lg font-bold text-white">Add New Item</h3>
+          <div className="p-6 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-lg border border-blue-500/20">
+            <h3 className="text-lg font-bold text-white mb-3">Quick Add from URL</h3>
+            <p className="text-sm text-gray-400 mb-4">Paste a product URL to automatically extract info</p>
+            <div className="flex gap-2">
+              <input
+                type="url"
+                value={urlInput}
+                onChange={(e) => setUrlInput(e.target.value)}
+                placeholder="https://amazon.com/product/..."
+                className="flex-1 px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <Button onClick={handleParseUrl} loading={parsingUrl} variant="outline">
+                <Zap size={18} className="mr-2" />
+                Extract
+              </Button>
+            </div>
+          </div>
+
+          <form onSubmit={editingItem ? handleUpdateItem : handleAddItem} className="space-y-4 p-6 bg-gray-800/50 rounded-lg">
+            <h3 className="text-lg font-bold text-white">{editingItem ? 'Edit Item' : 'Add New Item'}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Input
                 label="Title"
@@ -579,10 +893,33 @@ export function DashboardPage() {
                 onChange={(e) => setItemFormData({ ...itemFormData, merchant_link: e.target.value })}
               />
             </div>
-            <Button type="submit" loading={processing}>
-              <Plus size={18} className="mr-2" />
-              Add Item
-            </Button>
+            <div className="flex gap-2">
+              <Button type="submit" loading={processing} className="flex-1">
+                {editingItem ? (
+                  <>
+                    <Edit size={18} className="mr-2" />
+                    Update Item
+                  </>
+                ) : (
+                  <>
+                    <Plus size={18} className="mr-2" />
+                    Add Item
+                  </>
+                )}
+              </Button>
+              {editingItem && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setEditingItem(null);
+                    setItemFormData({ title: '', description: '', price_sats: '', image_url: '', product_url: '', merchant_link: '' });
+                  }}
+                >
+                  Cancel
+                </Button>
+              )}
+            </div>
           </form>
 
           <div className="space-y-3">
@@ -592,22 +929,35 @@ export function DashboardPage() {
             ) : (
               items.map((item) => (
                 <Card key={item.id} className="p-4">
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between gap-4">
                     <div className="flex-1">
                       <h4 className="text-white font-semibold">{item.title}</h4>
                       <p className="text-sm text-gray-400">
                         {formatSats(item.sats_raised)} / {formatSats(item.price_sats)} sats
                         {item.is_funded && <span className="ml-2 text-green-400">Funded</span>}
                       </p>
+                      {item.description && (
+                        <p className="text-xs text-gray-500 mt-1 line-clamp-2">{item.description}</p>
+                      )}
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleDeleteItem(item.id)}
-                      className="text-red-400"
-                    >
-                      <Trash2 size={16} />
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleEditItem(item)}
+                        className="text-blue-400"
+                      >
+                        <Edit size={16} />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDeleteItem(item.id)}
+                        className="text-red-400"
+                      >
+                        <Trash2 size={16} />
+                      </Button>
+                    </div>
                   </div>
                 </Card>
               ))
