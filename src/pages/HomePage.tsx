@@ -199,7 +199,7 @@ export function HomePage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               { icon: '🎁', title: 'Wishlists', desc: 'Like Throne, but 0% fees', tooltip: 'Create wishlists for gifts, crowdfund items, instant delivery' },
-              { icon: '⚡', title: 'Subscriptions', desc: 'Like OnlyFans, keep 100%', tooltip: 'BOLT 12 recurring payments on-chain, no intermediary' },
+              { icon: '⚡', title: 'Subscriptions', desc: 'Unlike OnlyFans, you keep 100%', tooltip: 'BOLT 12 recurring payments on-chain, no intermediary' },
               { icon: '🔗', title: 'Link-in-Bio', desc: 'Like Linktree, but free', tooltip: 'Unlimited links, full customization, zero monthly fees' },
               { icon: '💬', title: 'Private DMs', desc: 'Encrypted via Nostr', tooltip: 'End-to-end encrypted messaging, no server surveillance' },
             ].map((item, idx) => (
