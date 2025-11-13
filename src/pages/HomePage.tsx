@@ -204,10 +204,10 @@ export function HomePage() {
               { icon: '💬', title: 'Private DMs', desc: 'Encrypted via Nostr', tooltip: 'End-to-end encrypted messaging, no server surveillance' },
             ].map((item, idx) => (
               <Tooltip key={idx} content={item.tooltip} position="bottom">
-                <Card className="p-6 text-center bg-slate-800/50 border-slate-700 hover:border-emerald-500/50 transition-all hover-lift cursor-help">
-                  <div className="text-5xl mb-4">{item.icon}</div>
-                  <h3 className="text-xl font-bold text-white mb-2">{item.title}</h3>
-                  <p className="text-slate-400 text-sm">{item.desc}</p>
+                <Card className="p-8 text-center bg-slate-800/50 border-slate-700 hover:border-emerald-500/50 transition-all hover-lift cursor-help flex flex-col items-center justify-start h-full">
+                  <div className="text-5xl mb-6">{item.icon}</div>
+                  <h3 className="text-xl font-bold text-white mb-3 min-h-[2rem] flex items-center">{item.title}</h3>
+                  <p className="text-slate-400 text-sm leading-relaxed">{item.desc}</p>
                 </Card>
               </Tooltip>
             ))}
