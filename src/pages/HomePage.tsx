@@ -31,7 +31,7 @@ export function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-sand-tan-50 via-white to-sand-tan-100">
 
-      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden px-6">
+      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden px-4 sm:px-6">
         <div className="absolute inset-0 overflow-hidden opacity-40">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-sand-tan-400/30 rounded-full blur-3xl animate-pulse" />
           <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-night-blue-400/30 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
@@ -46,19 +46,19 @@ export function HomePage() {
             </span>
           </div>
 
-          <h1 className="text-5xl md:text-[4rem] lg:text-[4.75rem] font-bold mb-6 leading-[1.1] tracking-tight text-night-blue-shadow">
+          <h1 className="text-4xl sm:text-5xl md:text-[4rem] lg:text-[4.75rem] font-bold mb-6 leading-[1.1] tracking-tight text-night-blue-shadow px-2">
             Keep <span className="bg-gradient-to-r from-sand-tan-600 to-night-blue-600 bg-clip-text text-transparent">100%</span> of
             <br />
             Your Earnings
           </h1>
 
-          <p className="text-xl md:text-2xl text-night-blue-500 max-w-3xl mx-auto mb-10 font-medium leading-relaxed">
+          <p className="text-lg sm:text-xl md:text-2xl text-night-blue-500 max-w-3xl mx-auto mb-10 font-medium leading-relaxed px-2">
             Zero fees. Instant Bitcoin payments. Global reach.
             <br />
             <span className="text-night-blue-shadow font-semibold">While competitors take 10-20%, we take nothing.</span>
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 px-4">
             <Link href="/dashboard">
               <Button
                 size="lg"
@@ -79,7 +79,7 @@ export function HomePage() {
             </Link>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-8 text-night-blue-500 text-sm font-bold">
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-night-blue-500 text-xs sm:text-sm font-bold px-4">
             <div className="flex items-center gap-2">
               <CheckCircle2 size={18} className="text-sand-tan-600" />
               <span>{stats.volume} sats processed</span>
@@ -96,11 +96,11 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="py-20 px-6 bg-white">
+      <section className="py-12 sm:py-20 px-4 sm:px-6 bg-white">
         <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-6 sm:gap-8">
 
-            <Card className="group p-8 bg-white border-sand-tan-300 hover:border-orange-400 hover:shadow-xl hover:shadow-orange-300/30 transition-all duration-300">
+            <Card className="group p-6 sm:p-8 bg-white border-sand-tan-300 hover:border-orange-400 hover:shadow-xl hover:shadow-orange-300/30 transition-all duration-300">
               <Tooltip content="Lightning Network settles Bitcoin payments in milliseconds with near-zero fees. This revolutionary technology makes micropayments economically viable, enabling new business models impossible with traditional finance. Your money moves at the speed of the internet." position="bottom">
                 <div className="w-20 h-20 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-3xl flex items-center justify-center mb-6 shadow-2xl shadow-orange-500/50 group-hover:scale-110 transition-transform duration-300">
                   <Zap size={44} className="text-white" strokeWidth={3} />
@@ -121,7 +121,7 @@ export function HomePage() {
               </div>
             </Card>
 
-            <Card className="group p-8 bg-white border-sand-tan-300 hover:border-blue-400 hover:shadow-xl hover:shadow-blue-300/30 transition-all duration-300">
+            <Card className="group p-6 sm:p-8 bg-white border-sand-tan-300 hover:border-blue-400 hover:shadow-xl hover:shadow-blue-300/30 transition-all duration-300">
               <Tooltip content="Bitcoin transcends borders and banking systems. Whether you're in New York or Nigeria, Tokyo or Tanzania, your supporters can fund your dreams. No government can shut you down. No bank can deny you service. True financial inclusion for all humanity." position="bottom">
                 <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-3xl flex items-center justify-center mb-6 shadow-2xl shadow-blue-500/50 group-hover:scale-110 transition-transform duration-300">
                   <Globe size={44} className="text-white" strokeWidth={3} />
@@ -142,7 +142,7 @@ export function HomePage() {
               </div>
             </Card>
 
-            <Card className="group p-8 bg-white border-sand-tan-300 hover:border-green-400 hover:shadow-xl hover:shadow-green-300/30 transition-all duration-300">
+            <Card className="group p-6 sm:p-8 bg-white border-sand-tan-300 hover:border-green-400 hover:shadow-xl hover:shadow-green-300/30 transition-all duration-300">
               <Tooltip content="Zero-knowledge cryptography proves transactions without revealing your identity. Nostr protocol encrypts your messages end-to-end. Your data lives on your device, not our servers. We can't sell what we don't have. Privacy is your birthright." position="bottom">
                 <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-500 rounded-3xl flex items-center justify-center mb-6 shadow-2xl shadow-green-500/50 group-hover:scale-110 transition-transform duration-300">
                   <Shield size={44} className="text-white" strokeWidth={3} />
@@ -166,13 +166,13 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="py-20 px-6 bg-gradient-to-br from-lavender-100 to-lavender-200">
+      <section className="py-12 sm:py-20 px-4 sm:px-6 bg-gradient-to-br from-lavender-100 to-lavender-200">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-night-blue-shadow mb-4">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-night-blue-shadow mb-4 px-2">
               Stop Losing <span className="bg-gradient-to-r from-sand-tan-600 to-night-blue-600 bg-clip-text text-transparent">Thousands</span> to Fees
             </h2>
-            <p className="text-xl text-night-blue-500 font-semibold max-w-2xl mx-auto">
+            <p className="text-lg sm:text-xl text-night-blue-500 font-semibold max-w-2xl mx-auto px-2">
               Traditional platforms take 10-20% of everything you earn. We take nothing.
             </p>
           </div>
@@ -180,13 +180,13 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="py-20 px-6 bg-white">
+      <section className="py-12 sm:py-20 px-4 sm:px-6 bg-white">
         <div className="max-w-4xl mx-auto text-center">
-          <Card className="p-12 bg-gradient-to-br from-sand-tan-500 to-night-blue-500 border-sand-tan-400 shadow-2xl shadow-sand-tan-600/40">
-            <h2 className="text-4xl font-bold text-white mb-4">
+          <Card className="p-6 sm:p-12 bg-gradient-to-br from-sand-tan-500 to-night-blue-500 border-sand-tan-400 shadow-2xl shadow-sand-tan-600/40">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
               Ready to Keep 100% of Your Earnings?
             </h2>
-            <p className="text-xl text-white mb-8 max-w-2xl mx-auto font-semibold">
+            <p className="text-lg sm:text-xl text-white mb-8 max-w-2xl mx-auto font-semibold">
               Join thousands of creators who've stopped paying platform fees forever.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">

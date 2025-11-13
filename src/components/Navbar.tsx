@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from './Link';
 import { Button } from './Button';
 import { Modal } from './Modal';
@@ -18,10 +18,37 @@ export function Navbar() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [hasNostr, setHasNostr] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setHasNostr(!!window.nostr);
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowMenu(false);
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setShowMenu(false);
+      }
+    };
+
+    if (showMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [showMenu]);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -179,89 +206,140 @@ export function Navbar() {
         </div>
 
         {showMenu && (
-          <div className="md:hidden border-t border-gray-800 bg-black">
-            <div className="px-4 py-4 space-y-3">
-              <Link href="/explore" className="block text-gray-300 hover:text-white py-2">
-                {t('nav.explore')}
-              </Link>
+          <>
+            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden animate-fade-in" onClick={() => setShowMenu(false)} />
+            <div
+              ref={menuRef}
+              className="fixed top-16 right-0 bottom-0 w-80 bg-gradient-to-b from-night-blue-shadow-700 via-night-blue-shadow-800 to-black border-l border-sand-tan-500/30 shadow-2xl z-50 md:hidden transform transition-transform duration-300 ease-out animate-slide-in-right overflow-y-auto"
+            >
+              <div className="p-6 space-y-6">
+                <div className="space-y-1">
+                  <Link
+                    href="/explore"
+                    className="flex items-center gap-3 px-4 py-3 text-white hover:bg-gradient-to-r hover:from-sand-tan-500/20 hover:to-orange-500/20 rounded-xl transition-all duration-200 group"
+                    onClick={() => setShowMenu(false)}
+                  >
+                    <Globe size={20} className="text-sand-tan-400 group-hover:text-orange-400 transition-colors" />
+                    <span className="font-semibold group-hover:translate-x-1 transition-transform">{t('nav.explore')}</span>
+                  </Link>
 
-              <div className="border-t border-gray-800 pt-3">
-                <p className="text-xs text-gray-500 mb-2">Language</p>
-                <div className="grid grid-cols-4 gap-2">
-                  {Object.entries(languageFlags).map(([lang, flag]) => (
-                    <button
-                      key={lang}
-                      onClick={() => setLanguage(lang as any)}
-                      className={`text-2xl p-2 rounded ${language === lang ? 'bg-gray-800' : 'hover:bg-gray-800'}`}
-                    >
-                      {flag}
-                    </button>
-                  ))}
+                  <Link
+                    href="/compare"
+                    className="flex items-center gap-3 px-4 py-3 text-white hover:bg-gradient-to-r hover:from-sand-tan-500/20 hover:to-orange-500/20 rounded-xl transition-all duration-200 group"
+                    onClick={() => setShowMenu(false)}
+                  >
+                    <Zap size={20} className="text-sand-tan-400 group-hover:text-orange-400 transition-colors" />
+                    <span className="font-semibold group-hover:translate-x-1 transition-transform">Why KATOA?</span>
+                  </Link>
+                </div>
+
+                <div className="border-t border-sand-tan-500/20 pt-4">
+                  <p className="text-xs text-sand-tan-400 font-bold mb-3 px-4 uppercase tracking-wider">Language</p>
+                  <div className="grid grid-cols-4 gap-2 px-2">
+                    {Object.entries(languageFlags).map(([lang, flag]) => (
+                      <button
+                        key={lang}
+                        onClick={() => {
+                          setLanguage(lang as any);
+                          setShowMenu(false);
+                        }}
+                        className={`text-3xl p-3 rounded-xl transition-all duration-200 transform hover:scale-110 ${
+                          language === lang
+                            ? 'bg-gradient-to-br from-orange-500 to-yellow-500 shadow-lg shadow-orange-500/50'
+                            : 'bg-night-blue-500/30 hover:bg-night-blue-500/50'
+                        }`}
+                      >
+                        {flag}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {user ? (
+                  <>
+                    <div className="border-t border-sand-tan-500/20 pt-4 space-y-1">
+                      <Link
+                        href="/dashboard"
+                        className="flex items-center gap-3 px-4 py-3 text-white hover:bg-gradient-to-r hover:from-sand-tan-500/20 hover:to-orange-500/20 rounded-xl transition-all duration-200 group"
+                        onClick={() => setShowMenu(false)}
+                      >
+                        <LayoutDashboard size={20} className="text-sand-tan-400 group-hover:text-orange-400 transition-colors" />
+                        <span className="font-semibold group-hover:translate-x-1 transition-transform">Dashboard</span>
+                      </Link>
+                      <Link
+                        href="/settings"
+                        className="flex items-center gap-3 px-4 py-3 text-white hover:bg-gradient-to-r hover:from-sand-tan-500/20 hover:to-orange-500/20 rounded-xl transition-all duration-200 group"
+                        onClick={() => setShowMenu(false)}
+                      >
+                        <Settings size={20} className="text-sand-tan-400 group-hover:text-orange-400 transition-colors" />
+                        <span className="font-semibold group-hover:translate-x-1 transition-transform">Settings & Profile</span>
+                      </Link>
+                    </div>
+
+                    <div className="border-t border-sand-tan-500/20 pt-4">
+                      <div className="bg-gradient-to-br from-night-blue-500/40 to-night-blue-shadow-700/40 rounded-2xl p-4 mb-4 border border-sand-tan-500/20">
+                        <div className="flex items-center gap-3 mb-3">
+                          {profile?.avatar_url ? (
+                            <img
+                              src={profile.avatar_url}
+                              alt={profile.username}
+                              className="w-12 h-12 rounded-full object-cover border-2 border-orange-500/50 shadow-lg"
+                            />
+                          ) : (
+                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-500 to-yellow-500 border-2 border-orange-500/50 flex items-center justify-center shadow-lg">
+                              <User size={24} className="text-white" />
+                            </div>
+                          )}
+                          <div className="flex-1">
+                            <p className="text-sm text-white font-bold">{profile?.username}</p>
+                            <p className="text-xs text-sand-tan-400">View Profile</p>
+                          </div>
+                        </div>
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          signOut();
+                          setShowMenu(false);
+                        }}
+                        className="w-full bg-red-500/10 border-red-500/30 text-red-400 hover:bg-red-500/20 hover:border-red-500/50"
+                      >
+                        <LogOut size={18} className="mr-2" />
+                        Sign Out
+                      </Button>
+                    </div>
+                  </>
+                ) : (
+                  <div className="border-t border-sand-tan-500/20 pt-4 space-y-3">
+                    <Link href="/auth" onClick={() => setShowMenu(false)}>
+                      <Button
+                        variant="outline"
+                        size="lg"
+                        className="w-full bg-white/5 border-sand-tan-400/50 text-white hover:bg-white/10 hover:border-sand-tan-400 font-bold"
+                      >
+                        Sign In
+                      </Button>
+                    </Link>
+                    <Link href="/auth" onClick={() => setShowMenu(false)}>
+                      <Button
+                        size="lg"
+                        className="w-full bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white font-bold shadow-lg shadow-orange-500/50"
+                      >
+                        Get Started Free
+                      </Button>
+                    </Link>
+                  </div>
+                )}
+
+                <div className="border-t border-sand-tan-500/20 pt-4">
+                  <p className="text-xs text-center text-sand-tan-400/70">
+                    KATOA - Zero Fees, Maximum Freedom
+                  </p>
                 </div>
               </div>
-              {user ? (
-                <>
-                  <Link href="/dashboard" className="flex items-center gap-2 text-gray-300 hover:text-white py-2">
-                    <LayoutDashboard size={18} />
-                    Dashboard
-                  </Link>
-                  <Link href="/settings" className="flex items-center gap-2 text-gray-300 hover:text-white py-2">
-                    <Settings size={18} />
-                    Settings & Profile
-                  </Link>
-                  <div className="pt-2 border-t border-gray-800">
-                    <div className="flex items-center gap-3 mb-3">
-                      {profile?.avatar_url ? (
-                        <img
-                          src={profile.avatar_url}
-                          alt={profile.username}
-                          className="w-10 h-10 rounded-full object-cover border-2 border-orange-500/50"
-                        />
-                      ) : (
-                        <div className="w-10 h-10 rounded-full bg-orange-500/20 border-2 border-orange-500/50 flex items-center justify-center">
-                          <User size={20} className="text-orange-500" />
-                        </div>
-                      )}
-                      <div>
-                        <p className="text-sm text-white font-medium">{profile?.username}</p>
-                        <p className="text-xs text-gray-500">View Profile</p>
-                      </div>
-                    </div>
-                    <Button variant="ghost" size="sm" onClick={() => signOut()} className="w-full">
-                      <LogOut size={18} className="mr-2" />
-                      Sign Out
-                    </Button>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="w-full"
-                    onClick={() => {
-                      setAuthMode('signin');
-                      setShowAuthModal(true);
-                      setShowMenu(false);
-                    }}
-                  >
-                    Sign In
-                  </Button>
-                  <Button
-                    size="sm"
-                    className="w-full"
-                    onClick={() => {
-                      setAuthMode('signup');
-                      setShowAuthModal(true);
-                      setShowMenu(false);
-                    }}
-                  >
-                    Get Started
-                  </Button>
-                </>
-              )}
             </div>
-          </div>
+          </>
         )}
       </nav>
 

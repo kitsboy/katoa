@@ -33,7 +33,7 @@ export function Tooltip({ content, children, icon = false, position = 'top' }: T
 
       {show && (
         <div
-          className={`absolute z-50 px-4 py-3 bg-night-blue-shadow-700 border border-emerald-500/30 rounded-lg shadow-2xl text-sm text-white max-w-xs ${positionClasses[position]} animate-fade-in`}
+          className={`absolute z-50 px-6 py-4 bg-night-blue-shadow-700 border border-emerald-500/30 rounded-xl shadow-2xl text-sm text-white max-w-md w-96 ${positionClasses[position]} animate-fade-in`}
         >
           <div className="relative">
             {content}
