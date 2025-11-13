@@ -11,7 +11,7 @@ import { supabase } from '../lib/supabase';
 import { nostrService } from '../lib/nostr';
 import { parseProductUrl, isValidUrl } from '../lib/productParser';
 import { getBitcoinPrice, usdToSats, formatSats as formatSatsUtil, formatUsd } from '../lib/bitcoinPrice';
-import { Plus, Edit, Trash2, ExternalLink, Settings, Gift, DollarSign, Users, Share2, RefreshCw, Wallet, TrendingUp, Zap, Target, Heart, UserPlus } from 'lucide-react';
+import { Plus, Edit, Trash2, ExternalLink, Settings, Gift, DollarSign, Users, Share2, RefreshCw, Wallet, TrendingUp, Zap, Target, Heart, UserPlus, Globe, Link as LinkIcon } from 'lucide-react';
 
 interface Wishlist {
   id: string;
@@ -699,7 +699,7 @@ export function DashboardPage() {
                               } else if (visibility === 'private') {
                                 return (
                                   <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30 flex items-center gap-1">
-                                    <Link size={12} />
+                                    <LinkIcon size={12} />
                                     Private
                                   </span>
                                 );
@@ -935,7 +935,7 @@ export function DashboardPage() {
                 />
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <Link size={18} className="text-blue-500" />
+                    <LinkIcon size={18} className="text-blue-500" />
                     <span className="font-semibold text-white">Private</span>
                   </div>
                   <p className="text-sm text-gray-400 mt-1">Only accessible via direct link, hidden from explore</p>
