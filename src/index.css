@@ -3,31 +3,29 @@
 @tailwind utilities;
 
 :root {
-  --digital-lavender: #A78BFA;
-  --mint-green: #75C9B7;
-  --mocha-mousse: #A47864;
-  --soft-peach: #FFD6E0;
-  --cool-slate: #5E6472;
-  --cloud-white: #F7FBFC;
+  --sand-tan: #e1b382;
+  --sand-tan-shadow: #c89666;
+  --night-blue: #2d545e;
+  --night-blue-shadow: #12343b;
 }
 
 @layer base {
   body {
-    @apply bg-cloud-500 text-slate-800;
+    @apply bg-white text-night-blue-500;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-size: 1.08rem;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: 'DM Serif Display', Georgia, serif;
-    @apply text-slate-900;
+    @apply text-night-blue-shadow-700;
     letter-spacing: -0.01em;
   }
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #A78BFA #F7FBFC;
+  scrollbar-color: #c89666 #f5f5f5;
 }
 
 *::-webkit-scrollbar {
@@ -36,16 +34,16 @@
 }
 
 *::-webkit-scrollbar-track {
-  background: #F7FBFC;
+  background: #f5f5f5;
 }
 
 *::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #A78BFA 0%, #75C9B7 100%);
+  background: linear-gradient(135deg, #e1b382 0%, #c89666 100%);
   border-radius: 4px;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #8B5CF6 0%, #5DA89C 100%);
+  background: linear-gradient(135deg, #c89666 0%, #b08050 100%);
 }
 
 @keyframes shimmer {
@@ -62,7 +60,7 @@
   background: linear-gradient(
     to right,
     transparent 0%,
-    rgba(167, 139, 250, 0.1) 50%,
+    rgba(225, 179, 130, 0.1) 50%,
     transparent 100%
   );
   background-size: 1000px 100%;
@@ -79,10 +77,10 @@
 
 @keyframes glow {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(167, 139, 250, 0.3);
+    box-shadow: 0 0 20px rgba(225, 179, 130, 0.3);
   }
   50% {
-    box-shadow: 0 0 40px rgba(167, 139, 250, 0.6);
+    box-shadow: 0 0 40px rgba(225, 179, 130, 0.6);
   }
 }
 
@@ -156,15 +154,15 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.text-gradient-lavender {
-  background: linear-gradient(135deg, #A78BFA 0%, #75C9B7 100%);
+.text-gradient-tan {
+  background: linear-gradient(135deg, #e1b382 0%, #c89666 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-.text-gradient-peach {
-  background: linear-gradient(135deg, #FFD6E0 0%, #A47864 100%);
+.text-gradient-blue {
+  background: linear-gradient(135deg, #2d545e 0%, #12343b 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
