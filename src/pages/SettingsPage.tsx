@@ -8,10 +8,10 @@ import { WalletAddressManager } from '../components/WalletAddressManager';
 import { supabase } from '../lib/supabase';
 import {
   User, Wallet, MapPin, Image as ImageIcon,
-  Settings as SettingsIcon, Save, Upload, Camera, Zap, Check, AlertCircle
+  Settings as SettingsIcon, Save, Upload, Camera, Zap, Check, AlertCircle, LayoutDashboard
 } from 'lucide-react';
 
-type Tab = 'profile' | 'wallet' | 'shipping' | 'appearance' | 'advanced';
+type Tab = 'profile' | 'wallet' | 'dashboard' | 'shipping' | 'appearance' | 'advanced';
 
 export function SettingsPage() {
   const { user, profile, updateProfile } = useAuth();
@@ -130,6 +130,7 @@ export function SettingsPage() {
   const tabs = [
     { id: 'profile' as Tab, label: 'Profile', icon: User, color: 'from-orange-500 to-amber-600' },
     { id: 'wallet' as Tab, label: 'Wallet', icon: Wallet, color: 'from-emerald-500 to-cyan-600' },
+    { id: 'dashboard' as Tab, label: 'Dashboard', icon: LayoutDashboard, color: 'from-cyan-500 to-blue-600' },
     { id: 'shipping' as Tab, label: 'Shipping', icon: MapPin, color: 'from-purple-500 to-pink-600' },
     { id: 'appearance' as Tab, label: 'Appearance', icon: ImageIcon, color: 'from-blue-500 to-indigo-600' },
     { id: 'advanced' as Tab, label: 'Advanced', icon: SettingsIcon, color: 'from-gray-500 to-gray-700' },
@@ -218,6 +219,46 @@ export function SettingsPage() {
                     </div>
                   </div>
 
+                  <div className="p-6 bg-black rounded-xl border border-gray-700">
+                    <label className="block text-sm font-bold text-gray-200 mb-4 uppercase tracking-wider">
+                      Profile Banner
+                    </label>
+                    {profileForm.banner_url ? (
+                      <div className="mb-4 relative group">
+                        <img
+                          src={profileForm.banner_url}
+                          alt="Banner"
+                          className="w-full h-48 rounded-xl object-cover border-2 border-gray-700 shadow-lg"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-6">
+                          <Button
+                            type="button"
+                            onClick={() => setProfileForm({ ...profileForm, banner_url: '' })}
+                            variant="outline"
+                            className="border-red-500 text-red-400 hover:bg-red-500/10"
+                          >
+                            Remove Banner
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="mb-4 h-48 rounded-xl bg-gradient-to-r from-gray-800 to-gray-900 border-2 border-dashed border-gray-700 flex items-center justify-center">
+                        <div className="text-center">
+                          <Camera size={48} className="mx-auto text-gray-600 mb-3" />
+                          <p className="text-gray-500 font-medium">No banner uploaded</p>
+                        </div>
+                      </div>
+                    )}
+                    <MediaUpload onUpload={handleBannerUpload} maxFiles={1} />
+                    <p className="text-xs text-gray-500 mt-2">Recommended: 1500x500px. JPG or PNG. Max 10MB.</p>
+                    {processing && (
+                      <div className="mt-3 p-3 bg-orange-500/20 border border-orange-500/50 rounded-lg flex items-center gap-2">
+                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-orange-500 border-t-transparent"></div>
+                        <p className="text-orange-400 text-sm font-medium">Uploading...</p>
+                      </div>
+                    )}
+                  </div>
+
                   <div className="grid grid-cols-1 gap-6">
                     <Input
                       label="Username"
@@ -303,6 +344,85 @@ export function SettingsPage() {
                   </div>
                 </div>
                 <WalletAddressManager />
+              </Card>
+            )}
+
+            {activeTab === 'dashboard' && (
+              <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 p-8">
+                <div className="flex items-center gap-3 mb-8">
+                  <div className="p-3 bg-cyan-500/20 rounded-xl">
+                    <LayoutDashboard size={28} className="text-cyan-500" />
+                  </div>
+                  <div>
+                    <h2 className="text-3xl font-black text-white">Creator Dashboard</h2>
+                    <p className="text-gray-400">Quick access to your creator dashboard</p>
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  <div className="p-6 bg-black rounded-xl border border-gray-700">
+                    <h3 className="text-xl font-bold text-white mb-4">Dashboard Overview</h3>
+                    <p className="text-gray-300 mb-6 leading-relaxed">
+                      Your creator dashboard helps you manage projects, track contributions, and monitor your wishlists all in one place.
+                    </p>
+                    <a href="/#/dashboard" className="inline-block">
+                      <Button className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 font-bold text-lg px-8 py-4 shadow-[0_0_30px_rgba(6,182,212,0.3)]">
+                        <LayoutDashboard size={24} className="mr-3" />
+                        Go to Dashboard
+                      </Button>
+                    </a>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="p-6 bg-black rounded-xl border border-gray-700">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="p-2 bg-orange-500/20 rounded-lg">
+                          <User size={20} className="text-orange-500" />
+                        </div>
+                        <h4 className="text-lg font-bold text-white">Projects</h4>
+                      </div>
+                      <p className="text-gray-400 text-sm">
+                        Create and manage multiple projects to organize your wishlists and campaigns.
+                      </p>
+                    </div>
+
+                    <div className="p-6 bg-black rounded-xl border border-gray-700">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="p-2 bg-emerald-500/20 rounded-lg">
+                          <Wallet size={20} className="text-emerald-500" />
+                        </div>
+                        <h4 className="text-lg font-bold text-white">Contributions</h4>
+                      </div>
+                      <p className="text-gray-400 text-sm">
+                        Track Bitcoin contributions and monitor progress toward your goals.
+                      </p>
+                    </div>
+
+                    <div className="p-6 bg-black rounded-xl border border-gray-700">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="p-2 bg-purple-500/20 rounded-lg">
+                          <MapPin size={20} className="text-purple-500" />
+                        </div>
+                        <h4 className="text-lg font-bold text-white">Following</h4>
+                      </div>
+                      <p className="text-gray-400 text-sm">
+                        See what projects, wishlists, and creators you're supporting.
+                      </p>
+                    </div>
+
+                    <div className="p-6 bg-black rounded-xl border border-gray-700">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="p-2 bg-blue-500/20 rounded-lg">
+                          <ImageIcon size={20} className="text-blue-500" />
+                        </div>
+                        <h4 className="text-lg font-bold text-white">Analytics</h4>
+                      </div>
+                      <p className="text-gray-400 text-sm">
+                        View statistics about your projects and supporter engagement.
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </Card>
             )}
 
