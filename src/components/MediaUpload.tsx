@@ -13,25 +13,43 @@ export interface UploadedMedia {
   caption?: string;
 }
 
-interface MediaUploadProps {
+interface MediaUploadPropsWishlist {
   wishlistId: string;
   itemId?: string;
   onUploadComplete?: (media: UploadedMedia) => void;
   maxFiles?: number;
   acceptedTypes?: string[];
+  onFilesSelected?: never;
+  accept?: never;
+  maxSizeMB?: never;
 }
 
-export function MediaUpload({
-  wishlistId,
-  itemId,
-  onUploadComplete,
-  maxFiles = 5,
-  acceptedTypes = ['image/*', 'video/*', 'application/pdf', '.doc', '.docx'],
-}: MediaUploadProps) {
+interface MediaUploadPropsSimple {
+  onFilesSelected: (files: File[]) => Promise<void>;
+  accept?: string;
+  maxFiles?: number;
+  maxSizeMB?: number;
+  wishlistId?: never;
+  itemId?: never;
+  onUploadComplete?: never;
+  acceptedTypes?: never;
+}
+
+type MediaUploadProps = MediaUploadPropsWishlist | MediaUploadPropsSimple;
+
+export function MediaUpload(props: MediaUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedMedia[]>([]);
   const [error, setError] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const isSimpleMode = 'onFilesSelected' in props && props.onFilesSelected !== undefined;
+
+  const maxFiles = props.maxFiles || 5;
+  const acceptedTypes = isSimpleMode
+    ? (props.accept || '*/*')
+    : ((props as MediaUploadPropsWishlist).acceptedTypes || ['image/*', 'video/*', 'application/pdf', '.doc', '.docx']).join(',');
+  const maxSizeMB = isSimpleMode ? (props.maxSizeMB || 50) : 50;
 
   const getMediaType = (mimeType: string): 'image' | 'video' | 'document' => {
     if (mimeType.startsWith('image/')) return 'image';
@@ -59,6 +77,17 @@ export function MediaUpload({
     }
 
     setError('');
+
+    if (isSimpleMode) {
+      const simpleProps = props as MediaUploadPropsSimple;
+      await simpleProps.onFilesSelected(files);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+      return;
+    }
+
+    const wishlistProps = props as MediaUploadPropsWishlist;
     setUploading(true);
 
     try {
@@ -66,14 +95,14 @@ export function MediaUpload({
       if (!user) throw new Error('Not authenticated');
 
       for (const file of files) {
-        const maxSize = 50 * 1024 * 1024;
+        const maxSize = maxSizeMB * 1024 * 1024;
         if (file.size > maxSize) {
-          setError(`${file.name} is too large. Maximum size is 50MB`);
+          setError(`${file.name} is too large. Maximum size is ${maxSizeMB}MB`);
           continue;
         }
 
         const fileExt = file.name.split('.').pop();
-        const fileName = `${user.id}/${wishlistId}/${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+        const fileName = `${user.id}/${wishlistProps.wishlistId}/${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
 
         const { data: uploadData, error: uploadError } = await supabase.storage
           .from('wishlist-media')
@@ -90,8 +119,8 @@ export function MediaUpload({
         const { data: mediaRecord, error: insertError } = await supabase
           .from('wishlist_media')
           .insert({
-            wishlist_id: wishlistId,
-            item_id: itemId,
+            wishlist_id: wishlistProps.wishlistId,
+            item_id: wishlistProps.itemId,
             media_type: mediaType,
             file_url: publicUrl,
             file_name: file.name,
@@ -112,7 +141,7 @@ export function MediaUpload({
         };
 
         setUploadedFiles(prev => [...prev, uploadedMedia]);
-        onUploadComplete?.(uploadedMedia);
+        wishlistProps.onUploadComplete?.(uploadedMedia);
       }
     } catch (err) {
       console.error('Upload error:', err);
@@ -148,15 +177,17 @@ export function MediaUpload({
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-gray-300 mb-2">
-          Upload Media (Images, Videos, Documents)
-        </label>
+        {!isSimpleMode && (
+          <label className="block text-sm font-medium text-gray-300 mb-2">
+            Upload Media (Images, Videos, Documents)
+          </label>
+        )}
 
         <input
           ref={fileInputRef}
           type="file"
-          multiple
-          accept={acceptedTypes.join(',')}
+          multiple={maxFiles > 1}
+          accept={acceptedTypes}
           onChange={handleFileSelect}
           className="hidden"
           disabled={uploading}
@@ -177,21 +208,23 @@ export function MediaUpload({
           ) : (
             <>
               <Upload size={20} className="mr-2" />
-              Choose Files ({uploadedFiles.length}/{maxFiles})
+              {isSimpleMode ? 'Choose Files' : `Choose Files (${uploadedFiles.length}/${maxFiles})`}
             </>
           )}
         </Button>
 
-        <p className="text-xs text-gray-500 mt-2">
-          Accepted: Images, Videos, PDF, Word documents. Max 50MB per file.
-        </p>
+        {!isSimpleMode && (
+          <p className="text-xs text-gray-500 mt-2">
+            Accepted: Images, Videos, PDF, Word documents. Max {maxSizeMB}MB per file.
+          </p>
+        )}
 
         {error && (
           <p className="text-sm text-red-400 mt-2">{error}</p>
         )}
       </div>
 
-      {uploadedFiles.length > 0 && (
+      {!isSimpleMode && uploadedFiles.length > 0 && (
         <div className="space-y-2">
           <p className="text-sm font-medium text-gray-300">Uploaded Files</p>
           {uploadedFiles.map((media) => (
