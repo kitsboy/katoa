@@ -41,9 +41,9 @@ export function HomePage() {
 
         <div className="relative z-10 max-w-6xl mx-auto text-center">
 
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/90 border-2 border-sand-tan-600 rounded-full mb-8 animate-fade-in shadow-lg backdrop-blur-md hover:scale-105 transition-transform duration-300 cursor-default">
-            <div className="w-2 h-2 bg-sand-tan-600 rounded-full animate-pulse" />
-            <span className="text-sm font-bold text-night-blue-800 tracking-wide">
+          <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-50 border-2 border-emerald-500 rounded-full mb-8 animate-fade-in shadow-lg backdrop-blur-md hover:scale-105 transition-transform duration-300 cursor-default">
+            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
+            <span className="text-sm font-bold text-emerald-900 tracking-wide">
               Trusted by creators worldwide
             </span>
           </div>
