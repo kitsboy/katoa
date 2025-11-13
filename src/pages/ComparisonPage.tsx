@@ -183,37 +183,46 @@ export function ComparisonPage() {
         </div>
 
         <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <Card className="p-8 bg-gradient-to-br from-slate-700 to-slate-800 border-slate-600 text-center hover:shadow-xl hover:shadow-sand-tan-500/20 transition-all duration-300">
-            <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-emerald-500 to-cyan-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-emerald-500/50 transform hover:scale-110 transition-transform duration-300">
-              <Globe size={48} className="text-white" strokeWidth={3} />
+          <Card className="p-10 bg-gradient-to-br from-gray-900 via-gray-800 to-black border-2 border-gray-700 hover:border-orange-500/50 text-center hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-300 transform hover:-translate-y-1">
+            <div className="w-24 h-24 mx-auto mb-8 bg-gradient-to-br from-blue-500 via-cyan-500 to-teal-500 rounded-full flex items-center justify-center shadow-2xl shadow-blue-500/60 transform hover:scale-110 hover:rotate-12 transition-all duration-300">
+              <Globe size={56} className="text-white" strokeWidth={2.5} />
             </div>
-            <h3 className="text-2xl font-bold text-white mb-4">195+ Countries</h3>
-            <p className="text-white text-lg leading-relaxed mb-6 font-medium">
+            <h3 className="text-3xl font-black text-white mb-6 tracking-tight">195+ Countries</h3>
+            <p className="text-gray-300 text-base leading-relaxed mb-5">
               No bank account? No problem. Bitcoin works everywhere, for everyone. No discrimination.
             </p>
-            <div className="text-white font-bold text-lg bg-emerald-500/20 py-2 px-4 rounded-lg">KATOA: All countries, always 0%</div>
+            <div className="space-y-3 pt-4 border-t border-gray-700">
+              <div className="text-gray-400 font-semibold text-base">Throne: ~10 countries with 0% fees</div>
+              <div className="text-emerald-400 font-bold text-lg bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 py-3 px-5 rounded-xl border border-emerald-500/30">KATOA: All countries, always 0%</div>
+            </div>
           </Card>
 
-          <Card className="p-8 bg-gradient-to-br from-slate-700 to-slate-800 border-slate-600 text-center hover:shadow-xl hover:shadow-sand-tan-500/20 transition-all duration-300">
-            <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-emerald-500 to-cyan-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-emerald-500/50 transform hover:scale-110 transition-transform duration-300">
-              <Shield size={48} className="text-white" strokeWidth={3} />
+          <Card className="p-10 bg-gradient-to-br from-gray-900 via-gray-800 to-black border-2 border-gray-700 hover:border-orange-500/50 text-center hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-300 transform hover:-translate-y-1">
+            <div className="w-24 h-24 mx-auto mb-8 bg-gradient-to-br from-purple-500 via-pink-500 to-rose-500 rounded-full flex items-center justify-center shadow-2xl shadow-purple-500/60 transform hover:scale-110 hover:rotate-12 transition-all duration-300">
+              <Shield size={56} className="text-white" strokeWidth={2.5} />
             </div>
-            <h3 className="text-2xl font-bold text-white mb-4">True Privacy</h3>
-            <p className="text-white text-lg leading-relaxed mb-6 font-medium">
+            <h3 className="text-3xl font-black text-white mb-6 tracking-tight">True Privacy</h3>
+            <p className="text-gray-300 text-base leading-relaxed mb-5">
               Zero-knowledge proofs. Encrypted messaging. Decentralized storage. Your data stays yours.
             </p>
-            <div className="text-white font-bold text-lg bg-emerald-500/20 py-2 px-4 rounded-lg">KATOA: Zero-knowledge proofs</div>
+            <div className="space-y-3 pt-4 border-t border-gray-700">
+              <div className="text-gray-400 font-semibold text-base">Others: Your data is their product</div>
+              <div className="text-emerald-400 font-bold text-lg bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 py-3 px-5 rounded-xl border border-emerald-500/30">KATOA: Zero-knowledge proofs</div>
+            </div>
           </Card>
 
-          <Card className="p-8 bg-gradient-to-br from-slate-700 to-slate-800 border-slate-600 text-center hover:shadow-xl hover:shadow-sand-tan-500/20 transition-all duration-300">
-            <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-emerald-500 to-cyan-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-emerald-500/50 transform hover:scale-110 transition-transform duration-300">
-              <Zap size={48} className="text-white" strokeWidth={3} />
+          <Card className="p-10 bg-gradient-to-br from-gray-900 via-gray-800 to-black border-2 border-gray-700 hover:border-orange-500/50 text-center hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-300 transform hover:-translate-y-1">
+            <div className="w-24 h-24 mx-auto mb-8 bg-gradient-to-br from-orange-500 via-amber-500 to-yellow-500 rounded-full flex items-center justify-center shadow-2xl shadow-orange-500/60 transform hover:scale-110 hover:rotate-12 transition-all duration-300">
+              <Zap size={56} className="text-white" strokeWidth={2.5} />
             </div>
-            <h3 className="text-2xl font-bold text-white mb-4">Instant Settlement</h3>
-            <p className="text-white text-lg leading-relaxed mb-6 font-medium">
+            <h3 className="text-3xl font-black text-white mb-6 tracking-tight">Instant Settlement</h3>
+            <p className="text-gray-300 text-base leading-relaxed mb-5">
               Keep 100% of your earnings. Scale globally. Build your empire without platform taxes.
             </p>
-            <div className="text-white font-bold text-lg bg-emerald-500/20 py-2 px-4 rounded-lg">KATOA: Instant Lightning Network</div>
+            <div className="space-y-3 pt-4 border-t border-gray-700">
+              <div className="text-gray-400 font-semibold text-base">Others: Wait 7-14 days for payouts</div>
+              <div className="text-emerald-400 font-bold text-lg bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 py-3 px-5 rounded-xl border border-emerald-500/30">KATOA: Instant Lightning Network</div>
+            </div>
           </Card>
         </div>
 
