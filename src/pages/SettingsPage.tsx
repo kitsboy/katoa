@@ -340,6 +340,9 @@ export function SettingsPage() {
     e.preventDefault();
     setProcessing(true);
 
+    console.log('handleSaveProfile called');
+    console.log('Current profileForm state:', profileForm);
+
     try {
       const updates: any = {
         username: profileForm.username,
@@ -356,6 +359,8 @@ export function SettingsPage() {
         social_feed_title: profileForm.social_feed_title || 'My Social Feed',
         social_feed_height: profileForm.social_feed_height || '600px',
       };
+
+      console.log('Updates object being sent:', updates);
 
       if (profileForm.video_date) {
         updates.video_date = new Date(profileForm.video_date).toISOString();
@@ -805,8 +810,12 @@ export function SettingsPage() {
                 <MediaUpload
                   onFilesSelected={async (files) => {
                     const avatarUrl = await handleAvatarUpload(files);
+                    console.log('Modal upload - Avatar URL received:', avatarUrl);
                     if (avatarUrl) {
-                      setProfileForm({ ...profileForm, avatar_url: avatarUrl });
+                      setProfileForm(prev => {
+                        console.log('Updating profileForm state with avatar_url:', avatarUrl);
+                        return { ...prev, avatar_url: avatarUrl };
+                      });
                     }
                   }}
                   accept="image/*"
