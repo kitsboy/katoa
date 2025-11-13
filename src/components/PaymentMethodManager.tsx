@@ -419,13 +419,12 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
         </form>
       </Modal>
 
-      <Modal
-        isOpen={showQRScanner}
-        onClose={() => setShowQRScanner(false)}
-        title="Scan QR Code"
-      >
-        <QRScanner onScan={handleQRScan} />
-      </Modal>
+      {showQRScanner && (
+        <QRScanner
+          onScan={handleQRScan}
+          onClose={() => setShowQRScanner(false)}
+        />
+      )}
     </div>
   );
 }

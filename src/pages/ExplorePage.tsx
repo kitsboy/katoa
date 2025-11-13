@@ -143,7 +143,6 @@ export function ExplorePage() {
     }
   }
 
-
   const countries = Array.from(new Set(wishlists.map((w) => w.country).filter(Boolean) as string[])).sort();
 
   const wishlistsWithLocation = filteredWishlists.filter(
@@ -151,11 +150,11 @@ export function ExplorePage() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-night-blue-500 via-night-blue-500 to-black">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
 
-        {/* Hero Featured Wishlist */}
-        <Card className="mb-8 overflow-hidden bg-gradient-to-br from-night-blue-500 to-night-blue-500 border-night-blue-500 animate-slide-up">
+        {/* Hero Featured Project */}
+        <Card className="mb-8 overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 border-orange-500/30 shadow-[0_0_30px_rgba(255,135,0,0.2)] animate-slide-up">
           <div className="grid md:grid-cols-2 gap-0">
             <div className="relative h-64 md:h-auto overflow-hidden">
               <img
@@ -163,16 +162,16 @@ export function ExplorePage() {
                 alt="Skateboard Park Colombia"
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-night-blue-shadow-700/80 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/90 to-transparent" />
               <div className="absolute top-4 left-4">
                 <TrendingBadge type="featured" />
               </div>
             </div>
             <div className="p-8 flex flex-col justify-center">
-              <h2 className="text-3xl font-bold text-white mb-3">
+              <h2 className="text-3xl font-bold text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)] mb-3">
                 Skateboard Park for Medellín Youth
               </h2>
-              <p className="text-night-blue-200 mb-4 leading-relaxed">
+              <p className="text-gray-100 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] mb-4 leading-relaxed font-medium">
                 Help us build a safe community space where kids can skate, learn, and grow together.
                 This project will provide free skateboarding lessons and mentorship to 500+ youth in Medellín, Colombia.
               </p>
@@ -181,19 +180,19 @@ export function ExplorePage() {
                 goal={5000000}
                 showPercentage={true}
                 showValues={true}
-                gradient="from-emerald-500 to-cyan-600"
+                gradient="from-orange-500 to-amber-600"
                 height="md"
                 animated={true}
               />
               <div className="flex items-center gap-4 mt-6">
                 <Button
                   size="sm"
-                  className="bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700"
+                  className="bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700"
                   onClick={() => window.location.hash = '/wishlist/medellin-skate-park'}
                 >
                   Support This Project
                 </Button>
-                <div className="flex items-center gap-2 text-night-blue-300 text-sm">
+                <div className="flex items-center gap-2 text-gray-200 text-sm font-medium">
                   <MapPin size={16} />
                   <span>Medellín, Colombia 🇨🇴</span>
                 </div>
@@ -203,18 +202,18 @@ export function ExplorePage() {
         </Card>
 
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-4">Explore All Wishlists</h1>
-          <p className="text-gray-400 mb-6">Discover amazing creators and support their dreams around the world</p>
+          <h1 className="text-4xl font-bold text-white mb-4">Explore All Projects</h1>
+          <p className="text-gray-100 mb-6 text-lg">Discover amazing creators and support their dreams around the world</p>
 
           <div className="space-y-4 mb-6">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="relative flex-1">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-night-blue-400" size={20} />
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                 <Input
-                  placeholder="Search wishlists, creators, tags..."
+                  placeholder="Search projects, creators, tags..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-12 bg-night-blue-500 border-night-blue-500 focus:border-emerald-500"
+                  className="pl-12 bg-gray-900 border-gray-700 text-white focus:border-orange-500 placeholder:text-gray-400"
                 />
               </div>
 
@@ -222,7 +221,7 @@ export function ExplorePage() {
                 <Button
                   variant={showFilters ? 'primary' : 'outline'}
                   onClick={() => setShowFilters(!showFilters)}
-                  className="border-night-blue-500"
+                  className="border-gray-700 bg-gray-900 text-white hover:bg-gray-800"
                 >
                   <SlidersHorizontal size={20} className="mr-2" />
                   Filters
@@ -231,7 +230,7 @@ export function ExplorePage() {
                 <Button
                   variant={showMap ? 'primary' : 'outline'}
                   onClick={() => setShowMap(!showMap)}
-                  className="border-night-blue-500"
+                  className="border-gray-700 bg-gray-900 text-white hover:bg-gray-800"
                 >
                   <Globe size={20} className="mr-2" />
                   Map
@@ -240,14 +239,14 @@ export function ExplorePage() {
             </div>
 
             {showFilters && (
-              <Card className="p-4 bg-night-blue-500/50 border-night-blue-500 animate-slide-up">
+              <Card className="p-4 bg-gray-900 border-gray-700 animate-slide-up">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-night-blue-200 mb-2">Sort By</label>
+                    <label className="block text-sm font-medium text-gray-200 mb-2">Sort By</label>
                     <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value)}
-                      className="w-full px-4 py-2 bg-night-blue-500 border border-night-blue-400 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      className="w-full px-4 py-2 bg-black border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                     >
                       <option value="recent">Most Recent</option>
                       <option value="trending">Most Funded</option>
@@ -257,11 +256,11 @@ export function ExplorePage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-night-blue-200 mb-2">Category</label>
+                    <label className="block text-sm font-medium text-gray-200 mb-2">Category</label>
                     <select
                       value={selectedCategory}
                       onChange={(e) => setSelectedCategory(e.target.value)}
-                      className="w-full px-4 py-2 bg-night-blue-500 border border-night-blue-400 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      className="w-full px-4 py-2 bg-black border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                     >
                       <option value="">All Categories</option>
                       {categories.map((cat) => (
@@ -271,11 +270,11 @@ export function ExplorePage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-night-blue-200 mb-2">Location</label>
+                    <label className="block text-sm font-medium text-gray-200 mb-2">Location</label>
                     <select
                       value={selectedCountry}
                       onChange={(e) => setSelectedCountry(e.target.value)}
-                      className="w-full px-4 py-2 bg-night-blue-500 border border-night-blue-400 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      className="w-full px-4 py-2 bg-black border border-gray-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                     >
                       <option value="">All Countries</option>
                       {countries.map((country) => (
@@ -286,7 +285,7 @@ export function ExplorePage() {
                 </div>
 
                 {(selectedCategory || selectedCountry || sortBy !== 'recent') && (
-                  <div className="mt-4 pt-4 border-t border-night-blue-500">
+                  <div className="mt-4 pt-4 border-t border-gray-700">
                     <Button
                       variant="ghost"
                       size="sm"
@@ -295,7 +294,7 @@ export function ExplorePage() {
                         setSelectedCountry('');
                         setSortBy('recent');
                       }}
-                      className="text-night-blue-300 hover:text-white"
+                      className="text-gray-300 hover:text-white"
                     >
                       Clear All Filters
                     </Button>
@@ -306,7 +305,7 @@ export function ExplorePage() {
 
             {categories.length > 0 && !showFilters && (
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-night-blue-300 text-sm">Quick filters:</span>
+                <span className="text-gray-200 text-sm font-medium">Quick filters:</span>
                 {categories.slice(0, 6).map((cat) => (
                   <CategoryBadge
                     key={cat.id}
@@ -325,9 +324,9 @@ export function ExplorePage() {
             <Card className="mb-8 p-6">
               <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                 <MapPin size={24} className="text-orange-500" />
-                Wishlists Around the World
+                Projects Around the World
               </h2>
-              <div className="bg-night-blue-500 rounded-lg p-8 min-h-[400px] relative overflow-hidden">
+              <div className="bg-black rounded-lg p-8 min-h-[400px] relative overflow-hidden border border-gray-800">
                 <div className="absolute inset-0 opacity-20">
                   <svg viewBox="0 0 1000 500" className="w-full h-full">
                     <rect width="1000" height="500" fill="#1a1a1a" />
@@ -344,16 +343,16 @@ export function ExplorePage() {
                   {wishlistsWithLocation.map((wishlist) => (
                     <div
                       key={wishlist.id}
-                      className="bg-gray-800/80 backdrop-blur-sm border border-gray-700 rounded-lg p-4 hover:bg-gray-700/80 transition-all cursor-pointer"
+                      className="bg-gray-900 backdrop-blur-sm border border-gray-700 rounded-lg p-4 hover:bg-gray-800 hover:border-orange-500/50 transition-all cursor-pointer"
                       onClick={() => (window.location.hash = `/wishlist/${wishlist.slug}`)}
                     >
                       <div className="flex items-start gap-2 mb-2">
                         <MapPin size={16} className="text-orange-500 flex-shrink-0 mt-1" />
                         <div className="flex-1 min-w-0">
-                          <p className="text-white text-sm font-semibold line-clamp-2">
+                          <p className="text-white text-sm font-bold line-clamp-2">
                             {wishlist.title}
                           </p>
-                          <p className="text-gray-400 text-xs mt-1">
+                          <p className="text-gray-300 text-xs mt-1 font-medium">
                             {wishlist.city}, {wishlist.country}
                           </p>
                         </div>
@@ -377,7 +376,7 @@ export function ExplorePage() {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[...Array(9)].map((_, i) => (
-              <Card key={i} className="animate-pulse">
+              <Card key={i} className="animate-pulse bg-gray-900 border-gray-800">
                 <div className="h-48 bg-gray-800" />
                 <div className="p-6 space-y-3">
                   <div className="h-6 bg-gray-800 rounded" />
@@ -398,7 +397,7 @@ export function ExplorePage() {
 
               return (
                 <Link key={wishlist.id} href={`/wishlist/${wishlist.slug}`}>
-                  <Card className="hover-lift overflow-hidden bg-gradient-to-br from-night-blue-500 to-night-blue-500 border-night-blue-500 animate-fade-in">
+                  <Card className="hover-lift overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 hover:border-orange-500/50 transition-all duration-300 animate-fade-in shadow-lg hover:shadow-[0_0_30px_rgba(255,135,0,0.3)]">
                     <div className="relative overflow-hidden group">
                       {wishlist.cover_image ? (
                         <img
@@ -410,11 +409,11 @@ export function ExplorePage() {
                           }}
                         />
                       ) : (
-                        <div className="w-full h-56 bg-gradient-to-br from-sand-tan-500/20 via-night-blue-500/20 to-night-blue-shadow-700/20 flex items-center justify-center">
-                          <Gift size={80} className="text-sand-tan-500/40 animate-float" />
+                        <div className="w-full h-56 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
+                          <Gift size={80} className="text-gray-700 animate-float" />
                         </div>
                       )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-night-blue-shadow-700/80 via-night-blue-shadow-700/20 to-transparent"></div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
 
                       {(wishlist as any).country_flag && (
                         <div className="absolute top-3 right-3 text-3xl drop-shadow-lg">
@@ -439,14 +438,14 @@ export function ExplorePage() {
 
                     <div className="p-6 space-y-4">
                       <div>
-                        <h3 className="text-xl font-bold text-white mb-2 line-clamp-1 group-hover:text-emerald-400 transition-colors">
+                        <h3 className="text-xl font-bold text-white mb-2 line-clamp-1 group-hover:text-orange-400 transition-colors">
                           {wishlist.title}
                         </h3>
-                        <p className="text-night-blue-300 text-sm line-clamp-2 mb-3 leading-relaxed">
+                        <p className="text-gray-100 text-sm line-clamp-2 mb-3 leading-relaxed font-medium">
                           {wishlist.description}
                         </p>
                         {wishlist.country && (
-                          <div className="flex items-center gap-1.5 text-xs text-night-blue-400">
+                          <div className="flex items-center gap-1.5 text-xs text-gray-300 font-medium">
                             <MapPin size={12} />
                             <span>{wishlist.city ? `${wishlist.city}, ` : ''}{wishlist.country}</span>
                           </div>
@@ -455,14 +454,14 @@ export function ExplorePage() {
 
                       {wishlist.creator && wishlist.creator.username && (
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-gradient-to-r from-emerald-500 to-cyan-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
+                          <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-amber-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
                             {wishlist.creator.username[0].toUpperCase()}
                           </div>
                           <div>
                             <span className="text-sm text-white font-medium block">
                               {wishlist.creator.username}
                             </span>
-                            <span className="text-xs text-night-blue-400">Creator</span>
+                            <span className="text-xs text-gray-400 font-medium">Creator</span>
                           </div>
                         </div>
                       )}
@@ -487,9 +486,9 @@ export function ExplorePage() {
           <Card className="p-12 text-center">
             <Gift size={64} className="text-gray-700 mx-auto mb-4" />
             <h3 className="text-xl font-bold text-white mb-2">
-              {searchTerm || selectedCountry ? 'No results found' : 'No wishlists yet'}
+              {searchTerm || selectedCountry ? 'No results found' : 'No projects yet'}
             </h3>
-            <p className="text-gray-400">
+            <p className="text-gray-200">
               {searchTerm || selectedCountry ? 'Try adjusting your filters' : 'Check back soon!'}
             </p>
           </Card>
