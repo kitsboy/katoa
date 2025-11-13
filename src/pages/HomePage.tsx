@@ -133,12 +133,12 @@ export function HomePage() {
                 <Tooltip content="Unlike Stripe/PayPal that block 50+ countries, Bitcoin works everywhere." icon />
               </h3>
 
-              <p className="text-night-blue-500 leading-relaxed text-lg mb-4">
+              <p className="text-night-blue-700 leading-relaxed text-lg mb-4 font-semibold">
                 No banks required. Works in 195+ countries. Support anyone, anywhere.
               </p>
 
               <div className="pt-4 border-t border-sand-tan-200">
-                <div className="text-sand-tan-700 font-bold">vs. ~10 countries with 10% fees</div>
+                <div className="text-night-blue-700 font-bold">vs. ~10 countries with 10% fees</div>
               </div>
             </Card>
 
@@ -154,7 +154,7 @@ export function HomePage() {
                 <Tooltip content="Decentralized means no company owns your data. Encrypted via Nostr protocol." icon />
               </h3>
 
-              <p className="text-night-blue-500 leading-relaxed text-lg mb-4">
+              <p className="text-night-blue-700 leading-relaxed text-lg mb-4 font-semibold">
                 Zero-knowledge proofs. Encrypted messaging. Your data stays yours.
               </p>
 

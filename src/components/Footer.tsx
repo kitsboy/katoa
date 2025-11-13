@@ -24,63 +24,63 @@ export function Footer() {
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-orange-500/5 to-transparent pointer-events-none"></div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-12">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-9">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-9 mb-9">
             {/* Brand Section */}
             <div className="md:col-span-5">
-              <div className="flex items-center gap-3 mb-6">
-                <img src="/sats.png" alt="KATOA" className="w-10 h-10 rounded-full" />
-                <span className="text-2xl font-bold bg-gradient-to-r from-orange-400 to-yellow-500 bg-clip-text text-transparent">
+              <div className="flex items-center gap-2 mb-4">
+                <img src="/sats.png" alt="KATOA" className="w-7 h-7 rounded-full" />
+                <span className="text-lg font-bold bg-gradient-to-r from-orange-400 to-yellow-500 bg-clip-text text-transparent">
                   KATOA
                 </span>
               </div>
-              <p className="text-gray-400 text-sm leading-relaxed mb-6 max-w-md">
+              <p className="text-gray-400 text-xs leading-relaxed mb-4 max-w-md">
                 A movement to democratize giving using Bitcoin. Anyone with a smartphone can now support causes worldwide, instantly, privately, and directly.
               </p>
               {/* Social Links */}
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
                 <a
                   href="https://twitter.com/bitwish"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-20 h-20 rounded-full bg-night-blue-500 border border-night-blue-400 hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 group"
+                  className="flex items-center justify-center w-14 h-14 rounded-full bg-night-blue-500 border border-night-blue-400 hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 group"
                 >
-                  <Twitter size={36} className="text-gray-400 group-hover:text-orange-500 transition-colors" />
+                  <Twitter size={24} className="text-gray-400 group-hover:text-orange-500 transition-colors" />
                 </a>
                 <a
                   href="https://github.com/bitwish"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-20 h-20 rounded-full bg-night-blue-500 border border-night-blue-400 hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 group"
+                  className="flex items-center justify-center w-14 h-14 rounded-full bg-night-blue-500 border border-night-blue-400 hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 group"
                 >
-                  <Github size={36} className="text-gray-400 group-hover:text-orange-500 transition-colors" />
+                  <Github size={24} className="text-gray-400 group-hover:text-orange-500 transition-colors" />
                 </a>
                 <a
                   href="mailto:hello@katoa.org"
-                  className="flex items-center justify-center w-20 h-20 rounded-full bg-night-blue-500 border border-night-blue-400 hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 group"
+                  className="flex items-center justify-center w-14 h-14 rounded-full bg-night-blue-500 border border-night-blue-400 hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 group"
                 >
-                  <Mail size={36} className="text-gray-400 group-hover:text-orange-500 transition-colors" />
+                  <Mail size={24} className="text-gray-400 group-hover:text-orange-500 transition-colors" />
                 </a>
               </div>
             </div>
 
             {/* Navigation Columns */}
-            <div className="md:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8">
+            <div className="md:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-6">
               <div>
-                <h3 className="text-white font-semibold mb-4 text-lg uppercase tracking-wider">Company</h3>
-                <ul className="space-y-3">
+                <h3 className="text-white font-semibold mb-3 text-sm uppercase tracking-wider">Company</h3>
+                <ul className="space-y-2">
                   <li>
-                    <Link href="/about" className="text-gray-400 hover:text-orange-500 text-lg transition-colors duration-200">
+                    <Link href="/about" className="text-gray-400 hover:text-orange-500 text-sm transition-colors duration-200">
                       About Us
                     </Link>
                   </li>
                   <li>
-                    <Link href="/pricing" className="text-gray-400 hover:text-orange-500 text-lg transition-colors duration-200">
+                    <Link href="/pricing" className="text-gray-400 hover:text-orange-500 text-sm transition-colors duration-200">
                       Pricing
                     </Link>
                   </li>
                   <li>
-                    <Link href="/contact" className="text-gray-400 hover:text-orange-500 text-lg transition-colors duration-200">
+                    <Link href="/contact" className="text-gray-400 hover:text-orange-500 text-sm transition-colors duration-200">
                       Contact
                     </Link>
                   </li>
@@ -88,20 +88,20 @@ export function Footer() {
               </div>
 
               <div>
-                <h3 className="text-white font-semibold mb-4 text-lg uppercase tracking-wider">Product</h3>
-                <ul className="space-y-3">
+                <h3 className="text-white font-semibold mb-3 text-sm uppercase tracking-wider">Product</h3>
+                <ul className="space-y-2">
                   <li>
-                    <Link href="/explore" className="text-gray-400 hover:text-orange-500 text-lg transition-colors duration-200">
+                    <Link href="/explore" className="text-gray-400 hover:text-orange-500 text-sm transition-colors duration-200">
                       Explore
                     </Link>
                   </li>
                   <li>
-                    <Link href="/dashboard" className="text-gray-400 hover:text-orange-500 text-lg transition-colors duration-200">
+                    <Link href="/dashboard" className="text-gray-400 hover:text-orange-500 text-sm transition-colors duration-200">
                       Dashboard
                     </Link>
                   </li>
                   <li>
-                    <Link href="/faq" className="text-gray-400 hover:text-orange-500 text-lg transition-colors duration-200">
+                    <Link href="/faq" className="text-gray-400 hover:text-orange-500 text-sm transition-colors duration-200">
                       FAQ
                     </Link>
                   </li>
@@ -109,15 +109,15 @@ export function Footer() {
               </div>
 
               <div>
-                <h3 className="text-white font-semibold mb-4 text-lg uppercase tracking-wider">Legal</h3>
-                <ul className="space-y-3">
+                <h3 className="text-white font-semibold mb-3 text-sm uppercase tracking-wider">Legal</h3>
+                <ul className="space-y-2">
                   <li>
-                    <Link href="/terms" className="text-gray-400 hover:text-orange-500 text-lg transition-colors duration-200">
+                    <Link href="/terms" className="text-gray-400 hover:text-orange-500 text-sm transition-colors duration-200">
                       Terms of Service
                     </Link>
                   </li>
                   <li>
-                    <Link href="/privacy" className="text-gray-400 hover:text-orange-500 text-lg transition-colors duration-200">
+                    <Link href="/privacy" className="text-gray-400 hover:text-orange-500 text-sm transition-colors duration-200">
                       Privacy Policy
                     </Link>
                   </li>
@@ -127,22 +127,22 @@ export function Footer() {
           </div>
 
           {/* Bottom Section */}
-          <div className="pt-8 border-t border-night-blue-500">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-3 text-sm text-gray-500">
+          <div className="pt-6 border-t border-night-blue-500">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-3">
+              <div className="flex items-center gap-2 text-xs text-gray-500">
                 <span>&copy; {new Date().getFullYear()} KATOA (katoa.org). All rights reserved.</span>
                 <span className="text-gray-700">•</span>
-                <span className="text-gray-600 font-mono text-xs">v{packageJson.version}</span>
+                <span className="text-gray-600 font-mono text-[10px]">v{packageJson.version}</span>
               </div>
 
               <button
                 onClick={() => setShowDonation(!showDonation)}
-                className="flex items-center gap-3 text-xl text-gray-400 hover:text-orange-500 transition-colors duration-200 cursor-pointer group"
+                className="flex items-center gap-2 text-base text-gray-400 hover:text-orange-500 transition-colors duration-200 cursor-pointer group"
               >
                 <span>Made with</span>
-                <Heart size={28} className="text-orange-500 fill-orange-500 group-hover:animate-pulse" />
+                <Heart size={20} className="text-orange-500 fill-orange-500 group-hover:animate-pulse" />
                 <span>and</span>
-                <Bitcoin size={28} className="text-orange-500" />
+                <Bitcoin size={20} className="text-orange-500" />
               </button>
             </div>
           </div>
