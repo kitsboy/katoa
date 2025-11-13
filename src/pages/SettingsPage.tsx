@@ -223,17 +223,18 @@ export function SettingsPage() {
         .from('media')
         .getPublicUrl(filePath);
 
-      setProfileForm({ ...profileForm, avatar_url: publicUrl });
+      return publicUrl;
     } catch (error: any) {
       console.error('Error uploading avatar:', error);
       alert(`Failed to upload avatar: ${error.message || 'Unknown error'}`);
+      return null;
     } finally {
       setUploadingAvatar(false);
     }
   }
 
   async function handleBannerUpload(files: File[]) {
-    if (files.length === 0 || !user) return;
+    if (files.length === 0 || !user) return null;
 
     setUploadingBanner(true);
     try {
@@ -256,16 +257,18 @@ export function SettingsPage() {
         .getPublicUrl(filePath);
 
       setProfileForm({ ...profileForm, banner_url: publicUrl, banner_video_url: '' });
+      return publicUrl;
     } catch (error: any) {
       console.error('Error uploading banner:', error);
       alert(`Failed to upload banner: ${error.message || 'Unknown error'}`);
+      return null;
     } finally {
       setUploadingBanner(false);
     }
   }
 
   async function handleBannerVideoUpload(files: File[]) {
-    if (files.length === 0 || !user) return;
+    if (files.length === 0 || !user) return null;
 
     setUploadingBanner(true);
     try {
@@ -285,16 +288,18 @@ export function SettingsPage() {
         .getPublicUrl(filePath);
 
       setProfileForm({ ...profileForm, banner_video_url: publicUrl, banner_url: '' });
+      return publicUrl;
     } catch (error) {
       console.error('Error uploading banner video:', error);
       alert('Failed to upload banner video');
+      return null;
     } finally {
       setUploadingBanner(false);
     }
   }
 
   async function handleProfileVideoUpload(files: File[]) {
-    if (files.length === 0 || !user) return;
+    if (files.length === 0 || !user) return null;
 
     setUploadingVideo(true);
     try {
@@ -314,9 +319,11 @@ export function SettingsPage() {
         .getPublicUrl(filePath);
 
       setProfileForm({ ...profileForm, profile_video_url: publicUrl });
+      return publicUrl;
     } catch (error) {
       console.error('Error uploading profile video:', error);
       alert('Failed to upload profile video');
+      return null;
     } finally {
       setUploadingVideo(false);
     }
@@ -444,9 +451,11 @@ export function SettingsPage() {
                         input.onchange = async (e) => {
                           const file = (e.target as HTMLInputElement).files?.[0];
                           if (file) {
-                            await handleAvatarUpload([file]);
-                            const { error } = await updateProfile({ avatar_url: profileForm.avatar_url });
-                            if (!error) window.location.reload();
+                            const avatarUrl = await handleAvatarUpload([file]);
+                            if (avatarUrl) {
+                              const { error } = await updateProfile({ avatar_url: avatarUrl });
+                              if (!error) window.location.reload();
+                            }
                           }
                         };
                         input.click();
@@ -777,7 +786,12 @@ export function SettingsPage() {
               )}
               <div className="flex-1">
                 <MediaUpload
-                  onFilesSelected={handleAvatarUpload}
+                  onFilesSelected={async (files) => {
+                    const avatarUrl = await handleAvatarUpload(files);
+                    if (avatarUrl) {
+                      setProfileForm({ ...profileForm, avatar_url: avatarUrl });
+                    }
+                  }}
                   accept="image/*"
                   maxFiles={1}
                   maxSizeMB={5}
