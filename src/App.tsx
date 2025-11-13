@@ -6,6 +6,7 @@ import { HomePage } from './pages/HomePage';
 import { ExplorePage } from './pages/ExplorePage';
 import { WishlistPage } from './pages/WishlistPage';
 import { DashboardPage } from './pages/DashboardPage';
+import { ProjectPage } from './pages/ProjectPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
@@ -45,6 +46,8 @@ function App() {
     page = <PrivacyPage />;
   } else if (path === '/faq') {
     page = <FAQPage />;
+  } else if (path.startsWith('/project/')) {
+    page = <ProjectPage />;
   } else if (path.startsWith('/wishlist/')) {
     const slug = path.split('/')[2];
     page = <WishlistPage slug={slug} />;
