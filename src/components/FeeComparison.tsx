@@ -156,7 +156,7 @@ export function FeeComparison() {
               <div className="space-y-3">
                 <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
                   <p className="text-white/70 text-sm">Monthly Fees</p>
-                  <p className={`text-2xl font-black ${platform.fees === 0 ? 'text-white' : 'text-red-300'}`}>
+                  <p className={`text-2xl font-black ${platform.fees === 0 ? 'text-white' : 'text-red-100'}`}>
                     {formatCurrency(platform.fees)}
                   </p>
                 </div>
@@ -170,7 +170,7 @@ export function FeeComparison() {
 
                 {platform.platform !== 'KATOA' && (
                   <div className="pt-3 border-t border-white/20">
-                    <div className="flex items-center gap-2 text-red-300 text-sm font-semibold">
+                    <div className="flex items-center gap-2 text-orange-200 text-sm font-bold">
                       <TrendingDown size={16} />
                       <span>-{((platform.fees / amountInUSD) * 100).toFixed(1)}% lost</span>
                     </div>
