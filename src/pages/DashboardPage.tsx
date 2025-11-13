@@ -7,7 +7,7 @@ import { Input } from '../components/Input';
 import { Link } from '../components/Link';
 import { StatsCard } from '../components/StatsCard';
 import { supabase } from '../lib/supabase';
-import { Plus, Edit, Trash2, Settings, Gift, DollarSign, Users, FolderOpen, Globe, Lock, FileText, ExternalLink, TrendingUp, Eye } from 'lucide-react';
+import { Plus, Edit, Trash2, Settings, Gift, DollarSign, Users, FolderOpen, Globe, Lock, FileText, ExternalLink, TrendingUp, Eye, Heart, Filter } from 'lucide-react';
 
 interface Project {
   id: string;
@@ -45,12 +45,83 @@ export function DashboardPage() {
     totalRaised: 0,
   });
 
+  const [followFilter, setFollowFilter] = useState<'all' | 'projects' | 'wishlists' | 'creators'>('all');
+  const [following, setFollowing] = useState<{
+    projects: any[];
+    wishlists: any[];
+    creators: any[];
+  }>({
+    projects: [],
+    wishlists: [],
+    creators: [],
+  });
+
   useEffect(() => {
     if (user) {
       loadProjects();
       loadStats();
+      loadFollowing();
     }
   }, [user]);
+
+  async function loadFollowing() {
+    if (!user) return;
+
+    try {
+      const { data: projectFollows } = await supabase
+        .from('project_follows')
+        .select(`
+          project_id,
+          projects (
+            id,
+            title,
+            description,
+            slug,
+            background_url,
+            visibility
+          )
+        `)
+        .eq('user_id', user.id);
+
+      const { data: wishlistFollows } = await supabase
+        .from('wishlist_follows')
+        .select(`
+          wishlist_id,
+          wishlists (
+            id,
+            title,
+            description,
+            slug,
+            cover_image,
+            total_sats_goal,
+            total_sats_raised,
+            visibility
+          )
+        `)
+        .eq('user_id', user.id);
+
+      const { data: creatorFollows } = await supabase
+        .from('follows')
+        .select(`
+          following_id,
+          profiles!follows_following_id_fkey (
+            id,
+            username,
+            avatar_url,
+            bio
+          )
+        `)
+        .eq('follower_id', user.id);
+
+      setFollowing({
+        projects: (projectFollows || []).map(f => f.projects).filter(Boolean),
+        wishlists: (wishlistFollows || []).map(f => f.wishlists).filter(Boolean),
+        creators: (creatorFollows || []).map(f => f.profiles).filter(Boolean),
+      });
+    } catch (error) {
+      console.error('Error loading following:', error);
+    }
+  }
 
   async function loadProjects() {
     try {
@@ -491,6 +562,183 @@ export function DashboardPage() {
             ))}
           </div>
         )}
+
+        {/* Following Section */}
+        <div className="mt-16">
+          <div className="flex justify-between items-center mb-8">
+            <div>
+              <h2 className="text-3xl font-black text-white mb-2 flex items-center gap-3">
+                <Heart size={32} className="text-rose-500" />
+                Following
+              </h2>
+              <p className="text-gray-400">Projects, wishlists, and creators you support</p>
+            </div>
+          </div>
+
+          <div className="flex gap-3 mb-6 overflow-x-auto pb-2">
+            <Button
+              onClick={() => setFollowFilter('all')}
+              variant={followFilter === 'all' ? 'primary' : 'outline'}
+              className={followFilter === 'all'
+                ? 'bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 font-bold whitespace-nowrap'
+                : 'border-gray-700 text-gray-300 hover:bg-gray-800 whitespace-nowrap'
+              }
+            >
+              <Filter size={18} className="mr-2" />
+              All ({following.projects.length + following.wishlists.length + following.creators.length})
+            </Button>
+            <Button
+              onClick={() => setFollowFilter('projects')}
+              variant={followFilter === 'projects' ? 'primary' : 'outline'}
+              className={followFilter === 'projects'
+                ? 'bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 font-bold whitespace-nowrap'
+                : 'border-gray-700 text-gray-300 hover:bg-gray-800 whitespace-nowrap'
+              }
+            >
+              <FolderOpen size={18} className="mr-2" />
+              Projects ({following.projects.length})
+            </Button>
+            <Button
+              onClick={() => setFollowFilter('wishlists')}
+              variant={followFilter === 'wishlists' ? 'primary' : 'outline'}
+              className={followFilter === 'wishlists'
+                ? 'bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 font-bold whitespace-nowrap'
+                : 'border-gray-700 text-gray-300 hover:bg-gray-800 whitespace-nowrap'
+              }
+            >
+              <Gift size={18} className="mr-2" />
+              Wishlists ({following.wishlists.length})
+            </Button>
+            <Button
+              onClick={() => setFollowFilter('creators')}
+              variant={followFilter === 'creators' ? 'primary' : 'outline'}
+              className={followFilter === 'creators'
+                ? 'bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 font-bold whitespace-nowrap'
+                : 'border-gray-700 text-gray-300 hover:bg-gray-800 whitespace-nowrap'
+              }
+            >
+              <Users size={18} className="mr-2" />
+              Creators ({following.creators.length})
+            </Button>
+          </div>
+
+          {(following.projects.length === 0 && following.wishlists.length === 0 && following.creators.length === 0) ? (
+            <Card className="text-center py-16 bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700">
+              <Heart size={64} className="mx-auto text-rose-500/50 mb-4" />
+              <h3 className="text-2xl font-bold text-white mb-2">Not Following Anyone Yet</h3>
+              <p className="text-gray-400 mb-6">Explore projects and creators to start building your feed</p>
+              <Link href="/explore">
+                <Button className="bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 font-bold">
+                  Explore Now
+                </Button>
+              </Link>
+            </Card>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {(followFilter === 'all' || followFilter === 'projects') && following.projects.map((project: any) => (
+                <Link key={project.id} href={`/project/${project.slug}`}>
+                  <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 hover:border-rose-500/50 transition-all duration-300 overflow-hidden group hover:shadow-[0_0_30px_rgba(244,63,94,0.2)]">
+                    {project.background_url ? (
+                      <div
+                        className="w-full h-32 bg-cover bg-center"
+                        style={{ backgroundImage: `url(${project.background_url})` }}
+                      />
+                    ) : (
+                      <div className="w-full h-32 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
+                        <FolderOpen size={48} className="text-gray-700" />
+                      </div>
+                    )}
+                    <div className="p-5">
+                      <div className="flex items-center gap-2 mb-3">
+                        <FolderOpen size={16} className="text-orange-500" />
+                        <span className="text-xs font-bold text-orange-500 uppercase">Project</span>
+                      </div>
+                      <h3 className="text-lg font-bold text-white mb-2 line-clamp-1 group-hover:text-rose-400 transition-colors">
+                        {project.title}
+                      </h3>
+                      <p className="text-gray-400 text-sm line-clamp-2">
+                        {project.description || 'No description'}
+                      </p>
+                    </div>
+                  </Card>
+                </Link>
+              ))}
+
+              {(followFilter === 'all' || followFilter === 'wishlists') && following.wishlists.map((wishlist: any) => (
+                <Link key={wishlist.id} href={`/wishlist/${wishlist.slug}`}>
+                  <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 hover:border-purple-500/50 transition-all duration-300 overflow-hidden group hover:shadow-[0_0_30px_rgba(168,85,247,0.2)]">
+                    {wishlist.cover_image ? (
+                      <div
+                        className="w-full h-32 bg-cover bg-center"
+                        style={{ backgroundImage: `url(${wishlist.cover_image})` }}
+                      />
+                    ) : (
+                      <div className="w-full h-32 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
+                        <Gift size={48} className="text-gray-700" />
+                      </div>
+                    )}
+                    <div className="p-5">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Gift size={16} className="text-purple-500" />
+                        <span className="text-xs font-bold text-purple-500 uppercase">Wishlist</span>
+                      </div>
+                      <h3 className="text-lg font-bold text-white mb-2 line-clamp-1 group-hover:text-purple-400 transition-colors">
+                        {wishlist.title}
+                      </h3>
+                      <p className="text-gray-400 text-sm line-clamp-2 mb-3">
+                        {wishlist.description || 'No description'}
+                      </p>
+                      {wishlist.total_sats_goal > 0 && (
+                        <div className="w-full h-2 bg-gray-700 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-gradient-to-r from-purple-500 to-pink-500"
+                            style={{
+                              width: `${Math.min((wishlist.total_sats_raised / wishlist.total_sats_goal) * 100, 100)}%`,
+                            }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </Card>
+                </Link>
+              ))}
+
+              {(followFilter === 'all' || followFilter === 'creators') && following.creators.map((creator: any) => (
+                <Link key={creator.id} href={`/profile/${creator.username}`}>
+                  <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 hover:border-blue-500/50 transition-all duration-300 p-6 group hover:shadow-[0_0_30px_rgba(59,130,246,0.2)]">
+                    <div className="flex items-center gap-4 mb-4">
+                      {creator.avatar_url ? (
+                        <img
+                          src={creator.avatar_url}
+                          alt={creator.username}
+                          className="w-16 h-16 rounded-full object-cover border-2 border-gray-700 group-hover:border-blue-500 transition-colors"
+                        />
+                      ) : (
+                        <div className="w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-cyan-600 flex items-center justify-center text-white text-2xl font-bold">
+                          {creator.username[0].toUpperCase()}
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Users size={14} className="text-blue-500 flex-shrink-0" />
+                          <span className="text-xs font-bold text-blue-500 uppercase">Creator</span>
+                        </div>
+                        <h3 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors truncate">
+                          {creator.username}
+                        </h3>
+                      </div>
+                    </div>
+                    {creator.bio && (
+                      <p className="text-gray-400 text-sm line-clamp-2">
+                        {creator.bio}
+                      </p>
+                    )}
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       <Modal
