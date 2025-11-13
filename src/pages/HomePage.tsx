@@ -45,7 +45,7 @@ export function HomePage() {
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full mb-8 animate-fade-in">
             <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
             <span className="text-sm font-medium text-emerald-300">
-              Trusted by {stats.creators}+ creators worldwide
+              Trusted by creators worldwide
             </span>
           </div>
 
