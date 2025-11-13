@@ -7,7 +7,7 @@ import { Input } from '../components/Input';
 import { Link } from '../components/Link';
 import { StatsCard } from '../components/StatsCard';
 import { supabase } from '../lib/supabase';
-import { Plus, Edit, Trash2, Settings, Gift, DollarSign, Users, FolderOpen, Globe, Lock, FileText } from 'lucide-react';
+import { Plus, Edit, Trash2, Settings, Gift, DollarSign, Users, FolderOpen, Globe, Lock, FileText, ExternalLink, TrendingUp, Eye } from 'lucide-react';
 
 interface Project {
   id: string;
@@ -106,25 +106,28 @@ export function DashboardPage() {
 
   async function handleCreateProject(e: React.FormEvent) {
     e.preventDefault();
-    setProcessing(true);
+    if (!user || processing) return;
 
+    setProcessing(true);
     try {
       const slug = formData.slug || formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 
-      const { error } = await supabase.from('projects').insert({
-        creator_id: user!.id,
-        title: formData.title,
-        description: formData.description,
-        slug,
-        visibility: 'draft',
-      });
+      const { error } = await supabase
+        .from('projects')
+        .insert({
+          creator_id: user.id,
+          title: formData.title,
+          description: formData.description,
+          slug,
+          visibility: 'draft',
+        });
 
       if (error) throw error;
 
+      await loadProjects();
+      await loadStats();
       setShowCreateModal(false);
       setFormData({ title: '', description: '', slug: '' });
-      loadProjects();
-      loadStats();
     } catch (error: any) {
       console.error('Error creating project:', error);
       alert(error.message || 'Failed to create project');
@@ -133,18 +136,21 @@ export function DashboardPage() {
     }
   }
 
-  async function handleDeleteProject(id: string) {
-    if (!confirm('Are you sure? This will delete the project and all its wishlists.')) return;
+  async function handleDeleteProject(projectId: string) {
+    if (!confirm('Are you sure you want to delete this project? This will also delete all associated wishlists.')) {
+      return;
+    }
 
     try {
       const { error } = await supabase
         .from('projects')
         .delete()
-        .eq('id', id);
+        .eq('id', projectId);
 
       if (error) throw error;
-      loadProjects();
-      loadStats();
+
+      await loadProjects();
+      await loadStats();
     } catch (error) {
       console.error('Error deleting project:', error);
       alert('Failed to delete project');
@@ -166,9 +172,9 @@ export function DashboardPage() {
   }
 
   async function handleUpdateProject(projectId: string) {
-    if (!editFormData) return;
-    setProcessing(true);
+    if (!editFormData || processing) return;
 
+    setProcessing(true);
     try {
       const { error } = await supabase
         .from('projects')
@@ -181,40 +187,45 @@ export function DashboardPage() {
 
       if (error) throw error;
 
-      setEditingProject(null);
-      setEditFormData(null);
-      loadProjects();
-    } catch (error: any) {
+      await loadProjects();
+      cancelEditing();
+    } catch (error) {
       console.error('Error updating project:', error);
-      alert(error.message || 'Failed to update project');
+      alert('Failed to update project');
     } finally {
       setProcessing(false);
     }
   }
 
-  const formatSats = (sats: number) => {
-    return new Intl.NumberFormat().format(sats);
-  };
+  function formatSats(sats: number): string {
+    if (sats >= 100000000) {
+      return `${(sats / 100000000).toFixed(2)} BTC`;
+    }
+    if (sats >= 1000) {
+      return `${(sats / 1000).toFixed(0)}k`;
+    }
+    return `${sats}`;
+  }
 
   const getVisibilityBadge = (visibility: string) => {
     if (visibility === 'public') {
       return (
-        <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
-          <Globe size={12} />
+        <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 flex items-center gap-1.5 shadow-[0_0_10px_rgba(16,185,129,0.3)]">
+          <Globe size={14} />
           Public
         </span>
       );
     } else if (visibility === 'private') {
       return (
-        <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30 flex items-center gap-1">
-          <Lock size={12} />
+        <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-blue-500/20 text-blue-400 border border-blue-500/50 flex items-center gap-1.5 shadow-[0_0_10px_rgba(59,130,246,0.3)]">
+          <Lock size={14} />
           Private
         </span>
       );
     } else {
       return (
-        <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-night-blue-400/20 text-night-blue-300 border border-night-blue-400/30 flex items-center gap-1">
-          <FileText size={12} />
+        <span className="px-3 py-1.5 rounded-full text-xs font-bold bg-gray-500/20 text-gray-400 border border-gray-500/50 flex items-center gap-1.5">
+          <FileText size={14} />
           Draft
         </span>
       );
@@ -223,47 +234,91 @@ export function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-night-blue-500 via-night-blue-500 to-black flex items-center justify-center">
-        <div className="text-white text-xl">Loading...</div>
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-black flex items-center justify-center">
+        <div className="text-white text-xl">Loading your dashboard...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-night-blue-500 via-night-blue-500 to-black">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <StatsCard
-            title="Projects"
-            value={stats.totalProjects}
-            icon={FolderOpen}
-          />
-          <StatsCard
-            title="Wishlists"
-            value={stats.totalWishlists}
-            icon={Gift}
-          />
-          <StatsCard
-            title="Total Raised"
-            value={`${formatSats(stats.totalRaised)} sats`}
-            icon={DollarSign}
-          />
-          <StatsCard
-            title="Supporters"
-            value="0"
-            icon={Users}
-          />
+        <div className="mb-12">
+          <h1 className="text-5xl font-black text-white mb-3 bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
+            Creator Dashboard
+          </h1>
+          <p className="text-gray-300 text-lg">Manage your projects and track your success</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 hover:border-orange-500/50 transition-all duration-300 p-6 hover:shadow-[0_0_30px_rgba(255,135,0,0.2)]">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-orange-500/20 rounded-xl">
+                <FolderOpen size={28} className="text-orange-500" />
+              </div>
+              <div className="text-right">
+                <p className="text-3xl font-black text-white">{stats.totalProjects}</p>
+              </div>
+            </div>
+            <h3 className="text-gray-400 text-sm font-semibold uppercase tracking-wider">Projects</h3>
+            <div className="flex items-center gap-2 mt-2">
+              <TrendingUp size={14} className="text-emerald-400" />
+              <span className="text-xs text-emerald-400 font-medium">Active</span>
+            </div>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 hover:border-purple-500/50 transition-all duration-300 p-6 hover:shadow-[0_0_30px_rgba(168,85,247,0.2)]">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-purple-500/20 rounded-xl">
+                <Gift size={28} className="text-purple-500" />
+              </div>
+              <div className="text-right">
+                <p className="text-3xl font-black text-white">{stats.totalWishlists}</p>
+              </div>
+            </div>
+            <h3 className="text-gray-400 text-sm font-semibold uppercase tracking-wider">Wishlists</h3>
+            <div className="flex items-center gap-2 mt-2">
+              <TrendingUp size={14} className="text-purple-400" />
+              <span className="text-xs text-purple-400 font-medium">Growing</span>
+            </div>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 hover:border-emerald-500/50 transition-all duration-300 p-6 hover:shadow-[0_0_30px_rgba(16,185,129,0.2)]">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-emerald-500/20 rounded-xl">
+                <DollarSign size={28} className="text-emerald-500" />
+              </div>
+              <div className="text-right">
+                <p className="text-3xl font-black text-white">{formatSats(stats.totalRaised)}</p>
+              </div>
+            </div>
+            <h3 className="text-gray-400 text-sm font-semibold uppercase tracking-wider">Total Raised</h3>
+            <p className="text-xs text-gray-500 mt-2 font-medium">sats</p>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 hover:border-blue-500/50 transition-all duration-300 p-6 hover:shadow-[0_0_30px_rgba(59,130,246,0.2)]">
+            <div className="flex items-center justify-between mb-4">
+              <div className="p-3 bg-blue-500/20 rounded-xl">
+                <Users size={28} className="text-blue-500" />
+              </div>
+              <div className="text-right">
+                <p className="text-3xl font-black text-white">0</p>
+              </div>
+            </div>
+            <h3 className="text-gray-400 text-sm font-semibold uppercase tracking-wider">Supporters</h3>
+            <p className="text-xs text-gray-500 mt-2 font-medium">Coming soon</p>
+          </Card>
         </div>
 
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-4xl font-black text-white mb-2">My Projects</h1>
-            <p className="text-night-blue-300">Organize your wishlists into projects</p>
+            <h2 className="text-3xl font-black text-white mb-2">Your Projects</h2>
+            <p className="text-gray-400">Organize wishlists and manage your creator presence</p>
           </div>
           <Button
             onClick={() => setShowCreateModal(true)}
-            className="bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700"
+            className="bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 shadow-[0_0_20px_rgba(255,135,0,0.3)] font-bold"
           >
             <Plus size={20} className="mr-2" />
             New Project
@@ -271,117 +326,167 @@ export function DashboardPage() {
         </div>
 
         {projects.length === 0 ? (
-          <Card className="text-center py-16">
-            <FolderOpen size={64} className="mx-auto text-night-blue-400 mb-4" />
-            <h3 className="text-2xl font-bold text-white mb-2">No projects yet</h3>
-            <p className="text-night-blue-300 mb-6">Create your first project to get started</p>
-            <Button
-              onClick={() => setShowCreateModal(true)}
-              className="bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700"
-            >
-              <Plus size={20} className="mr-2" />
-              Create Project
-            </Button>
+          <Card className="text-center py-20 bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700">
+            <div className="max-w-md mx-auto">
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-orange-500 to-amber-600 rounded-2xl mb-6 shadow-[0_0_30px_rgba(255,135,0,0.4)]">
+                <FolderOpen size={40} className="text-white" />
+              </div>
+              <h3 className="text-3xl font-black text-white mb-3">Start Your First Project</h3>
+              <p className="text-gray-300 mb-8 text-lg leading-relaxed">
+                Projects help you organize multiple wishlists under one umbrella. Perfect for campaigns, causes, or creator portfolios.
+              </p>
+              <Button
+                onClick={() => setShowCreateModal(true)}
+                className="bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 shadow-[0_0_20px_rgba(255,135,0,0.3)] font-bold text-lg px-8 py-3"
+              >
+                <Plus size={24} className="mr-2" />
+                Create Your First Project
+              </Button>
+            </div>
           </Card>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((project) => (
               <Card
                 key={project.id}
-                className="bg-gradient-to-br from-night-blue-500 to-night-blue-500 border border-night-blue-400 hover:border-emerald-500/50 transition-all group"
+                className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 hover:border-orange-500/50 transition-all duration-300 overflow-hidden group hover:shadow-[0_0_40px_rgba(255,135,0,0.25)] hover:scale-[1.02]"
               >
-                {project.background_url && (
+                {project.background_url ? (
                   <div
-                    className="w-full h-32 bg-cover bg-center rounded-t-lg mb-4 -mt-6 -mx-6"
+                    className="w-full h-48 bg-cover bg-center relative overflow-hidden"
                     style={{ backgroundImage: `url(${project.background_url})` }}
-                  />
-                )}
-
-                {editingProject === project.id && editFormData ? (
-                  <div className="space-y-3">
-                    <Input
-                      value={editFormData.title}
-                      onChange={(e) => setEditFormData({ ...editFormData, title: e.target.value })}
-                      placeholder="Project title"
-                    />
-                    <textarea
-                      value={editFormData.description}
-                      onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
-                      placeholder="Description"
-                      className="w-full px-3 py-2 bg-night-blue-shadow-700/50 border border-night-blue-400 rounded-lg text-white text-sm placeholder-night-blue-400 focus:outline-none focus:border-emerald-500"
-                      rows={3}
-                    />
-                    <select
-                      value={editFormData.visibility}
-                      onChange={(e) => setEditFormData({ ...editFormData, visibility: e.target.value as any })}
-                      className="w-full px-3 py-2 bg-night-blue-shadow-700/50 border border-night-blue-400 rounded-lg text-white text-sm focus:outline-none focus:border-emerald-500"
-                    >
-                      <option value="draft">Draft (only you)</option>
-                      <option value="private">Private (link only)</option>
-                      <option value="public">Public (listed)</option>
-                    </select>
-                    <div className="flex gap-2">
-                      <Button
-                        onClick={() => handleUpdateProject(project.id)}
-                        className="flex-1 bg-emerald-500 hover:bg-emerald-600"
-                        disabled={processing}
-                      >
-                        Save
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={cancelEditing}
-                        className="flex-1"
-                        disabled={processing}
-                      >
-                        Cancel
-                      </Button>
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                    <div className="absolute top-4 right-4">
+                      {getVisibilityBadge(project.visibility)}
                     </div>
                   </div>
                 ) : (
-                  <>
-                    <div className="flex justify-between items-start mb-3">
-                      <h3 className="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">
-                        {project.title}
-                      </h3>
+                  <div className="w-full h-48 bg-gradient-to-br from-gray-800 to-gray-900 relative flex items-center justify-center overflow-hidden">
+                    <FolderOpen size={80} className="text-gray-700 opacity-50" />
+                    <div className="absolute top-4 right-4">
                       {getVisibilityBadge(project.visibility)}
                     </div>
+                  </div>
+                )}
 
-                    <p className="text-night-blue-300 text-sm mb-4 line-clamp-2">
-                      {project.description || 'No description'}
-                    </p>
-
-                    <div className="flex items-center gap-4 text-sm text-night-blue-300 mb-4">
-                      <div className="flex items-center gap-1">
-                        <Gift size={16} />
-                        <span>{project.wishlist_count} wishlists</span>
+                <div className="p-6">
+                  {editingProject === project.id && editFormData ? (
+                    <div className="space-y-4">
+                      <Input
+                        value={editFormData.title}
+                        onChange={(e) => setEditFormData({ ...editFormData, title: e.target.value })}
+                        placeholder="Project title"
+                        className="bg-black border-gray-700 text-white font-bold"
+                      />
+                      <textarea
+                        value={editFormData.description}
+                        onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
+                        placeholder="Description"
+                        className="w-full px-4 py-3 bg-black border border-gray-700 rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
+                        rows={3}
+                      />
+                      <select
+                        value={editFormData.visibility}
+                        onChange={(e) => setEditFormData({ ...editFormData, visibility: e.target.value as any })}
+                        className="w-full px-4 py-3 bg-black border border-gray-700 rounded-lg text-white text-sm focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
+                      >
+                        <option value="draft">Draft - Only you can see</option>
+                        <option value="private">Private - Anyone with link</option>
+                        <option value="public">Public - Listed on Explore</option>
+                      </select>
+                      <div className="flex gap-2 pt-2">
+                        <Button
+                          onClick={() => handleUpdateProject(project.id)}
+                          className="flex-1 bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 font-bold"
+                          disabled={processing}
+                        >
+                          {processing ? 'Saving...' : 'Save Changes'}
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={cancelEditing}
+                          className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800"
+                          disabled={processing}
+                        >
+                          Cancel
+                        </Button>
                       </div>
                     </div>
+                  ) : (
+                    <>
+                      <div className="mb-4">
+                        <h3 className="text-2xl font-black text-white mb-2 group-hover:text-orange-400 transition-colors line-clamp-1">
+                          {project.title}
+                        </h3>
+                        <p className="text-gray-300 text-sm line-clamp-2 leading-relaxed font-medium">
+                          {project.description || 'No description provided'}
+                        </p>
+                      </div>
 
-                    <div className="flex gap-2">
-                      <Link href={`/project/${project.slug}`} className="flex-1">
-                        <Button variant="outline" className="w-full border-emerald-500/30 hover:border-emerald-500">
-                          <Settings size={16} className="mr-2" />
-                          Manage
+                      <div className="flex items-center gap-6 mb-6 pb-6 border-b border-gray-700">
+                        <div className="flex items-center gap-2">
+                          <div className="p-2 bg-purple-500/20 rounded-lg">
+                            <Gift size={18} className="text-purple-400" />
+                          </div>
+                          <div>
+                            <p className="text-xl font-bold text-white">{project.wishlist_count}</p>
+                            <p className="text-xs text-gray-500 font-medium">Wishlists</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="p-2 bg-blue-500/20 rounded-lg">
+                            <Eye size={18} className="text-blue-400" />
+                          </div>
+                          <div>
+                            <p className="text-xl font-bold text-white">0</p>
+                            <p className="text-xs text-gray-500 font-medium">Views</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-2">
+                        <Link href={`/project/${project.slug}`} className="flex-1">
+                          <Button
+                            variant="primary"
+                            className="w-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 font-bold"
+                          >
+                            <Settings size={18} className="mr-2" />
+                            Manage
+                          </Button>
+                        </Link>
+                        <Button
+                          variant="outline"
+                          onClick={() => startEditingProject(project)}
+                          className="border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-orange-400 hover:border-orange-500/50"
+                        >
+                          <Edit size={18} />
                         </Button>
-                      </Link>
-                      <Button
-                        variant="ghost"
-                        onClick={() => startEditingProject(project)}
-                        className="text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10"
-                      >
-                        <Edit size={16} />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        onClick={() => handleDeleteProject(project.id)}
-                        className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
-                      >
-                        <Trash2 size={16} />
-                      </Button>
-                    </div>
-                  </>
-                )}
+                        <Button
+                          variant="outline"
+                          onClick={() => handleDeleteProject(project.id)}
+                          className="border-gray-700 text-gray-300 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/50"
+                        >
+                          <Trash2 size={18} />
+                        </Button>
+                      </div>
+
+                      {project.visibility === 'public' && (
+                        <div className="mt-4 pt-4 border-t border-gray-700">
+                          <a
+                            href={`#/project/${project.slug}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sm text-gray-400 hover:text-orange-400 transition-colors flex items-center gap-2 group/link"
+                          >
+                            <ExternalLink size={14} className="group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
+                            View Public Page
+                          </a>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
               </Card>
             ))}
           </div>
@@ -393,50 +498,60 @@ export function DashboardPage() {
         onClose={() => setShowCreateModal(false)}
         title="Create New Project"
       >
-        <form onSubmit={handleCreateProject} className="space-y-4">
-          <Input
-            label="Project Title"
-            value={formData.title}
-            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-            placeholder="My Awesome Project"
-            required
-          />
-
-          <Input
-            label="Slug (URL)"
-            value={formData.slug}
-            onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-            placeholder="my-awesome-project"
-            helpText="Leave blank to auto-generate from title"
-          />
+        <form onSubmit={handleCreateProject} className="space-y-5">
+          <div>
+            <Input
+              label="Project Title"
+              value={formData.title}
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              placeholder="e.g., Community Garden Fund"
+              required
+              className="bg-black border-gray-700 text-white"
+            />
+            <p className="text-xs text-gray-500 mt-2">Choose a clear, descriptive name for your project</p>
+          </div>
 
           <div>
-            <label className="block text-sm font-medium text-night-blue-200 mb-2">
+            <label className="block text-sm font-medium text-gray-200 mb-2">
               Description
             </label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              placeholder="What is this project about?"
-              className="w-full px-4 py-2 bg-night-blue-500 border border-night-blue-400 rounded-lg text-white placeholder-night-blue-400 focus:outline-none focus:border-emerald-500"
+              placeholder="Tell people about your project and what you're trying to achieve..."
+              className="w-full px-4 py-3 bg-black border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
               rows={4}
             />
+            <p className="text-xs text-gray-500 mt-2">A compelling description helps supporters understand your mission</p>
           </div>
 
-          <div className="flex gap-3 pt-4">
+          <div>
+            <Input
+              label="URL Slug (optional)"
+              value={formData.slug}
+              onChange={(e) => setFormData({ ...formData, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-') })}
+              placeholder="community-garden-fund"
+              className="bg-black border-gray-700 text-white font-mono text-sm"
+            />
+            <p className="text-xs text-gray-500 mt-2">
+              Your project URL: katoa.org/project/{formData.slug || 'your-slug'}
+            </p>
+          </div>
+
+          <div className="flex gap-3 pt-4 border-t border-gray-700">
             <Button
               type="button"
               variant="outline"
               onClick={() => setShowCreateModal(false)}
-              className="flex-1"
+              className="flex-1 border-gray-700 text-gray-300"
               disabled={processing}
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              className="flex-1 bg-gradient-to-r from-emerald-500 to-cyan-600"
-              disabled={processing}
+              className="flex-1 bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 font-bold"
+              disabled={processing || !formData.title}
             >
               {processing ? 'Creating...' : 'Create Project'}
             </Button>
