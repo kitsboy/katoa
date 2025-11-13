@@ -190,26 +190,22 @@ export function DashboardPage() {
           <StatsCard
             title="Projects"
             value={stats.totalProjects}
-            icon={<FolderOpen size={24} />}
-            trend="+12%"
+            icon={FolderOpen}
           />
           <StatsCard
             title="Wishlists"
             value={stats.totalWishlists}
-            icon={<Gift size={24} />}
-            trend="+8%"
+            icon={Gift}
           />
           <StatsCard
             title="Total Raised"
             value={`${formatSats(stats.totalRaised)} sats`}
-            icon={<DollarSign size={24} />}
-            trend="+23%"
+            icon={DollarSign}
           />
           <StatsCard
             title="Supporters"
             value="0"
-            icon={<Users size={24} />}
-            trend="+5%"
+            icon={Users}
           />
         </div>
 
