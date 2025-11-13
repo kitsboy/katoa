@@ -191,7 +191,7 @@ export function ComparisonPage() {
             <p className="text-white text-lg leading-relaxed mb-6 font-medium">
               No bank account? No problem. Bitcoin works everywhere, for everyone. No discrimination.
             </p>
-            <div className="text-sand-tan-200 font-bold text-lg">KATOA: All countries, always 0%</div>
+            <div className="text-sand-tan-400 font-bold text-lg">KATOA: All countries, always 0%</div>
           </Card>
 
           <Card className="p-8 bg-gradient-to-br from-slate-700 to-slate-800 border-slate-600 text-center hover:shadow-xl hover:shadow-sand-tan-500/20 transition-all duration-300">
@@ -202,7 +202,7 @@ export function ComparisonPage() {
             <p className="text-white text-lg leading-relaxed mb-6 font-medium">
               Zero-knowledge proofs. Encrypted messaging. Decentralized storage. Your data stays yours.
             </p>
-            <div className="text-sand-tan-200 font-bold text-lg">KATOA: Zero-knowledge proofs</div>
+            <div className="text-sand-tan-400 font-bold text-lg">KATOA: Zero-knowledge proofs</div>
           </Card>
 
           <Card className="p-8 bg-gradient-to-br from-slate-700 to-slate-800 border-slate-600 text-center hover:shadow-xl hover:shadow-sand-tan-500/20 transition-all duration-300">
@@ -213,7 +213,7 @@ export function ComparisonPage() {
             <p className="text-white text-lg leading-relaxed mb-6 font-medium">
               Keep 100% of your earnings. Scale globally. Build your empire without platform taxes.
             </p>
-            <div className="text-sand-tan-200 font-bold text-lg">KATOA: Instant Lightning Network</div>
+            <div className="text-sand-tan-400 font-bold text-lg">KATOA: Instant Lightning Network</div>
           </Card>
         </div>
 
