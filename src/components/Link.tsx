@@ -10,6 +10,8 @@ export function Link({ href, children, className = '', ...props }: LinkProps) {
     e.preventDefault();
     window.history.pushState({}, '', href);
     window.dispatchEvent(new PopStateEvent('popstate'));
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (

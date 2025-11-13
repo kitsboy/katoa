@@ -649,10 +649,21 @@ export function SettingsPage() {
                 <p className="text-gray-400 mb-6">
                   Add a shipping address so gifters know where to send items
                 </p>
-                <Button onClick={() => openAddressModal()}>
-                  <Plus size={20} className="mr-2" />
-                  Add Your First Address
-                </Button>
+
+                {/* Demo Address Field */}
+                <div className="max-w-md mx-auto mb-6 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-lg text-left">
+                  <div className="flex items-start gap-2 mb-3">
+                    <Shield size={16} className="text-yellow-400 flex-shrink-0 mt-1" />
+                    <p className="text-yellow-400 text-sm font-semibold">Privacy Tip</p>
+                  </div>
+                  <p className="text-slate-300 text-sm mb-3">Consider using a P.O. Box or alternative address for privacy. Never use your home address if you're a public creator.</p>
+                  <div className="bg-slate-900/50 rounded p-3 text-slate-500 text-sm space-y-1">
+                    <p className="font-semibold">Example Address:</p>
+                    <p>123 Business Center Rd, Suite 456</p>
+                    <p>P.O. Box Service, Miami, FL 33101</p>
+                    <p>United States</p>
+                  </div>
+                </div>
               </Card>
             )}
           </div>

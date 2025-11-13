@@ -156,8 +156,57 @@ export function ExplorePage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-800 via-slate-700 to-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
+
+        {/* Hero Featured Wishlist */}
+        <Card className="mb-8 overflow-hidden bg-gradient-to-br from-slate-800 to-slate-700 border-slate-700 animate-slide-up">
+          <div className="grid md:grid-cols-2 gap-0">
+            <div className="relative h-64 md:h-auto overflow-hidden">
+              <img
+                src="https://images.pexels.com/photos/5793678/pexels-photo-5793678.jpeg?auto=compress&cs=tinysrgb&w=800"
+                alt="Skateboard Park Colombia"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-slate-900/80 to-transparent" />
+              <div className="absolute top-4 left-4">
+                <TrendingBadge type="featured" />
+              </div>
+            </div>
+            <div className="p-8 flex flex-col justify-center">
+              <h2 className="text-3xl font-bold text-white mb-3">
+                Skateboard Park for Medellín Youth
+              </h2>
+              <p className="text-slate-300 mb-4 leading-relaxed">
+                Help us build a safe community space where kids can skate, learn, and grow together.
+                This project will provide free skateboarding lessons and mentorship to 500+ youth in Medellín, Colombia.
+              </p>
+              <ProgressBar
+                current={3250000}
+                goal={5000000}
+                showPercentage={true}
+                showValues={true}
+                gradient="from-emerald-500 to-cyan-600"
+                height="md"
+                animated={true}
+              />
+              <div className="flex items-center gap-4 mt-6">
+                <Button
+                  size="sm"
+                  className="bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700"
+                  onClick={() => window.location.hash = '/wishlist/medellin-skate-park'}
+                >
+                  Support This Project
+                </Button>
+                <div className="flex items-center gap-2 text-slate-400 text-sm">
+                  <MapPin size={16} />
+                  <span>Medellín, Colombia 🇨🇴</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Card>
+
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-4">Explore Wishlists</h1>
+          <h1 className="text-4xl font-bold text-white mb-4">Explore All Wishlists</h1>
           <p className="text-gray-400 mb-6">Discover amazing creators and support their dreams around the world</p>
 
           <div className="space-y-4 mb-6">

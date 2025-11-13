@@ -148,7 +148,7 @@ export function HomePage() {
               </p>
 
               <div className="pt-4 border-t border-slate-700">
-                <div className="text-cyan-400 font-semibold">vs. ~10 countries on competitors</div>
+                <div className="text-cyan-400 font-semibold">vs. ~10 countries with 10% fees</div>
               </div>
             </Card>
 
