@@ -16,13 +16,13 @@ export function Button({
   disabled,
   ...props
 }: ButtonProps) {
-  const baseStyles = 'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95';
+  const baseStyles = 'inline-flex items-center justify-center font-bold rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95';
 
   const variants = {
-    primary: 'bg-gradient-to-r from-mandarin-500 to-mandarin-600 hover:from-mandarin-600 hover:to-mandarin-700 text-white shadow-lg hover:shadow-xl hover:shadow-mandarin-500/40',
-    secondary: 'bg-jewel-500 hover:bg-jewel-600 text-white shadow-md hover:shadow-lg',
-    outline: 'border-2 border-jewel-400 text-jewel-600 hover:bg-jewel-50 backdrop-blur-sm',
-    ghost: 'text-slate-300 hover:bg-nightmoon-700 hover:text-white',
+    primary: 'bg-gradient-to-r from-hotpink-500 to-hotpink-600 hover:from-hotpink-600 hover:to-hotpink-700 text-white shadow-lg hover:shadow-xl hover:shadow-hotpink-500/50',
+    secondary: 'bg-shocking-500 hover:bg-shocking-600 text-luxury-700 shadow-md hover:shadow-lg',
+    outline: 'border-2 border-electric-500 text-electric-500 hover:bg-electric-500 hover:text-white backdrop-blur-sm',
+    ghost: 'text-slate-300 hover:bg-electric-500/10 hover:text-electric-400',
   };
 
   const sizes = {
