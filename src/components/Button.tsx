@@ -19,10 +19,10 @@ export function Button({
   const baseStyles = 'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95';
 
   const variants = {
-    primary: 'bg-gradient-to-r from-lavender-400 to-lavender-500 hover:from-lavender-500 hover:to-lavender-600 text-white shadow-lg hover:shadow-xl hover:shadow-lavender-500/30',
-    secondary: 'bg-mocha-500 hover:bg-mocha-600 text-white shadow-md hover:shadow-lg',
-    outline: 'border-2 border-lavender-400 text-lavender-600 hover:bg-lavender-50 backdrop-blur-sm',
-    ghost: 'text-slate-700 hover:bg-lavender-50 hover:text-lavender-600',
+    primary: 'bg-gradient-to-r from-mandarin-500 to-mandarin-600 hover:from-mandarin-600 hover:to-mandarin-700 text-white shadow-lg hover:shadow-xl hover:shadow-mandarin-500/40',
+    secondary: 'bg-jewel-500 hover:bg-jewel-600 text-white shadow-md hover:shadow-lg',
+    outline: 'border-2 border-jewel-400 text-jewel-600 hover:bg-jewel-50 backdrop-blur-sm',
+    ghost: 'text-slate-300 hover:bg-nightmoon-700 hover:text-white',
   };
 
   const sizes = {

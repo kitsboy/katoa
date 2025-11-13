@@ -76,31 +76,31 @@ export function Navbar() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-40 bg-white/90 backdrop-blur-md border-b border-lavender-100 shadow-sm">
+      <nav className="fixed top-0 left-0 right-0 z-40 bg-nightmoon-800/90 backdrop-blur-md border-b border-nightmoon-700 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-3 text-slate-900 hover:text-lavender-600 transition-colors group">
+            <Link href="/" className="flex items-center gap-3 text-white hover:text-mandarin-400 transition-colors group">
               <img src="/sats.png" alt="KATOA" className="w-10 h-10 rounded-full group-hover:scale-105 transition-transform" />
               <span className="text-xl font-bold">KATOA</span>
             </Link>
 
             <div className="hidden md:flex items-center gap-6">
-              <Link href="/explore" className="text-slate-600 hover:text-lavender-600 transition-colors font-medium">
+              <Link href="/explore" className="text-slate-300 hover:text-white transition-colors font-medium">
                 {t('nav.explore')}
               </Link>
-              <Link href="/compare" className="text-slate-600 hover:text-lavender-600 transition-colors font-semibold">
+              <Link href="/compare" className="text-slate-300 hover:text-mandarin-400 transition-colors font-semibold">
                 Why KATOA?
               </Link>
 
               <div className="relative">
                 <button
                   onClick={() => setShowLangMenu(!showLangMenu)}
-                  className="flex items-center gap-1 text-slate-600 hover:text-lavender-600 transition-colors text-2xl"
+                  className="flex items-center gap-1 text-slate-300 hover:text-white transition-colors text-2xl"
                 >
                   {languageFlags[language]}
                 </button>
                 {showLangMenu && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white border border-lavender-200 rounded-xl shadow-xl py-2 z-50">
+                  <div className="absolute right-0 mt-2 w-48 bg-nightmoon-700 border border-nightmoon-600 rounded-xl shadow-xl py-2 z-50">
                     {Object.entries(languageFlags).map(([lang, flag]) => (
                       <button
                         key={lang}
@@ -108,7 +108,7 @@ export function Navbar() {
                           setLanguage(lang as any);
                           setShowLangMenu(false);
                         }}
-                        className="w-full px-4 py-2 text-left hover:bg-lavender-50 text-slate-700 flex items-center gap-3 transition-colors"
+                        className="w-full px-4 py-2 text-left hover:bg-nightmoon-600 text-slate-300 hover:text-white flex items-center gap-3 transition-colors"
                       >
                         <span className="text-xl">{flag}</span>
                         <span className="text-sm font-medium">{languageNames[lang as keyof typeof languageNames]}</span>
@@ -120,11 +120,11 @@ export function Navbar() {
 
               {user ? (
                 <>
-                  <Link href="/dashboard" className="flex items-center gap-2 text-slate-600 hover:text-lavender-600 transition-colors font-medium">
+                  <Link href="/dashboard" className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors font-medium">
                     <LayoutDashboard size={18} />
                     {t('nav.dashboard')}
                   </Link>
-                  <Link href="/settings" className="flex items-center gap-2 text-slate-600 hover:text-lavender-600 transition-colors font-medium">
+                  <Link href="/settings" className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors font-medium">
                     <Settings size={18} />
                     {t('nav.settings')}
                   </Link>
