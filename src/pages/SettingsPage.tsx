@@ -59,8 +59,9 @@ export function SettingsPage() {
     }
   }
 
-  async function handleAvatarUpload(files: File[]) {
-    if (files.length === 0) return null;
+  async function handleAvatarUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
     setProcessing(true);
     try {
@@ -68,33 +69,45 @@ export function SettingsPage() {
       const fileExt = file.name.split('.').pop();
       const fileName = `${user!.id}-avatar-${Date.now()}.${fileExt}`;
 
+      console.log('Uploading avatar:', fileName);
+
       const { error: uploadError } = await supabase.storage
         .from('media')
         .upload(fileName, file);
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error('Upload error:', uploadError);
+        throw uploadError;
+      }
 
       const { data: { publicUrl } } = supabase.storage
         .from('media')
         .getPublicUrl(fileName);
 
-      const updatedForm = { ...profileForm, avatar_url: publicUrl };
-      setProfileForm(updatedForm);
-      await updateProfile(updatedForm);
+      console.log('Avatar uploaded, URL:', publicUrl);
+
+      const result = await updateProfile({ avatar_url: publicUrl });
+
+      if (result.error) {
+        console.error('Profile update error:', result.error);
+        throw result.error;
+      }
+
+      setProfileForm({ ...profileForm, avatar_url: publicUrl });
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 3000);
-      return publicUrl;
+      console.log('Avatar saved successfully');
     } catch (error) {
       console.error('Error uploading avatar:', error);
-      alert('Failed to upload avatar');
-      return null;
+      alert(`Failed to upload avatar: ${(error as Error).message}`);
     } finally {
       setProcessing(false);
     }
   }
 
-  async function handleBannerUpload(files: File[]) {
-    if (files.length === 0) return null;
+  async function handleBannerUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
     setProcessing(true);
     try {
@@ -102,26 +115,37 @@ export function SettingsPage() {
       const fileExt = file.name.split('.').pop();
       const fileName = `${user!.id}-banner-${Date.now()}.${fileExt}`;
 
+      console.log('Uploading banner:', fileName);
+
       const { error: uploadError } = await supabase.storage
         .from('media')
         .upload(fileName, file);
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error('Upload error:', uploadError);
+        throw uploadError;
+      }
 
       const { data: { publicUrl } } = supabase.storage
         .from('media')
         .getPublicUrl(fileName);
 
-      const updatedForm = { ...profileForm, banner_url: publicUrl };
-      setProfileForm(updatedForm);
-      await updateProfile(updatedForm);
+      console.log('Banner uploaded, URL:', publicUrl);
+
+      const result = await updateProfile({ banner_url: publicUrl });
+
+      if (result.error) {
+        console.error('Profile update error:', result.error);
+        throw result.error;
+      }
+
+      setProfileForm({ ...profileForm, banner_url: publicUrl });
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 3000);
-      return publicUrl;
+      console.log('Banner saved successfully');
     } catch (error) {
       console.error('Error uploading banner:', error);
-      alert('Failed to upload banner');
-      return null;
+      alert(`Failed to upload banner: ${(error as Error).message}`);
     } finally {
       setProcessing(false);
     }
@@ -245,70 +269,110 @@ export function SettingsPage() {
 
                   <div className="text-center py-4 bg-orange-500/10 rounded-xl border border-orange-500/30">
                     <p className="text-orange-400 font-bold text-sm">
-                      👆 Live Preview - See your profile as others will see it
+                      👆 Live Preview - Click on the banner or avatar to upload images
                     </p>
                   </div>
+
+                  {/* Hidden file inputs */}
+                  <input
+                    type="file"
+                    id="banner-upload"
+                    accept="image/*"
+                    onChange={handleBannerUpload}
+                    className="hidden"
+                  />
+                  <input
+                    type="file"
+                    id="avatar-upload"
+                    accept="image/*"
+                    onChange={handleAvatarUpload}
+                    className="hidden"
+                  />
+
+                  {/* Clickable Banner Upload Section */}
+                  <div className="p-6 bg-black rounded-xl border border-gray-700">
+                    <label className="block text-sm font-bold text-gray-200 mb-4 uppercase tracking-wider">
+                      Profile Banner
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => document.getElementById('banner-upload')?.click()}
+                      className="w-full relative group cursor-pointer"
+                      disabled={processing}
+                    >
+                      {profileForm.banner_url ? (
+                        <div className="relative">
+                          <img
+                            src={profileForm.banner_url}
+                            alt="Banner"
+                            className="w-full h-48 rounded-xl object-cover border-2 border-gray-700 shadow-lg"
+                          />
+                          <div className="absolute inset-0 bg-black/60 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <div className="text-center">
+                              <Upload size={48} className="mx-auto text-white mb-2" />
+                              <p className="text-white font-bold">Click to change banner</p>
+                              <p className="text-gray-300 text-sm">1500x500px recommended</p>
+                            </div>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="h-48 rounded-xl bg-gradient-to-r from-gray-800 to-gray-900 border-2 border-dashed border-gray-700 flex items-center justify-center hover:border-orange-500 transition-colors">
+                          <div className="text-center">
+                            <Upload size={64} className="mx-auto text-gray-600 mb-3 group-hover:text-orange-500 transition-colors" />
+                            <p className="text-gray-500 font-bold group-hover:text-white transition-colors">Click to upload banner</p>
+                            <p className="text-gray-600 text-sm mt-1">1500x500px recommended</p>
+                          </div>
+                        </div>
+                      )}
+                    </button>
+                    {processing && (
+                      <div className="mt-3 p-3 bg-orange-500/20 border border-orange-500/50 rounded-lg flex items-center gap-2">
+                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-orange-500 border-t-transparent"></div>
+                        <p className="text-orange-400 text-sm font-medium">Uploading banner...</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Clickable Avatar Upload Section */}
                   <div className="p-6 bg-black rounded-xl border border-gray-700">
                     <label className="block text-sm font-bold text-gray-200 mb-4 uppercase tracking-wider">
                       Profile Picture
                     </label>
                     <div className="flex items-center gap-6">
-                      {profileForm.avatar_url ? (
-                        <img
-                          src={profileForm.avatar_url}
-                          alt="Avatar"
-                          className="w-32 h-32 rounded-full object-cover border-4 border-orange-500 shadow-[0_0_30px_rgba(255,135,0,0.3)]"
-                        />
-                      ) : (
-                        <div className="w-32 h-32 rounded-full bg-gradient-to-r from-orange-500 to-amber-600 flex items-center justify-center text-white text-4xl font-black shadow-lg">
-                          {profileForm.username?.[0]?.toUpperCase() || '?'}
-                        </div>
-                      )}
+                      <button
+                        type="button"
+                        onClick={() => document.getElementById('avatar-upload')?.click()}
+                        className="relative group cursor-pointer"
+                        disabled={processing}
+                      >
+                        {profileForm.avatar_url ? (
+                          <div className="relative">
+                            <img
+                              src={profileForm.avatar_url}
+                              alt="Avatar"
+                              className="w-32 h-32 rounded-full object-cover border-4 border-orange-500 shadow-[0_0_30px_rgba(255,135,0,0.3)]"
+                            />
+                            <div className="absolute inset-0 bg-black/60 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                              <Camera size={32} className="text-white" />
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="w-32 h-32 rounded-full bg-gradient-to-r from-orange-500 to-amber-600 flex items-center justify-center text-white text-4xl font-black shadow-lg hover:shadow-2xl transition-shadow">
+                            {profileForm.username?.[0]?.toUpperCase() || <Camera size={48} />}
+                          </div>
+                        )}
+                      </button>
                       <div className="flex-1">
-                        <MediaUpload onUpload={handleAvatarUpload} maxFiles={1} />
-                        <p className="text-xs text-gray-500 mt-2">JPG, PNG or GIF. Max 5MB.</p>
+                        <p className="text-white font-bold mb-2">Click on the image to upload</p>
+                        <p className="text-xs text-gray-500">JPG, PNG or GIF. Max 5MB.</p>
+                        {processing && (
+                          <div className="mt-3 p-2 bg-orange-500/20 border border-orange-500/50 rounded-lg flex items-center gap-2">
+                            <div className="animate-spin rounded-full h-3 w-3 border-2 border-orange-500 border-t-transparent"></div>
+                            <p className="text-orange-400 text-xs font-medium">Uploading...</p>
+                          </div>
+                        )}
                       </div>
                     </div>
-                  </div>
-
-                  <div className="p-6 bg-black rounded-xl border border-gray-700">
-                    <label className="block text-sm font-bold text-gray-200 mb-4 uppercase tracking-wider">
-                      Profile Banner
-                    </label>
-                    {profileForm.banner_url ? (
-                      <div className="mb-4 relative group">
-                        <img
-                          src={profileForm.banner_url}
-                          alt="Banner"
-                          className="w-full h-48 rounded-xl object-cover border-2 border-gray-700 shadow-lg"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-6">
-                          <Button
-                            type="button"
-                            onClick={() => setProfileForm({ ...profileForm, banner_url: '' })}
-                            variant="outline"
-                            className="border-red-500 text-red-400 hover:bg-red-500/10"
-                          >
-                            Remove Banner
-                          </Button>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="mb-4 h-48 rounded-xl bg-gradient-to-r from-gray-800 to-gray-900 border-2 border-dashed border-gray-700 flex items-center justify-center">
-                        <div className="text-center">
-                          <Camera size={48} className="mx-auto text-gray-600 mb-3" />
-                          <p className="text-gray-500 font-medium">No banner uploaded</p>
-                        </div>
-                      </div>
-                    )}
-                    <MediaUpload onUpload={handleBannerUpload} maxFiles={1} />
-                    <p className="text-xs text-gray-500 mt-2">Recommended: 1500x500px. JPG or PNG. Max 10MB.</p>
-                    {processing && (
-                      <div className="mt-3 p-3 bg-orange-500/20 border border-orange-500/50 rounded-lg flex items-center gap-2">
-                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-orange-500 border-t-transparent"></div>
-                        <p className="text-orange-400 text-sm font-medium">Uploading...</p>
-                      </div>
-                    )}
                   </div>
 
                   <div className="grid grid-cols-1 gap-6">
