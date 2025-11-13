@@ -8,12 +8,12 @@ export function Footer() {
   const { t } = useLanguage();
   const [showDonation, setShowDonation] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [qrExpanded, setQrExpanded] = useState(false);
 
-  // Mock BOLT12 address - replace with real one later
-  const mockBolt12 = "lno1pg257enxv4ezqcneype82um50ynhxgrwdajx293pqe5zv4ezqmnw33j";
+  const bitcoinAddress = "bc1qhm5ndfjhqxdk3cx0pngyps4f5nnwdckulmge6c8keyf2pk0neqtshjn8ad";
 
   const handleCopyAddress = () => {
-    navigator.clipboard.writeText(mockBolt12);
+    navigator.clipboard.writeText(bitcoinAddress);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -149,6 +149,14 @@ export function Footer() {
         </div>
       </footer>
 
+      {/* QR Expanded Backdrop */}
+      {qrExpanded && (
+        <div
+          className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm"
+          onClick={() => setQrExpanded(false)}
+        />
+      )}
+
       {/* Sliding Donation Panel */}
       <div
         className={`fixed bottom-0 left-0 right-0 z-50 transition-transform duration-500 ease-out ${
@@ -179,11 +187,14 @@ export function Footer() {
             <div className="flex items-start gap-4">
               {/* QR Code */}
               <div className="flex-shrink-0">
-                <div className="w-36 h-36 bg-white p-2 rounded-lg">
+                <div
+                  onClick={() => setQrExpanded(!qrExpanded)}
+                  className={`cursor-pointer transition-all duration-300 ease-in-out ${qrExpanded ? 'fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[70]' : 'relative'}`}
+                >
                   <img
-                    src="/donations-qr.png"
+                    src="/donations-qr copy.png"
                     alt="Donation QR Code"
-                    className="w-full h-full object-contain"
+                    className={`object-contain transition-all duration-300 ${qrExpanded ? 'w-80 h-80' : 'w-36 h-36'}`}
                     style={{ imageRendering: 'crisp-edges' }}
                   />
                 </div>
@@ -191,10 +202,10 @@ export function Footer() {
 
               {/* Content */}
               <div className="flex-1 min-w-0">
-                {/* BOLT12 Address */}
+                {/* Bitcoin Main Chain Address */}
                 <div className="bg-night-blue-400/80 border border-night-blue-500 rounded-lg p-3 mb-3">
                   <div className="flex items-center justify-between gap-2 mb-1">
-                    <span className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">BOLT12</span>
+                    <span className="text-xs text-white uppercase tracking-wider font-semibold">Bitcoin Main Chain</span>
                     <button
                       onClick={handleCopyAddress}
                       className="flex items-center gap-1 text-[10px] text-orange-500 hover:text-orange-400 transition-colors"
@@ -212,8 +223,8 @@ export function Footer() {
                       )}
                     </button>
                   </div>
-                  <code className="text-[10px] text-gray-300 break-all font-mono block leading-tight">
-                    {mockBolt12}
+                  <code className="text-xs text-gray-300 break-all font-mono block leading-tight">
+                    bc1qhm5ndfjhqxdk3cx0pngyps4f5nnwdckulmge6c8keyf2pk0neqtshjn8ad
                   </code>
                 </div>
 
