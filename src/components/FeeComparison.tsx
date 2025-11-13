@@ -97,40 +97,42 @@ export function FeeComparison() {
             What's your monthly earnings goal?
           </label>
 
-          <div className="grid md:grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-sm text-slate-400 mb-2">Currency</label>
-              <select
-                value={currency.code}
-                onChange={(e) => setCurrency(currencies.find(c => c.code === e.target.value) || currencies[0])}
-                className="w-full px-4 py-4 bg-slate-900 border-2 border-slate-700 rounded-xl text-white text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent appearance-none cursor-pointer"
-              >
-                {currencies.map((curr) => (
-                  <option key={curr.code} value={curr.code}>
-                    {curr.symbol} {curr.code} - {curr.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+          <div className="relative max-w-2xl mx-auto">
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 rounded-xl opacity-75 blur-sm animate-pulse"></div>
+            <div className="relative bg-slate-900 rounded-xl overflow-hidden border-2 border-orange-500/30 shadow-lg shadow-orange-500/20">
+              <div className="flex items-stretch divide-x divide-slate-700">
+                <div className="flex-shrink-0 bg-slate-800/50">
+                  <select
+                    value={currency.code}
+                    onChange={(e) => setCurrency(currencies.find(c => c.code === e.target.value) || currencies[0])}
+                    className="h-full px-4 py-3 bg-transparent text-white text-sm font-semibold focus:outline-none cursor-pointer appearance-none hover:bg-slate-800/80 transition-colors"
+                    style={{ minWidth: '140px' }}
+                  >
+                    {currencies.map((curr) => (
+                      <option key={curr.code} value={curr.code} className="bg-slate-900">
+                        {curr.symbol} {curr.code}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-            <div>
-              <label className="block text-sm text-slate-400 mb-2">Monthly Earnings</label>
-              <div className="relative">
-                <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 text-xl font-bold">
-                  {currency.symbol}
-                </span>
-                <input
-                  type="text"
-                  value={displayValue}
-                  onChange={(e) => handleInputChange(e.target.value)}
-                  className="w-full pl-14 pr-4 py-4 bg-slate-900 border-2 border-slate-700 rounded-xl text-white text-2xl font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                  placeholder="10,000"
-                />
+                <div className="flex-1 flex items-center px-4">
+                  <span className="text-slate-400 text-xl font-bold mr-2">
+                    {currency.symbol}
+                  </span>
+                  <input
+                    type="text"
+                    value={displayValue}
+                    onChange={(e) => handleInputChange(e.target.value)}
+                    className="flex-1 bg-transparent text-white text-2xl font-bold focus:outline-none placeholder-slate-600"
+                    placeholder="10,000"
+                  />
+                </div>
               </div>
             </div>
           </div>
 
-          <p className="text-sm text-slate-500">Enter your target monthly earnings. Amounts are converted to USD for comparison.</p>
+          <p className="text-xs text-slate-500 text-center mt-3">Amounts converted to USD for comparison</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
