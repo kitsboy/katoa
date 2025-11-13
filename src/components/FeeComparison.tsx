@@ -86,15 +86,15 @@ export function FeeComparison() {
         <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
           The True Cost of Platform Fees
         </h2>
-        <p className="text-xl text-night-blue-300 max-w-3xl mx-auto">
+        <p className="text-2xl text-white/90 max-w-3xl mx-auto font-medium">
           See how much you're losing to competitors' fees. KATOA keeps it simple: 0% forever.
         </p>
       </div>
 
       <Card className="p-8 bg-gradient-to-br from-night-blue-500 to-night-blue-500 border-night-blue-500">
         <div className="mb-8">
-          <label className="block text-lg font-semibold text-white mb-4">
-            What's your monthly earnings goal?
+          <label className="block text-3xl font-bold text-white mb-4 text-center">
+            What's your monthly earnings goal, enter numbers below!
           </label>
 
           <div className="relative max-w-2xl mx-auto">
