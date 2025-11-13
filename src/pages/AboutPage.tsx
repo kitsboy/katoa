@@ -5,7 +5,7 @@ import { Button } from '../components/Button';
 
 export function AboutPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-night-blue-shadow-700 via-night-blue-500 to-black text-white">
+    <div className="min-h-screen bg-gradient-to-b from-night-blue-shadow-700 via-night-blue-500 to-black text-white pt-16">
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 px-6 overflow-hidden">

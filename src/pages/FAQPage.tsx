@@ -122,7 +122,7 @@ export function FAQPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-night-blue-shadow-700 via-night-blue-500 to-night-blue-shadow-700">
+    <div className="min-h-screen bg-gradient-to-b from-night-blue-shadow-700 via-night-blue-500 to-night-blue-shadow-700 pt-16">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}

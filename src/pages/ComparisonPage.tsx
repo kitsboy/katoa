@@ -94,7 +94,7 @@ export function ComparisonPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-night-blue-500 via-night-blue-500 to-black">
+    <div className="min-h-screen bg-gradient-to-b from-night-blue-500 via-night-blue-500 to-black pt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
         <div className="text-center mb-16 animate-slide-up">
           <div className="inline-flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-emerald-500/30 rounded-full mb-6">

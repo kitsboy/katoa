@@ -29,7 +29,7 @@ export function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-sand-tan-50 via-white to-sand-tan-100">
+    <div className="min-h-screen bg-gradient-to-b from-sand-tan-50 via-white to-sand-tan-100 pt-16">
 
       <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden px-4 sm:px-6">
         <div className="absolute inset-0 overflow-hidden opacity-40">

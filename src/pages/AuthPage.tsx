@@ -101,7 +101,7 @@ export function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-night-blue-500 via-night-blue-400 to-night-blue-500 flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-gradient-to-b from-night-blue-500 via-night-blue-400 to-night-blue-500 flex items-center justify-center px-4 py-12 pt-24">
       {/* Background effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-400/8 rounded-full blur-3xl"></div>

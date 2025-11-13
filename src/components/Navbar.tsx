@@ -103,7 +103,7 @@ export function Navbar() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-b border-sand-tan-200 shadow-lg">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-sand-tan-200 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="flex items-center gap-3 text-night-blue-shadow hover:text-sand-tan-600 transition-colors group">
@@ -207,35 +207,52 @@ export function Navbar() {
 
         {showMenu && (
           <>
-            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden animate-fade-in" onClick={() => setShowMenu(false)} />
+            <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 md:hidden" onClick={() => setShowMenu(false)} />
             <div
               ref={menuRef}
-              className="fixed top-16 right-0 bottom-0 w-80 bg-gradient-to-b from-night-blue-shadow-700 via-night-blue-shadow-800 to-black border-l border-sand-tan-500/30 shadow-2xl z-50 md:hidden transform transition-transform duration-300 ease-out animate-slide-in-right overflow-y-auto"
+              className="fixed top-0 right-0 bottom-0 w-full max-w-sm bg-gradient-to-b from-gray-900 via-black to-black border-l border-gray-700 shadow-2xl z-50 md:hidden overflow-y-auto"
             >
               <div className="p-6 space-y-6">
-                <div className="space-y-1">
+                <div className="flex items-center justify-between pb-4 border-b border-gray-700">
+                  <div className="flex items-center gap-3">
+                    <img src="/sats.png" alt="KATOA" className="w-10 h-10 rounded-full" />
+                    <span className="text-xl font-black text-white">KATOA Menu</span>
+                  </div>
+                  <button
+                    onClick={() => setShowMenu(false)}
+                    className="p-2 rounded-xl bg-gray-800 hover:bg-gray-700 text-white transition-colors"
+                    title="Close menu"
+                  >
+                    <X size={24} />
+                  </button>
+                </div>
+                <div className="space-y-2">
                   <Link
                     href="/explore"
-                    className="flex items-center gap-3 px-4 py-3 text-white hover:bg-gradient-to-r hover:from-sand-tan-500/20 hover:to-orange-500/20 rounded-xl transition-all duration-200 group"
+                    className="flex items-center gap-3 px-5 py-4 text-white bg-gray-800/50 hover:bg-orange-500/20 rounded-xl transition-all duration-200 group border border-gray-700 hover:border-orange-500/50"
                     onClick={() => setShowMenu(false)}
                   >
-                    <Globe size={20} className="text-sand-tan-400 group-hover:text-orange-400 transition-colors" />
-                    <span className="font-semibold group-hover:translate-x-1 transition-transform">{t('nav.explore')}</span>
+                    <div className="p-2 bg-orange-500/20 rounded-lg group-hover:bg-orange-500/30 transition-colors">
+                      <Globe size={20} className="text-orange-400" />
+                    </div>
+                    <span className="font-bold text-lg">{t('nav.explore')}</span>
                   </Link>
 
                   <Link
                     href="/compare"
-                    className="flex items-center gap-3 px-4 py-3 text-white hover:bg-gradient-to-r hover:from-sand-tan-500/20 hover:to-orange-500/20 rounded-xl transition-all duration-200 group"
+                    className="flex items-center gap-3 px-5 py-4 text-white bg-gray-800/50 hover:bg-orange-500/20 rounded-xl transition-all duration-200 group border border-gray-700 hover:border-orange-500/50"
                     onClick={() => setShowMenu(false)}
                   >
-                    <Zap size={20} className="text-sand-tan-400 group-hover:text-orange-400 transition-colors" />
-                    <span className="font-semibold group-hover:translate-x-1 transition-transform">Why KATOA?</span>
+                    <div className="p-2 bg-orange-500/20 rounded-lg group-hover:bg-orange-500/30 transition-colors">
+                      <Zap size={20} className="text-orange-400" />
+                    </div>
+                    <span className="font-bold text-lg">Why KATOA?</span>
                   </Link>
                 </div>
 
-                <div className="border-t border-sand-tan-500/20 pt-4">
-                  <p className="text-xs text-sand-tan-400 font-bold mb-3 px-4 uppercase tracking-wider">Language</p>
-                  <div className="grid grid-cols-4 gap-2 px-2">
+                <div className="border-t border-gray-700 pt-6">
+                  <p className="text-sm text-gray-400 font-bold mb-4 px-2 uppercase tracking-wider">Choose Language</p>
+                  <div className="grid grid-cols-4 gap-3">
                     {Object.entries(languageFlags).map(([lang, flag]) => (
                       <button
                         key={lang}
@@ -243,11 +260,12 @@ export function Navbar() {
                           setLanguage(lang as any);
                           setShowMenu(false);
                         }}
-                        className={`text-3xl p-3 rounded-xl transition-all duration-200 transform hover:scale-110 ${
+                        className={`text-3xl p-4 rounded-xl transition-all duration-200 border-2 ${
                           language === lang
-                            ? 'bg-gradient-to-br from-orange-500 to-yellow-500 shadow-lg shadow-orange-500/50'
-                            : 'bg-night-blue-500/30 hover:bg-night-blue-500/50'
+                            ? 'bg-gradient-to-br from-orange-500 to-amber-600 border-orange-400 shadow-lg shadow-orange-500/50 scale-105'
+                            : 'bg-gray-800/50 border-gray-700 hover:bg-gray-700 hover:border-gray-600'
                         }`}
+                        title={languageNames[lang as keyof typeof languageNames]}
                       >
                         {flag}
                       </button>
@@ -257,74 +275,76 @@ export function Navbar() {
 
                 {user ? (
                   <>
-                    <div className="border-t border-sand-tan-500/20 pt-4 space-y-1">
+                    <div className="border-t border-gray-700 pt-6 space-y-2">
                       <Link
                         href="/dashboard"
-                        className="flex items-center gap-3 px-4 py-3 text-white hover:bg-gradient-to-r hover:from-sand-tan-500/20 hover:to-orange-500/20 rounded-xl transition-all duration-200 group"
+                        className="flex items-center gap-3 px-5 py-4 text-white bg-gray-800/50 hover:bg-purple-500/20 rounded-xl transition-all duration-200 group border border-gray-700 hover:border-purple-500/50"
                         onClick={() => setShowMenu(false)}
                       >
-                        <LayoutDashboard size={20} className="text-sand-tan-400 group-hover:text-orange-400 transition-colors" />
-                        <span className="font-semibold group-hover:translate-x-1 transition-transform">Dashboard</span>
+                        <div className="p-2 bg-purple-500/20 rounded-lg group-hover:bg-purple-500/30 transition-colors">
+                          <LayoutDashboard size={20} className="text-purple-400" />
+                        </div>
+                        <span className="font-bold text-lg">Dashboard</span>
                       </Link>
                       <Link
                         href="/settings"
-                        className="flex items-center gap-3 px-4 py-3 text-white hover:bg-gradient-to-r hover:from-sand-tan-500/20 hover:to-orange-500/20 rounded-xl transition-all duration-200 group"
+                        className="flex items-center gap-3 px-5 py-4 text-white bg-gray-800/50 hover:bg-blue-500/20 rounded-xl transition-all duration-200 group border border-gray-700 hover:border-blue-500/50"
                         onClick={() => setShowMenu(false)}
                       >
-                        <Settings size={20} className="text-sand-tan-400 group-hover:text-orange-400 transition-colors" />
-                        <span className="font-semibold group-hover:translate-x-1 transition-transform">Settings & Profile</span>
+                        <div className="p-2 bg-blue-500/20 rounded-lg group-hover:bg-blue-500/30 transition-colors">
+                          <Settings size={20} className="text-blue-400" />
+                        </div>
+                        <span className="font-bold text-lg">Settings</span>
                       </Link>
                     </div>
 
-                    <div className="border-t border-sand-tan-500/20 pt-4">
-                      <div className="bg-gradient-to-br from-night-blue-500/40 to-night-blue-shadow-700/40 rounded-2xl p-4 mb-4 border border-sand-tan-500/20">
-                        <div className="flex items-center gap-3 mb-3">
-                          {profile?.avatar_url ? (
-                            <img
-                              src={profile.avatar_url}
-                              alt={profile.username}
-                              className="w-12 h-12 rounded-full object-cover border-2 border-orange-500/50 shadow-lg"
-                            />
-                          ) : (
-                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-orange-500 to-yellow-500 border-2 border-orange-500/50 flex items-center justify-center shadow-lg">
-                              <User size={24} className="text-white" />
+                    <div className="border-t border-gray-700 pt-6">
+                      <Link href="/settings" onClick={() => setShowMenu(false)}>
+                        <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-5 mb-4 border-2 border-gray-700 hover:border-orange-500/50 transition-colors">
+                          <div className="flex items-center gap-4">
+                            {profile?.avatar_url ? (
+                              <img
+                                src={profile.avatar_url}
+                                alt={profile.username}
+                                className="w-14 h-14 rounded-full object-cover border-2 border-orange-500/50 shadow-lg"
+                              />
+                            ) : (
+                              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-orange-500 to-amber-600 border-2 border-orange-500/50 flex items-center justify-center shadow-lg">
+                                <User size={28} className="text-white" />
+                              </div>
+                            )}
+                            <div className="flex-1">
+                              <p className="text-white font-black text-lg">{profile?.username}</p>
+                              <p className="text-gray-400 text-sm">Tap to view profile</p>
                             </div>
-                          )}
-                          <div className="flex-1">
-                            <p className="text-sm text-white font-bold">{profile?.username}</p>
-                            <p className="text-xs text-sand-tan-400">View Profile</p>
                           </div>
                         </div>
-                      </div>
+                      </Link>
                       <Button
-                        variant="outline"
-                        size="sm"
                         onClick={() => {
                           signOut();
                           setShowMenu(false);
                         }}
-                        className="w-full bg-red-500/10 border-red-500/30 text-red-400 hover:bg-red-500/20 hover:border-red-500/50"
+                        className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 font-bold text-lg py-4 border-2 border-red-400/30 hover:border-red-400/50"
                       >
-                        <LogOut size={18} className="mr-2" />
+                        <LogOut size={20} className="mr-2" />
                         Sign Out
                       </Button>
                     </div>
                   </>
                 ) : (
-                  <div className="border-t border-sand-tan-500/20 pt-4 space-y-3">
+                  <div className="border-t border-gray-700 pt-6 space-y-3">
                     <Link href="/auth" onClick={() => setShowMenu(false)}>
                       <Button
                         variant="outline"
-                        size="lg"
-                        className="w-full bg-white/5 border-sand-tan-400/50 text-white hover:bg-white/10 hover:border-sand-tan-400 font-bold"
+                        className="w-full border-2 border-gray-700 bg-gray-800/50 text-white hover:bg-gray-700 hover:border-gray-600 font-bold text-lg py-4"
                       >
                         Sign In
                       </Button>
                     </Link>
                     <Link href="/auth" onClick={() => setShowMenu(false)}>
                       <Button
-                        size="lg"
-                        className="w-full bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white font-bold shadow-lg shadow-orange-500/50"
+                        className="w-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-black text-lg py-5 shadow-lg shadow-orange-500/50"
                       >
                         Get Started Free
                       </Button>
@@ -332,9 +352,10 @@ export function Navbar() {
                   </div>
                 )}
 
-                <div className="border-t border-sand-tan-500/20 pt-4">
-                  <p className="text-xs text-center text-sand-tan-400/70">
-                    KATOA - Zero Fees, Maximum Freedom
+                <div className="border-t border-gray-700 pt-6">
+                  <p className="text-xs text-center text-gray-500 leading-relaxed">
+                    KATOA - Zero Fees, Maximum Freedom<br/>
+                    <span className="text-gray-600 text-[10px]">Tap outside or press X to close</span>
                   </p>
                 </div>
               </div>
