@@ -14,6 +14,78 @@ export interface MockWishlistItem {
 }
 
 export const mockWishlistItems: Record<string, MockWishlistItem[]> = {
+  'mock-featured': [
+    {
+      id: 'item-featured-1',
+      title: 'Professional Concrete Ramps',
+      description: 'High-quality concrete ramps, bowls, and street obstacles built to professional skateboarding standards',
+      price_sats: 2000000,
+      sats_raised: 1500000,
+      product_url: 'https://www.example.com/concrete-ramps',
+      merchant: 'Skatepark Construction Co',
+      image_url: 'https://images.pexels.com/photos/19920069/pexels-photo-19920069.jpeg?auto=compress&cs=tinysrgb&w=400',
+      currency: 'USD',
+      original_price: 2000,
+      is_funded: false,
+      sort_order: 1,
+    },
+    {
+      id: 'item-featured-2',
+      title: 'Safety Equipment Bundle (100 sets)',
+      description: 'Helmets, knee pads, elbow pads, and wrist guards for program participants',
+      price_sats: 1200000,
+      sats_raised: 900000,
+      product_url: 'https://www.amazon.com/Skateboarding-Safety-Equipment/dp/B08SAFE123',
+      merchant: 'Amazon',
+      image_url: 'https://images.pexels.com/photos/18916334/pexels-photo-18916334.jpeg?auto=compress&cs=tinysrgb&w=400',
+      currency: 'USD',
+      original_price: 1200,
+      is_funded: false,
+      sort_order: 2,
+    },
+    {
+      id: 'item-featured-3',
+      title: 'Complete Skateboards (50 units)',
+      description: 'Quality beginner-friendly complete skateboards for program participants',
+      price_sats: 800000,
+      sats_raised: 600000,
+      product_url: 'https://www.amazon.com/Complete-Skateboard-Beginners/dp/B08SKATE45',
+      merchant: 'Amazon',
+      image_url: 'https://images.pexels.com/photos/19920066/pexels-photo-19920066.jpeg?auto=compress&cs=tinysrgb&w=400',
+      currency: 'USD',
+      original_price: 800,
+      is_funded: false,
+      sort_order: 3,
+    },
+    {
+      id: 'item-featured-4',
+      title: 'LED Lighting System',
+      description: 'Professional LED lighting system for safe evening skating sessions',
+      price_sats: 600000,
+      sats_raised: 250000,
+      product_url: 'https://www.amazon.com/Outdoor-LED-Lights/dp/B08LED7890',
+      merchant: 'Amazon',
+      image_url: 'https://images.pexels.com/photos/2681319/pexels-photo-2681319.jpeg?auto=compress&cs=tinysrgb&w=400',
+      currency: 'USD',
+      original_price: 600,
+      is_funded: false,
+      sort_order: 4,
+    },
+    {
+      id: 'item-featured-5',
+      title: 'First Aid Station Equipment',
+      description: 'Complete first aid station with medical supplies, ice packs, and emergency equipment',
+      price_sats: 400000,
+      sats_raised: 0,
+      product_url: 'https://www.amazon.com/First-Aid-Kit-Complete/dp/B08MED1234',
+      merchant: 'Amazon',
+      image_url: 'https://images.pexels.com/photos/4386467/pexels-photo-4386467.jpeg?auto=compress&cs=tinysrgb&w=400',
+      currency: 'USD',
+      original_price: 400,
+      is_funded: false,
+      sort_order: 5,
+    },
+  ],
   'mock-001': [
     {
       id: 'item-001-1',
@@ -455,6 +527,53 @@ We've already organized volunteer teams for construction and maintenance. All we
     creator: {
       username: 'berlin_green',
       avatar_url: null,
+    },
+  },
+  {
+    id: 'mock-featured',
+    title: 'Skateboard Park for Medellín Youth',
+    description: 'Transform lives through skateboarding. Building a safe community space where 500+ youth can skate, learn, and grow together with free lessons and mentorship.',
+    created_at: '2025-11-01T08:00:00Z',
+    full_story: `¡Hola! I'm Carlos Ramirez, founder of Skate Colombia Foundation. For the past eight years, I've dedicated my life to using skateboarding as a tool for social change in Medellín, Colombia.
+
+Growing up in Comuna 13, one of Medellín's most challenging neighborhoods, I witnessed firsthand how limited opportunities and lack of safe spaces affect young people. Skateboarding saved my life—it gave me purpose, discipline, and a positive community when I needed it most.
+
+Now, I want to create that same opportunity for the next generation. We're building a full-scale skatepark in the heart of Comuna 13 that will serve over 500 youth. This isn't just about building ramps—it's about building futures.
+
+Our program includes:
+• Free skateboarding lessons for beginners (ages 8-18)
+• Weekly workshops on life skills, conflict resolution, and goal setting
+• Mentorship program pairing experienced skaters with newcomers
+• Scholarship opportunities for talented skaters to compete nationally
+• Safe space open 6 days a week, supervised by trained staff
+
+We've already secured the land (donated by the city) and gathered a team of 15 volunteer instructors. We've also partnered with local schools to identify youth who would benefit most from the program.
+
+The funds we're raising will cover:
+• Construction of professional-grade concrete ramps and bowls
+• Safety equipment (helmets, pads) for 100+ participants
+• Basic skateboards for program participants
+• Lighting for evening sessions
+• First aid station and emergency equipment
+
+Skateboarding taught me that falling is part of learning, but getting back up is what defines you. Every donation helps us create a space where kids learn this invaluable lesson while staying away from negative influences.
+
+We're 65% funded and construction is ready to begin! Your support will directly impact hundreds of young lives. ¡Gracias por su apoyo!`,
+    slug: 'medellin-skate-park',
+    cover_image: 'https://images.pexels.com/photos/5793678/pexels-photo-5793678.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750',
+    total_sats_goal: 5000000,
+    total_sats_raised: 3250000,
+    country: 'Colombia',
+    country_code: 'CO',
+    country_flag: '🇨🇴',
+    city: 'Medellín',
+    latitude: 6.2476,
+    longitude: -75.5658,
+    creator: {
+      username: 'skate_colombia',
+      avatar_url: null,
+      lightning_address: 'carlos@getalby.com',
+      bio: 'Founder of Skate Colombia Foundation. Using skateboarding to empower youth in Medellín. Former pro skater, now full-time social entrepreneur.',
     },
   },
 ];

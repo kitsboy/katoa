@@ -197,20 +197,26 @@ export function Navbar() {
             </div>
 
             <button
-              className="md:hidden text-night-blue-500"
+              className="md:hidden text-night-blue-500 p-2 hover:bg-sand-tan-100 rounded-lg transition-colors"
               onClick={() => setShowMenu(!showMenu)}
+              aria-label="Toggle menu"
             >
-              {showMenu ? <X size={24} /> : <Menu size={24} />}
+              {showMenu ? <X size={28} /> : <Menu size={28} />}
             </button>
           </div>
         </div>
 
         {showMenu && (
           <>
-            <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100] md:hidden" onClick={() => setShowMenu(false)} />
+            <div
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm md:hidden"
+              style={{ zIndex: 9998 }}
+              onClick={() => setShowMenu(false)}
+            />
             <div
               ref={menuRef}
-              className="fixed top-0 right-0 bottom-0 w-full max-w-sm bg-gradient-to-b from-gray-900 via-black to-black border-l border-gray-700 shadow-2xl z-[110] md:hidden overflow-y-auto"
+              className="fixed top-0 right-0 bottom-0 w-full max-w-sm bg-gradient-to-b from-gray-900 via-black to-black border-l border-gray-700 shadow-2xl md:hidden overflow-y-auto"
+              style={{ zIndex: 9999 }}
             >
               <div className="p-6 space-y-6">
                 <div className="flex items-center justify-between pb-4 border-b border-gray-700">
