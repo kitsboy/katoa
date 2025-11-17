@@ -465,6 +465,18 @@ export function ExplorePage() {
                           </div>
                         </div>
                       )}
+
+                      <div className="absolute bottom-3 right-3 flex flex-wrap gap-1.5 justify-end max-w-[60%]">
+                        <div className="px-2 py-1 bg-orange-500 rounded-md text-white text-[10px] font-black shadow-lg border border-orange-400/50 backdrop-blur-sm">
+                          ⚡ LIGHTNING
+                        </div>
+                        <div className="px-2 py-1 bg-amber-600 rounded-md text-white text-[10px] font-black shadow-lg border border-amber-500/50 backdrop-blur-sm">
+                          ₿ BITCOIN
+                        </div>
+                        <div className="px-2 py-1 bg-purple-600 rounded-md text-white text-[10px] font-black shadow-lg border border-purple-500/50 backdrop-blur-sm">
+                          🔐 PYNYM
+                        </div>
+                      </div>
                     </div>
 
                     <div className="p-6 space-y-4">

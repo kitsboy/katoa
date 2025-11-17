@@ -43,7 +43,7 @@ export function ShareButton({ url, title, description, className = '' }: ShareBu
         variant="outline"
         size="sm"
         onClick={() => setShowMenu(!showMenu)}
-        className="gap-2"
+        className="gap-2 border-2 border-gray-600 hover:border-orange-500 text-white font-bold bg-gray-800/80 hover:bg-gray-700 backdrop-blur-sm"
       >
         <Share2 size={16} />
         Share

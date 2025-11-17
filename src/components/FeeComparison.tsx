@@ -83,11 +83,11 @@ export function FeeComparison() {
 
   return (
     <div className="space-y-8">
-      <div className="text-center mb-8">
-        <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+      <div className="text-center mb-8 bg-gradient-to-b from-night-blue-shadow-700/90 to-night-blue-500/90 py-8 px-4 rounded-2xl shadow-2xl">
+        <h2 className="text-4xl md:text-5xl font-black text-white mb-4 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
           The True Cost of Platform Fees
         </h2>
-        <p className="text-2xl text-white/90 max-w-3xl mx-auto font-medium">
+        <p className="text-xl md:text-2xl text-white font-bold max-w-3xl mx-auto drop-shadow-[0_2px_6px_rgba(0,0,0,0.8)]">
           See how much you're losing to competitors' fees. KATOA keeps it simple: 0% forever.
         </p>
       </div>
