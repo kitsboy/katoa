@@ -4,11 +4,11 @@ import { supabase } from '../lib/supabase';
 import { Button } from './Button';
 import { Card } from './Card';
 import { QRScanner } from './QRScanner';
-import { Wallet, Plus, Trash2, QrCode, Edit2, Check, X, Zap, Bitcoin, Shield } from 'lucide-react';
+import { Wallet, Plus, Trash2, QrCode, Edit2, Check, X, Zap, Bitcoin, Shield, Globe } from 'lucide-react';
 
 interface WalletAddress {
   id: string;
-  address_type: 'lightning' | 'xpub' | 'pynym';
+  address_type: 'lightning' | 'xpub' | 'pynym' | 'nostr';
   address_value: string;
   label: string;
   is_active: boolean;
@@ -23,7 +23,7 @@ export function WalletAddressManager() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
-    address_type: 'lightning' as 'lightning' | 'xpub' | 'pynym',
+    address_type: 'lightning' as 'lightning' | 'xpub' | 'pynym' | 'nostr',
     address_value: '',
     label: '',
   });
@@ -128,6 +128,8 @@ export function WalletAddressManager() {
         return <Bitcoin size={20} className="text-orange-500" />;
       case 'pynym':
         return <Shield size={20} className="text-purple-400" />;
+      case 'nostr':
+        return <Globe size={20} className="text-cyan-400" />;
       default:
         return <Wallet size={20} />;
     }
@@ -141,6 +143,8 @@ export function WalletAddressManager() {
         return 'XPUB Address';
       case 'pynym':
         return 'PYNYM Payment Code';
+      case 'nostr':
+        return 'Nostr Public Key';
       default:
         return type;
     }
@@ -195,6 +199,7 @@ export function WalletAddressManager() {
                   <option value="lightning">Lightning Address</option>
                   <option value="xpub">XPUB Address</option>
                   <option value="pynym">PYNYM Payment Code</option>
+                  <option value="nostr">Nostr Public Key</option>
                 </select>
               </div>
 
@@ -214,6 +219,8 @@ export function WalletAddressManager() {
                         ? 'you@getalby.com'
                         : formData.address_type === 'xpub'
                         ? 'xpub...'
+                        : formData.address_type === 'nostr'
+                        ? 'npub1...'
                         : 'PM8T...'
                     }
                     className="flex-1 px-4 py-3 bg-night-blue-400 border border-night-blue-400 rounded-lg text-white placeholder-night-blue-300 focus:outline-none focus:ring-2 focus:ring-emerald-500"
