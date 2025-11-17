@@ -25,7 +25,7 @@ export function PrivacyPage() {
               <div>
                 <h3 className="text-xl font-semibold mb-2 text-white">Your Privacy Matters</h3>
                 <p className="text-gray-400 leading-relaxed">
-                  BitWish is committed to protecting your privacy and giving you control over your personal information.
+                  Katoa is committed to protecting your privacy and giving you control over your personal information.
                   This Privacy Policy explains how we collect, use, share, and protect your data.
                 </p>
               </div>
@@ -40,7 +40,7 @@ export function PrivacyPage() {
             <div className="space-y-6 text-gray-300 leading-relaxed">
               <div>
                 <h3 className="text-lg font-semibold text-white mb-3">1.1 Information You Provide</h3>
-                <p className="mb-3">When you use BitWish, you may provide us with:</p>
+                <p className="mb-3">When you use Katoa, you may provide us with:</p>
                 <ul className="list-disc list-inside space-y-2 ml-4">
                   <li><strong className="text-white">Account Information:</strong> Email address, username, password</li>
                   <li><strong className="text-white">Profile Information:</strong> Display name, bio, profile picture</li>
@@ -157,7 +157,7 @@ export function PrivacyPage() {
                 <div>
                   <h3 className="text-lg font-semibold text-white mb-2">3.4 Business Transfers</h3>
                   <p>
-                    If BitWish is involved in a merger, acquisition, or sale of assets, your information may be transferred
+                    If Katoa is involved in a merger, acquisition, or sale of assets, your information may be transferred
                     as part of that transaction. We will notify you of any such change.
                   </p>
                 </div>
@@ -244,7 +244,7 @@ export function PrivacyPage() {
               </div>
 
               <p className="mt-6">
-                To exercise these rights, email us at <a href="mailto:privacy@katoa.org" className="text-blue-400 hover:text-blue-300">privacy@katoa.org</a> with your request.
+                To exercise these rights, email us at <a href="mailto:hello@giveabit.io" className="text-blue-400 hover:text-blue-300">hello@giveabit.io</a> with your request.
               </p>
             </div>
           </section>
@@ -308,7 +308,7 @@ export function PrivacyPage() {
             <h2 className="text-2xl font-bold mb-4 text-white">8. Children's Privacy</h2>
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <p>
-                BitWish is not intended for users under 18 years of age. We do not knowingly collect personal
+                Katoa is not intended for users under 18 years of age. We do not knowingly collect personal
                 information from children under 18.
               </p>
               <p>
@@ -317,7 +317,7 @@ export function PrivacyPage() {
               </p>
               <p>
                 If you believe a child under 18 has provided us with personal information, please contact us
-                at <a href="mailto:privacy@katoa.org" className="text-blue-400 hover:text-blue-300">privacy@katoa.org</a>.
+                at <a href="mailto:hello@giveabit.io" className="text-blue-400 hover:text-blue-300">hello@giveabit.io</a>.
               </p>
             </div>
           </section>
@@ -326,7 +326,7 @@ export function PrivacyPage() {
             <h2 className="text-2xl font-bold mb-4 text-white">9. International Data Transfers</h2>
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <p>
-                BitWish operates globally. Your information may be transferred to, stored, and processed in countries
+                Katoa operates globally. Your information may be transferred to, stored, and processed in countries
                 other than your own, including the United States.
               </p>
               <p>
@@ -350,7 +350,7 @@ export function PrivacyPage() {
                 <li>Right to non-discrimination for exercising your privacy rights</li>
               </ul>
               <p className="mt-4">
-                To exercise these rights, contact us at <a href="mailto:privacy@katoa.org" className="text-blue-400 hover:text-blue-300">privacy@katoa.org</a>.
+                To exercise these rights, contact us at <a href="mailto:hello@giveabit.io" className="text-blue-400 hover:text-blue-300">hello@giveabit.io</a>.
               </p>
             </div>
           </section>
@@ -411,7 +411,7 @@ export function PrivacyPage() {
                 please contact us:
               </p>
               <div className="bg-night-blue-500/50 border border-gray-800 rounded-xl p-6 mt-4">
-                <p className="font-semibold text-white mb-3">BitWish Privacy Team</p>
+                <p className="font-semibold text-white mb-3">Katoa Privacy Team</p>
                 <p><strong className="text-white">Email:</strong> privacy@katoa.org</p>
                 <p><strong className="text-white">Website:</strong> https://katoa.org/contact</p>
                 <p className="mt-3 text-sm">Response time: We aim to respond within 48 hours</p>
@@ -423,7 +423,7 @@ export function PrivacyPage() {
             <p className="text-sm text-gray-400 leading-relaxed">
               <strong className="text-white">Legal Disclaimer:</strong> This is a template Privacy Policy document
               provided as a starting point. It should be reviewed and customized by qualified legal counsel to ensure
-              compliance with applicable laws in your jurisdiction. BitWish makes no representations or warranties
+              compliance with applicable laws in your jurisdiction. Katoa makes no representations or warranties
               regarding the legal adequacy or compliance of this document.
             </p>
           </div>

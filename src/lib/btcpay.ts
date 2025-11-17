@@ -45,7 +45,7 @@ export class BTCPayService {
       orderId,
       metadata: {
         ...metadata,
-        platform: 'BitWish',
+        platform: 'Katoa',
         version: '1.0',
       },
       checkout: {

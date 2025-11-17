@@ -154,46 +154,77 @@ export function ExplorePage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
 
         {/* Hero Featured Project */}
-        <Card className="mb-8 overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 border-orange-500/30 shadow-[0_0_30px_rgba(255,135,0,0.2)] animate-slide-up">
+        <Card className="mb-8 overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 border-2 border-orange-500/50 shadow-[0_0_40px_rgba(255,135,0,0.3)] hover:shadow-[0_0_60px_rgba(255,135,0,0.4)] transition-all duration-300 animate-slide-up">
           <div className="grid md:grid-cols-2 gap-0">
-            <div className="relative h-64 md:h-auto overflow-hidden">
+            <div className="relative h-80 md:h-auto overflow-hidden group">
               <img
-                src="https://images.pexels.com/photos/5793678/pexels-photo-5793678.jpeg?auto=compress&cs=tinysrgb&w=800"
+                src="https://images.pexels.com/photos/5793678/pexels-photo-5793678.jpeg?auto=compress&cs=tinysrgb&w=1200"
                 alt="Skateboard Park Colombia"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/90 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent" />
               <div className="absolute top-4 left-4">
                 <TrendingBadge type="featured" />
               </div>
+              {/* Impact badge */}
+              <div className="absolute bottom-4 left-4 bg-emerald-500 text-white px-4 py-2 rounded-full font-bold text-sm flex items-center gap-2 shadow-lg">
+                <Star size={16} className="fill-white" />
+                65% Funded
+              </div>
             </div>
-            <div className="p-8 flex flex-col justify-center">
-              <h2 className="text-3xl font-bold text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)] mb-3">
+            <div className="p-8 md:p-10 flex flex-col justify-center bg-gradient-to-br from-gray-900 to-black">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-amber-600 rounded-full flex items-center justify-center">
+                  <span className="text-white font-black text-lg">SK</span>
+                </div>
+                <div>
+                  <p className="text-white font-bold">Skate Colombia Foundation</p>
+                  <p className="text-gray-400 text-sm">Verified Creator</p>
+                </div>
+              </div>
+              <h2 className="text-3xl md:text-4xl font-black text-white mb-4 leading-tight">
                 Skateboard Park for Medellín Youth
               </h2>
-              <p className="text-gray-100 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] mb-4 leading-relaxed font-medium">
-                Help us build a safe community space where kids can skate, learn, and grow together.
-                This project will provide free skateboarding lessons and mentorship to 500+ youth in Medellín, Colombia.
+              <p className="text-gray-200 mb-6 leading-relaxed font-medium text-lg">
+                Transform lives through skateboarding. We're building a safe community space where 500+ youth can skate, learn, and grow together with free lessons and mentorship.
               </p>
+
+              {/* Stats Row */}
+              <div className="grid grid-cols-3 gap-4 mb-6 p-4 bg-black/30 rounded-xl border border-gray-700">
+                <div className="text-center">
+                  <p className="text-2xl font-black text-orange-500">500+</p>
+                  <p className="text-xs text-gray-400 font-medium">Youth Served</p>
+                </div>
+                <div className="text-center border-x border-gray-700">
+                  <p className="text-2xl font-black text-emerald-500">65%</p>
+                  <p className="text-xs text-gray-400 font-medium">Funded</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-2xl font-black text-cyan-500">234</p>
+                  <p className="text-xs text-gray-400 font-medium">Supporters</p>
+                </div>
+              </div>
+
               <ProgressBar
                 current={3250000}
                 goal={5000000}
-                showPercentage={true}
+                showPercentage={false}
                 showValues={true}
                 gradient="from-orange-500 to-amber-600"
                 height="md"
                 animated={true}
               />
-              <div className="flex items-center gap-4 mt-6">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-6">
                 <Button
-                  size="sm"
-                  className="bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700"
+                  size="lg"
+                  className="flex-1 bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 font-bold shadow-[0_0_20px_rgba(255,135,0,0.4)] hover:shadow-[0_0_30px_rgba(255,135,0,0.6)] transition-all"
                   onClick={() => window.location.hash = '/wishlist/medellin-skate-park'}
                 >
+                  <Gift size={20} className="mr-2" />
                   Support This Project
                 </Button>
-                <div className="flex items-center gap-2 text-gray-200 text-sm font-medium">
-                  <MapPin size={16} />
+                <div className="flex items-center justify-center gap-2 text-gray-200 text-sm font-bold px-4 py-3 bg-gray-800 rounded-lg border border-gray-700">
+                  <MapPin size={16} className="text-orange-500" />
                   <span>Medellín, Colombia 🇨🇴</span>
                 </div>
               </div>

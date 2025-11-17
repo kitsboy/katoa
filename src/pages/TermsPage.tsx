@@ -25,7 +25,7 @@ export function TermsPage() {
               <div>
                 <h3 className="text-xl font-semibold mb-2 text-white">Important Notice</h3>
                 <p className="text-gray-400 leading-relaxed">
-                  By accessing or using BitWish (katoa.org), you agree to be bound by these Terms of Service.
+                  By accessing or using Katoa (katoa.org), you agree to be bound by these Terms of Service.
                   If you do not agree to these terms, please do not use our platform.
                 </p>
               </div>
@@ -39,7 +39,7 @@ export function TermsPage() {
             </h2>
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <p>
-                These Terms of Service govern your access to and use of BitWish's services, including our website,
+                These Terms of Service govern your access to and use of Katoa's services, including our website,
                 mobile applications, and any related services (collectively, the "Services").
               </p>
               <p>
@@ -53,7 +53,7 @@ export function TermsPage() {
             <h2 className="text-2xl font-bold mb-4 text-white">2. Description of Services</h2>
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <p>
-                BitWish is a platform that enables users to create, share, and manage wishlists for charitable
+                Katoa is a platform that enables users to create, share, and manage wishlists for charitable
                 giving and personal fundraising using Bitcoin and other cryptocurrencies. Our Services include:
               </p>
               <ul className="list-disc list-inside space-y-2 ml-4">
@@ -110,7 +110,7 @@ export function TermsPage() {
               <div className="bg-orange-500/10 border border-orange-500/30 rounded-xl p-6">
                 <h3 className="text-lg font-semibold text-orange-400 mb-3">Important Cryptocurrency Notice</h3>
                 <p className="text-gray-300">
-                  All cryptocurrency transactions are irreversible and final. BitWish does not control, custody,
+                  All cryptocurrency transactions are irreversible and final. Katoa does not control, custody,
                   or manage any cryptocurrency funds. You are solely responsible for managing your private keys
                   and wallet addresses.
                 </p>
@@ -118,7 +118,7 @@ export function TermsPage() {
 
               <h3 className="text-lg font-semibold text-white mt-6">4.1 No Custody</h3>
               <p>
-                BitWish is a non-custodial platform. We do not hold, control, or have access to your cryptocurrency
+                Katoa is a non-custodial platform. We do not hold, control, or have access to your cryptocurrency
                 or private keys. All donations go directly to wallet addresses you provide.
               </p>
 
@@ -131,7 +131,7 @@ export function TermsPage() {
               <h3 className="text-lg font-semibold text-white mt-6">4.3 Tax Obligations</h3>
               <p>
                 You are solely responsible for determining what, if any, taxes apply to your cryptocurrency transactions.
-                BitWish is not responsible for determining or collecting taxes owed on your behalf.
+                Katoa is not responsible for determining or collecting taxes owed on your behalf.
               </p>
 
               <h3 className="text-lg font-semibold text-white mt-6">4.4 No Refunds</h3>
@@ -147,13 +147,13 @@ export function TermsPage() {
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <h3 className="text-lg font-semibold text-white">5.1 Our Content</h3>
               <p>
-                The Services and their original content, features, and functionality are owned by BitWish and are
+                The Services and their original content, features, and functionality are owned by Katoa and are
                 protected by international copyright, trademark, patent, trade secret, and other intellectual property laws.
               </p>
 
               <h3 className="text-lg font-semibold text-white mt-6">5.2 Your Content</h3>
               <p>
-                You retain ownership of content you upload to the Services. By posting content, you grant BitWish
+                You retain ownership of content you upload to the Services. By posting content, you grant Katoa
                 a worldwide, non-exclusive, royalty-free license to use, reproduce, modify, and display such content
                 for the purpose of operating and promoting the Services.
               </p>
@@ -177,13 +177,13 @@ export function TermsPage() {
 
               <h3 className="text-lg font-semibold text-white mt-6">6.2 No Financial Advice</h3>
               <p>
-                BitWish does not provide financial, investment, tax, or legal advice. Any information provided through
+                Katoa does not provide financial, investment, tax, or legal advice. Any information provided through
                 the Services is for informational purposes only and should not be relied upon for financial decisions.
               </p>
 
               <h3 className="text-lg font-semibold text-white mt-6">6.3 Limitation of Liability</h3>
               <p>
-                To the maximum extent permitted by law, BitWish shall not be liable for any indirect, incidental,
+                To the maximum extent permitted by law, Katoa shall not be liable for any indirect, incidental,
                 special, consequential, or punitive damages, including loss of profits, data, or cryptocurrency,
                 arising out of or related to your use of the Services.
               </p>
@@ -191,7 +191,7 @@ export function TermsPage() {
               <h3 className="text-lg font-semibold text-white mt-6">6.4 Maximum Liability</h3>
               <p>
                 Our total liability for any claims arising from your use of the Services shall not exceed the amount
-                you paid to BitWish in the twelve months preceding the claim, or $100, whichever is greater.
+                you paid to Katoa in the twelve months preceding the claim, or $100, whichever is greater.
               </p>
             </div>
           </section>
@@ -200,7 +200,7 @@ export function TermsPage() {
             <h2 className="text-2xl font-bold mb-4 text-white">7. Indemnification</h2>
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <p>
-                You agree to indemnify, defend, and hold harmless BitWish and its officers, directors, employees,
+                You agree to indemnify, defend, and hold harmless Katoa and its officers, directors, employees,
                 and agents from any claims, damages, losses, liabilities, and expenses (including legal fees) arising
                 from:
               </p>
@@ -222,7 +222,7 @@ export function TermsPage() {
               </p>
               <ul className="list-disc list-inside space-y-2 ml-4">
                 <li>Violates these Terms or applicable laws</li>
-                <li>Could harm other users, BitWish, or third parties</li>
+                <li>Could harm other users, Katoa, or third parties</li>
                 <li>Could subject us to legal liability</li>
                 <li>Is otherwise inappropriate</li>
               </ul>
@@ -239,7 +239,7 @@ export function TermsPage() {
               <h3 className="text-lg font-semibold text-white">9.1 Governing Law</h3>
               <p>
                 These Terms shall be governed by and construed in accordance with the laws of the jurisdiction
-                in which BitWish operates, without regard to conflict of law provisions.
+                in which Katoa operates, without regard to conflict of law provisions.
               </p>
 
               <h3 className="text-lg font-semibold text-white mt-6">9.2 Arbitration</h3>
@@ -276,7 +276,7 @@ export function TermsPage() {
               <h3 className="text-lg font-semibold text-white">11.1 Entire Agreement</h3>
               <p>
                 These Terms, together with our Privacy Policy, constitute the entire agreement between you and
-                BitWish regarding the Services.
+                Katoa regarding the Services.
               </p>
 
               <h3 className="text-lg font-semibold text-white mt-6">11.2 Severability</h3>
@@ -305,8 +305,8 @@ export function TermsPage() {
                 If you have questions about these Terms, please contact us at:
               </p>
               <div className="bg-night-blue-500/50 border border-gray-800 rounded-xl p-6 mt-4">
-                <p className="font-semibold text-white mb-2">BitWish Legal Team</p>
-                <p>Email: legal@katoa.org</p>
+                <p className="font-semibold text-white mb-2">Katoa Legal Team</p>
+                <p>Email: hello@giveabit.io</p>
                 <p>Website: https://katoa.org/contact</p>
               </div>
             </div>
@@ -316,7 +316,7 @@ export function TermsPage() {
             <p className="text-sm text-gray-400 leading-relaxed">
               <strong className="text-white">Legal Disclaimer:</strong> This is a template Terms of Service document
               provided as a starting point. It should be reviewed and customized by qualified legal counsel before use.
-              BitWish makes no representations or warranties regarding the legal adequacy or compliance of this document.
+              Katoa makes no representations or warranties regarding the legal adequacy or compliance of this document.
             </p>
           </div>
         </div>

@@ -56,7 +56,7 @@ export function Footer() {
                   <Github size={24} className="text-gray-400 group-hover:text-orange-500 transition-colors" />
                 </a>
                 <a
-                  href="mailto:hello@katoa.org"
+                  href="mailto:hello@giveabit.io"
                   className="flex items-center justify-center w-14 h-14 rounded-full bg-night-blue-500 border border-night-blue-400 hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 group"
                 >
                   <Mail size={24} className="text-gray-400 group-hover:text-orange-500 transition-colors" />

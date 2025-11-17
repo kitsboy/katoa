@@ -278,7 +278,7 @@ export function AuthPage() {
               <div className="flex items-start gap-3 text-sm text-night-blue-300">
                 <Zap size={20} className="text-emerald-400 flex-shrink-0 mt-0.5" />
                 <p>
-                  With BitWish, you can receive instant Bitcoin donations via Lightning Network.
+                  With Katoa, you can receive instant Bitcoin donations via Lightning Network.
                   Fast, private, and global.
                 </p>
               </div>

@@ -48,16 +48,16 @@ export function HomePage() {
             </span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-[4rem] lg:text-[4.75rem] font-bold mb-6 leading-[1.1] tracking-tight text-night-blue-shadow px-2">
-            Keep <span className="bg-gradient-to-r from-sand-tan-600 via-orange-500 to-night-blue-600 bg-clip-text text-transparent animate-gradient">100%</span> of
+          <h1 className="text-4xl sm:text-5xl md:text-[4rem] lg:text-[4.75rem] font-black mb-6 leading-[1.1] tracking-tight text-night-blue-shadow px-2 drop-shadow-lg">
+            Keep <span className="bg-gradient-to-r from-orange-600 via-orange-500 to-yellow-500 bg-clip-text text-transparent animate-gradient font-black">100%</span> of
             <br />
             Your Earnings
           </h1>
 
-          <p className="text-lg sm:text-xl md:text-2xl text-night-blue-500 max-w-3xl mx-auto mb-10 font-medium leading-relaxed px-2">
+          <p className="text-lg sm:text-xl md:text-2xl text-night-blue-700 max-w-3xl mx-auto mb-10 font-bold leading-relaxed px-2">
             Own Every Satoshi. Participate Everywhere. Build Anything.
             <br />
-            <span className="text-night-blue-shadow font-semibold">Restricted to no one. First time ever.</span>
+            <span className="text-night-blue-shadow font-black">Restricted to no one. First time ever.</span>
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 px-4">

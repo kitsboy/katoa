@@ -17,6 +17,15 @@ export function ContactPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Create mailto link with "From Katoa" prefix
+    const emailSubject = `From Katoa - ${formData.subject}`;
+    const emailBody = `From Katoa Contact Form\n\nName: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`;
+    const mailtoLink = `mailto:hello@giveabit.io?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+
+    // Open mail client
+    window.location.href = mailtoLink;
+
     setSubmitted(true);
     setTimeout(() => {
       setFormData({ name: '', email: '', subject: '', message: '' });
@@ -38,7 +47,7 @@ export function ContactPage() {
               <Mail className="text-orange-500" size={24} />
             </div>
             <h3 className="text-lg font-bold text-white mb-2">Email</h3>
-            <p className="text-gray-400 text-sm">support@katoa.org</p>
+            <p className="text-gray-400 text-sm">hello@giveabit.io</p>
           </Card>
 
           <Card className="p-6 text-center">
