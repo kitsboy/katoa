@@ -205,19 +205,20 @@ export function Navbar() {
             </button>
           </div>
         </div>
+      </nav>
 
-        {showMenu && (
-          <>
-            <div
-              className="fixed inset-0 bg-black/90 backdrop-blur-md md:hidden"
-              style={{ zIndex: 99998, position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
-              onClick={() => setShowMenu(false)}
-            />
-            <div
-              ref={menuRef}
-              className="fixed top-0 right-0 bottom-0 w-full max-w-sm bg-gradient-to-b from-gray-900 via-black to-black border-l border-gray-700 shadow-2xl md:hidden overflow-y-auto"
-              style={{ zIndex: 99999, position: 'fixed', top: 0, right: 0, bottom: 0, width: '100%', maxWidth: '24rem' }}
-            >
+      {showMenu && (
+        <>
+          <div
+            className="fixed inset-0 bg-black/90 backdrop-blur-md md:hidden"
+            style={{ zIndex: 99998, position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
+            onClick={() => setShowMenu(false)}
+          />
+          <div
+            ref={menuRef}
+            className="fixed top-0 right-0 bottom-0 w-full max-w-sm bg-gradient-to-b from-gray-900 via-black to-black border-l border-gray-700 shadow-2xl md:hidden overflow-y-auto"
+            style={{ zIndex: 99999, position: 'fixed', top: 0, right: 0, bottom: 0, width: '100%', maxWidth: '24rem' }}
+          >
               <div className="p-6 space-y-6">
                 <div className="flex items-center justify-between pb-4 border-b border-gray-700">
                   <div className="flex items-center gap-3">
@@ -368,7 +369,6 @@ export function Navbar() {
             </div>
           </>
         )}
-      </nav>
 
       <Modal
         isOpen={showAuthModal}
