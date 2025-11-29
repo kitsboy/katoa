@@ -37,10 +37,10 @@ export function HomePage() {
           <img
             src="https://giveabit.io/wp-content/uploads/2020/05/1400Paddle_board.jpg"
             alt="Paddleboard background"
-            className="absolute inset-0 w-full h-full object-cover opacity-20"
-            style={{ filter: 'blur(1px)' }}
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ filter: 'blur(0.5px)', opacity: 0.65 }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-charcoal-950/80 via-charcoal-950/60 to-charcoal-950/90"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-charcoal-950/40 via-charcoal-950/30 to-charcoal-950/50"></div>
         </div>
         <div className="relative z-10 max-w-6xl mx-auto text-center">
           <GlassSection className="max-w-4xl mx-auto" glow="cyan">
