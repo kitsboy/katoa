@@ -34,13 +34,12 @@ export function HomePage() {
       <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden px-4 sm:px-6">
         <div className="absolute inset-0 overflow-hidden">
           <img
-            src="https://giveabit.io/wp-content/uploads/2022/04/pineapple200x1300.jpeg"
-            alt="Pineapple background"
-            className="absolute inset-0 w-full h-full object-cover opacity-25"
-            style={{ filter: 'blur(1.5px) sepia(0.3) saturate(1.5) hue-rotate(20deg)' }}
+            src="https://giveabit.io/wp-content/uploads/2020/05/1400Paddle_board.jpg"
+            alt="Paddleboard background"
+            className="absolute inset-0 w-full h-full object-cover opacity-20"
+            style={{ filter: 'blur(1px)' }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-emerald-50/70 via-white/50 to-emerald-50/70"></div>
-          <div className="absolute inset-0 bg-emerald-500/5"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-white/85 via-white/70 to-white/85"></div>
         </div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(156,163,175,0.02)_1px,transparent_1px)] bg-[size:32px_32px] opacity-40"></div>
 
