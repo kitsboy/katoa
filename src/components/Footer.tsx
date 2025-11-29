@@ -70,17 +70,17 @@ export function Footer() {
                 <h3 className="text-white font-semibold mb-3 text-sm uppercase tracking-wider">Company</h3>
                 <ul className="space-y-2">
                   <li>
-                    <Link href="/about" className="text-gray-400 hover:text-orange-500 text-sm transition-colors duration-200">
+                    <Link href="/about" className="text-gray-300 hover:text-orange-400 text-sm transition-colors duration-200 font-normal">
                       About Us
                     </Link>
                   </li>
                   <li>
-                    <Link href="/pricing" className="text-gray-400 hover:text-orange-500 text-sm transition-colors duration-200">
+                    <Link href="/pricing" className="text-gray-300 hover:text-orange-400 text-sm transition-colors duration-200 font-normal">
                       Pricing
                     </Link>
                   </li>
                   <li>
-                    <Link href="/contact" className="text-gray-400 hover:text-orange-500 text-sm transition-colors duration-200">
+                    <Link href="/contact" className="text-gray-300 hover:text-orange-400 text-sm transition-colors duration-200 font-normal">
                       Contact
                     </Link>
                   </li>
@@ -91,17 +91,17 @@ export function Footer() {
                 <h3 className="text-white font-semibold mb-3 text-sm uppercase tracking-wider">Product</h3>
                 <ul className="space-y-2">
                   <li>
-                    <Link href="/explore" className="text-gray-400 hover:text-orange-500 text-sm transition-colors duration-200">
+                    <Link href="/explore" className="text-gray-300 hover:text-orange-400 text-sm transition-colors duration-200 font-normal">
                       Explore
                     </Link>
                   </li>
                   <li>
-                    <Link href="/dashboard" className="text-gray-400 hover:text-orange-500 text-sm transition-colors duration-200">
+                    <Link href="/dashboard" className="text-gray-300 hover:text-orange-400 text-sm transition-colors duration-200 font-normal">
                       Dashboard
                     </Link>
                   </li>
                   <li>
-                    <Link href="/faq" className="text-gray-400 hover:text-orange-500 text-sm transition-colors duration-200">
+                    <Link href="/faq" className="text-gray-300 hover:text-orange-400 text-sm transition-colors duration-200 font-normal">
                       FAQ
                     </Link>
                   </li>
@@ -112,12 +112,12 @@ export function Footer() {
                 <h3 className="text-white font-semibold mb-3 text-sm uppercase tracking-wider">Legal</h3>
                 <ul className="space-y-2">
                   <li>
-                    <Link href="/terms" className="text-gray-400 hover:text-orange-500 text-sm transition-colors duration-200">
+                    <Link href="/terms" className="text-gray-300 hover:text-orange-400 text-sm transition-colors duration-200 font-normal">
                       Terms of Service
                     </Link>
                   </li>
                   <li>
-                    <Link href="/privacy" className="text-gray-400 hover:text-orange-500 text-sm transition-colors duration-200">
+                    <Link href="/privacy" className="text-gray-300 hover:text-orange-400 text-sm transition-colors duration-200 font-normal">
                       Privacy Policy
                     </Link>
                   </li>

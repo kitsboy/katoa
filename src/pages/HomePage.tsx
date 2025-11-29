@@ -32,9 +32,14 @@ export function HomePage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50/30 pt-16">
 
       <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden px-4 sm:px-6">
-        <div className="absolute inset-0 overflow-hidden opacity-30">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-blue-200/20 to-cyan-200/20 rounded-full blur-3xl animate-subtle-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-indigo-200/20 to-purple-200/20 rounded-full blur-3xl animate-subtle-pulse" style={{ animationDelay: '1.5s' }} />
+        <div className="absolute inset-0 overflow-hidden">
+          <img
+            src="/1200x708.jpeg"
+            alt="Inspiring background"
+            className="absolute inset-0 w-full h-full object-cover opacity-15"
+            style={{ filter: 'blur(1px)' }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/60 to-white/80"></div>
         </div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(156,163,175,0.02)_1px,transparent_1px)] bg-[size:32px_32px] opacity-40"></div>
 

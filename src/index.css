@@ -35,11 +35,7 @@
   }
 
   a {
-    @apply text-blue-600 hover:text-blue-700 transition-colors;
-  }
-
-  a:visited {
-    @apply text-blue-700;
+    @apply transition-colors;
   }
 }
 
