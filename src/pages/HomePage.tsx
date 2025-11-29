@@ -33,6 +33,15 @@ export function HomePage() {
       <LightningField />
 
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 sm:px-6 pt-24">
+        <div className="absolute inset-0 overflow-hidden">
+          <img
+            src="https://giveabit.io/wp-content/uploads/2020/05/1400Paddle_board.jpg"
+            alt="Paddleboard background"
+            className="absolute inset-0 w-full h-full object-cover opacity-20"
+            style={{ filter: 'blur(1px)' }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-charcoal-950/80 via-charcoal-950/60 to-charcoal-950/90"></div>
+        </div>
         <div className="relative z-10 max-w-6xl mx-auto text-center">
           <GlassSection className="max-w-4xl mx-auto" glow="cyan">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-neon-cyan/10 border border-neon-cyan/30 rounded-full mb-8 backdrop-blur-sm">
