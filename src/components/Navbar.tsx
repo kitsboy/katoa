@@ -103,19 +103,20 @@ export function Navbar() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 glass-morphism border-b border-gray-200/60 shadow-sm">
+      <nav className="fixed top-0 left-0 right-0 z-50 glass-morphism border-b border-white/5 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-3 text-gray-900 hover:text-blue-600 transition-colors group">
+            <Link href="/" className="flex items-center gap-3 text-white hover:text-neon-cyan transition-colors group">
               <img src="/sats.png" alt="KATOA" className="w-10 h-10 rounded-full group-hover:scale-105 transition-transform" />
-              <span className="text-xl font-bold tracking-tight">KATOA</span>
+              <span className="text-xl font-display font-bold tracking-tight">KATOA</span>
+              <span className="text-xs font-mono text-neon-cyan/60 bg-neon-cyan/10 px-2 py-0.5 rounded">BETA</span>
             </Link>
 
             <div className="hidden md:flex items-center gap-6">
-              <Link href="/explore" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+              <Link href="/explore" className="text-gray-300 hover:text-neon-cyan transition-colors font-medium">
                 {t('nav.explore')}
               </Link>
-              <Link href="/compare" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
+              <Link href="/compare" className="text-gray-300 hover:text-neon-cyan transition-colors font-medium">
                 Why KATOA?
               </Link>
 

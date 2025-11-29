@@ -6,6 +6,8 @@ export default {
       fontFamily: {
         'sans': ['Inter', 'system-ui', 'sans-serif'],
         'serif': ['DM Serif Display', 'Georgia', 'serif'],
+        'display': ['Space Grotesk', 'Inter', 'system-ui', 'sans-serif'],
+        'mono': ['JetBrains Mono', 'Courier New', 'monospace'],
       },
       colors: {
         'sand-tan': {
@@ -44,8 +46,41 @@ export default {
           800: '#0d2529',
           900: '#081a1d',
         },
+        'charcoal': {
+          950: '#050509',
+          900: '#070711',
+          800: '#0a0a14',
+          700: '#0d0d1a',
+        },
+        'neon-cyan': {
+          500: '#14E6FF',
+          400: '#3DEBFF',
+          600: '#00D4ED',
+        },
+        'bitcoin-orange': {
+          500: '#F7931A',
+          400: '#F9A825',
+          600: '#E67E00',
+        },
+      },
+      backdropBlur: {
+        'xs': '2px',
+      },
+      transitionDuration: {
+        '150': '150ms',
+        '200': '200ms',
+        '220': '220ms',
+      },
+      transitionTimingFunction: {
+        'smooth': 'cubic-bezier(0.4, 0, 0.2, 1)',
       },
     },
   },
   plugins: [],
+  safelist: [
+    'font-mono',
+    'font-display',
+    'backdrop-blur-md',
+    'backdrop-blur-lg',
+  ],
 };

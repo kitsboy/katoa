@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Button } from '../components/Button';
-import { Card } from '../components/Card';
 import { Link } from '../components/Link';
-import { Tooltip } from '../components/Tooltip';
+import { GlassSection } from '../components/GlassSection';
+import { LightningField } from '../components/LightningField';
 import { FeeComparison } from '../components/FeeComparison';
 import { supabase } from '../lib/supabase';
-import { ArrowRight, Zap, Shield, Globe, CheckCircle2, TrendingUp } from 'lucide-react';
+import { ArrowRight, Zap, Shield, Globe, ChevronDown } from 'lucide-react';
 
 export function HomePage() {
   const [stats, setStats] = useState({ creators: '2.5K', volume: '₿1.2M', countries: '195+' });
@@ -29,178 +29,221 @@ export function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50/30 pt-16">
+    <div className="min-h-screen relative">
+      <LightningField />
 
-      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden px-4 sm:px-6">
-        <div className="absolute inset-0 overflow-hidden">
-          <img
-            src="https://giveabit.io/wp-content/uploads/2020/05/1400Paddle_board.jpg"
-            alt="Paddleboard background"
-            className="absolute inset-0 w-full h-full object-cover opacity-70"
-            style={{ filter: 'blur(0.5px)' }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-white/45 via-white/25 to-white/45"></div>
-        </div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(156,163,175,0.02)_1px,transparent_1px)] bg-[size:32px_32px] opacity-40"></div>
-
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 sm:px-6 pt-24">
         <div className="relative z-10 max-w-6xl mx-auto text-center">
-
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/80 border border-gray-200 rounded-full mb-8 animate-fade-in shadow-sm backdrop-blur-md hover:shadow-md transition-all duration-300 cursor-default">
-            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
-            <span className="text-sm font-medium text-gray-700">
-              Trusted by creators worldwide
-            </span>
-          </div>
-
-          <h1 className="text-4xl sm:text-5xl md:text-[4rem] lg:text-[4.75rem] font-bold mb-6 leading-[1.1] tracking-tight text-gray-900 px-2">
-            Keep <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent font-bold">100%</span> of
-            <br />
-            Your Earnings
-          </h1>
-
-          <p className="text-lg sm:text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto mb-10 font-normal leading-relaxed px-2">
-            Own Every Satoshi. Participate Everywhere. Build Anything.
-            <br />
-            <span className="text-gray-900 font-medium">Restricted to no one. First time ever.</span>
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 px-4">
-            <Link href="/dashboard">
-              <Button
-                size="lg"
-                className="min-w-[240px] h-14 text-lg font-bold group"
-              >
-                Start Earning 100%
-                <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
-              </Button>
-            </Link>
-            <Link href="/compare">
-              <Button
-                size="lg"
-                variant="outline"
-                className="min-w-[240px] h-14 text-lg font-bold"
-              >
-                See How We Compare
-              </Button>
-            </Link>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-gray-700 text-xs sm:text-sm font-medium px-4">
-            <div className="flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm rounded-full border border-gray-200 hover:border-blue-300 hover:shadow-sm transition-all duration-200">
-              <CheckCircle2 size={16} className="text-blue-600" />
-              <span>{stats.volume} sats processed</span>
+          <GlassSection className="max-w-4xl mx-auto" glow="cyan">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-neon-cyan/10 border border-neon-cyan/30 rounded-full mb-8 backdrop-blur-sm">
+              <div className="w-2 h-2 bg-neon-cyan rounded-full animate-pulse" />
+              <span className="text-sm font-medium text-neon-cyan">
+                Bitcoin-native • Non-custodial • Open Source
+              </span>
             </div>
-            <div className="flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm rounded-full border border-gray-200 hover:border-blue-300 hover:shadow-sm transition-all duration-200">
-              <CheckCircle2 size={16} className="text-blue-600" />
-              <span>{stats.countries} countries served</span>
+
+            <h1 className="font-display text-5xl sm:text-6xl md:text-7xl font-bold mb-6 leading-[1.1] tracking-wide">
+              <span className="block text-white mb-2">Keep</span>
+              <span className="block text-gradient-cyan glow-cyan text-6xl sm:text-7xl md:text-8xl">100%</span>
+              <span className="block text-white mt-2">of Your Earnings</span>
+            </h1>
+
+            <p className="text-xl sm:text-2xl text-gray-300 max-w-3xl mx-auto mb-10 leading-relaxed">
+              <span className="text-white font-semibold">Zero-fee, privacy-first Bitcoin commerce.</span>
+              <br />
+              Protocol-level upgrade to creator monetization.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+              <Link href="/dashboard">
+                <Button
+                  size="lg"
+                  className="min-w-[260px] h-14 text-lg font-bold bg-neon-cyan text-charcoal-950 hover:bg-neon-cyan/90 shadow-[0_0_40px_rgba(20,230,255,0.3)] hover:shadow-[0_0_60px_rgba(20,230,255,0.5)] transition-all duration-200"
+                >
+                  Start Earning 100%
+                  <ArrowRight className="ml-2" size={20} />
+                </Button>
+              </Link>
+              <Link href="/compare">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="min-w-[260px] h-14 text-lg font-bold border-2 border-neon-cyan text-neon-cyan hover:bg-neon-cyan/10 transition-all duration-200"
+                >
+                  See How We Compare
+                </Button>
+              </Link>
             </div>
-            <div className="flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm rounded-full border border-gray-200 hover:border-blue-300 hover:shadow-sm transition-all duration-200">
-              <CheckCircle2 size={16} className="text-blue-600" />
-              <span>0% fees forever</span>
+
+            <div className="flex flex-wrap items-center justify-center gap-3 text-sm font-mono">
+              <div className="flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm rounded-full border border-white/10">
+                <span className="text-bitcoin-orange font-bold">{stats.volume}</span>
+                <span className="text-gray-400">sats processed</span>
+              </div>
+              <div className="w-1 h-1 bg-gray-600 rounded-full animate-pulse" />
+              <div className="flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm rounded-full border border-white/10">
+                <span className="text-bitcoin-orange font-bold">{stats.countries}</span>
+                <span className="text-gray-400">countries</span>
+              </div>
+              <div className="w-1 h-1 bg-gray-600 rounded-full animate-pulse" />
+              <div className="flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-sm rounded-full border border-white/10">
+                <span className="text-neon-cyan font-bold">0%</span>
+                <span className="text-gray-400">fees forever</span>
+              </div>
             </div>
-          </div>
+          </GlassSection>
+        </div>
+
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <ChevronDown size={32} className="text-gray-500" />
         </div>
       </section>
 
-      <section className="py-12 sm:py-20 px-4 sm:px-6 bg-white">
+      <section className="relative py-20 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-3 gap-6 sm:gap-8">
-
-            <Card className="group p-6 sm:p-8 bg-white border-sand-tan-300 hover:border-orange-400 hover:shadow-xl hover:shadow-orange-300/30 transition-all duration-500">
-              <Tooltip content="Lightning Network settles Bitcoin payments in milliseconds with near-zero fees. This revolutionary technology makes micropayments economically viable, enabling new business models impossible with traditional finance. Your money moves at the speed of the internet." position="bottom">
-                <div className="w-20 h-20 bg-gradient-to-br from-orange-500 to-yellow-500 rounded-3xl flex items-center justify-center mb-6 shadow-2xl shadow-orange-500/50 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                  <Zap size={44} className="text-white" strokeWidth={3} />
-                </div>
-              </Tooltip>
-
-              <h3 className="text-2xl font-bold text-night-blue-shadow mb-3">
-                Lightning Fast
-                <Tooltip content="Settlement in seconds, not weeks. While traditional platforms hold your money for 7-14 days, Lightning Network delivers instant access to your earnings. Build your financial freedom without waiting." icon position="bottom" />
-              </h3>
-
-              <p className="text-night-blue-800 leading-relaxed text-lg mb-4 font-semibold">
-                Instant Bitcoin payments via Lightning Network. Funds arrive in seconds, not days.
-              </p>
-
-              <div className="pt-4 border-t border-orange-200">
-                <div className="text-white font-bold text-base bg-orange-500 py-2 px-4 rounded-lg inline-block">vs. 7-day payouts elsewhere</div>
-              </div>
-            </Card>
-
-            <Card className="group p-6 sm:p-8 bg-white border-sand-tan-300 hover:border-blue-400 hover:shadow-xl hover:shadow-blue-300/30 transition-all duration-300">
-              <Tooltip content="Bitcoin transcends borders and banking systems. Whether you're in New York or Nigeria, Tokyo or Tanzania, your supporters can fund your dreams. No government can shut you down. No bank can deny you service. True financial inclusion for all humanity." position="bottom">
-                <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-3xl flex items-center justify-center mb-6 shadow-2xl shadow-blue-500/50 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                  <Globe size={44} className="text-white" strokeWidth={3} />
-                </div>
-              </Tooltip>
-
-              <h3 className="text-2xl font-bold text-night-blue-shadow-700 mb-3">
-                Truly Global
-                <Tooltip content="195+ countries. Zero discrimination. While competitors cherry-pick wealthy nations and charge 10-20% fees, Bitcoin serves everyone equally. The unbanked are no longer excluded. This is financial democracy." icon position="bottom" />
-              </h3>
-
-              <p className="text-night-blue-800 leading-relaxed text-lg mb-4 font-semibold">
-                No banks required. Works in 195+ countries. Support anyone, anywhere.
-              </p>
-
-              <div className="pt-4 border-t border-blue-200">
-                <div className="text-white font-bold text-base bg-blue-500 py-2 px-4 rounded-lg inline-block">vs. ~10 countries with 10% fees</div>
-              </div>
-            </Card>
-
-            <Card className="group p-6 sm:p-8 bg-white border-sand-tan-300 hover:border-green-400 hover:shadow-xl hover:shadow-green-300/30 transition-all duration-300">
-              <Tooltip content="Zero-knowledge cryptography proves transactions without revealing your identity. Nostr protocol encrypts your messages end-to-end. Your data lives on your device, not our servers. We can't sell what we don't have. Privacy is your birthright." position="bottom">
-                <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-emerald-500 rounded-3xl flex items-center justify-center mb-6 shadow-2xl shadow-green-500/50 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                  <Shield size={44} className="text-white" strokeWidth={3} />
-                </div>
-              </Tooltip>
-
-              <h3 className="text-2xl font-bold text-night-blue-shadow mb-3">
-                Actually Private
-                <Tooltip content="Decentralized architecture means no central authority controls your account. No CEO can delete you. No government can freeze you. Your identity, your data, your rules. This is sovereignty in the digital age." icon position="bottom" />
-              </h3>
-
-              <p className="text-night-blue-800 leading-relaxed text-lg mb-4 font-semibold">
-                Zero-knowledge proofs. Encrypted messaging. Your data stays yours.
-              </p>
-
-              <div className="pt-4 border-t border-green-200">
-                <div className="text-white font-bold text-base bg-green-500 py-2 px-4 rounded-lg inline-block">vs. server-based data mining</div>
-              </div>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-12 sm:py-20 px-4 sm:px-6 bg-gradient-to-br from-lavender-100 to-lavender-200">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-night-blue-shadow mb-4 px-2">
-              Stop Losing <span className="bg-gradient-to-r from-sand-tan-600 to-night-blue-600 bg-clip-text text-transparent">Thousands</span> to Fees
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-neon-cyan/10 border border-neon-cyan/30 rounded-full mb-6">
+              <Zap size={18} className="text-neon-cyan" />
+              <span className="text-sm font-medium text-neon-cyan">
+                Protocol Specifications
+              </span>
+            </div>
+            <h2 className="font-display text-4xl sm:text-5xl font-bold text-white mb-4">
+              Built Different
             </h2>
-            <p className="text-lg sm:text-xl text-night-blue-500 font-semibold max-w-2xl mx-auto px-2">
-              Traditional platforms take 10-20% of everything you earn. We take nothing.
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <GlassSection className="group hover:-translate-y-2 transition-all duration-200">
+              <div className="flex items-start justify-between mb-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-neon-cyan/20 to-neon-cyan/5 rounded-xl flex items-center justify-center border border-neon-cyan/30">
+                  <Zap size={32} className="text-neon-cyan" strokeWidth={2} />
+                </div>
+                <div className="text-xs font-mono text-gray-500 bg-white/5 px-3 py-1 rounded-full">
+                  L2 • Lightning
+                </div>
+              </div>
+
+              <h3 className="text-2xl font-display font-bold text-white mb-3">
+                Instant Settlement
+              </h3>
+
+              <p className="text-gray-400 leading-relaxed mb-6">
+                Funds settle over Bitcoin's Lightning Network in seconds. No bank intermediaries. No waiting periods.
+              </p>
+
+              <div className="pt-4 border-t border-white/10">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-500">Traditional platforms:</span>
+                  <span className="text-gray-400 font-mono">7-14 days</span>
+                </div>
+                <div className="flex items-center justify-between text-sm mt-2">
+                  <span className="text-neon-cyan font-semibold">KATOA:</span>
+                  <span className="text-neon-cyan font-mono font-bold glow-cyan">Instant</span>
+                </div>
+              </div>
+            </GlassSection>
+
+            <GlassSection className="group hover:-translate-y-2 transition-all duration-200">
+              <div className="flex items-start justify-between mb-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-neon-cyan/20 to-neon-cyan/5 rounded-xl flex items-center justify-center border border-neon-cyan/30">
+                  <Globe size={32} className="text-neon-cyan" strokeWidth={2} />
+                </div>
+                <div className="text-xs font-mono text-gray-500 bg-white/5 px-3 py-1 rounded-full">
+                  Global • 195+
+                </div>
+              </div>
+
+              <h3 className="text-2xl font-display font-bold text-white mb-3">
+                Universal Access
+              </h3>
+
+              <p className="text-gray-400 leading-relaxed mb-6">
+                Bitcoin transcends borders and banking systems. No KYC. No discrimination. True financial inclusion.
+              </p>
+
+              <div className="pt-4 border-t border-white/10">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-500">Traditional platforms:</span>
+                  <span className="text-gray-400 font-mono">~10 countries</span>
+                </div>
+                <div className="flex items-center justify-between text-sm mt-2">
+                  <span className="text-neon-cyan font-semibold">KATOA:</span>
+                  <span className="text-neon-cyan font-mono font-bold glow-cyan">195+ countries</span>
+                </div>
+              </div>
+            </GlassSection>
+
+            <GlassSection className="group hover:-translate-y-2 transition-all duration-200">
+              <div className="flex items-start justify-between mb-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-neon-cyan/20 to-neon-cyan/5 rounded-xl flex items-center justify-center border border-neon-cyan/30">
+                  <Shield size={32} className="text-neon-cyan" strokeWidth={2} />
+                </div>
+                <div className="text-xs font-mono text-gray-500 bg-white/5 px-3 py-1 rounded-full">
+                  Privacy • ZK
+                </div>
+              </div>
+
+              <h3 className="text-2xl font-display font-bold text-white mb-3">
+                True Privacy
+              </h3>
+
+              <p className="text-gray-400 leading-relaxed mb-6">
+                Zero-knowledge cryptography. Encrypted messaging. Your data lives on your device, not our servers.
+              </p>
+
+              <div className="pt-4 border-t border-white/10">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-gray-500">Traditional platforms:</span>
+                  <span className="text-gray-400 font-mono">Server-based</span>
+                </div>
+                <div className="flex items-center justify-between text-sm mt-2">
+                  <span className="text-neon-cyan font-semibold">KATOA:</span>
+                  <span className="text-neon-cyan font-mono font-bold glow-cyan">Zero-knowledge</span>
+                </div>
+              </div>
+            </GlassSection>
+          </div>
+        </div>
+      </section>
+
+      <section className="relative py-20 px-4 sm:px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="font-display text-4xl sm:text-5xl font-bold text-white mb-4">
+              Stop Losing <span className="text-gradient-bitcoin glow-orange">Thousands</span> to Fees
+            </h2>
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+              See exactly how much money you're leaving on the table with traditional platforms.
             </p>
           </div>
           <FeeComparison />
         </div>
       </section>
 
-      <section className="py-12 sm:py-20 px-4 sm:px-6 bg-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <Card className="p-6 sm:p-12 bg-gradient-to-br from-sand-tan-500 to-night-blue-500 border-sand-tan-400 shadow-2xl shadow-sand-tan-600/40">
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-              Ready to Keep 100% of Your Earnings?
+      <section className="relative py-20 px-4 sm:px-6">
+        <div className="max-w-5xl mx-auto">
+          <GlassSection glow="cyan" className="text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-bitcoin-orange/10 border border-bitcoin-orange/30 rounded-full mb-6">
+              <Zap size={18} className="text-bitcoin-orange" />
+              <span className="text-sm font-medium text-bitcoin-orange">
+                A Movement to Democratize Giving
+              </span>
+            </div>
+
+            <h2 className="font-display text-4xl sm:text-5xl font-bold text-white mb-6">
+              Join the Bitcoin Creator Economy
             </h2>
-            <p className="text-lg sm:text-xl text-white mb-8 max-w-2xl mx-auto font-semibold">
-              Join thousands of creators who've stopped paying platform fees forever.
+
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-10 leading-relaxed">
+              Thousands of creators worldwide have stopped paying platform fees and started building true financial freedom.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <Link href="/dashboard">
                 <Button
                   size="lg"
-                  variant="secondary"
-                  className="min-w-[200px] shadow-xl"
+                  className="min-w-[240px] h-14 text-lg font-bold bg-neon-cyan text-charcoal-950 hover:bg-neon-cyan/90 shadow-[0_0_40px_rgba(20,230,255,0.3)]"
                 >
                   Get Started Free
                   <ArrowRight className="ml-2" size={20} />
@@ -210,14 +253,30 @@ export function HomePage() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="min-w-[200px] shadow-xl bg-white"
+                  className="min-w-[240px] h-14 text-lg font-bold border-2 border-white/20 text-white hover:bg-white/10"
                 >
                   Browse Campaigns
-                  <TrendingUp className="ml-2" size={20} />
                 </Button>
               </Link>
             </div>
-          </Card>
+
+            <div className="flex items-center justify-center gap-8 pt-8 border-t border-white/10">
+              <div className="text-center">
+                <div className="text-3xl font-display font-bold text-neon-cyan glow-cyan mb-1">2024</div>
+                <div className="text-sm text-gray-500">Launch</div>
+              </div>
+              <div className="w-px h-12 bg-white/10" />
+              <div className="text-center">
+                <div className="text-3xl font-display font-bold text-bitcoin-orange glow-orange mb-1">{stats.volume}</div>
+                <div className="text-sm text-gray-500">Processed</div>
+              </div>
+              <div className="w-px h-12 bg-white/10" />
+              <div className="text-center">
+                <div className="text-3xl font-display font-bold text-neon-cyan glow-cyan mb-1">Next</div>
+                <div className="text-sm text-gray-500">Global Scale</div>
+              </div>
+            </div>
+          </GlassSection>
         </div>
       </section>
     </div>
