@@ -103,26 +103,26 @@ export function Navbar() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-sand-tan-200 shadow-lg">
+      <nav className="fixed top-0 left-0 right-0 z-50 glass-morphism border-b border-gray-200/60 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-3 text-night-blue-shadow hover:text-sand-tan-600 transition-colors group">
+            <Link href="/" className="flex items-center gap-3 text-gray-900 hover:text-blue-600 transition-colors group">
               <img src="/sats.png" alt="KATOA" className="w-10 h-10 rounded-full group-hover:scale-105 transition-transform" />
-              <span className="text-xl font-bold">KATOA</span>
+              <span className="text-xl font-bold tracking-tight">KATOA</span>
             </Link>
 
             <div className="hidden md:flex items-center gap-6">
-              <Link href="/explore" className="text-night-blue-500 hover:text-night-blue-800 transition-colors font-bold">
+              <Link href="/explore" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
                 {t('nav.explore')}
               </Link>
-              <Link href="/compare" className="text-night-blue-500 hover:text-sand-tan-600 transition-colors font-bold">
+              <Link href="/compare" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">
                 Why KATOA?
               </Link>
 
               <div className="relative">
                 <button
                   onClick={() => setShowLangMenu(!showLangMenu)}
-                  className="flex items-center gap-1 text-night-blue-500 hover:text-night-blue-800 transition-colors text-2xl"
+                  className="flex items-center gap-1 text-gray-700 hover:text-blue-600 transition-colors text-2xl"
                 >
                   {languageFlags[language]}
                 </button>

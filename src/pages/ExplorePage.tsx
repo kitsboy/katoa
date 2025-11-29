@@ -428,7 +428,7 @@ export function ExplorePage() {
 
               return (
                 <Link key={wishlist.id} href={`/wishlist/${wishlist.slug}`}>
-                  <Card className="hover-lift overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 hover:border-orange-500/50 transition-all duration-300 animate-fade-in shadow-lg hover:shadow-[0_0_30px_rgba(255,135,0,0.3)]">
+                  <Card className="hover-lift overflow-hidden transition-all duration-300 animate-fade-in">
                     <div className="relative overflow-hidden group">
                       {wishlist.cover_image ? (
                         <img
@@ -444,7 +444,7 @@ export function ExplorePage() {
                           <Gift size={80} className="text-gray-700 animate-float" />
                         </div>
                       )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
 
                       {(wishlist as any).country_flag && (
                         <div className="absolute top-3 right-3 text-3xl drop-shadow-lg">
@@ -481,10 +481,10 @@ export function ExplorePage() {
 
                     <div className="p-6 space-y-4">
                       <div>
-                        <h3 className="text-xl font-bold text-white mb-2 line-clamp-1 group-hover:text-orange-400 transition-colors">
+                        <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-1 group-hover:text-blue-600 transition-colors">
                           {wishlist.title}
                         </h3>
-                        <p className="text-gray-100 text-sm line-clamp-2 mb-3 leading-relaxed font-medium">
+                        <p className="text-gray-600 text-sm line-clamp-2 mb-3 leading-relaxed">
                           {wishlist.description}
                         </p>
                         {wishlist.country && (

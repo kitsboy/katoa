@@ -29,35 +29,34 @@ export function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-sand-tan-50 via-white to-sand-tan-100 pt-16">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50/30 pt-16">
 
       <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden px-4 sm:px-6">
-        <div className="absolute inset-0 overflow-hidden opacity-40">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-sand-tan-400/30 to-orange-500/30 rounded-full blur-3xl animate-subtle-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-night-blue-400/30 to-cyan-500/30 rounded-full blur-3xl animate-subtle-pulse" style={{ animationDelay: '1.5s' }} />
-          <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-gradient-to-br from-emerald-500/20 to-teal-500/20 rounded-full blur-3xl animate-subtle-pulse" style={{ animationDelay: '3s' }} />
+        <div className="absolute inset-0 overflow-hidden opacity-30">
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-br from-blue-200/20 to-cyan-200/20 rounded-full blur-3xl animate-subtle-pulse" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-indigo-200/20 to-purple-200/20 rounded-full blur-3xl animate-subtle-pulse" style={{ animationDelay: '1.5s' }} />
         </div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(225,179,130,0.03)_1px,transparent_1px)] bg-[size:32px_32px] opacity-30"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(156,163,175,0.02)_1px,transparent_1px)] bg-[size:32px_32px] opacity-40"></div>
 
         <div className="relative z-10 max-w-6xl mx-auto text-center">
 
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-50 border-2 border-emerald-500 rounded-full mb-8 animate-fade-in shadow-lg backdrop-blur-md hover:scale-105 transition-transform duration-300 cursor-default">
-            <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
-            <span className="text-sm font-bold text-emerald-900 tracking-wide">
+          <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/80 border border-gray-200 rounded-full mb-8 animate-fade-in shadow-sm backdrop-blur-md hover:shadow-md transition-all duration-300 cursor-default">
+            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
+            <span className="text-sm font-medium text-gray-700">
               Trusted by creators worldwide
             </span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-[4rem] lg:text-[4.75rem] font-black mb-6 leading-[1.1] tracking-tight text-night-blue-shadow px-2 drop-shadow-lg">
-            Keep <span className="bg-gradient-to-r from-orange-600 via-orange-500 to-yellow-500 bg-clip-text text-transparent animate-gradient font-black">100%</span> of
+          <h1 className="text-4xl sm:text-5xl md:text-[4rem] lg:text-[4.75rem] font-bold mb-6 leading-[1.1] tracking-tight text-gray-900 px-2">
+            Keep <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent font-bold">100%</span> of
             <br />
             Your Earnings
           </h1>
 
-          <p className="text-lg sm:text-xl md:text-2xl text-night-blue-700 max-w-3xl mx-auto mb-10 font-bold leading-relaxed px-2">
+          <p className="text-lg sm:text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto mb-10 font-normal leading-relaxed px-2">
             Own Every Satoshi. Participate Everywhere. Build Anything.
             <br />
-            <span className="text-night-blue-shadow font-black">Restricted to no one. First time ever.</span>
+            <span className="text-gray-900 font-medium">Restricted to no one. First time ever.</span>
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 px-4">
@@ -81,17 +80,17 @@ export function HomePage() {
             </Link>
           </div>
 
-          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-night-blue-500 text-xs sm:text-sm font-bold px-4">
-            <div className="flex items-center gap-2 px-4 py-2 bg-white/50 backdrop-blur-sm rounded-full border border-sand-tan-200 hover:border-sand-tan-400 hover:bg-white/80 transition-all duration-300 hover:scale-105">
-              <CheckCircle2 size={18} className="text-sand-tan-600" />
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-gray-700 text-xs sm:text-sm font-medium px-4">
+            <div className="flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm rounded-full border border-gray-200 hover:border-blue-300 hover:shadow-sm transition-all duration-200">
+              <CheckCircle2 size={16} className="text-blue-600" />
               <span>{stats.volume} sats processed</span>
             </div>
-            <div className="flex items-center gap-2 px-4 py-2 bg-white/50 backdrop-blur-sm rounded-full border border-sand-tan-200 hover:border-sand-tan-400 hover:bg-white/80 transition-all duration-300 hover:scale-105">
-              <CheckCircle2 size={18} className="text-sand-tan-600" />
+            <div className="flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm rounded-full border border-gray-200 hover:border-blue-300 hover:shadow-sm transition-all duration-200">
+              <CheckCircle2 size={16} className="text-blue-600" />
               <span>{stats.countries} countries served</span>
             </div>
-            <div className="flex items-center gap-2 px-4 py-2 bg-white/50 backdrop-blur-sm rounded-full border border-sand-tan-200 hover:border-sand-tan-400 hover:bg-white/80 transition-all duration-300 hover:scale-105">
-              <CheckCircle2 size={18} className="text-sand-tan-600" />
+            <div className="flex items-center gap-2 px-4 py-2 bg-white/90 backdrop-blur-sm rounded-full border border-gray-200 hover:border-blue-300 hover:shadow-sm transition-all duration-200">
+              <CheckCircle2 size={16} className="text-blue-600" />
               <span>0% fees forever</span>
             </div>
           </div>
