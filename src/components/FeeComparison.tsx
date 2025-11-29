@@ -95,7 +95,7 @@ export function FeeComparison() {
       <Card className="p-8 bg-gradient-to-br from-night-blue-500 to-night-blue-500 border-night-blue-500">
         <div className="mb-8">
           <label className="block text-3xl font-bold text-white mb-4 text-center">
-            What's your monthly earnings goal, enter numbers below!
+            What's your monthly project goal, enter numbers below!
           </label>
 
           <div className="relative max-w-2xl mx-auto">
@@ -155,16 +155,24 @@ export function FeeComparison() {
               <h3 className="text-white font-bold text-xl mb-4 flex items-center justify-between">
                 <span className="flex items-center gap-2">
                   {platform.platform === 'KATOA' && (
-                    <img src="/sats.svg" alt="KATOA" className="w-6 h-6" />
+                    <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center p-1 shadow-md">
+                      <img src="/sats.svg" alt="KATOA" className="w-full h-full" />
+                    </div>
                   )}
                   {platform.platform === 'OnlyFans' && (
-                    <img src="/pngwing.com.png" alt="OnlyFans" className="w-6 h-6" />
+                    <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center p-1 shadow-md">
+                      <img src="/pngwing.com.png" alt="OnlyFans" className="w-full h-full object-contain" />
+                    </div>
                   )}
                   {platform.platform === 'Throne' && (
-                    <img src="/Throne_Icon_-_Single_(Gradient).png" alt="Throne" className="w-6 h-6" />
+                    <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center p-1 shadow-md">
+                      <img src="/Throne_Icon_-_Single_(Gradient).png" alt="Throne" className="w-full h-full object-contain" />
+                    </div>
                   )}
                   {platform.platform === 'Linktree' && (
-                    <img src="/linktree-logo-in-transparent-background-free-png.webp" alt="Linktree" className="w-6 h-6" />
+                    <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center p-1 shadow-md">
+                      <img src="/linktree-logo-in-transparent-background-free-png.webp" alt="Linktree" className="w-full h-full object-contain" />
+                    </div>
                   )}
                   {platform.platform}
                 </span>
