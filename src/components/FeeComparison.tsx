@@ -157,6 +157,15 @@ export function FeeComparison() {
                   {platform.platform === 'KATOA' && (
                     <img src="/sats.svg" alt="KATOA" className="w-6 h-6" />
                   )}
+                  {platform.platform === 'OnlyFans' && (
+                    <img src="/pngwing.com.png" alt="OnlyFans" className="w-6 h-6" />
+                  )}
+                  {platform.platform === 'Throne' && (
+                    <img src="/Throne_Icon_-_Single_(Gradient).png" alt="Throne" className="w-6 h-6" />
+                  )}
+                  {platform.platform === 'Linktree' && (
+                    <img src="/linktree-logo-in-transparent-background-free-png.webp" alt="Linktree" className="w-6 h-6" />
+                  )}
                   {platform.platform}
                 </span>
                 <Tooltip
