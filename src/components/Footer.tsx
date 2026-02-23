@@ -48,14 +48,6 @@ export function Footer() {
                   <Twitter size={24} className="text-gray-400 group-hover:text-orange-500 transition-colors" />
                 </a>
                 <a
-                  href="https://github.com/kitsboy/Katoa"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center w-14 h-14 rounded-full bg-night-blue-500 border border-night-blue-400 hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 group"
-                >
-                  <Github size={24} className="text-gray-400 group-hover:text-orange-500 transition-colors" />
-                </a>
-                <a
                   href="mailto:hello@giveabit.io"
                   className="flex items-center justify-center w-14 h-14 rounded-full bg-night-blue-500 border border-night-blue-400 hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 group"
                 >
@@ -189,9 +181,8 @@ export function Footer() {
 
       {/* Sliding Donation Panel */}
       <div
-        className={`fixed bottom-0 left-0 right-0 z-50 transition-transform duration-500 ease-out ${
-          showDonation ? 'translate-y-0' : 'translate-y-full'
-        }`}
+        className={`fixed bottom-0 left-0 right-0 z-50 transition-transform duration-500 ease-out ${showDonation ? 'translate-y-0' : 'translate-y-full'
+          }`}
       >
         <div className="relative bg-gradient-to-t from-night-blue-500 via-night-blue-400 to-night-blue-500 border-t-2 border-orange-500/50 shadow-[0_-10px_50px_rgba(249,115,22,0.3)]">
           {/* Close Button */}

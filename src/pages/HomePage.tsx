@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Button } from '../components/Button';
 import { Link } from '../components/Link';
 import { GlassSection } from '../components/GlassSection';
 import { LightningField } from '../components/LightningField';
 import { FeeComparison } from '../components/FeeComparison';
 import { supabase } from '../lib/supabase';
 import { ArrowRight, Zap, Shield, Globe, ChevronDown } from 'lucide-react';
+import { BitcoinPulse } from '../components/BitcoinPulse';
+import { ProtocolUpdates } from '../components/ProtocolUpdates';
 
 export function HomePage() {
   const [stats, setStats] = useState({ creators: '2.5K', volume: '₿1.2M', countries: '195+' });
@@ -38,9 +39,9 @@ export function HomePage() {
             src="https://giveabit.io/wp-content/uploads/2020/05/1400Paddle_board.jpg"
             alt="Paddleboard background"
             className="absolute inset-0 w-full h-full object-cover"
-            style={{ filter: 'blur(0.5px)', opacity: 0.65 }}
+            style={{ filter: 'blur(0.5px)', opacity: 0.5 }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-charcoal-950/40 via-charcoal-950/30 to-charcoal-950/50"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-charcoal-950/40 via-charcoal-950/60 to-charcoal-950/90"></div>
         </div>
         <div className="relative z-10 max-w-6xl mx-auto text-center">
           <GlassSection className="max-w-4xl mx-auto" glow="cyan">
@@ -51,10 +52,10 @@ export function HomePage() {
               </span>
             </div>
 
-            <h1 className="font-display text-5xl sm:text-6xl md:text-7xl font-bold mb-6 leading-[1.1] tracking-wide">
-              <span className="block text-white mb-2">Keep</span>
-              <span className="block text-gradient-cyan glow-cyan text-6xl sm:text-7xl md:text-8xl">100%</span>
-              <span className="block text-white mt-2">of Your Earnings</span>
+            <h1 className="font-display text-5xl sm:text-7xl md:text-8xl font-black mb-6 leading-tight tracking-tighter">
+              <span className="block text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400 mb-2">Keep</span>
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan-400 via-blue-400 to-neon-cyan-500 glow-cyan text-7xl sm:text-8xl md:text-9xl py-2 drop-shadow-[0_0_30px_rgba(20,230,255,0.4)]">100%</span>
+              <span className="block text-transparent bg-clip-text bg-gradient-to-b from-gray-100 to-gray-500 mt-2">of Your Earnings</span>
             </h1>
 
             <p className="text-xl sm:text-2xl text-gray-300 max-w-3xl mx-auto mb-10 leading-relaxed">
@@ -63,24 +64,19 @@ export function HomePage() {
               Protocol-level upgrade to creator monetization.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Link href="/dashboard">
-                <Button
-                  size="lg"
-                  className="min-w-[260px] h-14 text-lg font-bold bg-neon-cyan text-charcoal-950 hover:bg-neon-cyan/90 shadow-[0_0_40px_rgba(20,230,255,0.3)] hover:shadow-[0_0_60px_rgba(20,230,255,0.5)] transition-all duration-200"
-                >
-                  Start Earning 100%
-                  <ArrowRight className="ml-2" size={20} />
-                </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 relative z-20">
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center justify-center min-w-[260px] h-14 text-lg font-bold bg-neon-cyan-500 text-charcoal-950 hover:bg-neon-cyan-400 shadow-[0_0_40px_rgba(20,230,255,0.3)] hover:shadow-[0_0_60px_rgba(20,230,255,0.5)] transition-all duration-200 rounded-lg cursor-pointer"
+              >
+                Start Earning 100%
+                <ArrowRight className="ml-2" size={20} />
               </Link>
-              <Link href="/compare">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="min-w-[260px] h-14 text-lg font-bold border-2 border-neon-cyan text-neon-cyan hover:bg-neon-cyan/10 transition-all duration-200"
-                >
-                  See How We Compare
-                </Button>
+              <Link
+                href="/compare"
+                className="inline-flex items-center justify-center min-w-[260px] h-14 text-lg font-bold border-2 border-neon-cyan-500 text-neon-cyan-500 hover:bg-neon-cyan-500/10 transition-all duration-200 backdrop-blur-sm rounded-lg cursor-pointer"
+              >
+                See How We Compare
               </Link>
             </div>
 
@@ -101,6 +97,14 @@ export function HomePage() {
               </div>
             </div>
           </GlassSection>
+
+          <div className="mt-8">
+            <BitcoinPulse />
+          </div>
+
+          <div className="mt-8">
+            <ProtocolUpdates />
+          </div>
         </div>
 
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
@@ -245,27 +249,22 @@ export function HomePage() {
             </h2>
 
             <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-10 leading-relaxed">
-              Thousands of creators worldwide have stopped paying platform fees and started building true financial freedom.
+              Thousands of creators!!! worldwide have stopped paying platform fees and started building true financial freedom.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Link href="/dashboard">
-                <Button
-                  size="lg"
-                  className="min-w-[240px] h-14 text-lg font-bold bg-neon-cyan text-charcoal-950 hover:bg-neon-cyan/90 shadow-[0_0_40px_rgba(20,230,255,0.3)]"
-                >
-                  Get Started Free
-                  <ArrowRight className="ml-2" size={20} />
-                </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 relative z-20">
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center justify-center min-w-[240px] h-14 text-lg font-bold bg-neon-cyan-500 text-charcoal-950 hover:bg-neon-cyan-400 shadow-[0_0_40px_rgba(20,230,255,0.3)] transition-all duration-200 rounded-lg cursor-pointer"
+              >
+                Get Started Free
+                <ArrowRight className="ml-2" size={20} />
               </Link>
-              <Link href="/explore">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="min-w-[240px] h-14 text-lg font-bold border-2 border-white/20 text-white hover:bg-white/10"
-                >
-                  Browse Campaigns
-                </Button>
+              <Link
+                href="/explore"
+                className="inline-flex items-center justify-center min-w-[240px] h-14 text-lg font-bold border-2 border-white/20 text-white hover:bg-white/10 transition-all duration-200 backdrop-blur-sm rounded-lg cursor-pointer"
+              >
+                Browse Campaigns
               </Link>
             </div>
 
