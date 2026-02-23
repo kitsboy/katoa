@@ -1,8 +1,8 @@
 {
-  "timestamp": "2026-02-23T00:10:08.741Z",
-  "btc_price": 67602,
+  "timestamp": "2026-02-23T01:10:08.758Z",
+  "btc_price": 65679,
   "fear_greed": 5,
   "sentiment": "extreme fear",
-  "trend_24h": "-0.58%",
+  "trend_24h": "-3.42%",
   "source": "CoinGecko + Alternative.me"
 }

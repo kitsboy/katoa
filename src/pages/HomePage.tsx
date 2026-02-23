@@ -36,8 +36,8 @@ export function HomePage() {
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden px-4 sm:px-6 pt-24">
         <div className="absolute inset-0 overflow-hidden">
           <img
-            src="https://giveabit.io/wp-content/uploads/2020/05/1400Paddle_board.jpg"
-            alt="Paddleboard background"
+            src="/katoa-hero-bg.jpg"
+            alt="Background"
             className="absolute inset-0 w-full h-full object-cover"
             style={{ filter: 'blur(0.5px)', opacity: 0.5 }}
           />
