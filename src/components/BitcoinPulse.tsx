@@ -58,7 +58,7 @@ export function BitcoinPulse() {
                     <h3 className="font-display font-bold text-white tracking-wider text-sm uppercase">Bitcoin Pulse</h3>
                 </div>
                 <div className="text-[10px] font-mono whitespace-nowrap px-2 py-1 rounded bg-black/40 text-gray-400 border border-white/10">
-                    Last Updated: {new Date(data.timestamp).toLocaleTimeString()}
+                    Last Updated: {data.timestamp ? new Date(data.timestamp).toLocaleTimeString() : 'Recently'}
                 </div>
             </div>
 
@@ -67,7 +67,7 @@ export function BitcoinPulse() {
                 <div className="bg-white/5 rounded-xl p-4 border border-white/10 flex flex-col items-center justify-center">
                     <span className="text-xs text-gray-400 mb-2 uppercase tracking-wider font-semibold">Live Price</span>
                     <span className="text-2xl font-bold font-mono text-bitcoin-orange glow-orange">
-                        ${data.btc_price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        ${data.btc_price?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '---'}
                     </span>
                 </div>
 
@@ -77,8 +77,8 @@ export function BitcoinPulse() {
                         <BarChart2 size={12} /> Fear & Greed
                     </span>
                     <div className="flex items-baseline gap-2">
-                        <span className="text-2xl font-bold font-mono text-white">{data.fear_greed}</span>
-                        <span className="text-xs font-semibold text-red-400 uppercase">({data.sentiment})</span>
+                        <span className="text-2xl font-bold font-mono text-white">{data.fear_greed ?? '--'}</span>
+                        <span className="text-xs font-semibold text-red-400 uppercase">({data.sentiment || 'Loading'})</span>
                     </div>
                 </div>
 
@@ -86,13 +86,13 @@ export function BitcoinPulse() {
                 <div className="bg-white/5 rounded-xl p-4 border border-white/10 flex flex-col items-center justify-center">
                     <span className="text-xs text-gray-400 mb-2 uppercase tracking-wider font-semibold">24hr Trend</span>
                     <span className="text-2xl font-bold font-mono text-neon-cyan glow-cyan flex items-center gap-1">
-                        <TrendingUp size={20} /> {data.trend_24h}
+                        <TrendingUp size={20} /> {data.trend_24h || 'Flat'}
                     </span>
                 </div>
             </div>
 
             <div className="mt-4 pt-4 border-t border-white/10 flex justify-between items-center text-[10px] text-gray-500 font-mono">
-                <span>Source: {data.source}</span>
+                <span>Source: {data.source || 'Aggregated'}</span>
                 <span className="flex items-center gap-1 text-neon-cyan/70">
                     <div className="w-1.5 h-1.5 rounded-full bg-neon-cyan animate-ping"></div> Live Sync Active
                 </span>

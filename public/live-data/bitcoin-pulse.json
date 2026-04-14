@@ -1,8 +1,8 @@
 {
-  "timestamp": "2026-02-23T01:10:08.758Z",
-  "btc_price": 65679,
-  "fear_greed": 5,
-  "sentiment": "extreme fear",
-  "trend_24h": "-3.42%",
-  "source": "CoinGecko + Alternative.me"
+  "timestamp": "2024-03-24T12:00:00Z",
+  "btc_price": 64128.50,
+  "fear_greed": 75,
+  "sentiment": "Greed",
+  "trend_24h": "+2.4%",
+  "source": "CoinGecko + LunarCrush"
 }
