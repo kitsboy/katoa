@@ -14,7 +14,7 @@ A revolutionary creator platform enabling anyone, anywhere to receive support vi
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/YOUR-USERNAME/katoa.git
+   git clone https://github.com/kitsboy/katoa.git
    cd katoa
    ```
 
@@ -41,73 +41,85 @@ A revolutionary creator platform enabling anyone, anywhere to receive support vi
 
 ## 🌐 Deployment
 
-### **Fastest Method - Netlify Drop (2 minutes)**
+### Live Site
+**https://katoa.org/** — Currently live on Cloudflare (custom domain, SPA).
 
-1. Build: `npm run build`
-2. Go to: https://app.netlify.com/drop
-3. Drag the `dist` folder
-4. Connect custom domain `katoa.org`
+### Quick Deploy / Update
+- Build: `npm run build` (outputs to `dist`)
+- See current deployment notes in [docs/deployment/DEPLOYMENT.md](./docs/deployment/DEPLOYMENT.md)
+- Historical cPanel/Netlify Drop experiments are archived in `docs/archive/` (for reference only)
 
-**Full deployment guide**: See [DEPLOYMENT.md](./DEPLOYMENT.md)
+**Configs**: `netlify.toml` (security headers, redirects, caching) + `public/_redirects` are present. Actual hosting confirmed via live headers (Cloudflare).
 
-## 📚 Documentation
+## 📚 Documentation (Best Organized for Humans + Kimi Handoff)
 
-- [Deployment Guide](./DEPLOYMENT.md) - How to deploy to production
-- [cPanel Instructions](./FINAL-CPANEL-INSTRUCTIONS.md) - Deploy to cPanel hosting
-- [BTCPay Integration](./BTCPAY_INTEGRATION.md) - Bitcoin payment setup
-- [Nostr Guide](./NOSTR_GUIDE.md) - Decentralized identity integration
-- [Integration Guide](./INTEGRATION_GUIDE.md) - API and webhooks
-- [Implementation Roadmap](./IMPLEMENTATION_ROADMAP.md) - Feature roadmap
+**Start here for handoff / big picture**:
+- [SOURCE-OF-TRUTH.md](./SOURCE-OF-TRUTH.md) — Single source of truth (GitHub, live URL, deploy details, pitch, files, mission, gaps, how-to-run)
+- [KIMI-HANDOFF-katoa-2026-06-10.md](./KIMI-HANDOFF-katoa-2026-06-10.md) — Clean self-contained prompt for Kimi (M4/Obsidian/HERMES) — update MASTER-BRAIN, Kanban, vault, educate Hermes
+- [EXECUTIVE-SUMMARY.md](./EXECUTIVE-SUMMARY.md) — Robust high-level overview (what it is, why it matters, current state, gaps)
+- [MARKETING.md](./MARKETING.md) — Full pitch, value props, comparisons, messaging, CTAs, Give A Bit alignment
+- [STATUS.md](./STATUS.md) — Living project health snapshot
 
-## ✨ Features
+**Guides & Reference**:
+- [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) — System overview, DB schema (from 23 migrations), Nostr/BTCPay layers, security model, data flows, extension points (excellent for Kimi + devs)
+- [docs/ROADMAP.md](./docs/ROADMAP.md) — Feature roadmap (rebranded + cleaned)
+- [docs/guides/BTCPAY_INTEGRATION.md](./docs/guides/BTCPAY_INTEGRATION.md) — Bitcoin payment setup (ready for live wiring)
+- [docs/guides/NOSTR_GUIDE.md](./docs/guides/NOSTR_GUIDE.md) — Full Nostr integration (NIP-07, publishing, zaps prep, etc.)
+- [docs/guides/INTEGRATION_GUIDE.md](./docs/guides/INTEGRATION_GUIDE.md) — Broader integration notes
+- [docs/guides/QR_CODE_INSTRUCTIONS.md](./docs/guides/QR_CODE_INSTRUCTIONS.md)
+- [docs/deployment/DEPLOYMENT.md](./docs/deployment/DEPLOYMENT.md) — Historical + context
+- Historical junk (old cPanel tarballs, SSL fixes, upload prompts, huge build tars) → `docs/archive/` (preserved for institutional knowledge, not active)
 
-### Core Platform
-- ✅ **0% Platform Fees** - Keep 100% of your earnings
-- ✅ **Global Accessibility** - Works in 195+ countries
-- ✅ **No Banking Required** - Bitcoin-native payments
-- ✅ **Instant Settlement** - Lightning Network payments
-- ✅ **Censorship Resistant** - Decentralized infrastructure
-- ✅ **True Privacy** - Zero-knowledge proofs
+All docs are Obsidian-friendly Markdown. Run the `giveabit-project-handoff` skill after any work to keep Kimi current.
 
-### Creator Features
-- ✅ Create unlimited projects and wishlists
-- ✅ Multiple revenue streams (donations, subscriptions, crowdfunding)
-- ✅ Add items from Amazon, eBay, Etsy with auto-parsing
-- ✅ Track funding progress per item
-- ✅ Upload images, videos, documents
-- ✅ Profile banners and media galleries
-- ✅ Social feed integration (Twitter, Instagram, YouTube)
-- ✅ Categories and tags for discoverability
+## ✨ Features (Production-Ready Core + Live Polish)
 
-### Payment Features
-- ✅ Bitcoin Lightning Network integration
-- ✅ Multiple wallet address support
-- ✅ Payment codes (Lightning Address, LNURL)
-- ✅ QR codes for easy donations
-- ✅ BTCPay Server integration ready
-- ✅ Real-time Bitcoin price conversion
+### Core Platform (0% Fees Forever)
+- ✅ **0% Platform Fees** — Keep 100% of your earnings ("Keep All That's Owed Always")
+- ✅ **Global Accessibility** — Works in 195+ countries, no bank or KYC required
+- ✅ **Instant Settlement** — Lightning Network (seconds, not days)
+- ✅ **Censorship Resistant & Private** — Decentralized infrastructure + Nostr identity today; PYNYM / BIP-47 / Silent Payments planned
 
-### Social Features
-- ✅ Follow system
-- ✅ Contributions tracking
-- ✅ Leaderboards
-- ✅ Share on all social platforms
-- ✅ Public/private project visibility
-- ✅ Explore and discover creators
+### Creator & Project Features
+- ✅ Create unlimited projects, wishlists, and crowdfunding campaigns
+- ✅ Multiple revenue streams (donations, wishlist items, future subscriptions)
+- ✅ Add items from Amazon, eBay, Etsy with smart URL auto-parsing (title, image, price)
+- ✅ Per-item funding progress + goals + merchant links + shipping flags
+- ✅ Rich media: uploads (images, video, docs), profile banners, galleries
+- ✅ Social feed embeds (X/Twitter, Instagram, YouTube)
+- ✅ Categories, tags, visibility controls, geo/country support
 
-### Platform Features
-- ✅ Multi-language support (7 languages)
-- ✅ Responsive design (mobile, tablet, desktop)
-- ✅ Bitcoin stats dashboard
-- ✅ Fee comparison calculator
-- ✅ Interactive tooltips with detailed info
-- ✅ Premium UI/UX with animations
+### Bitcoin & Payment Features (Live Today)
+- ✅ Direct Lightning Address + on-chain + payment code (LNURL) support
+- ✅ Multiple wallet addresses per creator with labels
+- ✅ Beautiful QR code generation + scanner
+- ✅ Real-time Bitcoin price + sats conversion
+- ✅ **Bitcoin Pulse** live widget + **Protocol Updates** feed (new)
+- ✅ **Fee Comparison** calculator (shows exactly how much traditional platforms take)
+- ✅ BTCPay Server integration **code + comprehensive guide ready** (full live wiring is the current priority gap)
+- ✅ Nostr-powered Lightning address resolution
 
-### In Progress
-- 🚧 BTCPay Server live integration
-- 🚧 Nostr authentication
-- 🚧 PYNYMS privacy layer
-- 🚧 Email notifications
+### Social & Discovery (Fully Wired)
+- ✅ Follow system + project follows
+- ✅ Contributions tracking + leaderboards
+- ✅ Explore / discover page
+- ✅ Public + private visibility
+- ✅ Share buttons everywhere
+
+### Platform & UX
+- ✅ Multi-language support (7 languages framework)
+- ✅ Stunning responsive glassmorphic design (mobile-first, premium feel)
+- ✅ Interactive portal tooltips, smooth animations, accessible
+- ✅ Nostr authentication (NIP-07 browser extension: Alby etc.) — full profile sync + wishlist publishing (NIP-78)
+- ✅ Dashboard for full self-serve management
+
+### In Progress / Next
+- 🚧 BTCPay Server end-to-end (invoices, webhooks, checkout) — stubs + guide excellent
+- 🚧 Deeper privacy layers (PYNYM client integration, BIP-47, etc.)
+- 🚧 Real-time notifications polish, email (privacy-preserving), analytics
+- See [docs/ROADMAP.md](./docs/ROADMAP.md) for full phased plan
+
+**Live differentiators you can feel today**: Bitcoin Pulse widget, Protocol Updates, the fee calculator, Nostr login flow, and the instant "keep 100%" story.
 
 ## 🛠️ Tech Stack
 
@@ -130,9 +142,11 @@ A revolutionary creator platform enabling anyone, anywhere to receive support vi
 - **Price Data**: CoinGecko API
 
 ### Infrastructure
-- **Hosting**: Netlify / cPanel
-- **CDN**: Netlify Edge
-- **SSL**: Automatic HTTPS
+- **Hosting (Live)**: Cloudflare (custom domain katoa.org, CF headers confirmed)
+- **Configs**: netlify.toml + public/_redirects (SPA routing, strong security headers, caching)
+- **Backend**: Supabase (Postgres + Auth + Storage + RLS)
+- **Bitcoin**: Lightning + Nostr + BTCPay (in progress)
+- **SSL / Edge**: Automatic via host
 
 ## 📁 Project Structure
 
@@ -251,10 +265,28 @@ VITE_BTCPAY_API_KEY=your-api-key
 - Accessible contrast ratios
 - Mobile-first design
 
-## 🤝 Contributing
+## 🤝 Contributing & Handoff
 
-This project welcomes contributions! To contribute:
+This project welcomes contributions! (See the basic process in the old text below; we will expand into a proper CONTRIBUTING.md soon.)
 
+**For Give A Bit two-machine workflow (M3 coding ↔ M4 Kimi/Obsidian)**:
+- At the end of any session, run the **giveabit-project-handoff** skill.
+- This updates SOURCE-OF-TRUTH.md and generates a clean KIMI-HANDOFF-*.md.
+- Kimi integrates the structured docs into MASTER-BRAIN.md, Kanban, and the permanent vault (no raw chat dumps).
+- Sync the hand-off files (and/or project folder) via Tailscale to the M4 Obsidian location for nightly backups.
+
+**Current hand-off package (as of 2026-06-10)** is exceptionally robust:
+- SOURCE-OF-TRUTH.md
+- KIMI-HANDOFF-katoa-2026-06-10.md
+- EXECUTIVE-SUMMARY.md
+- MARKETING.md
+- Updated STATUS + organized docs/
+
+Always keep the "Template Rule" in SOURCE-OF-TRUTH: GitHub, live URL, deploy details, key docs, simple pitch, git snapshot, mission, gaps, hand-off notes, startup instructions.
+
+---
+
+### Basic Contribution Process (Classic)
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Make your changes
@@ -273,7 +305,7 @@ This project welcomes contributions! To contribute:
 
 ## 📄 License
 
-MIT License - See LICENSE file for details
+MIT License — See [LICENSE](./LICENSE) (newly added during 2026-06-10 organization pass for clean handoff).
 
 ## 🆘 Troubleshooting
 
@@ -308,56 +340,14 @@ MIT License - See LICENSE file for details
 
 ## 🎯 Roadmap
 
-### Phase 1 - Core Platform ✅
-- [x] User authentication
-- [x] Profile management
-- [x] Wishlist/project creation
-- [x] Item management
-- [x] Media uploads
-- [x] Social sharing
-- [x] QR code generation
+See the full living roadmap: **[docs/ROADMAP.md](./docs/ROADMAP.md)** (rebranded from early BitWish notes, cleaned during handoff prep).
 
-### Phase 2 - Bitcoin Integration ✅
-- [x] Wallet address management
-- [x] Payment codes (Lightning, LNURL)
-- [x] QR code generation
-- [x] Bitcoin price tracking
-- [x] Fee comparison calculator
-- [ ] BTCPay Server live integration
-- [ ] Automatic payment detection
+**High-level status (2026-06-10)**:
+- ✅ Phase 1–3 largely complete and live (auth, wishlists/projects, media, social follows/leaderboards/explore, Nostr full stack, basic Bitcoin rails, beautiful UX, live widgets)
+- 🚧 Phase 4 privacy + full BTCPay (Nostr auth & publishing done; BTCPay guide + code stubs excellent, end-to-end prod integration is the clear next engineering priority)
+- 📋 Later phases (mobile, advanced monetization, AI, scale) planned per Give A Bit vision
 
-### Phase 3 - Social Features ✅
-- [x] Follow system
-- [x] Contributions tracking
-- [x] Leaderboards
-- [x] Social feed embedding
-- [x] Categories and tags
-- [x] Explore page
-
-### Phase 4 - Privacy & Decentralization 🚧
-- [ ] Nostr authentication
-- [ ] PYNYMS privacy layer
-- [ ] Zero-knowledge proofs
-- [ ] Encrypted messaging
-- [ ] Decentralized storage
-
-### Phase 5 - Advanced Features 📋
-- [ ] Mobile app (React Native)
-- [ ] Email notifications
-- [ ] Analytics dashboard
-- [ ] Creator verification
-- [ ] Milestone tracking
-- [ ] Recurring subscriptions (BOLT 12)
-- [ ] Multi-signature wallets
-- [ ] Team collaboration
-
-### Phase 6 - Scale & Optimize 📋
-- [ ] Performance optimization
-- [ ] CDN integration
-- [ ] Advanced search
-- [ ] AI-powered recommendations
-- [ ] Video streaming
-- [ ] Live streaming integration
+The product is already a credible, usable, beautiful 0% fee Bitcoin creator platform today.
 
 ## 🌟 Why KATOA?
 
@@ -390,3 +380,10 @@ MIT License - See LICENSE file for details
 **KATOA - Keep All That's Owed Always**
 
 *Empowering creators worldwide with financial freedom and true ownership.*
+
+---
+
+**Part of the Give A Bit ecosystem** — [giveabit.io](https://giveabit.io)  
+Bitcoin sovereignty tools for private, feel-good giving. Privacy (Lightning + Nostr + PYNYM), education, Safe Harbour, open source.
+
+**For Kimi / future hand-offs**: See SOURCE-OF-TRUTH.md + KIMI-HANDOFF-katoa-2026-06-10.md. Documentation is the most important deliverable for seamless M3↔M4 continuity.

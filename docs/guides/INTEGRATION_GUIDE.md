@@ -1,4 +1,4 @@
-# BitWish - Bitcoin & Nostr Integration Guide
+# KATOA - Bitcoin & Nostr Integration Guide
 
 ## MVP Foundation Complete
 

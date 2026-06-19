@@ -1,6 +1,6 @@
 # BTCPay Server Integration Guide
 
-This guide explains how to integrate BTCPay Server with BitWish for accepting Bitcoin and Lightning Network payments.
+This guide explains how to integrate BTCPay Server with KATOA for accepting Bitcoin and Lightning Network payments.
 
 ## Overview
 
@@ -71,7 +71,7 @@ VITE_BTCPAY_WEBHOOK_SECRET=your-webhook-secret
    - Events: `InvoiceSettled`, `InvoiceProcessing`, `InvoiceInvalid`, `InvoiceExpired`
    - Secret: Generate a random secret and add to `.env`
 
-## Usage in BitWish
+## Usage in KATOA
 
 ### Creating an Invoice
 
@@ -91,7 +91,7 @@ async function createDonation(wishlistId: string, amount: number) {
     {
       wishlistId,
       type: 'donation',
-      platform: 'BitWish'
+      platform: 'KATOA'
     }
   );
 
@@ -134,7 +134,7 @@ BTCPay Server has built-in Nostr support for decentralized identity and communic
 3. Configure Nostr relays
 4. Enable Nostr authentication
 
-### Using Nostr with BitWish
+### Using Nostr with KATOA
 
 ```typescript
 import { nostrService } from './lib/nostr';

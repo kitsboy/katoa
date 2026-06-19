@@ -21,3 +21,20 @@ dist-ssr
 *.sln
 *.sw?
 .env
+.env.*
+
+# Deployment artifacts and archives
+*.tar.gz
+*.tar
+*.tgz
+archive/
+docs/archive/
+
+# Supabase local
+.supabase/
+*.db
+*.sqlite
+
+# Misc
+*.pem
+*.key

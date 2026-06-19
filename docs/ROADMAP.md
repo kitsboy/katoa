@@ -1,7 +1,7 @@
-# BitWish Implementation Roadmap
+# KATOA Implementation Roadmap
 ## Production-Ready MVP Enhancement Plan
 
-This document outlines concrete improvements to transform your existing BitWish app into a production-ready platform with advanced Bitcoin payment features.
+This document outlines concrete improvements to transform your existing KATOA app into a production-ready platform with advanced Bitcoin payment features.
 
 ---
 
@@ -240,7 +240,7 @@ serve(async (req: Request) => {
     // Fetch the URL
     const response = await fetch(url, {
       headers: {
-        "User-Agent": "Mozilla/5.0 (compatible; BitWish/1.0)",
+        "User-Agent": "Mozilla/5.0 (compatible; KATOA/1.0)",
       },
     });
 

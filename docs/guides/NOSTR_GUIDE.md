@@ -2,7 +2,7 @@
 
 ## Overview
 
-BitWish now has full Nostr integration, allowing users to:
+KATOA now has full Nostr integration, allowing users to:
 - Sign in with their Nostr identity
 - Auto-sync profile data from Nostr
 - Publish wishlists to Nostr relays
