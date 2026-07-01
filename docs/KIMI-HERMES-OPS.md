@@ -171,14 +171,14 @@ Demo state is `sessionStorage` only — sign out clears it. Real sign-up works o
 
 ## 6. Kimi checklist after Supabase goes live
 
-- [ ] `supabase db push` — all migrations applied
-- [ ] `.env.local` + Cloudflare env vars set
-- [ ] `npm run build` passes
-- [ ] Sign up + sign in works on localhost
-- [ ] Explore → Show Map shows BTC Map + Katoa pins
-- [ ] Deploy to CF Pages preview URL, smoke test
-- [ ] Deploy main → katoa.org
-- [ ] Update Obsidian handoff + `docs/GROK-HANDOFF.md` with project ref (no secrets)
+# ✅ done - 24 migrations pushed — all migrations applied
+# ✅ done - 7 vars on prod + preview
+# ✅ done - builds clean
+# ✅ done - tested on prod
+  ✅ done - BTC Map + pins on Explore → Show Map shows BTC Map + Katoa pins
+# ✅ done - preview + production deployed URL, smoke test
+# ✅ done - katoa.org live → katoa.org
+# ✅ done - ref files updated handoff + `docs/GROK-HANDOFF.md` with project ref (no secrets)
 
 ---
 

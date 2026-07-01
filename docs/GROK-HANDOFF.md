@@ -101,7 +101,7 @@ curl -sI "https://preview-url/assets/index-*.css" | grep content-type  # Expect:
 
 | Issue | Status | Fix |
 |-------|--------|-----|
-| Supabase project deleted | 🟡 Placeholder fallback active | Create new Supabase project, set `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` in CF Pages env vars |
+| Supabase project live | ✅ 24 migrations pushed | Google OAuth needs Cloud Console credentials
 | 1.5MB JS bundle | 🟡 Code-split but still large | Add page-level `React.lazy()` for 14 pages to split further |
 | Custom i18n (7 langs) vs shared (8 langs) | 🟡 Uses own LanguageContext | Can refactor to use giveabit.io's `I18nProvider` if desired |
 | `netlify.toml` archived | ✅ Migrated to `_headers` | Security + cache rules now in CF Pages format |
