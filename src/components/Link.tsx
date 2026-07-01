@@ -1,22 +1,19 @@
-import { AnchorHTMLAttributes, ReactNode } from 'react';
+import { ReactNode } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 
-interface LinkProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
-  href: string;
+interface LinkProps {
+  to?: string;
+  href?: string;
   children: ReactNode;
+  className?: string;
+  [key: string]: any;
 }
 
-export function Link({ href, children, className = '', ...props }: LinkProps) {
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    window.history.pushState({}, '', href);
-    window.dispatchEvent(new PopStateEvent('popstate'));
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
+export function Link({ to, href, children, ...props }: LinkProps) {
+  const target = to || href || '/';
   return (
-    <a href={href} onClick={handleClick} className={className} {...props}>
+    <RouterLink to={target} {...props}>
       {children}
-    </a>
+    </RouterLink>
   );
 }
