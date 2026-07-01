@@ -1,16 +1,49 @@
 import { useState } from 'react';
 import { Link } from './Link';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Bitcoin, Twitter, Github, Mail, Heart, X, Copy, Check, ChevronDown } from 'lucide-react';
+import { FooterBitcoinStrip } from './FooterBitcoinStrip';
+import { FooterJobBoard } from './FooterJobBoard';
+import { DonateQRModal } from './DonateQRModal';
+import {
+  Bitcoin,
+  Twitter,
+  Mail,
+  Heart,
+  Copy,
+  Check,
+  ChevronDown,
+  Github,
+  Zap,
+  Globe,
+  Code2,
+  ExternalLink,
+  BookOpen,
+  Shield,
+} from 'lucide-react';
 import packageJson from '../../package.json';
+
+const bitcoinAddress = 'bc1qhm5ndfjhqxdk3cx0pngyps4f5nnwdckulmge6c8keyf2pk0neqtshjn8ad';
+
+const apiLinks = [
+  { label: 'Supabase REST', href: 'https://pglqjtipbocjnqmiwmwf.supabase.co/rest/v1/', icon: DatabaseIcon },
+  { label: 'BTC Map API', href: 'https://api.btcmap.org/v2/areas', icon: Globe },
+  { label: 'Mempool.space', href: 'https://mempool.space/api', icon: BlocksIcon },
+  { label: 'Nostr NIPs', href: 'https://github.com/nostr-protocol/nips', icon: BookOpen },
+];
+
+function DatabaseIcon({ size = 16, className = '' }: { size?: number; className?: string }) {
+  return <Code2 size={size} className={className} />;
+}
+
+function BlocksIcon({ size = 16, className = '' }: { size?: number; className?: string }) {
+  return <Shield size={size} className={className} />;
+}
 
 export function Footer() {
   const { t } = useLanguage();
   const [showDonation, setShowDonation] = useState(false);
   const [copied, setCopied] = useState(false);
   const [qrExpanded, setQrExpanded] = useState(false);
-
-  const bitcoinAddress = "bc1qhm5ndfjhqxdk3cx0pngyps4f5nnwdckulmge6c8keyf2pk0neqtshjn8ad";
 
   const handleCopyAddress = () => {
     navigator.clipboard.writeText(bitcoinAddress);
@@ -20,243 +53,238 @@ export function Footer() {
 
   return (
     <>
-      <footer className="relative bg-gradient-to-b from-night-blue-500 to-night-blue-500 border-t border-night-blue-500">
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-orange-500/5 to-transparent pointer-events-none"></div>
+      <footer className="relative mt-auto overflow-hidden">
+        {/* Ambient glow */}
+        <div className="absolute inset-0 bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 pointer-events-none" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-px bg-gradient-to-r from-transparent via-neon-cyan-500/40 to-transparent" />
+        <div className="absolute -top-32 left-1/4 w-96 h-96 bg-bitcoin-orange-500/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-20 right-1/4 w-72 h-72 bg-neon-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-9">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-9 mb-9">
-            {/* Brand Section */}
-            <div className="md:col-span-5">
-              <div className="flex items-center gap-2 mb-4">
-                <img src="/sats.png" alt="KATOA" className="w-7 h-7 rounded-full" />
-                <span className="text-lg font-bold bg-gradient-to-r from-orange-400 to-yellow-500 bg-clip-text text-transparent">
-                  KATOA
-                </span>
-              </div>
-              <p className="text-gray-400 text-xs leading-relaxed mb-4 max-w-md">
-                A movement to democratize giving using Bitcoin. Anyone with a smartphone can now support causes worldwide, instantly, privately, and directly.
+        <FooterBitcoinStrip />
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 mb-12">
+            {/* Brand */}
+            <div className="lg:col-span-3">
+              <Link href="/" className="inline-flex items-center gap-3 mb-5 group">
+                <img
+                  src="/sats.png"
+                  alt="KATOA"
+                  className="w-11 h-11 rounded-full ring-2 ring-bitcoin-orange-500/30 group-hover:ring-neon-cyan-500/50 transition-all"
+                />
+                <div>
+                  <span className="text-xl font-display font-black bg-gradient-to-r from-bitcoin-orange-400 via-amber-300 to-neon-cyan-400 bg-clip-text text-transparent">
+                    KATOA
+                  </span>
+                  <p className="text-[10px] font-mono text-gray-500 tracking-widest uppercase">Keep All That's Owed Always</p>
+                </div>
+              </Link>
+
+              <p className="text-gray-400 text-sm leading-relaxed mb-6">
+                {t('footer.tagline')}. A movement to democratize giving using Bitcoin—anyone with a smartphone can support
+                causes worldwide, instantly, privately, and directly. Zero platform fees. Forever.
               </p>
-              {/* Social Links */}
-              <div className="flex items-center gap-3">
+
+              <div className="flex flex-wrap gap-2 mb-6">
                 <a
                   href="https://x.com/give_bit"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center justify-center w-14 h-14 rounded-full bg-night-blue-500 border border-night-blue-400 hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 group"
+                  className="flex items-center justify-center w-11 h-11 rounded-xl bg-white/5 border border-white/10 hover:border-neon-cyan-500/40 hover:bg-neon-cyan-500/10 transition-all group"
+                  aria-label="Twitter"
                 >
-                  <Twitter size={24} className="text-gray-400 group-hover:text-orange-500 transition-colors" />
+                  <Twitter size={20} className="text-gray-400 group-hover:text-neon-cyan-400" />
+                </a>
+                <a
+                  href="https://github.com/kitsboy/katoa"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center w-11 h-11 rounded-xl bg-white/5 border border-white/10 hover:border-white/30 hover:bg-white/10 transition-all group"
+                  aria-label="GitHub"
+                >
+                  <Github size={20} className="text-gray-400 group-hover:text-white" />
                 </a>
                 <a
                   href="mailto:hello@giveabit.io"
-                  className="flex items-center justify-center w-14 h-14 rounded-full bg-night-blue-500 border border-night-blue-400 hover:border-orange-500 hover:bg-orange-500/10 transition-all duration-300 group"
+                  className="flex items-center justify-center w-11 h-11 rounded-xl bg-white/5 border border-white/10 hover:border-bitcoin-orange-500/40 hover:bg-bitcoin-orange-500/10 transition-all group"
+                  aria-label="Email"
                 >
-                  <Mail size={24} className="text-gray-400 group-hover:text-orange-500 transition-colors" />
+                  <Mail size={20} className="text-gray-400 group-hover:text-bitcoin-orange-400" />
                 </a>
+                <button
+                  type="button"
+                  onClick={() => setShowDonation(true)}
+                  className="flex items-center gap-2 px-4 h-11 rounded-xl bg-gradient-to-r from-bitcoin-orange-500/20 to-amber-600/20 border border-bitcoin-orange-500/30 hover:border-bitcoin-orange-500/60 text-bitcoin-orange-400 text-sm font-semibold transition-all"
+                >
+                  <Bitcoin size={18} />
+                  Donate sats
+                </button>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10">
+                <p className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-2 flex items-center gap-1.5">
+                  <Zap size={12} className="text-neon-cyan-500" />
+                  Developer APIs
+                </p>
+                <ul className="space-y-2">
+                  {apiLinks.map((item) => (
+                    <li key={item.label}>
+                      <a
+                        href={item.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-xs text-gray-400 hover:text-neon-cyan-400 transition-colors group"
+                      >
+                        <item.icon size={14} className="text-gray-600 group-hover:text-neon-cyan-500" />
+                        <span className="flex-1">{item.label}</span>
+                        <ExternalLink size={10} className="opacity-0 group-hover:opacity-100" />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
 
-            {/* Navigation Columns */}
-            <div className="md:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-6">
+            {/* Nav */}
+            <div className="lg:col-span-2 grid grid-cols-2 gap-6">
               <div>
-                <h3 className="text-white font-semibold mb-3 text-sm uppercase tracking-wider">Company</h3>
-                <ul className="space-y-2">
-                  <li>
-                    <Link href="/about" className="text-gray-300 hover:text-orange-400 text-sm transition-colors duration-200 font-normal">
-                      About Us
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/pricing" className="text-gray-300 hover:text-orange-400 text-sm transition-colors duration-200 font-normal">
-                      Pricing
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/contact" className="text-gray-300 hover:text-orange-400 text-sm transition-colors duration-200 font-normal">
-                      Contact
-                    </Link>
-                  </li>
+                <h3 className="text-white font-display font-bold mb-4 text-xs uppercase tracking-widest text-gray-300">
+                  Company
+                </h3>
+                <ul className="space-y-2.5">
+                  <FooterLink href="/about">{t('footer.about')}</FooterLink>
+                  <FooterLink href="/pricing">{t('footer.pricing')}</FooterLink>
+                  <FooterLink href="/contact">{t('footer.contact')}</FooterLink>
+                  <FooterLink href="/comparison">Why Katoa</FooterLink>
                 </ul>
               </div>
+              <div>
+                <h3 className="text-white font-display font-bold mb-4 text-xs uppercase tracking-widest text-gray-300">
+                  Product
+                </h3>
+                <ul className="space-y-2.5">
+                  <FooterLink href="/explore">Explore</FooterLink>
+                  <FooterLink href="/dashboard">Dashboard</FooterLink>
+                  <FooterLink href="/faq">FAQ</FooterLink>
+                  <FooterLink href="/auth">Sign In</FooterLink>
+                </ul>
+              </div>
+              <div className="col-span-2">
+                <h3 className="text-white font-display font-bold mb-4 text-xs uppercase tracking-widest text-gray-300">
+                  Legal
+                </h3>
+                <ul className="space-y-2.5 sm:flex sm:flex-wrap sm:gap-x-6 sm:gap-y-2.5 sm:space-y-0">
+                  <FooterLink href="/terms">{t('footer.terms')}</FooterLink>
+                  <FooterLink href="/privacy">{t('footer.privacy')}</FooterLink>
+                </ul>
+              </div>
+            </div>
 
-              <div>
-                <h3 className="text-white font-semibold mb-3 text-sm uppercase tracking-wider">Product</h3>
-                <ul className="space-y-2">
-                  <li>
-                    <Link href="/explore" className="text-gray-300 hover:text-orange-400 text-sm transition-colors duration-200 font-normal">
-                      Explore
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/dashboard" className="text-gray-300 hover:text-orange-400 text-sm transition-colors duration-200 font-normal">
-                      Dashboard
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/faq" className="text-gray-300 hover:text-orange-400 text-sm transition-colors duration-200 font-normal">
-                      FAQ
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-
-              <div>
-                <h3 className="text-white font-semibold mb-3 text-sm uppercase tracking-wider">Legal</h3>
-                <ul className="space-y-2">
-                  <li>
-                    <Link href="/terms" className="text-gray-300 hover:text-orange-400 text-sm transition-colors duration-200 font-normal">
-                      Terms of Service
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/privacy" className="text-gray-300 hover:text-orange-400 text-sm transition-colors duration-200 font-normal">
-                      Privacy Policy
-                    </Link>
-                  </li>
-                </ul>
-              </div>
+            {/* Jobs */}
+            <div className="lg:col-span-7">
+              <FooterJobBoard />
             </div>
           </div>
 
-          {/* Bottom Section */}
-          <div className="pt-6 border-t border-night-blue-500">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-3">
-              <div className="flex items-center gap-2 text-xs text-gray-500">
-                <span>&copy; {new Date().getFullYear()} KATOA (katoa.org). All rights reserved.</span>
-                <span className="text-gray-700">•</span>
-                <span className="text-gray-600 font-mono text-[10px]">v{packageJson.version}</span>
+          {/* Bottom bar */}
+          <div className="pt-8 border-t border-white/10">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-3 gap-y-1 text-xs text-gray-500">
+                <span>&copy; {new Date().getFullYear()} KATOA (katoa.org)</span>
+                <span className="hidden sm:inline text-gray-700">·</span>
+                <span className="font-mono text-[10px] text-gray-600">v{packageJson.version}</span>
+                <span className="hidden sm:inline text-gray-700">·</span>
+                <a
+                  href="https://giveabit.io"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-500 hover:text-neon-cyan-400 transition-colors"
+                >
+                  A Give A Bit project
+                </a>
               </div>
 
               <button
+                type="button"
                 onClick={() => setShowDonation(!showDonation)}
-                className="flex items-center gap-2 text-base text-gray-400 hover:text-orange-500 transition-colors duration-200 cursor-pointer group"
+                className="flex items-center gap-2 text-sm text-gray-400 hover:text-bitcoin-orange-400 transition-colors group"
               >
                 <span>Made with</span>
-                <Heart size={20} className="text-orange-500 fill-orange-500 group-hover:animate-pulse" />
+                <Heart size={18} className="text-bitcoin-orange-500 fill-bitcoin-orange-500 group-hover:animate-pulse" />
                 <span>and</span>
-                <Bitcoin size={20} className="text-orange-500" />
+                <Bitcoin size={18} className="text-bitcoin-orange-500" />
+                <span className="text-gray-600">·</span>
+                <span className="font-mono text-neon-cyan-500/80">₿ FOSS</span>
               </button>
             </div>
           </div>
         </div>
       </footer>
 
-      {/* QR Code Modal */}
-      {qrExpanded && (
-        <>
-          <div
-            className="fixed inset-0 z-[60] bg-black/80 backdrop-blur-md"
-            onClick={() => setQrExpanded(false)}
-          />
-          <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 pointer-events-none">
-            <div className="pointer-events-auto bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full animate-in fade-in zoom-in duration-300">
-              <div className="text-center mb-6">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Scan to Donate</h3>
-                <p className="text-gray-600 text-sm">Use any Bitcoin wallet to scan</p>
-              </div>
-              <div className="bg-white p-4 rounded-xl shadow-inner mb-6">
-                <img
-                  src="/donations-qr copy.png"
-                  alt="Bitcoin Donation QR Code"
-                  className="w-full h-full object-contain"
-                  style={{ imageRendering: 'crisp-edges', maxWidth: '400px', margin: '0 auto', display: 'block' }}
-                />
-              </div>
-              <div className="bg-gray-50 rounded-lg p-4 mb-4">
-                <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-2">Bitcoin Address</p>
-                <code className="text-xs text-gray-800 break-all font-mono block leading-relaxed">
-                  bc1qhm5ndfjhqxdk3cx0pngyps4f5nnwdckulmge6c8keyf2pk0neqtshjn8ad
-                </code>
-              </div>
-              <button
-                onClick={() => setQrExpanded(false)}
-                className="w-full py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-medium transition-colors"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </>
-      )}
+      <DonateQRModal
+        isOpen={qrExpanded}
+        onClose={() => setQrExpanded(false)}
+        address={bitcoinAddress}
+      />
 
-      {/* Sliding Donation Panel */}
+      {/* Donation drawer — preserved */}
       <div
-        className={`fixed bottom-0 left-0 right-0 z-50 transition-transform duration-500 ease-out ${showDonation ? 'translate-y-0' : 'translate-y-full'
-          }`}
+        className={`fixed bottom-0 left-0 right-0 z-50 transition-transform duration-500 ease-out ${
+          showDonation ? 'translate-y-0' : 'translate-y-full'
+        }`}
       >
-        <div className="relative bg-gradient-to-t from-night-blue-500 via-night-blue-400 to-night-blue-500 border-t-2 border-orange-500/50 shadow-[0_-10px_50px_rgba(249,115,22,0.3)]">
-          {/* Close Button */}
+        <div className="relative bg-gradient-to-t from-charcoal-950 via-charcoal-900 to-charcoal-950 border-t-2 border-bitcoin-orange-500/50 shadow-[0_-10px_50px_rgba(247,147,26,0.25)] pb-safe">
           <button
+            type="button"
             onClick={() => setShowDonation(false)}
-            className="absolute top-4 right-4 flex items-center justify-center w-8 h-8 rounded-full bg-night-blue-500 hover:bg-orange-500/20 border border-night-blue-400 hover:border-orange-500 text-gray-400 hover:text-orange-500 transition-all duration-200"
+            className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/10 hover:bg-white/15 border border-white/10 text-gray-400 hover:text-white flex items-center justify-center transition-all"
           >
             <ChevronDown size={20} />
           </button>
 
-          <div className="max-w-md mx-auto px-6 py-8">
-            {/* Header */}
+          <div className="max-w-lg mx-auto px-6 py-8">
             <div className="text-center mb-6">
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-orange-500 to-yellow-600 mb-3">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-bitcoin-orange-500 to-amber-600 mb-3">
                 <Heart size={24} className="text-white fill-white" />
               </div>
               <h3 className="text-xl font-bold text-white mb-1">Support FOSS Development</h3>
-              <p className="text-gray-400 text-xs">
-                Help keep KATOA free and open-source
-              </p>
+              <p className="text-gray-400 text-xs">Help keep KATOA free and open-source</p>
             </div>
 
-            <div className="flex items-start gap-4">
-              {/* QR Code */}
-              <div className="flex-shrink-0">
-                <div
-                  onClick={() => setQrExpanded(!qrExpanded)}
-                  className="cursor-pointer hover:opacity-80 transition-opacity"
+            <div className="flex flex-col sm:flex-row items-start gap-4">
+              <div className="mx-auto sm:mx-0 shrink-0 flex flex-col items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => setQrExpanded(true)}
+                  className="w-36 h-36 bg-white p-2 rounded-xl shadow-lg hover:opacity-90 active:scale-[0.98] transition-all touch-manipulation ring-2 ring-transparent hover:ring-bitcoin-orange-500/30"
+                  aria-label="Expand donation QR code"
                 >
-                  <div className="w-36 h-36 bg-white p-2 rounded-lg shadow-lg">
-                    <img
-                      src="/donations-qr copy.png"
-                      alt="Donation QR Code"
-                      className="w-full h-full object-contain"
-                      style={{ imageRendering: 'crisp-edges' }}
-                    />
-                  </div>
-                </div>
+                  <img
+                    src="/donations-qr copy.png"
+                    alt="Donation QR"
+                    className="w-full h-full object-contain"
+                    style={{ imageRendering: 'crisp-edges' }}
+                  />
+                </button>
+                <p className="text-[10px] text-gray-500 sm:hidden">Tap to enlarge</p>
               </div>
-
-              {/* Content */}
-              <div className="flex-1 min-w-0">
-                {/* Bitcoin Main Chain Address */}
-                <div className="bg-night-blue-400/80 border border-night-blue-500 rounded-lg p-3 mb-3">
+              <div className="flex-1 min-w-0 w-full">
+                <div className="bg-white/5 border border-white/10 rounded-xl p-3 mb-3">
                   <div className="flex items-center justify-between gap-2 mb-1">
                     <span className="text-xs text-white uppercase tracking-wider font-semibold">Bitcoin Main Chain</span>
                     <button
+                      type="button"
                       onClick={handleCopyAddress}
-                      className="flex items-center gap-1 text-[10px] text-orange-500 hover:text-orange-400 transition-colors"
+                      className="flex items-center gap-1 text-[10px] text-bitcoin-orange-400 hover:text-bitcoin-orange-300"
                     >
-                      {copied ? (
-                        <>
-                          <Check size={12} />
-                          Copied
-                        </>
-                      ) : (
-                        <>
-                          <Copy size={12} />
-                          Copy
-                        </>
-                      )}
+                      {copied ? <><Check size={12} /> Copied</> : <><Copy size={12} /> Copy</>}
                     </button>
                   </div>
-                  <code className="text-xs text-gray-300 break-all font-mono block leading-tight">
-                    bc1qhm5ndfjhqxdk3cx0pngyps4f5nnwdckulmge6c8keyf2pk0neqtshjn8ad
-                  </code>
+                  <code className="text-xs text-gray-400 break-all font-mono block leading-tight">{bitcoinAddress}</code>
                 </div>
-
-                {/* Caption */}
-                <p className="text-xs text-gray-400 leading-relaxed mb-2">
-                  Your <span className="text-orange-500 font-semibold">sats</span> help us build free tools for the Bitcoin community.
-                </p>
-                <p className="text-[10px] text-white font-medium">
-                  Scan with any Bitcoin wallet
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  Your <span className="text-bitcoin-orange-500 font-semibold">sats</span> fund free tools for the Bitcoin
+                  community.
                 </p>
               </div>
             </div>
@@ -264,13 +292,27 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Backdrop */}
       {showDonation && (
         <div
+          role="presentation"
           onClick={() => setShowDonation(false)}
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 animate-in fade-in duration-300"
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
         />
       )}
     </>
+  );
+}
+
+function FooterLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <li>
+      <Link
+        href={href}
+        className="text-gray-400 hover:text-neon-cyan-400 text-sm transition-colors duration-200 inline-flex items-center gap-1 group"
+      >
+        <span className="w-0 group-hover:w-1.5 h-px bg-neon-cyan-500 transition-all duration-200" />
+        {children}
+      </Link>
+    </li>
   );
 }
