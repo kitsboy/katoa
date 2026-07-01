@@ -1,6 +1,6 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { LanguageProvider } from './contexts/LanguageContext';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { HomePage } from './pages/HomePage';
@@ -17,57 +17,34 @@ import { TermsPage } from './pages/TermsPage';
 import { PrivacyPage } from './pages/PrivacyPage';
 import { AuthPage } from './pages/AuthPage';
 import { FAQPage } from './pages/FAQPage';
-import { useRouter } from './hooks/useRouter';
 
 function App() {
-  const path = useRouter();
-
-  let page;
-  if (path === '/' || path === '') {
-    page = <HomePage />;
-  } else if (path === '/explore') {
-    page = <ExplorePage />;
-  } else if (path === '/auth') {
-    page = <AuthPage />;
-  } else if (path === '/dashboard') {
-    page = <DashboardPage />;
-  } else if (path === '/settings') {
-    page = <SettingsPage />;
-  } else if (path === '/about') {
-    page = <AboutPage />;
-  } else if (path === '/contact') {
-    page = <ContactPage />;
-  } else if (path === '/pricing') {
-    page = <PricingPage />;
-  } else if (path === '/compare' || path === '/comparison') {
-    page = <ComparisonPage />;
-  } else if (path === '/terms') {
-    page = <TermsPage />;
-  } else if (path === '/privacy') {
-    page = <PrivacyPage />;
-  } else if (path === '/faq') {
-    page = <FAQPage />;
-  } else if (path.startsWith('/project/')) {
-    page = <ProjectPage />;
-  } else if (path.startsWith('/wishlist/')) {
-    const slug = path.split('/')[2];
-    page = <WishlistPage slug={slug} />;
-  } else {
-    page = <HomePage />;
-  }
-
   return (
-    <LanguageProvider>
-      <AuthProvider>
-        <div className="min-h-screen bg-black flex flex-col">
+    <AuthProvider>
+      <LanguageProvider>
+        <BrowserRouter>
           <Navbar />
-          <main className="flex-1">
-            {page}
-          </main>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/explore" element={<ExplorePage />} />
+            <Route path="/auth" element={<AuthPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/faq" element={<FAQPage />} />
+            <Route path="/pricing" element={<PricingPage />} />
+            <Route path="/comparison" element={<ComparisonPage />} />
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/wishlist" element={<WishlistPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/project" element={<ProjectPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="*" element={<HomePage />} />
+          </Routes>
           <Footer />
-        </div>
-      </AuthProvider>
-    </LanguageProvider>
+        </BrowserRouter>
+      </LanguageProvider>
+    </AuthProvider>
   );
 }
 
