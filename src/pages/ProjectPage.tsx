@@ -5,13 +5,13 @@ import { Card } from '../components/Card';
 import { Modal } from '../components/Modal';
 import { Input } from '../components/Input';
 import { Link } from '../components/Link';
-import { MediaUpload } from '../components/MediaUpload';
+
 import { PaymentMethodManager } from '../components/PaymentMethodManager';
 import { supabase } from '../lib/supabase';
 import { parseProductUrl } from '../lib/productParser';
 import {
   Plus, Edit, Trash2, Settings, Gift, ArrowLeft,
-  Image as ImageIcon, Wallet, Globe, Lock, FileText,
+  Wallet, Globe, Lock, FileText,
   ExternalLink, Save, X, Camera, Upload
 } from 'lucide-react';
 
@@ -785,7 +785,7 @@ export function ProjectPage() {
             value={wishlistForm.url}
             onChange={(e) => setWishlistForm({ ...wishlistForm, url: e.target.value })}
             placeholder="https://amazon.com/wishlist/..."
-            helpText="Auto-populate details from URL"
+            helperText="Auto-populate details from URL"
             icon={<ExternalLink size={16} />}
           />
 
@@ -814,7 +814,7 @@ export function ProjectPage() {
             value={wishlistForm.slug}
             onChange={(e) => setWishlistForm({ ...wishlistForm, slug: e.target.value })}
             placeholder="my-wishlist"
-            helpText="Leave blank to auto-generate"
+            helperText="Leave blank to auto-generate"
           />
 
           <div>

@@ -37,7 +37,7 @@ const translations: Record<Language, Record<string, string>> = {
     'explore.raised': 'raised',
     'explore.noResults': 'No results found',
     'explore.tryAgain': 'Try adjusting your filters',
-    'about.title': 'About BitWish',
+    'about.title': 'About Katoa',
     'about.subtitle': 'Our Mission',
     'contact.title': 'Contact Us',
     'contact.subtitle': 'Get in Touch',
@@ -70,7 +70,7 @@ const translations: Record<Language, Record<string, string>> = {
     'explore.raised': 'recaudado',
     'explore.noResults': 'No se encontraron resultados',
     'explore.tryAgain': 'Intenta ajustar tus filtros',
-    'about.title': 'Acerca de BitWish',
+    'about.title': 'Acerca de Katoa',
     'about.subtitle': 'Nuestra Misión',
     'contact.title': 'Contáctanos',
     'contact.subtitle': 'Ponte en Contacto',
@@ -103,7 +103,7 @@ const translations: Record<Language, Record<string, string>> = {
     'explore.raised': 'arrecadado',
     'explore.noResults': 'Nenhum resultado encontrado',
     'explore.tryAgain': 'Tente ajustar seus filtros',
-    'about.title': 'Sobre BitWish',
+    'about.title': 'Sobre Katoa',
     'about.subtitle': 'Nossa Missão',
     'contact.title': 'Fale Conosco',
     'contact.subtitle': 'Entre em Contato',
@@ -136,7 +136,7 @@ const translations: Record<Language, Record<string, string>> = {
     'explore.raised': 'collecté',
     'explore.noResults': 'Aucun résultat trouvé',
     'explore.tryAgain': 'Essayez d\'ajuster vos filtres',
-    'about.title': 'À Propos de BitWish',
+    'about.title': 'À Propos de Katoa',
     'about.subtitle': 'Notre Mission',
     'contact.title': 'Nous Contacter',
     'contact.subtitle': 'Prenez Contact',
@@ -169,7 +169,7 @@ const translations: Record<Language, Record<string, string>> = {
     'explore.raised': 'gesammelt',
     'explore.noResults': 'Keine Ergebnisse gefunden',
     'explore.tryAgain': 'Versuche deine Filter anzupassen',
-    'about.title': 'Über BitWish',
+    'about.title': 'Über Katoa',
     'about.subtitle': 'Unsere Mission',
     'contact.title': 'Kontakt',
     'contact.subtitle': 'Melde Dich',
@@ -202,7 +202,7 @@ const translations: Record<Language, Record<string, string>> = {
     'explore.raised': '達成',
     'explore.noResults': '結果が見つかりません',
     'explore.tryAgain': 'フィルターを調整してください',
-    'about.title': 'BitWishについて',
+    'about.title': 'Katoaについて',
     'about.subtitle': '私たちのミッション',
     'contact.title': 'お問い合わせ',
     'contact.subtitle': 'ご連絡ください',
@@ -235,7 +235,7 @@ const translations: Record<Language, Record<string, string>> = {
     'explore.raised': '已筹集',
     'explore.noResults': '未找到结果',
     'explore.tryAgain': '尝试调整您的筛选条件',
-    'about.title': '关于 BitWish',
+    'about.title': '关于 Katoa',
     'about.subtitle': '我们的使命',
     'contact.title': '联系我们',
     'contact.subtitle': '保持联系',
@@ -266,12 +266,12 @@ export const languageNames: Record<Language, string> = {
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<Language>(() => {
-    const saved = localStorage.getItem('bitwish-language');
+    const saved = localStorage.getItem('katoa-language') || localStorage.getItem('bitwish-language');
     return (saved as Language) || 'en';
   });
 
   useEffect(() => {
-    localStorage.setItem('bitwish-language', language);
+    localStorage.setItem('katoa-language', language);
   }, [language]);
 
   const setLanguage = (lang: Language) => {

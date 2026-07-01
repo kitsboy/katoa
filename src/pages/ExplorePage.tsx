@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { Card } from '../components/Card';
 import { Link } from '../components/Link';
 import { Input } from '../components/Input';
@@ -6,8 +6,12 @@ import { Button } from '../components/Button';
 import { CategoryBadge } from '../components/CategoryBadge';
 import { TrendingBadge } from '../components/TrendingBadge';
 import { ProgressBar } from '../components/ProgressBar';
+import { MediaCard } from '../components/MediaCard';
+import { BTCMapSection } from '../components/BTCMapSection';
+import { SatsDisplay } from '../components/SatsDisplay';
 import { supabase } from '../lib/supabase';
 import { mockWishlists } from '../data/mockWishlists';
+import { mergeKatoaPinsWithMap } from '../lib/btcmap';
 import { Gift, Search, MapPin, Globe, SlidersHorizontal, Star } from 'lucide-react';
 
 interface Wishlist {
@@ -16,6 +20,7 @@ interface Wishlist {
   description: string;
   slug: string;
   cover_image: string | null;
+  cover_video_url?: string | null;
   total_sats_goal: number;
   total_sats_raised: number;
   country?: string;
@@ -149,30 +154,45 @@ export function ExplorePage() {
     (w) => w.latitude && w.longitude
   );
 
+  const { pins: katoaMapPins, mapCenter } = useMemo(() => {
+    const pins = wishlistsWithLocation.map((w) => ({
+      id: w.id,
+      title: w.title,
+      slug: w.slug,
+      latitude: w.latitude!,
+      longitude: w.longitude!,
+      total_sats_raised: w.total_sats_raised,
+      cover_image: w.cover_image,
+    }));
+    return mergeKatoaPinsWithMap(pins);
+  }, [wishlistsWithLocation]);
+
+  const featured = mockWishlists.find((w) => w.slug === 'medellin-skate-park') ?? mockWishlists[0];
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-black pt-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
+    <div className="min-h-screen bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 pt-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pt-20 sm:pt-24">
 
         {/* Hero Featured Project */}
-        <Card className="mb-8 overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 border-2 border-orange-500/50 shadow-[0_0_40px_rgba(255,135,0,0.3)] hover:shadow-[0_0_60px_rgba(255,135,0,0.4)] transition-all duration-300 animate-slide-up">
+        <Card className="mb-8 overflow-hidden border-2 border-bitcoin-orange-500/40 shadow-[0_0_40px_rgba(255,135,0,0.2)] hover:shadow-[0_0_60px_rgba(255,135,0,0.35)] transition-all duration-300 animate-slide-up group">
           <div className="grid md:grid-cols-2 gap-0">
-            <div className="relative h-80 md:h-auto overflow-hidden group">
-              <img
-                src="https://images.pexels.com/photos/5793678/pexels-photo-5793678.jpeg?auto=compress&cs=tinysrgb&w=1200"
-                alt="Skateboard Park Colombia"
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent" />
-              <div className="absolute top-4 left-4">
-                <TrendingBadge type="featured" />
-              </div>
-              {/* Impact badge */}
-              <div className="absolute bottom-4 left-4 bg-emerald-500 text-white px-4 py-2 rounded-full font-bold text-sm flex items-center gap-2 shadow-lg">
-                <Star size={16} className="fill-white" />
-                65% Funded
-              </div>
-            </div>
-            <div className="p-8 md:p-10 flex flex-col justify-center bg-gradient-to-br from-gray-900 to-black">
+            <MediaCard
+              className="h-64 sm:h-80 md:h-auto md:min-h-[360px]"
+              media={{
+                imageUrl: featured.cover_image,
+                videoUrl: (featured as { cover_video_url?: string }).cover_video_url,
+                alt: featured.title,
+              }}
+              aspect="wide"
+              topLeft={<TrendingBadge type="featured" />}
+              bottomLeft={
+                <div className="bg-emerald-500 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-full font-bold text-xs sm:text-sm flex items-center gap-2 shadow-lg">
+                  <Star size={14} className="fill-white" />
+                  {Math.round((featured.total_sats_raised / featured.total_sats_goal) * 100)}% Funded
+                </div>
+              }
+            />
+            <div className="p-6 sm:p-8 md:p-10 flex flex-col justify-center bg-gradient-to-br from-charcoal-900 to-charcoal-950">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-amber-600 rounded-full flex items-center justify-center">
                   <span className="text-white font-black text-lg">SK</span>
@@ -182,11 +202,11 @@ export function ExplorePage() {
                   <p className="text-gray-400 text-sm">Verified Creator</p>
                 </div>
               </div>
-              <h2 className="text-3xl md:text-4xl font-black text-white mb-4 leading-tight">
-                Skateboard Park for Medellín Youth
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-white mb-4 leading-tight">
+                {featured.title}
               </h2>
-              <p className="text-gray-200 mb-6 leading-relaxed font-medium text-lg">
-                Transform lives through skateboarding. We're building a safe community space where 500+ youth can skate, learn, and grow together with free lessons and mentorship.
+              <p className="text-gray-300 mb-6 leading-relaxed font-medium text-base sm:text-lg">
+                {featured.description}
               </p>
 
               {/* Stats Row */}
@@ -206,26 +226,28 @@ export function ExplorePage() {
               </div>
 
               <ProgressBar
-                current={3250000}
-                goal={5000000}
+                current={featured.total_sats_raised}
+                goal={featured.total_sats_goal}
                 showPercentage={false}
                 showValues={true}
-                gradient="from-orange-500 to-amber-600"
+                gradient="from-bitcoin-orange-500 to-amber-600"
                 height="md"
                 animated={true}
               />
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-6">
-                <Button
-                  size="lg"
-                  className="flex-1 bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 font-bold shadow-[0_0_20px_rgba(255,135,0,0.4)] hover:shadow-[0_0_30px_rgba(255,135,0,0.6)] transition-all"
-                  onClick={() => window.location.hash = '/wishlist/medellin-skate-park'}
-                >
-                  <Gift size={20} className="mr-2" />
-                  Support This Project
-                </Button>
-                <div className="flex items-center justify-center gap-2 text-gray-200 text-sm font-bold px-4 py-3 bg-gray-800 rounded-lg border border-gray-700">
-                  <MapPin size={16} className="text-orange-500" />
-                  <span>Medellín, Colombia 🇨🇴</span>
+                <Link href={`/wishlist/${featured.slug}`} className="flex-1">
+                  <Button
+                    size="lg"
+                    variant="bitcoin"
+                    className="w-full font-bold"
+                  >
+                    <Gift size={20} className="mr-2" />
+                    Support This Project
+                  </Button>
+                </Link>
+                <div className="flex items-center justify-center gap-2 text-gray-200 text-sm font-bold px-4 py-3 bg-white/5 rounded-xl border border-white/10">
+                  <MapPin size={16} className="text-bitcoin-orange-500" />
+                  <span>{featured.city}, {featured.country} {featured.country_flag}</span>
                 </div>
               </div>
             </div>
@@ -351,55 +373,38 @@ export function ExplorePage() {
             )}
           </div>
 
-          {showMap && wishlistsWithLocation.length > 0 && (
-            <Card className="mb-8 p-6">
-              <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
-                <MapPin size={24} className="text-orange-500" />
-                Projects Around the World
-              </h2>
-              <div className="bg-black rounded-lg p-8 min-h-[400px] relative overflow-hidden border border-gray-800">
-                <div className="absolute inset-0 opacity-20">
-                  <svg viewBox="0 0 1000 500" className="w-full h-full">
-                    <rect width="1000" height="500" fill="#1a1a1a" />
-                    <path
-                      d="M 150,150 L 200,120 L 280,140 L 320,130 L 360,150 L 400,140 L 450,160 L 500,150 L 550,140 L 600,160 L 650,150 L 700,140 L 750,160 L 800,150 L 850,140"
-                      stroke="#333"
-                      strokeWidth="1"
-                      fill="none"
-                    />
-                  </svg>
-                </div>
+          {showMap && (
+            <Card className="mb-8 p-4 sm:p-6" variant="glass">
+              <BTCMapSection mapCenter={mapCenter} pins={katoaMapPins} />
 
-                <div className="relative grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {wishlistsWithLocation.map((wishlist) => (
-                    <div
+              {wishlistsWithLocation.length > 0 && (
+                <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                  {wishlistsWithLocation.slice(0, 8).map((wishlist) => (
+                    <Link
                       key={wishlist.id}
-                      className="bg-gray-900 backdrop-blur-sm border border-gray-700 rounded-lg p-4 hover:bg-gray-800 hover:border-orange-500/50 transition-all cursor-pointer"
-                      onClick={() => (window.location.hash = `/wishlist/${wishlist.slug}`)}
+                      href={`/wishlist/${wishlist.slug}`}
+                      className="bg-white/5 border border-white/10 rounded-xl p-4 hover:bg-white/10 hover:border-neon-cyan/30 transition-all"
                     >
                       <div className="flex items-start gap-2 mb-2">
-                        <MapPin size={16} className="text-orange-500 flex-shrink-0 mt-1" />
+                        <MapPin size={16} className="text-bitcoin-orange-500 flex-shrink-0 mt-0.5" />
                         <div className="flex-1 min-w-0">
-                          <p className="text-white text-sm font-bold line-clamp-2">
-                            {wishlist.title}
-                          </p>
-                          <p className="text-gray-300 text-xs mt-1 font-medium">
+                          <p className="text-white text-sm font-bold line-clamp-2">{wishlist.title}</p>
+                          <p className="text-gray-400 text-xs mt-1">
                             {wishlist.city}, {wishlist.country}
                           </p>
                         </div>
                       </div>
-                      <div className="w-full h-1.5 bg-gray-700 rounded-full overflow-hidden mt-3">
-                        <div
-                          className="h-full bg-gradient-to-r from-orange-500 to-amber-500"
-                          style={{
-                            width: `${Math.min((wishlist.total_sats_raised / wishlist.total_sats_goal) * 100, 100)}%`,
-                          }}
-                        />
-                      </div>
-                    </div>
+                      <ProgressBar
+                        current={wishlist.total_sats_raised}
+                        goal={wishlist.total_sats_goal}
+                        showPercentage={false}
+                        showValues={false}
+                        height="sm"
+                      />
+                    </Link>
                   ))}
                 </div>
-              </div>
+              )}
             </Card>
           )}
         </div>
@@ -417,7 +422,7 @@ export function ExplorePage() {
             ))}
           </div>
         ) : filteredWishlists.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {filteredWishlists.map((wishlist) => {
               const progress = wishlist.total_sats_goal > 0
                 ? (wishlist.total_sats_raised / wishlist.total_sats_goal) * 100
@@ -425,99 +430,83 @@ export function ExplorePage() {
 
               const isTrending = wishlist.total_sats_raised > 50000;
               const isNew = wishlist.created_at ? new Date(wishlist.created_at).getTime() > Date.now() - 7 * 24 * 60 * 60 * 1000 : false;
+              const w = wishlist as Wishlist & { country_flag?: string };
 
               return (
-                <Link key={wishlist.id} href={`/wishlist/${wishlist.slug}`}>
-                  <Card className="hover-lift overflow-hidden transition-all duration-300 animate-fade-in">
-                    <div className="relative overflow-hidden group">
-                      {wishlist.cover_image ? (
-                        <img
-                          src={wishlist.cover_image}
-                          alt={wishlist.title}
-                          className="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110"
-                          onError={(e) => {
-                            e.currentTarget.src = 'https://images.pexels.com/photos/2599244/pexels-photo-2599244.jpeg?auto=compress&cs=tinysrgb&w=800';
-                          }}
-                        />
-                      ) : (
-                        <div className="w-full h-56 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
-                          <Gift size={80} className="text-gray-700 animate-float" />
-                        </div>
-                      )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-
-                      {(wishlist as any).country_flag && (
-                        <div className="absolute top-3 right-3 text-3xl drop-shadow-lg">
-                          {(wishlist as any).country_flag}
-                        </div>
-                      )}
-
-                      <div className="absolute top-3 left-3">
-                        {isTrending && <TrendingBadge type="trending" />}
-                        {isNew && !isTrending && <TrendingBadge type="new" />}
-                      </div>
-
-                      {progress >= 100 && (
-                        <div className="absolute bottom-3 left-3">
-                          <div className="px-3 py-1 bg-emerald-500 rounded-full text-white text-xs font-bold flex items-center gap-1">
-                            <Star size={12} className="fill-white" />
-                            Fully Funded
+                <Link key={wishlist.id} href={`/wishlist/${wishlist.slug}`} className="group">
+                  <Card hover className="overflow-hidden animate-fade-in h-full flex flex-col">
+                    <MediaCard
+                      media={{
+                        imageUrl: wishlist.cover_image,
+                        videoUrl: wishlist.cover_video_url,
+                        alt: wishlist.title,
+                      }}
+                      aspect="wide"
+                      className="!aspect-[16/11]"
+                      topLeft={
+                        <>
+                          {isTrending && <TrendingBadge type="trending" />}
+                          {isNew && !isTrending && <TrendingBadge type="new" />}
+                        </>
+                      }
+                      topRight={
+                        w.country_flag ? (
+                          <span className="text-2xl drop-shadow-lg">{w.country_flag}</span>
+                        ) : undefined
+                      }
+                      bottomLeft={
+                        progress >= 100 ? (
+                          <div className="px-2.5 py-1 bg-emerald-500 rounded-full text-white text-xs font-bold flex items-center gap-1">
+                            <Star size={11} className="fill-white" />
+                            Funded
                           </div>
-                        </div>
-                      )}
+                        ) : undefined
+                      }
+                      bottomRight={
+                        <>
+                          <span className="px-2 py-0.5 bg-bitcoin-orange-500/90 rounded text-white text-[10px] font-black">⚡ LN</span>
+                          <span className="px-2 py-0.5 bg-amber-600/90 rounded text-white text-[10px] font-black">₿</span>
+                        </>
+                      }
+                    />
 
-                      <div className="absolute bottom-3 right-3 flex flex-wrap gap-1.5 justify-end max-w-[60%]">
-                        <div className="px-2 py-1 bg-orange-500 rounded-md text-white text-[10px] font-black shadow-lg border border-orange-400/50 backdrop-blur-sm">
-                          ⚡ LIGHTNING
-                        </div>
-                        <div className="px-2 py-1 bg-amber-600 rounded-md text-white text-[10px] font-black shadow-lg border border-amber-500/50 backdrop-blur-sm">
-                          ₿ BITCOIN
-                        </div>
-                        <div className="px-2 py-1 bg-purple-600 rounded-md text-white text-[10px] font-black shadow-lg border border-purple-500/50 backdrop-blur-sm">
-                          🔐 PYNYM
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="p-6 space-y-4">
-                      <div>
-                        <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-1 group-hover:text-blue-600 transition-colors">
+                    <div className="p-4 sm:p-5 space-y-3 flex-1 flex flex-col">
+                      <div className="flex-1">
+                        <h3 className="text-lg font-bold text-white mb-1.5 line-clamp-1 group-hover:text-neon-cyan-400 transition-colors">
                           {wishlist.title}
                         </h3>
-                        <p className="text-gray-600 text-sm line-clamp-2 mb-3 leading-relaxed">
+                        <p className="text-gray-400 text-sm line-clamp-2 leading-relaxed">
                           {wishlist.description}
                         </p>
                         {wishlist.country && (
-                          <div className="flex items-center gap-1.5 text-xs text-gray-300 font-medium">
-                            <MapPin size={12} />
+                          <div className="flex items-center gap-1.5 text-xs text-gray-500 font-medium mt-2">
+                            <MapPin size={12} className="text-bitcoin-orange-500" />
                             <span>{wishlist.city ? `${wishlist.city}, ` : ''}{wishlist.country}</span>
                           </div>
                         )}
                       </div>
 
-                      {wishlist.creator && wishlist.creator.username && (
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-amber-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
+                      {wishlist.creator?.username && (
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-9 h-9 bg-gradient-to-r from-bitcoin-orange-500 to-amber-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
                             {wishlist.creator.username[0].toUpperCase()}
                           </div>
-                          <div>
-                            <span className="text-sm text-white font-medium block">
-                              {wishlist.creator.username}
-                            </span>
-                            <span className="text-xs text-gray-400 font-medium">Creator</span>
-                          </div>
+                          <span className="text-sm text-gray-300 font-medium">{wishlist.creator.username}</span>
                         </div>
                       )}
 
                       {wishlist.total_sats_goal > 0 && (
-                        <ProgressBar
-                          current={wishlist.total_sats_raised}
-                          goal={wishlist.total_sats_goal}
-                          showPercentage={true}
-                          showValues={false}
-                          height="md"
-                          animated={true}
-                        />
+                        <div className="space-y-2 pt-1">
+                          <SatsDisplay sats={wishlist.total_sats_raised} size="sm" />
+                          <ProgressBar
+                            current={wishlist.total_sats_raised}
+                            goal={wishlist.total_sats_goal}
+                            showPercentage={true}
+                            showValues={false}
+                            height="sm"
+                            animated={true}
+                          />
+                        </div>
                       )}
                     </div>
                   </Card>

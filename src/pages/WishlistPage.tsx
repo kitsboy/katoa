@@ -5,11 +5,12 @@ import { Modal } from '../components/Modal';
 import { Input } from '../components/Input';
 import { ShareButton } from '../components/ShareButton';
 import { QRCodeModal } from '../components/QRCodeModal';
-import { WishlistItemsList } from '../components/WishlistItemsList';
+import { MediaCard } from '../components/MediaCard';
+import { SatsDisplay } from '../components/SatsDisplay';
+import { Link } from '../components/Link';
 import { supabase } from '../lib/supabase';
-import { nostrService } from '../lib/nostr';
 import { mockWishlists, mockWishlistItems } from '../data/mockWishlists';
-import { Gift, ExternalLink, Zap, Bitcoin, Check, Copy, MapPin, QrCode, ArrowLeft, Camera, Upload, Heart, TrendingUp, Package } from 'lucide-react';
+import { Gift, ExternalLink, Zap, Bitcoin, Check, Copy, MapPin, QrCode, ArrowLeft, Heart, TrendingUp, Package } from 'lucide-react';
 
 interface WishlistItem {
   id: string;
@@ -18,6 +19,7 @@ interface WishlistItem {
   price_sats: number;
   sats_raised: number;
   image_url: string | null;
+  video_url?: string | null;
   merchant_link: string | null;
   is_funded: boolean;
 }
@@ -30,6 +32,7 @@ interface Wishlist {
   slug: string;
   theme_color?: string;
   cover_image: string | null;
+  cover_video_url?: string | null;
   total_sats_goal: number;
   total_sats_raised: number;
   country?: string;
@@ -196,10 +199,12 @@ export function WishlistPage({ slug }: { slug: string }) {
           <Gift size={64} className="text-gray-600 mx-auto mb-4" />
           <h2 className="text-3xl font-black text-white mb-2">Wishlist Not Found</h2>
           <p className="text-gray-400 mb-6">This wishlist doesn't exist or has been removed.</p>
-          <Button className="bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 font-bold">
-            <ArrowLeft size={18} className="mr-2" />
-            Explore Wishlists
-          </Button>
+          <Link href="/explore">
+            <Button variant="bitcoin">
+              <ArrowLeft size={18} className="mr-2" />
+              Explore Wishlists
+            </Button>
+          </Link>
         </Card>
       </div>
     );
@@ -210,56 +215,44 @@ export function WishlistPage({ slug }: { slug: string }) {
     : 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-black">
+    <div className="min-h-screen bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950">
       <div className="relative">
-        {wishlist.cover_image ? (
-          <div className="relative h-96 overflow-hidden">
-            <img
-              src={wishlist.cover_image}
-              alt={wishlist.title}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-black" />
-          </div>
-        ) : (
-          <div className="relative h-96 overflow-hidden bg-gradient-to-br from-gray-800 to-gray-900">
-            <div className="absolute inset-0 flex items-center justify-center">
-              <Gift size={128} className="text-white/10" />
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-70" />
-          </div>
-        )}
+        <MediaCard
+          className="!aspect-auto h-56 sm:h-72 md:h-96"
+          media={{
+            imageUrl: wishlist.cover_image,
+            videoUrl: wishlist.cover_video_url,
+            alt: wishlist.title,
+          }}
+          aspect="wide"
+          autoplayOnHover={false}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-charcoal-950 pointer-events-none" />
 
         <div className="absolute bottom-0 left-0 right-0 z-10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
-            <div className="flex items-end justify-between">
-              <div className="flex-1">
-                <div className="flex items-center gap-4 mb-4">
-                  <h1
-                    className="text-6xl font-black text-white drop-shadow-2xl"
-                    style={{ textShadow: '0 4px 12px rgba(0,0,0,0.8), 0 0 40px rgba(0,0,0,0.5)' }}
-                  >
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6 sm:pb-8">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-3">
+                  <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-white drop-shadow-lg leading-tight">
                     {wishlist.title}
                   </h1>
                   {wishlist.country_flag && (
-                    <div className="text-5xl drop-shadow-2xl" title={wishlist.country}>{wishlist.country_flag}</div>
+                    <span className="text-3xl sm:text-4xl" title={wishlist.country}>{wishlist.country_flag}</span>
                   )}
                 </div>
-                <p
-                  className="text-white/90 text-xl leading-relaxed max-w-3xl backdrop-blur-sm bg-black/20 px-4 py-2 rounded-lg mb-4"
-                  style={{ textShadow: '0 2px 8px rgba(0,0,0,0.8)' }}
-                >
+                <p className="text-white/90 text-base sm:text-lg leading-relaxed max-w-3xl backdrop-blur-sm bg-black/30 px-3 sm:px-4 py-2 rounded-xl mb-3">
                   {wishlist.description}
                 </p>
                 {wishlist.country && (
-                  <div className="flex items-center gap-2 text-white/80 backdrop-blur-sm bg-black/30 px-4 py-2 rounded-lg inline-flex" title="Location">
-                    <MapPin size={18} />
+                  <div className="inline-flex items-center gap-2 text-white/80 backdrop-blur-sm bg-black/40 px-3 py-2 rounded-lg text-sm">
+                    <MapPin size={16} className="text-bitcoin-orange-500" />
                     <span className="font-medium">{wishlist.city ? `${wishlist.city}, ` : ''}{wishlist.country}</span>
                   </div>
                 )}
               </div>
 
-              <div className="flex flex-col gap-3 ml-6">
+              <div className="flex sm:flex-col gap-3 shrink-0">
                 <ShareButton
                   url={`/wishlist/${wishlist.slug}`}
                   title={wishlist.title}
@@ -323,11 +316,9 @@ export function WishlistPage({ slug }: { slug: string }) {
                   </div>
                 </div>
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-3xl font-black text-white">
-                      {formatSats(wishlist.total_sats_raised)}
-                    </span>
-                    <span className="text-emerald-400 font-black text-2xl">
+                  <div className="flex items-center justify-between gap-4">
+                    <SatsDisplay sats={wishlist.total_sats_raised} size="lg" showBtc />
+                    <span className="text-emerald-400 font-black text-xl sm:text-2xl">
                       {totalProgress.toFixed(0)}%
                     </span>
                   </div>
@@ -401,18 +392,22 @@ export function WishlistPage({ slug }: { slug: string }) {
                     className={`overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 hover:border-purple-500/50 transition-all duration-300 hover:shadow-[0_0_40px_rgba(168,85,247,0.25)] ${item.is_funded ? 'ring-2 ring-emerald-500/50' : ''}`}
                     title={item.is_funded ? "This item has been fully funded!" : "Click to support this item"}
                   >
-                    {item.image_url && (
-                      <div className="relative h-64 overflow-hidden">
-                        <img
-                          src={item.image_url}
-                          alt={item.title}
-                          className="w-full h-full object-cover"
+                    {(item.image_url || item.video_url) && (
+                      <div className="relative">
+                        <MediaCard
+                          media={{
+                            imageUrl: item.image_url,
+                            videoUrl: item.video_url,
+                            alt: item.title,
+                          }}
+                          aspect="wide"
+                          className="!aspect-[16/10]"
+                          showPlayIndicator={Boolean(item.video_url)}
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
                         {item.is_funded && (
-                          <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center">
-                            <div className="bg-emerald-500 rounded-full p-5 shadow-2xl ring-4 ring-white/30 animate-pulse">
-                              <Check size={40} className="text-white" />
+                          <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px] flex items-center justify-center z-10">
+                            <div className="bg-emerald-500 rounded-full p-4 sm:p-5 shadow-2xl ring-4 ring-white/30">
+                              <Check size={32} className="text-white sm:w-10 sm:h-10" />
                             </div>
                           </div>
                         )}

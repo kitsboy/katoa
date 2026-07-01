@@ -2,6 +2,13 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 import { nostrService } from '../lib/nostr';
+import {
+  canUseDemoAuth,
+  DEMO_PROFILE,
+  DEMO_USER_ID,
+  isDemoSessionActive,
+  setDemoSessionActive,
+} from '../lib/demoAuth';
 
 interface Profile {
   id: string;
@@ -32,6 +39,9 @@ interface AuthContextType {
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<Profile>) => Promise<{ error: Error | null }>;
   syncNostrProfile: () => Promise<{ error: Error | null }>;
+  signInAsDemo: () => Promise<{ error: Error | null }>;
+  isDemoUser: boolean;
+  canUseDemoAuth: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -41,8 +51,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isDemoUser, setIsDemoUser] = useState(false);
+
+  function activateDemoSession() {
+    const demoUser = {
+      id: DEMO_USER_ID,
+      email: 'demo@katoa.org',
+      app_metadata: {},
+      user_metadata: { username: DEMO_PROFILE.username },
+      aud: 'authenticated',
+      created_at: new Date().toISOString(),
+    } as User;
+
+    setDemoSessionActive(true);
+    setIsDemoUser(true);
+    setUser(demoUser);
+    setProfile(DEMO_PROFILE);
+    setSession({ user: demoUser } as Session);
+    setLoading(false);
+  }
 
   useEffect(() => {
+    if (isDemoSessionActive()) {
+      activateDemoSession();
+      return;
+    }
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
@@ -160,7 +194,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  async function signInAsDemo() {
+    if (!canUseDemoAuth()) {
+      return { error: new Error('Demo mode is not available when Supabase is configured') };
+    }
+    activateDemoSession();
+    return { error: null };
+  }
+
   async function signOut() {
+    if (isDemoUser || isDemoSessionActive()) {
+      setDemoSessionActive(false);
+      setIsDemoUser(false);
+      setUser(null);
+      setProfile(null);
+      setSession(null);
+      return;
+    }
     await supabase.auth.signOut();
   }
 
@@ -254,6 +304,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { error: new Error('Not authenticated') };
     }
 
+    if (isDemoUser) {
+      setProfile((prev) => (prev ? { ...prev, ...updates } : prev));
+      return { error: null };
+    }
+
     try {
       console.log('Updating profile with:', updates);
       console.log('User ID:', user.id);
@@ -290,6 +345,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     signOut,
     updateProfile,
     syncNostrProfile,
+    signInAsDemo,
+    isDemoUser,
+    canUseDemoAuth: canUseDemoAuth(),
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

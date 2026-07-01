@@ -40,7 +40,7 @@ export function ProgressBar({
       {(showValues || showPercentage) && (
         <div className="flex items-center justify-between text-sm">
           {showValues && (
-            <span className="text-night-blue-300 font-medium">
+            <span className="text-gray-400 font-medium">
               {formatSats(current)} / {formatSats(goal)}
             </span>
           )}
@@ -51,7 +51,7 @@ export function ProgressBar({
           )}
         </div>
       )}
-      <div className={`w-full bg-night-blue-500 rounded-full overflow-hidden ${heightClasses[height]}`}>
+      <div className={`w-full bg-white/10 rounded-full overflow-hidden ${heightClasses[height]}`}>
         <div
           className={`
             ${heightClasses[height]} bg-gradient-to-r ${gradient} rounded-full

@@ -1,4 +1,4 @@
-import { SimplePool, Event, nip19, getPublicKey, finishEvent, UnsignedEvent } from 'nostr-tools';
+import { SimplePool, Event, nip19, UnsignedEvent } from 'nostr-tools';
 
 export const DEFAULT_RELAYS = [
   'wss://relay.damus.io',

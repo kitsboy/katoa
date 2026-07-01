@@ -73,7 +73,7 @@ export function HomePage() {
                 <ArrowRight className="ml-2" size={20} />
               </Link>
               <Link
-                href="/compare"
+                href="/comparison"
                 className="inline-flex items-center justify-center min-w-[260px] h-14 text-lg font-bold border-2 border-neon-cyan-500 text-neon-cyan-500 hover:bg-neon-cyan-500/10 transition-all duration-200 backdrop-blur-sm rounded-lg cursor-pointer"
               >
                 See How We Compare

@@ -3,12 +3,12 @@ import { useAuth } from '../contexts/AuthContext';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
 import { Input } from '../components/Input';
-import { MediaUpload } from '../components/MediaUpload';
 import { WalletAddressManager } from '../components/WalletAddressManager';
+import { CurrencySelector } from '../components/CurrencySelector';
 import { Link } from '../components/Link';
 import { supabase } from '../lib/supabase';
 import {
-  User, Wallet, MapPin, Image as ImageIcon,
+  User, Wallet, MapPin,
   Settings as SettingsIcon, Save, Upload, Camera, Zap, Check, AlertCircle, LayoutDashboard,
   Heart, TrendingUp, Users, FolderOpen
 } from 'lucide-react';
@@ -446,18 +446,12 @@ export function SettingsPage() {
 
                       <div>
                         <label className="block text-sm font-bold text-gray-200 mb-3 uppercase tracking-wider">
-                          Preferred Currency
+                          Display Currency
                         </label>
-                        <select
-                          value={profileForm.preferred_currency}
-                          onChange={(e) => setProfileForm({ ...profileForm, preferred_currency: e.target.value })}
-                          className="w-full px-4 py-4 bg-black border border-gray-700 rounded-xl text-white text-lg focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all"
-                        >
-                          <option value="USD">USD - US Dollar</option>
-                          <option value="EUR">EUR - Euro</option>
-                          <option value="GBP">GBP - British Pound</option>
-                          <option value="BTC">BTC - Bitcoin</option>
-                        </select>
+                        <div className="px-4 py-4 bg-black border border-gray-700 rounded-xl">
+                          <CurrencySelector />
+                          <p className="text-xs text-gray-500 mt-2">All amounts stored in sats — display preference only</p>
+                        </div>
                       </div>
                     </div>
 

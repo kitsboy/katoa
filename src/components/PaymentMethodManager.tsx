@@ -381,7 +381,7 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
               value={formData.derivation_path}
               onChange={(e) => setFormData({ ...formData, derivation_path: e.target.value })}
               placeholder="m/84'/0'/0'/0"
-              helpText="BIP84 path for native SegWit addresses"
+              helperText="BIP84 path for native SegWit addresses"
             />
           )}
 

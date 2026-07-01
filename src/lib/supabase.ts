@@ -1,17 +1,25 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import type { Database } from '../types/database';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder.supabase.co';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder-key';
 
-// Create client — will gracefully handle missing Supabase project
-// The client object always exists. Queries will fail with network errors
-// instead of crashing the entire app.
-let supabase;
+let supabase: SupabaseClient<Database>;
+
 try {
-  supabase = createClient(supabaseUrl, supabaseAnonKey);
+  supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
 } catch {
-  // createClient might throw if URL is malformed
-  supabase = createClient('https://placeholder.supabase.co', 'placeholder');
+  supabase = createClient<Database>('https://placeholder.supabase.co', 'placeholder');
 }
 
 export { supabase };
+export type { Database };
+
+/** True when a real Supabase project is configured (not placeholder). */
+export function isSupabaseConfigured(): boolean {
+  return (
+    !supabaseUrl.includes('placeholder') &&
+    supabaseAnonKey !== 'placeholder-key' &&
+    Boolean(import.meta.env.VITE_SUPABASE_URL)
+  );
+}

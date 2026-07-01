@@ -577,7 +577,7 @@ export function AboutPage() {
                 Start Earning 100%
               </Button>
             </Link>
-            <Link href="/compare">
+            <Link href="/comparison">
               <Button
                 size="lg"
                 variant="outline"

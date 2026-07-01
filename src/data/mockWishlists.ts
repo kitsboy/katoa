@@ -779,6 +779,7 @@ Skateboarding taught me that falling is part of learning, but getting back up is
 We're 65% funded and construction is ready to begin! Your support will directly impact hundreds of young lives. ¡Gracias por su apoyo!`,
     slug: 'medellin-skate-park',
     cover_image: 'https://images.pexels.com/photos/5793678/pexels-photo-5793678.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750',
+    cover_video_url: 'https://videos.pexels.com/video-files/3571264/3571264-sd_640_360_30fps.mp4',
     total_sats_goal: 5000000,
     total_sats_raised: 3250000,
     country: 'Colombia',

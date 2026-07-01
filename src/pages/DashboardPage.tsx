@@ -23,7 +23,7 @@ interface Project {
 }
 
 export function DashboardPage() {
-  const { user } = useAuth();
+  const { user, isDemoUser } = useAuth();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -361,6 +361,17 @@ export function DashboardPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-black pt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
+
+        {isDemoUser && (
+          <div className="mb-6 p-4 rounded-xl bg-neon-cyan/10 border border-neon-cyan/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <p className="text-sm text-neon-cyan-300">
+              <strong>Demo preview</strong> — UI only. Connect Supabase to save projects and accept real payments.
+            </p>
+            <Link href="/auth" className="text-sm font-semibold text-neon-cyan-500 hover:text-neon-cyan-400 shrink-0">
+              Set up real account →
+            </Link>
+          </div>
+        )}
 
         <div className="mb-12">
           <h1 className="text-5xl font-black text-white mb-3 bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">

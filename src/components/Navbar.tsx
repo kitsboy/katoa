@@ -4,6 +4,7 @@ import { Button } from './Button';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage, languageFlags, languageNames } from '../contexts/LanguageContext';
 import { Menu, X, User, LogOut, LayoutDashboard, Settings, Zap, Globe } from 'lucide-react';
+import { CurrencySelector } from './CurrencySelector';
 
 export function Navbar() {
   const { user, profile, signOut } = useAuth();
@@ -55,9 +56,11 @@ export function Navbar() {
               <Link href="/explore" className="text-gray-200 hover:text-neon-cyan transition-colors font-medium">
                 {t('nav.explore')}
               </Link>
-              <Link href="/compare" className="text-gray-200 hover:text-neon-cyan transition-colors font-medium">
+              <Link href="/comparison" className="text-gray-200 hover:text-neon-cyan transition-colors font-medium">
                 Why KATOA?
               </Link>
+
+              <CurrencySelector compact />
 
               <div className="relative">
                 <button
@@ -195,7 +198,7 @@ export function Navbar() {
                 </Link>
 
                 <Link
-                  href="/compare"
+                  href="/comparison"
                   className="flex items-center gap-3 px-5 py-4 text-white bg-white/5 hover:bg-neon-cyan/10 rounded-xl transition-all duration-200 group border border-white/10 hover:border-neon-cyan/50"
                   onClick={() => setShowMenu(false)}
                 >

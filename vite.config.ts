@@ -3,6 +3,15 @@ import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  server: {
+    proxy: {
+      '/btcmap-api-proxy': {
+        target: 'https://api.btcmap.org',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/btcmap-api-proxy/, ''),
+      },
+    },
+  },
   build: {
     rollupOptions: {
       output: {

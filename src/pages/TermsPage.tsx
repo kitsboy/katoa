@@ -13,7 +13,7 @@ export function TermsPage() {
             <Scale size={32} className="text-white" />
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-orange-400 to-yellow-500 bg-clip-text text-transparent">
-            Terms of Service
+            {t('footer.terms')}
           </h1>
           <p className="text-gray-400">Last Updated: {lastUpdated}</p>
         </div>

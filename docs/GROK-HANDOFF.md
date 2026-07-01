@@ -115,7 +115,15 @@ curl -sI "https://preview-url/assets/index-*.css" | grep content-type  # Expect:
 - **The `docs/DIRECTORY-MAP.md`** has the full file tree for quick navigation.
 - **When deploying**: always verify `_headers` has CSS + JS Content-Type rules, and `dist/index.html` has no `crossorigin` attribute on `<script>` tags.
 
-## 8. Contact
+## 8. Kimi / HERMES Operations
+
+Full runbook for Supabase provisioning, Cloudflare env vars, BTC Map, and demo login:
+
+**`docs/KIMI-HERMES-OPS.md`**
+
+Scripts: `scripts/setup-supabase.sh`, `scripts/cloudflare-pages-env.sh`
+
+## 9. Contact
 
 - **Kimi** (Hermes Agent) — handled the React Router migration, code-split, Supabase resilience, and docs port
 - **Give A Bit parent**: giveabit.io — shared i18n, deployment template, all project documentation

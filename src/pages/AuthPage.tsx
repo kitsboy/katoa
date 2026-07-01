@@ -7,7 +7,7 @@ import { Link } from '../components/Link';
 import { Gift, Mail, Lock, User, Zap, ArrowLeft } from 'lucide-react';
 
 export function AuthPage() {
-  const { signUp, signIn, signInWithGoogle, signInWithNostr, session } = useAuth();
+  const { signUp, signIn, signInWithGoogle, signInWithNostr, signInAsDemo, canUseDemoAuth, session } = useAuth();
   const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -132,6 +132,29 @@ export function AuthPage() {
           {error && (
             <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
               <p className="text-red-400 text-sm">{error}</p>
+            </div>
+          )}
+
+          {canUseDemoAuth && (
+            <div className="mb-6 p-4 rounded-xl bg-neon-cyan/10 border border-neon-cyan/30">
+              <p className="text-sm text-neon-cyan-300 mb-3">
+                Supabase not connected yet? Preview the logged-in experience without a real account.
+              </p>
+              <Button
+                type="button"
+                variant="primary"
+                className="w-full"
+                disabled={loading}
+                onClick={async () => {
+                  setLoading(true);
+                  const { error: demoError } = await signInAsDemo();
+                  if (demoError) setError(demoError.message);
+                  else window.location.href = '/dashboard';
+                  setLoading(false);
+                }}
+              >
+                Preview as Demo User →
+              </Button>
             </div>
           )}
 
