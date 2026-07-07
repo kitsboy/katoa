@@ -5,8 +5,8 @@ import { Card } from '../components/Card';
 import { Modal } from '../components/Modal';
 import { Input } from '../components/Input';
 import { Link } from '../components/Link';
-import { StatsCard } from '../components/StatsCard';
-import { supabase } from '../lib/supabase';
+import { supabase, asRows } from '../lib/supabase';
+import type { Project as DbProject, Profile } from '../types/database';
 import { Plus, Edit, Trash2, Settings, Gift, DollarSign, Users, FolderOpen, Globe, Lock, FileText, ExternalLink, TrendingUp, Eye, Heart, Filter, Camera, Upload } from 'lucide-react';
 import { PageMeta } from '../components/PageMeta';
 import { ConfirmDialog } from '../components/ConfirmDialog';
@@ -16,18 +16,20 @@ import { useLanguage } from '../contexts/LanguageContext';
 
 import { Breadcrumbs } from '../components/Breadcrumbs';
 
-interface Project {
+type Project = DbProject & { wishlist_count?: number };
+
+type FollowedProject = Pick<DbProject, 'id' | 'title' | 'description' | 'slug' | 'background_url' | 'visibility'>;
+type FollowedWishlist = {
   id: string;
   title: string;
   description: string;
   slug: string;
-  background_url: string | null;
-  wallet_address: string | null;
-  lightning_address: string | null;
-  visibility: 'public' | 'private' | 'draft';
-  created_at: string;
-  wishlist_count?: number;
-}
+  cover_image: string | null;
+  total_sats_goal: number;
+  total_sats_raised: number;
+  visibility: string;
+};
+type FollowedCreator = Pick<Profile, 'id' | 'username' | 'avatar_url' | 'bio'>;
 
 export function DashboardPage() {
   const { user, isDemoUser } = useAuth();
@@ -57,9 +59,9 @@ export function DashboardPage() {
   const [deleteProjectId, setDeleteProjectId] = useState<string | null>(null);
   const [followFilter, setFollowFilter] = useState<'all' | 'projects' | 'wishlists' | 'creators'>('all');
   const [following, setFollowing] = useState<{
-    projects: any[];
-    wishlists: any[];
-    creators: any[];
+    projects: FollowedProject[];
+    wishlists: FollowedWishlist[];
+    creators: FollowedCreator[];
   }>({
     projects: [],
     wishlists: [],
@@ -80,53 +82,47 @@ export function DashboardPage() {
     try {
       const { data: projectFollows } = await supabase
         .from('project_follows')
-        .select(`
-          project_id,
-          projects (
-            id,
-            title,
-            description,
-            slug,
-            background_url,
-            visibility
-          )
-        `)
+        .select('project_id')
         .eq('user_id', user.id);
 
       const { data: wishlistFollows } = await supabase
         .from('wishlist_follows')
-        .select(`
-          wishlist_id,
-          wishlists (
-            id,
-            title,
-            description,
-            slug,
-            cover_image,
-            total_sats_goal,
-            total_sats_raised,
-            visibility
-          )
-        `)
+        .select('wishlist_id')
         .eq('user_id', user.id);
 
       const { data: creatorFollows } = await supabase
-        .from('follows')
-        .select(`
-          following_id,
-          profiles!follows_following_id_fkey (
-            id,
-            username,
-            avatar_url,
-            bio
-          )
-        `)
+        .from('user_follows')
+        .select('following_id')
         .eq('follower_id', user.id);
 
+      const creatorIds = (creatorFollows || []).map((f) => f.following_id);
+      const projectIds = (projectFollows || []).map((f) => f.project_id);
+      const wishlistIds = (wishlistFollows || []).map((f) => f.wishlist_id);
+
+      const [creatorProfiles, followedProjects, followedWishlists] = await Promise.all([
+        creatorIds.length > 0
+          ? supabase.from('profiles').select('id, username, avatar_url, bio').in('id', creatorIds).then((r) => r.data || [])
+          : Promise.resolve([] as FollowedCreator[]),
+        projectIds.length > 0
+          ? supabase
+              .from('projects')
+              .select('id, title, description, slug, background_url, visibility')
+              .in('id', projectIds)
+              .then((r) => r.data || [])
+          : Promise.resolve([] as FollowedProject[]),
+        wishlistIds.length > 0
+          ? supabase
+              .from('wishlists')
+              .select('id, title, description, slug, cover_image, total_sats_goal, total_sats_raised, visibility')
+              .in('id', wishlistIds)
+              .then((r) => r.data || [])
+          : Promise.resolve([] as FollowedWishlist[]),
+      ]);
+
       setFollowing({
-        projects: (projectFollows || []).map(f => f.projects).filter(Boolean),
-        wishlists: (wishlistFollows || []).map(f => f.wishlists).filter(Boolean),
-        creators: (creatorFollows || []).map(f => f.profiles).filter(Boolean),
+        projects: followedProjects,
+        wishlists: followedWishlists,
+        creators: creatorProfiles,
       });
     } catch (error) {
       console.error('Error loading following:', error);
@@ -137,21 +133,35 @@ export function DashboardPage() {
     try {
       const { data, error } = await supabase
         .from('projects')
-        .select(`
-          *,
-          wishlists (count)
-        `)
+        .select('*')
         .eq('creator_id', user!.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
 
-      const projectsWithCount = (data || []).map(p => ({
-        ...p,
-        wishlist_count: p.wishlists?.[0]?.count || 0
-      }));
+      const projectList = asRows<DbProject>(data);
+      const projectIds = projectList.map((p) => p.id);
+      const countByProject: Record<string, number> = {};
 
-      setProjects(projectsWithCount);
+      if (projectIds.length > 0) {
+        const { data: wishlistRows } = await supabase
+          .from('wishlists')
+          .select('project_id')
+          .in('project_id', projectIds);
+
+        (wishlistRows || []).forEach((row) => {
+          if (row.project_id) {
+            countByProject[row.project_id] = (countByProject[row.project_id] || 0) + 1;
+          }
+        });
+      }
+
+      setProjects(
+        projectList.map((p) => ({
+          ...p,
+          wishlist_count: countByProject[p.id] || 0,
+        }))
+      );
     } catch (error) {
       console.error('Error loading projects:', error);
     } finally {
@@ -530,13 +540,13 @@ export function DashboardPage() {
                       <Input
                         value={editFormData.title}
                         onChange={(e) => setEditFormData({ ...editFormData, title: e.target.value })}
-                        placeholder="Project title"
+                        placeholder={t('dashboard.placeholder.title')}
                         className="bg-black border-white/10 text-white font-bold"
                       />
                       <textarea
                         value={editFormData.description}
                         onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
-                        placeholder="Description"
+                        placeholder={t('dashboard.placeholder.description')}
                         className="w-full px-4 py-3 bg-black border border-white/10 rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
                         rows={3}
                       />
@@ -833,7 +843,7 @@ export function DashboardPage() {
               label="Project Title"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-              placeholder="e.g., Community Garden Fund"
+              placeholder={t('dashboard.placeholder.titleExample')}
               required
               className="bg-black border-white/10 text-white"
             />
@@ -847,7 +857,7 @@ export function DashboardPage() {
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              placeholder="Tell people about your project and what you're trying to achieve..."
+              placeholder={t('dashboard.placeholder.descriptionLong')}
               className="w-full px-4 py-3 bg-black border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
               rows={4}
             />
@@ -859,7 +869,7 @@ export function DashboardPage() {
               label="URL Slug (optional)"
               value={formData.slug}
               onChange={(e) => setFormData({ ...formData, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-') })}
-              placeholder="community-garden-fund"
+              placeholder={t('dashboard.placeholder.slug')}
               className="bg-black border-white/10 text-white font-mono text-sm"
             />
             <p className="text-xs text-gray-500 mt-2">

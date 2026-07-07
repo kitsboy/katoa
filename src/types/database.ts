@@ -1,12 +1,21 @@
 /**
- * Staged Supabase Database types — regenerate with `supabase gen types` after provisioning.
+ * Staged Supabase Database types — regenerate with `npm run db:types` after provisioning.
  */
 
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Visibility = 'public' | 'private' | 'draft';
-export type PaymentMethodType = 'lightning' | 'onchain' | 'nostr' | 'bolt12' | string;
-export type AddressType = 'onchain' | 'lightning' | 'nostr' | string;
+
+export type PaymentMethodType =
+  | 'bitcoin_xpub'
+  | 'bitcoin_address'
+  | 'lightning'
+  | 'nostr'
+  | 'nym'
+  | 'bolt12'
+  | 'onchain';
+
+export type WalletAddressType = 'lightning' | 'xpub' | 'pynym' | 'nostr' | 'onchain';
 
 type Relationships = [];
 
@@ -49,9 +58,12 @@ export interface Database {
         visibility: Visibility;
         cover_image: string | null;
         cover_video_url: string | null;
+        theme_color: string | null;
         total_sats_goal: number;
         total_sats_raised: number;
         country: string | null;
+        country_code: string | null;
+        country_flag: string | null;
         city: string | null;
         latitude: number | null;
         longitude: number | null;
@@ -114,14 +126,16 @@ export interface Database {
         metadata: Json;
         is_primary: boolean;
         is_active: boolean;
+        created_at?: string;
       }>;
       wallet_addresses: TableDef<{
         id: string;
         user_id: string;
-        address_type: string;
+        address_type: WalletAddressType;
         address_value: string;
         label: string;
         is_active: boolean;
+        created_at: string;
       }>;
       notifications: TableDef<{
         id: string;
@@ -136,6 +150,7 @@ export interface Database {
         name: string;
         slug: string;
         icon: string | null;
+        color: string | null;
       }>;
       project_follows: TableDef<{
         id: string;
@@ -169,3 +184,9 @@ export interface Database {
 
 export type Profile = Database['public']['Tables']['profiles']['Row'];
 export type Wishlist = Database['public']['Tables']['wishlists']['Row'];
+export type WishlistItem = Database['public']['Tables']['wishlist_items']['Row'];
+export type Project = Database['public']['Tables']['projects']['Row'];
+export type PaymentMethod = Database['public']['Tables']['payment_methods']['Row'];
+export type WalletAddress = Database['public']['Tables']['wallet_addresses']['Row'];
+export type Category = Database['public']['Tables']['categories']['Row'];
+export type WishlistMedia = Database['public']['Tables']['wishlist_media']['Row'];

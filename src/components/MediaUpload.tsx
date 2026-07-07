@@ -2,7 +2,8 @@ import { useState, useRef } from 'react';
 import { Upload, X, Image, Video, FileText, Loader } from 'lucide-react';
 import { Button } from './Button';
 import { Card } from './Card';
-import { supabase } from '../lib/supabase';
+import { supabase, asRow } from '../lib/supabase';
+import type { WishlistMedia } from '../types/database';
 
 export interface UploadedMedia {
   id: string;
@@ -104,7 +105,7 @@ export function MediaUpload(props: MediaUploadProps) {
         const fileExt = file.name.split('.').pop();
         const fileName = `${user.id}/${wishlistProps.wishlistId}/${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
 
-        const { data: uploadData, error: uploadError } = await supabase.storage
+        const { error: uploadError } = await supabase.storage
           .from('wishlist-media')
           .upload(fileName, file);
 
@@ -132,8 +133,11 @@ export function MediaUpload(props: MediaUploadProps) {
 
         if (insertError) throw insertError;
 
+        const record = asRow<WishlistMedia>(mediaRecord);
+        if (!record) throw new Error('Failed to save media record');
+
         const uploadedMedia: UploadedMedia = {
-          id: mediaRecord.id,
+          id: record.id,
           type: mediaType,
           url: publicUrl,
           name: file.name,

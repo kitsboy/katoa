@@ -8,21 +8,14 @@ import { Modal } from './Modal';
 import { Input } from './Input';
 import { QRScanner } from './QRScanner';
 import { useToast } from './Toast';
-import { supabase } from '../lib/supabase';
+import { supabase, asRows } from '../lib/supabase';
+import type { PaymentMethod as DbPaymentMethod } from '../types/database';
 import {
   Plus, Edit, Trash2, Bitcoin, Zap, Hash, Shield, Star,
-  Check, X, Scan, ExternalLink
+  Check, X, Scan
 } from 'lucide-react';
 
-interface PaymentMethod {
-  id: string;
-  method_type: 'bitcoin_xpub' | 'bitcoin_address' | 'lightning' | 'nostr' | 'nym' | 'bolt12';
-  label: string;
-  address: string;
-  metadata: any;
-  is_primary: boolean;
-  is_active: boolean;
-}
+type PaymentMethod = DbPaymentMethod;
 
 interface PaymentMethodManagerProps {
   projectId: string;
@@ -68,7 +61,7 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setMethods(data || []);
+      setMethods(asRows<PaymentMethod>(data));
     } catch (error) {
       console.error('Error loading payment methods:', error);
     } finally {
@@ -83,7 +76,7 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
         method_type: method.method_type,
         label: method.label,
         address: method.address,
-        derivation_path: method.metadata?.derivation_path || "m/84'/0'/0'/0",
+        derivation_path: (method.metadata as { derivation_path?: string } | null)?.derivation_path || "m/84'/0'/0'/0",
         is_primary: method.is_primary,
       });
     } else {

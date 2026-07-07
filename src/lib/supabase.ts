@@ -19,6 +19,15 @@ try {
 export { supabase };
 export type { Database };
 
+/** Coerce Supabase row data when generic inference is incomplete. */
+export function asRow<T>(data: unknown): T | null {
+  return (data ?? null) as T | null;
+}
+
+export function asRows<T>(data: unknown): T[] {
+  return (data ?? []) as T[];
+}
+
 /** True when a real Supabase project is configured (not placeholder). */
 export function isSupabaseConfigured(): boolean {
   return (

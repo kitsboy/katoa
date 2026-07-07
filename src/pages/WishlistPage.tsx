@@ -170,7 +170,24 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
         } as Wishlist);
 
         const mockItems = mockWishlistItems[mockWishlist.id] || [];
-        setItems(applyItemOrder(mockItems as WishlistItem[], slug));
+        setItems(
+          applyItemOrder(
+            mockItems.map((item) => ({
+              id: item.id,
+              wishlist_id: mockWishlist.id,
+              title: item.title,
+              description: item.description,
+              price_sats: item.price_sats,
+              sats_raised: item.sats_raised,
+              image_url: item.image_url,
+              video_url: null,
+              merchant_link: item.product_url,
+              is_funded: item.is_funded,
+              sort_order: item.sort_order,
+            })),
+            slug
+          )
+        );
 
         setLoading(false);
         return;
@@ -726,7 +743,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
                 setGiftForm(next);
                 persistGiftDraft(next);
               }}
-              placeholder="21000"
+              placeholder={t('wishlist.placeholder.amount')}
               required
               aria-label="Custom amount in sats"
             />
@@ -740,7 +757,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
               setGiftForm(next);
               persistGiftDraft(next);
             }}
-            placeholder="Anonymous"
+            placeholder={t('wishlist.placeholder.name')}
           />
           <div>
             <label htmlFor="gift-message" className="block text-sm font-medium text-gray-300 mb-2">
@@ -756,7 +773,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
               }}
               className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-neon-cyan-500/50 focus:border-neon-cyan-500/30 resize-none"
               rows={3}
-              placeholder="Leave a message for the creator..."
+              placeholder={t('wishlist.placeholder.message')}
             />
           </div>
           <Button

@@ -38,8 +38,8 @@ export function ShareButton({ url, title, description, className = '' }: ShareBu
     twitter: `https://x.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}%20-%20Support%20this%20wishlist%20with%20Bitcoin!`,
     facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
     linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
-    whatsapp: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`,
-    telegram: `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`,
+    whatsapp: `https://wa.me/?text=${encodedTitle}%20${encodedDescription}%20${encodedUrl}`,
+    telegram: `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}%20${encodedDescription}`,
     reddit: `https://reddit.com/submit?url=${encodedUrl}&title=${encodedTitle}`,
   };
 

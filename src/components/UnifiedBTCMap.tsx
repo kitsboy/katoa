@@ -79,6 +79,8 @@ export function UnifiedBTCMap({
     setStorage(STORAGE_KEYS.mapShowKatoa, showKatoa);
   }, [showKatoa]);
 
+  const [expanded, setExpanded] = useState(false);
+
   useEffect(() => {
     if (!expanded) return;
     const onKey = (e: KeyboardEvent) => {
@@ -87,7 +89,6 @@ export function UnifiedBTCMap({
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [expanded]);
-  const [expanded, setExpanded] = useState(false);
   const [merchantCount, setMerchantCount] = useState<number | null>(null);
   const [loadingMerchants, setLoadingMerchants] = useState(false);
   const [merchantError, setMerchantError] = useState<string | null>(null);

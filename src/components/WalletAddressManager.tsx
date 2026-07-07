@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
-import { supabase } from '../lib/supabase';
+import { supabase, asRows } from '../lib/supabase';
+import type { WalletAddressType } from '../types/database';
+import type { WalletAddress as DbWalletAddress } from '../types/database';
 import { Button } from './Button';
 import { Card } from './Card';
 import { ConfirmDialog } from './ConfirmDialog';
@@ -10,14 +12,7 @@ import { QRScanner } from './QRScanner';
 import { useToast } from './Toast';
 import { Wallet, Plus, Trash2, QrCode, Edit2, Check, X, Zap, Bitcoin, Shield, Globe } from 'lucide-react';
 
-interface WalletAddress {
-  id: string;
-  address_type: 'lightning' | 'xpub' | 'pynym' | 'nostr';
-  address_value: string;
-  label: string;
-  is_active: boolean;
-  created_at: string;
-}
+type WalletAddress = DbWalletAddress;
 
 export function WalletAddressManager() {
   const { user } = useAuth();
@@ -28,8 +23,12 @@ export function WalletAddressManager() {
   const [showScanner, setShowScanner] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [formData, setFormData] = useState({
-    address_type: 'lightning' as 'lightning' | 'xpub' | 'pynym' | 'nostr',
+  const [formData, setFormData] = useState<{
+    address_type: WalletAddressType;
+    address_value: string;
+    label: string;
+  }>({
+    address_type: 'lightning',
     address_value: '',
     label: '',
   });
@@ -44,15 +43,16 @@ export function WalletAddressManager() {
   }, [user]);
 
   async function loadAddresses() {
+    if (!user?.id) return;
     try {
       const { data, error } = await supabase
         .from('wallet_addresses')
         .select('*')
-        .eq('user_id', user?.id)
+        .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setAddresses(data || []);
+      setAddresses(asRows<WalletAddress>(data));
     } catch (error) {
       console.error('Error loading addresses:', error);
     } finally {

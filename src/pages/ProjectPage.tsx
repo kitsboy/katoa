@@ -11,8 +11,8 @@ import { ConfirmDialog } from '../components/ConfirmDialog';
 import { useToast } from '../components/Toast';
 import { useLanguage } from '../contexts/LanguageContext';
 import { PageMeta } from '../components/PageMeta';
-import { supabase } from '../lib/supabase';
-import type { Visibility } from '../types/database';
+import { supabase, asRow, asRows } from '../lib/supabase';
+import type { Project as DbProject, Visibility } from '../types/database';
 import { parseProductUrl } from '../lib/productParser';
 import {
   Plus, Edit, Trash2, Settings, Gift, ArrowLeft,
@@ -20,18 +20,7 @@ import {
   ExternalLink, Save, X, Camera, Upload
 } from 'lucide-react';
 
-interface Project {
-  id: string;
-  title: string;
-  description: string;
-  slug: string;
-  background_url: string | null;
-  wallet_address: string | null;
-  lightning_address: string | null;
-  nostr_pubkey: string | null;
-  visibility: 'public' | 'private' | 'draft';
-  settings: any;
-}
+type Project = DbProject & { settings?: Record<string, unknown> };
 
 interface Wishlist {
   id: string;
@@ -91,6 +80,7 @@ export function ProjectPage() {
   }, [user, slug]);
 
   async function loadProject() {
+    if (!slug) return;
     try {
       const { data, error } = await supabase
         .from('projects')
@@ -101,14 +91,17 @@ export function ProjectPage() {
 
       if (error) throw error;
 
-      setProject(data);
+      const project = asRow<Project>(data);
+      if (!project) return;
+
+      setProject(project);
       setFormData({
-        title: data.title,
-        description: data.description || '',
-        wallet_address: data.wallet_address || '',
-        lightning_address: data.lightning_address || '',
-        nostr_pubkey: data.nostr_pubkey || '',
-        visibility: data.visibility,
+        title: project.title,
+        description: project.description || '',
+        wallet_address: project.wallet_address || '',
+        lightning_address: project.lightning_address || '',
+        nostr_pubkey: project.nostr_pubkey || '',
+        visibility: project.visibility,
       });
     } catch (error) {
       console.error('Error loading project:', error);
@@ -118,6 +111,7 @@ export function ProjectPage() {
   }
 
   async function loadWishlists() {
+    if (!slug) return;
     try {
       const { data: projectData } = await supabase
         .from('projects')
@@ -125,16 +119,17 @@ export function ProjectPage() {
         .eq('slug', slug)
         .single();
 
-      if (!projectData) return;
+      const project = asRow<Pick<DbProject, 'id'>>(projectData);
+      if (!project) return;
 
       const { data, error } = await supabase
         .from('wishlists')
         .select('*')
-        .eq('project_id', projectData.id)
+        .eq('project_id', project.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setWishlists(data || []);
+      setWishlists(asRows<Wishlist>(data));
     } catch (error) {
       console.error('Error loading wishlists:', error);
     }
@@ -453,7 +448,7 @@ export function ProjectPage() {
                     value={formData.title}
                     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                     className="text-5xl font-black text-white bg-black/50 backdrop-blur-md border-b-4 border-orange-500 focus:outline-none focus:border-orange-400 w-full mb-4 px-4 py-2 rounded-t-lg"
-                    placeholder="Project Title"
+                    placeholder={t('project.placeholder.title')}
                     title="Edit your project title"
                   />
                 ) : (
@@ -470,7 +465,7 @@ export function ProjectPage() {
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                     className="w-full px-5 py-4 bg-black/50 backdrop-blur-md border-2 border-white/10 rounded-xl text-white text-lg placeholder-gray-400 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
                     rows={3}
-                    placeholder="Describe your project and what you're building..."
+                    placeholder={t('project.placeholder.description')}
                     title="Edit your project description"
                   />
                 ) : (
@@ -671,7 +666,7 @@ export function ProjectPage() {
                         type="text"
                         value={editWishlistForm.title}
                         onChange={(e) => setEditWishlistForm({ ...editWishlistForm, title: e.target.value })}
-                        placeholder="e.g., Recording Equipment Fund"
+                        placeholder={t('project.placeholder.wishlistTitle')}
                         className="w-full px-5 py-4 bg-black border-2 border-white/10 rounded-xl text-white text-lg font-bold placeholder-gray-500 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20"
                       />
                     </div>
@@ -682,7 +677,7 @@ export function ProjectPage() {
                       <textarea
                         value={editWishlistForm.description}
                         onChange={(e) => setEditWishlistForm({ ...editWishlistForm, description: e.target.value })}
-                        placeholder="Tell supporters what this wishlist is for and why it matters..."
+                        placeholder={t('project.placeholder.wishlistDescription')}
                         className="w-full px-5 py-4 bg-black border-2 border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 leading-relaxed"
                         rows={4}
                       />
@@ -797,7 +792,7 @@ export function ProjectPage() {
             label="Wishlist URL (optional)"
             value={wishlistForm.url}
             onChange={(e) => setWishlistForm({ ...wishlistForm, url: e.target.value })}
-            placeholder="https://amazon.com/wishlist/..."
+            placeholder={t('project.placeholder.url')}
             helperText="Auto-populate details from URL"
             icon={<ExternalLink size={16} />}
           />
@@ -818,7 +813,7 @@ export function ProjectPage() {
             label="Wishlist Title"
             value={wishlistForm.title}
             onChange={(e) => setWishlistForm({ ...wishlistForm, title: e.target.value })}
-            placeholder="My Wishlist"
+            placeholder={t('project.placeholder.wishlistName')}
             required
           />
 
@@ -826,7 +821,7 @@ export function ProjectPage() {
             label="Slug (URL)"
             value={wishlistForm.slug}
             onChange={(e) => setWishlistForm({ ...wishlistForm, slug: e.target.value })}
-            placeholder="my-wishlist"
+            placeholder={t('project.placeholder.slug')}
             helperText="Leave blank to auto-generate"
           />
 
@@ -837,7 +832,7 @@ export function ProjectPage() {
             <textarea
               value={wishlistForm.description}
               onChange={(e) => setWishlistForm({ ...wishlistForm, description: e.target.value })}
-              placeholder="What is this wishlist for?"
+              placeholder={t('project.placeholder.wishlistDesc')}
               className="w-full px-4 py-2 bg-white/[0.03] border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-neon-cyan-500"
               rows={4}
             />

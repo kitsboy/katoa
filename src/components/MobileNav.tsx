@@ -89,7 +89,7 @@ export function MobileNav() {
           {items.map((item) => {
             const active = item.match(location.pathname);
             const Icon = item.icon;
-            const label = 'labelKey' in item && item.labelKey ? t(item.labelKey) : item.label;
+            const label = t(item.labelKey);
 
             return (
               <Link

@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
-import { supabase } from '../lib/supabase';
+import { supabase, asRow } from '../lib/supabase';
 import { nostrService } from '../lib/nostr';
 import {
   canUseDemoAuth,
@@ -115,7 +115,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (error) throw error;
 
       if (data) {
-        setProfile(data);
+        setProfile(asRow<Profile>(data));
       } else {
         console.warn('No profile found for user:', userId);
         setProfile(null);
@@ -231,7 +231,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         .maybeSingle();
 
       if (existingProfile) {
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const { error } = await supabase.auth.signInWithPassword({
           email: `${pubkey}@nostr.local`,
           password: pubkey,
         });

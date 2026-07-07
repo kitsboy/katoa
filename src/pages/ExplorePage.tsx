@@ -11,9 +11,10 @@ import { SatsDisplay } from '../components/SatsDisplay';
 import { DemoBanner } from '../components/DemoBanner';
 import { EmptyState } from '../components/EmptyState';
 import { CardSkeleton } from '../components/Skeleton';
-import { supabase } from '../lib/supabase';
+import { supabase, asRows } from '../lib/supabase';
 import { mockWishlists } from '../data/mockWishlists';
 import { mergeKatoaPinsWithMap } from '../lib/btcmap';
+import type { Category } from '../types/database';
 import { getStorage, setStorage, STORAGE_KEYS } from '../lib/storage';
 import { useLanguage } from '../contexts/LanguageContext';
 import { PageMeta } from '../components/PageMeta';
@@ -65,10 +66,12 @@ const WishlistCard = memo(function WishlistCard({
   wishlist,
   isFavorite,
   onToggleFavorite,
+  t,
 }: {
   wishlist: Wishlist;
   isFavorite: boolean;
   onToggleFavorite: (id: string) => void;
+  t: (key: string) => string;
 }) {
   const progress = wishlist.total_sats_goal > 0
     ? (wishlist.total_sats_raised / wishlist.total_sats_goal) * 100
@@ -109,7 +112,7 @@ const WishlistCard = memo(function WishlistCard({
                   onToggleFavorite(wishlist.id);
                 }}
                 className="p-2 rounded-full bg-black/50 backdrop-blur-sm border border-white/10 hover:border-rose-500/50 transition-colors touch-manipulation"
-                aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+                aria-label={isFavorite ? t('explore.removeFavorite') : t('explore.addFavorite')}
                 aria-pressed={isFavorite}
               >
                 <Heart
@@ -123,7 +126,7 @@ const WishlistCard = memo(function WishlistCard({
             progress >= 100 ? (
               <div className="px-2.5 py-1 bg-emerald-500 rounded-full text-white text-xs font-bold flex items-center gap-1">
                 <Star size={11} className="fill-white" />
-                Funded
+                {t('explore.funded')}
               </div>
             ) : undefined
           }
@@ -188,6 +191,7 @@ function FilterFields({
   onSortChange,
   onCategoryChange,
   onCountryChange,
+  t,
 }: {
   sortBy: string;
   selectedCategory: string;
@@ -197,6 +201,7 @@ function FilterFields({
   onSortChange: (v: string) => void;
   onCategoryChange: (v: string) => void;
   onCountryChange: (v: string) => void;
+  t: (key: string) => string;
 }) {
   const selectClass =
     'w-full px-4 py-3 min-h-[44px] bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-neon-cyan-500/50 focus:border-neon-cyan-500/30';
@@ -204,27 +209,27 @@ function FilterFields({
   return (
     <div className="grid grid-cols-1 gap-4">
       <div>
-        <label htmlFor="explore-sort" className="block text-sm font-medium text-gray-300 mb-2">Sort By</label>
+        <label htmlFor="explore-sort" className="block text-sm font-medium text-gray-300 mb-2">{t('explore.sortBy')}</label>
         <select id="explore-sort" value={sortBy} onChange={(e) => onSortChange(e.target.value)} className={selectClass}>
-          <option value="recent">Most Recent</option>
-          <option value="trending">Most Funded</option>
-          <option value="funded">Highest Progress</option>
-          <option value="goal">Biggest Goals</option>
+          <option value="recent">{t('explore.sortRecent')}</option>
+          <option value="trending">{t('explore.sortTrending')}</option>
+          <option value="funded">{t('explore.sortFunded')}</option>
+          <option value="goal">{t('explore.sortGoal')}</option>
         </select>
       </div>
       <div>
-        <label htmlFor="explore-category" className="block text-sm font-medium text-gray-300 mb-2">Category</label>
+        <label htmlFor="explore-category" className="block text-sm font-medium text-gray-300 mb-2">{t('explore.category')}</label>
         <select id="explore-category" value={selectedCategory} onChange={(e) => onCategoryChange(e.target.value)} className={selectClass}>
-          <option value="">All Categories</option>
+          <option value="">{t('explore.allCategories')}</option>
           {categories.map((cat) => (
             <option key={cat.id} value={cat.slug}>{cat.name}</option>
           ))}
         </select>
       </div>
       <div>
-        <label htmlFor="explore-country" className="block text-sm font-medium text-gray-300 mb-2">Location</label>
+        <label htmlFor="explore-country" className="block text-sm font-medium text-gray-300 mb-2">{t('explore.location')}</label>
         <select id="explore-country" value={selectedCountry} onChange={(e) => onCountryChange(e.target.value)} className={selectClass}>
-          <option value="">All Countries</option>
+          <option value="">{t('explore.allCountries')}</option>
           {countries.map((country) => (
             <option key={country} value={country}>{country}</option>
           ))}
@@ -255,7 +260,7 @@ export function ExplorePage() {
     setStorage(STORAGE_KEYS.exploreShowMap, showMap);
   }, [showMap]);
   const [showFilters, setShowFilters] = useState(false);
-  const [categories, setCategories] = useState<{ id: string; slug: string; name: string; icon?: string; color?: string }[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [favorites, setFavorites] = useState<string[]>(() =>
     getStorage<string[]>(STORAGE_KEYS.exploreFavorites, [])
   );
@@ -303,7 +308,7 @@ export function ExplorePage() {
         .order('name');
 
       if (error) throw error;
-      setCategories(data || []);
+      setCategories(asRows<Category>(data));
     } catch (error) {
       console.error('Error loading categories:', error);
     }
@@ -479,7 +484,7 @@ export function ExplorePage() {
       <PageMeta title="Explore" description="Browse Bitcoin creator wishlists worldwide." path="/explore" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
       {usingMockData && (
-        <DemoBanner message="Showing sample projects — live database unavailable. Explore freely with demo data." />
+        <DemoBanner message={t('explore.demoBanner')} />
       )}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pt-20 sm:pt-24">
@@ -560,7 +565,7 @@ export function ExplorePage() {
 
         {recentlyViewed.length > 0 && (
           <div className="mb-8">
-            <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Recently viewed</h2>
+            <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">{t('explore.recentlyViewed')}</h2>
             <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1 -mx-1 px-1">
               {recentlyViewed.map((item) => (
                 <Link
@@ -587,11 +592,11 @@ export function ExplorePage() {
               <div className="relative flex-1">
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} aria-hidden />
                 <Input
-                  placeholder="Search projects, creators, tags..."
+                  placeholder={t('explore.searchProjects')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-12"
-                  aria-label="Search projects"
+                  aria-label={t('explore.searchAria')}
                 />
               </div>
 
@@ -604,9 +609,9 @@ export function ExplorePage() {
                   aria-haspopup="dialog"
                 >
                   <SlidersHorizontal size={20} className="mr-2" />
-                  Filters
+                  {t('explore.filters')}
                   {hasActiveFilters && (
-                    <span className="ml-2 w-2 h-2 rounded-full bg-neon-cyan-500" aria-label="Filters active" />
+                    <span className="ml-2 w-2 h-2 rounded-full bg-neon-cyan-500" aria-label={t('explore.filtersActive')} />
                   )}
                 </Button>
 
@@ -627,7 +632,7 @@ export function ExplorePage() {
                   aria-pressed={favoritesOnly}
                 >
                   <Heart size={20} className={`mr-2 ${favoritesOnly ? 'fill-current' : ''}`} />
-                  Favorites only
+                  {t('explore.favoritesOnly')}
                 </Button>
               </div>
             </div>
@@ -644,11 +649,12 @@ export function ExplorePage() {
                   onSortChange={setSortBy}
                   onCategoryChange={setSelectedCategory}
                   onCountryChange={setSelectedCountry}
+                  t={t}
                 />
                 {hasActiveFilters && (
                   <div className="mt-4 pt-4 border-t border-white/10">
                     <Button variant="ghost" size="sm" onClick={clearFilters} className="text-gray-300 hover:text-white">
-                      Clear All Filters
+                      {t('explore.clearFilters')}
                     </Button>
                   </div>
                 )}
@@ -662,19 +668,19 @@ export function ExplorePage() {
                   type="button"
                   className="absolute inset-0 bg-black/75 backdrop-blur-sm"
                   onClick={() => setShowFilters(false)}
-                  aria-label="Close filters"
+                  aria-label={t('explore.closeFilters')}
                 />
                 <div className="absolute bottom-0 left-0 right-0 bg-charcoal-900 border-t border-white/10 rounded-t-[1.75rem] p-5 pb-safe animate-sheet-up max-h-[85dvh] overflow-y-auto">
                   <div className="flex justify-center mb-3">
                     <div className="w-10 h-1 rounded-full bg-white/20" aria-hidden />
                   </div>
                   <div className="flex items-center justify-between mb-4">
-                    <h2 id="filter-sheet-title" className="text-lg font-bold text-white">Filters</h2>
+                    <h2 id="filter-sheet-title" className="text-lg font-bold text-white">{t('explore.filtersTitle')}</h2>
                     <button
                       type="button"
                       onClick={() => setShowFilters(false)}
                       className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-gray-400"
-                      aria-label="Close filters"
+                      aria-label={t('explore.closeFilters')}
                     >
                       <X size={22} />
                     </button>
@@ -688,15 +694,16 @@ export function ExplorePage() {
                     onSortChange={setSortBy}
                     onCategoryChange={setSelectedCategory}
                     onCountryChange={setSelectedCountry}
+                    t={t}
                   />
                   <div className="mt-6 flex gap-3">
                     {hasActiveFilters && (
                       <Button variant="outline" className="flex-1" onClick={clearFilters}>
-                        Clear
+                        {t('explore.clear')}
                       </Button>
                     )}
                     <Button className="flex-1" onClick={() => setShowFilters(false)}>
-                      Show {filteredWishlists.length} results
+                      {t('explore.showResults').replace('${count}', String(filteredWishlists.length))}
                     </Button>
                   </div>
                 </div>
@@ -705,13 +712,13 @@ export function ExplorePage() {
 
             {categories.length > 0 && !showFilters && (
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-gray-300 text-sm font-medium">Quick filters:</span>
+                <span className="text-gray-300 text-sm font-medium">{t('explore.quickFilters')}</span>
                 {categories.slice(0, 6).map((cat) => (
                   <CategoryBadge
                     key={cat.id}
                     name={cat.name}
-                    icon={cat.icon}
-                    color={cat.color}
+                    icon={cat.icon ?? undefined}
+                    color={cat.color ?? undefined}
                     size="sm"
                     onClick={() => setSelectedCategory(cat.slug)}
                   />
@@ -725,7 +732,7 @@ export function ExplorePage() {
               <Suspense
                 fallback={
                   <div className="h-64 sm:h-96 rounded-xl border border-white/10 flex items-center justify-center text-gray-400">
-                    Loading map…
+                    {t('explore.loadingMap')}
                   </div>
                 }
               >
@@ -765,7 +772,7 @@ export function ExplorePage() {
         </div>
 
         {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" aria-busy="true" aria-label="Loading projects">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" aria-busy="true" aria-label={t('explore.loadingProjects')}>
             {[...Array(9)].map((_, i) => (
               <CardSkeleton key={i} />
             ))}
@@ -779,6 +786,7 @@ export function ExplorePage() {
                   wishlist={wishlist}
                   isFavorite={favorites.includes(wishlist.id)}
                   onToggleFavorite={toggleFavorite}
+                  t={t}
                 />
               ))}
             </div>
@@ -799,15 +807,15 @@ export function ExplorePage() {
           <Card variant="glass">
             <EmptyState
               icon={<Gift size={32} />}
-              title={favoritesOnly ? 'No favorites yet' : debouncedSearch || selectedCountry ? 'No results found' : 'No projects yet'}
+              title={favoritesOnly ? t('explore.noFavorites') : debouncedSearch || selectedCountry ? t('explore.noResults') : t('explore.noProjects')}
               description={
                 favoritesOnly
-                  ? 'Tap the heart on projects you love — they will show up here.'
+                  ? t('explore.emptyDescFavorites')
                   : debouncedSearch || selectedCountry
-                  ? 'Try adjusting your filters or search terms.'
-                  : 'Check back soon for new creators and causes!'
+                  ? t('explore.tryAgain')
+                  : t('explore.emptyDescNone')
               }
-              actionLabel={favoritesOnly ? 'Browse all projects' : hasActiveFilters ? 'Clear filters' : undefined}
+              actionLabel={favoritesOnly ? t('explore.browseAll') : hasActiveFilters ? t('explore.clearFiltersAction') : undefined}
               onAction={favoritesOnly || hasActiveFilters ? clearFilters : undefined}
             />
           </Card>

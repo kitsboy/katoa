@@ -140,7 +140,7 @@ export class BTCPayService {
     }
   }
 
-  verifyWebhookSignature(payload: string, signature: string): boolean {
+  verifyWebhookSignature(_payload: string, _signature: string): boolean {
     if (!this.config.webhookSecret) {
       console.warn('Webhook secret not configured');
       return false;
