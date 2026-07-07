@@ -94,3 +94,32 @@
 ---
 
 *Safe Harbour · Part of the [Give A Bit](https://giveabit.io) family.*
+
+## Handoff to Kimi — 2026-07-07
+
+**Machine:** M3 (Grok)
+**Project:** katoa
+
+### Done
+- [x] Landing hero redesign (`25eb6e8`): creator-forward light aesthetic (rose/cream, OnlyFans-inspired)
+- [x] Live wishlist product screenshot mock in hero header (Medellín skate park mock data)
+- [x] Light `lp-*` design system across homepage sections, trust bar, CTA panel
+- [x] Navbar `nav-island-hero-light` variant for homepage scroll-top state
+
+### Decisions
+- Product showcase built as HTML/CSS mock (not static PNG) using `mockWishlists` data — stays sharp at all sizes
+- Dark product UI inside browser frame contrasts against light hero (common creator-platform marketing pattern)
+- Full landing page moved to light theme for cohesion; other site pages remain dark charcoal
+
+### What's Next
+- User feedback on hero direction; may tune imagery or extend light theme to footer
+- FeeComparison component may need light-theme polish on homepage section
+
+### Git State
+- Last commit SHA: cf9eb6d
+- Branch: main
+- Unpushed: none
+
+---
+
+*Safe Harbour · Part of the [Give A Bit](https://giveabit.io) family.*
