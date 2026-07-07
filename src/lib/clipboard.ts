@@ -1,11 +1,13 @@
-export async function copyToClipboard(text: string): Promise<boolean> {
+export type ClipboardResult = 'success' | 'denied' | 'unsupported';
+
+export async function copyToClipboard(text: string): Promise<ClipboardResult> {
   try {
     if (navigator.clipboard?.writeText) {
       await navigator.clipboard.writeText(text);
-      return true;
+      return 'success';
     }
   } catch {
-    /* fall through */
+    return 'denied';
   }
 
   try {
@@ -17,8 +19,8 @@ export async function copyToClipboard(text: string): Promise<boolean> {
     textarea.select();
     const ok = document.execCommand('copy');
     document.body.removeChild(textarea);
-    return ok;
+    return ok ? 'success' : 'denied';
   } catch {
-    return false;
+    return 'unsupported';
   }
 }

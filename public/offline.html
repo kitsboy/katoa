@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#050509" />
+    <link rel="manifest" href="/manifest.json" />
     <title>Offline — KATOA</title>
     <style>
       * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -28,7 +29,8 @@
       img { width: 4rem; height: 4rem; border-radius: 50%; margin-bottom: 1.5rem; }
       h1 { font-size: 1.5rem; margin-bottom: 0.75rem; }
       p { color: #9ca3af; line-height: 1.6; margin-bottom: 1.5rem; }
-      a {
+      .actions { display: flex; flex-direction: column; gap: 0.75rem; align-items: center; }
+      a, button {
         display: inline-block;
         padding: 0.75rem 1.5rem;
         border-radius: 0.75rem;
@@ -36,7 +38,14 @@
         color: #050509;
         font-weight: 700;
         text-decoration: none;
+        border: none;
+        font-size: 1rem;
+        cursor: pointer;
+        font-family: inherit;
       }
+      button { background: transparent; color: #14e6ff; border: 1px solid rgba(20, 230, 255, 0.4); }
+      button:disabled { opacity: 0.4; cursor: not-allowed; }
+      button:not(:disabled):hover { background: rgba(20, 230, 255, 0.1); }
     </style>
   </head>
   <body>
@@ -44,7 +53,24 @@
       <img src="/sats.png" alt="KATOA" />
       <h1>You're offline</h1>
       <p>KATOA needs a connection for live wishlists and payments. Cached pages may still be available — try again when you're back online.</p>
-      <a href="/">Return home</a>
+      <div class="actions">
+        <a href="/">Return home</a>
+        <button type="button" id="retry-btn" disabled>Retry when online</button>
+      </div>
     </div>
+    <script>
+      const retryBtn = document.getElementById('retry-btn');
+      function updateOnline() {
+        const online = navigator.onLine;
+        retryBtn.disabled = !online;
+        retryBtn.textContent = online ? 'Retry now' : 'Retry when online';
+      }
+      window.addEventListener('online', updateOnline);
+      window.addEventListener('offline', updateOnline);
+      updateOnline();
+      retryBtn.addEventListener('click', () => {
+        if (navigator.onLine) window.location.reload();
+      });
+    </script>
   </body>
 </html>

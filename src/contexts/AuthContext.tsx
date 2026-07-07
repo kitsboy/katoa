@@ -18,6 +18,7 @@ interface Profile {
   nostr_pubkey: string | null;
   bio: string;
   banner_url: string | null;
+  preferred_currency: string | null;
   banner_video_url: string | null;
   profile_video_url: string | null;
   video_title: string | null;

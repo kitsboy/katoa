@@ -27,6 +27,7 @@ const pillars = [
 export function HomePage() {
   const { t } = useLanguage();
   const [stats, setStats] = useState({ creators: '2.5K', volume: '₿1.2M', countries: '195+' });
+  const [statsUnavailable, setStatsUnavailable] = useState(false);
 
   useEffect(() => {
     loadStats();
@@ -40,9 +41,10 @@ export function HomePage() {
 
       if (count) {
         setStats((prev) => ({ ...prev, creators: `${(count / 1000).toFixed(1)}K` }));
+        setStatsUnavailable(false);
       }
     } catch {
-      /* use defaults */
+      setStatsUnavailable(true);
     }
   }
 
@@ -53,6 +55,12 @@ export function HomePage() {
         description="Keep 100% of your earnings. Privacy-first wishlists and donations on Bitcoin Lightning. 0% fees forever."
         path="/"
       />
+
+      {statsUnavailable && (
+        <p className="text-center text-xs text-gray-500 py-2" role="status">
+          Live stats unavailable — showing estimates
+        </p>
+      )}
 
       <LandingHero
         badge={t('home.badge')}

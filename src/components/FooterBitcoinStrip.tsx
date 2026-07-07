@@ -16,17 +16,21 @@ export function FooterBitcoinStrip() {
   const [quoteIndex, setQuoteIndex] = useState(0);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     getBitcoinPrice().then(setPrice).catch(() => setPrice(null));
 
-    fetch('/live-data/bitcoin-pulse.json')
-      .then((r) => r.json())
+    fetch('/live-data/bitcoin-pulse.json', { signal: controller.signal })
+      .then((r) => r.ok ? r.json() : Promise.reject())
       .then(setPulse)
       .catch(() => null);
 
-    fetch('https://mempool.space/api/blocks/tip/height')
-      .then((r) => r.json())
+    fetch('https://mempool.space/api/blocks/tip/height', { signal: controller.signal })
+      .then((r) => r.ok ? r.json() : Promise.reject())
       .then((h) => setBlockHeight(typeof h === 'number' ? h : null))
       .catch(() => null);
+
+    return () => controller.abort();
   }, []);
 
   useEffect(() => {

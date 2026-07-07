@@ -4,6 +4,10 @@ import type { Database } from '../types/database';
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://placeholder.supabase.co';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'placeholder-key';
 
+if (import.meta.env.DEV && (supabaseUrl.includes('placeholder') || supabaseAnonKey === 'placeholder-key')) {
+  console.warn('[KATOA] Supabase is using placeholder config — set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env.local');
+}
+
 let supabase: SupabaseClient<Database>;
 
 try {

@@ -1,7 +1,7 @@
-const CACHE_NAME = 'katoa-static-v7';
+const CACHE_NAME = 'katoa-static-v8';
 const OFFLINE_URL = '/offline.html';
 
-const PRECACHE = [OFFLINE_URL, '/sats.png', '/manifest.json'];
+const PRECACHE = [OFFLINE_URL, '/sats.png', '/favicon.ico', '/manifest.json'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -74,7 +74,7 @@ self.addEventListener('fetch', (event) => {
           if (offline) return offline;
           return caches.match('/index.html');
         }
-        return undefined;
+        return new Response('Network error', { status: 503, statusText: 'Service Unavailable' });
       })
   );
 });

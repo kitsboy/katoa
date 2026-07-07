@@ -53,7 +53,7 @@ function ProductScreenshot() {
 
         <div className="lp-shot-screen">
           <div className="lp-shot-cover">
-            <img src={FEATURED.cover} alt="" loading="eager" />
+            <img src={FEATURED.cover} alt={`${FEATURED.title} cover`} loading="eager" fetchPriority="high" />
             <div className="lp-shot-cover-overlay" />
             <div className="lp-shot-cover-copy">
               <div className="lp-shot-title-row">
@@ -89,7 +89,7 @@ function ProductScreenshot() {
               <span className="lp-shot-progress-goal">of {formatSats(FEATURED.goal)} sats goal</span>
             </div>
 
-            <button type="button" className="lp-shot-cta" tabIndex={-1}>
+            <button type="button" className="lp-shot-cta" tabIndex={-1} aria-hidden="true">
               <Gift size={15} />
               Send a gift
             </button>
@@ -97,7 +97,7 @@ function ProductScreenshot() {
             <div className="lp-shot-items">
               {items.map((item) => (
                 <div key={item.id} className="lp-shot-item">
-                  <img src={item.image_url} alt="" />
+                  <img src={item.image_url} alt={item.title} />
                   <div>
                     <p>{item.title}</p>
                     <span>{formatSats(item.sats_raised)} / {formatSats(item.price_sats)} sats</span>

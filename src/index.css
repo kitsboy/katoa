@@ -465,6 +465,12 @@
   color: #0c4a6e;
 }
 
+.lp-btn-primary:focus-visible,
+.lp-btn-secondary:focus-visible {
+  outline: 2px solid #14e6ff;
+  outline-offset: 2px;
+}
+
 /* Product screenshot showcase */
 .lp-shot {
   position: relative;
@@ -1226,7 +1232,10 @@
   .motion-hero-image,
   .hero-orb-drift,
   .hero-orb-drift-reverse,
-  .hero-headline-accent {
+  .hero-headline-accent,
+  .lp-hero-gradient,
+  .lp-shot,
+  .lp-metric {
     animation: none;
   }
 
@@ -1261,7 +1270,7 @@
   padding: 0;
   margin: -1px;
   overflow: hidden;
-  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
   white-space: nowrap;
   border-width: 0;
 }

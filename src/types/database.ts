@@ -4,6 +4,9 @@
 
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
+export type Visibility = 'public' | 'private' | 'draft';
+export type PaymentMethodType = 'lightning' | 'onchain' | 'nostr' | 'bolt12' | string;
+
 type Relationships = [];
 
 type TableDef<Row, Insert = Partial<Row>, Update = Partial<Row>> = {
@@ -42,7 +45,7 @@ export interface Database {
         title: string;
         description: string;
         slug: string;
-        visibility: string;
+        visibility: Visibility;
         cover_image: string | null;
         cover_video_url: string | null;
         total_sats_goal: number;
@@ -98,13 +101,13 @@ export interface Database {
         wallet_address: string | null;
         lightning_address: string | null;
         nostr_pubkey: string | null;
-        visibility: string;
+        visibility: Visibility;
         created_at: string;
       }>;
       payment_methods: TableDef<{
         id: string;
         project_id: string;
-        method_type: string;
+        method_type: PaymentMethodType;
         label: string;
         address: string;
         metadata: Json;
