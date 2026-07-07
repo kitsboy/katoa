@@ -1,0 +1,15 @@
+{
+  "versions": [
+    {
+      "version": "1.1.0",
+      "date": "July 2026",
+      "changes": [
+        "Homepage hero motion background — cleaner, faster",
+        "Full charcoal/glass design across all pages",
+        "Mobile filter sheets, sticky donate bar, sat presets",
+        "PWA install support and offline fallback",
+        "Explore favorites and recently viewed wishlists"
+      ]
+    }
+  ]
+}

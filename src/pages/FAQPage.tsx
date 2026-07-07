@@ -35,7 +35,7 @@ const faqs: FAQItem[] = [
 const categories = Array.from(new Set(faqs.map((f) => f.category)));
 
 export function FAQPage() {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [openIndices, setOpenIndices] = useState<Set<number>>(new Set());
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [search, setSearch] = useState('');
 
@@ -91,14 +91,40 @@ export function FAQPage() {
           ))}
         </div>
 
+        <div className="flex flex-wrap gap-2 mb-4">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setOpenIndices(new Set(filteredFAQs.map((_, i) => i)))}
+          >
+            Expand all
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => setOpenIndices(new Set())}
+          >
+            Collapse all
+          </Button>
+        </div>
+
         <div className="space-y-3">
           {filteredFAQs.map((faq, index) => {
-            const isOpen = openIndex === index;
+            const isOpen = openIndices.has(index);
             return (
               <div key={`${faq.question}-${index}`} className="bg-white/[0.03] backdrop-blur-md rounded-2xl border border-white/10 overflow-hidden">
                 <button
                   type="button"
-                  onClick={() => setOpenIndex(isOpen ? null : index)}
+                  onClick={() => {
+                    setOpenIndices((prev) => {
+                      const next = new Set(prev);
+                      if (next.has(index)) next.delete(index);
+                      else next.add(index);
+                      return next;
+                    });
+                  }}
                   className="w-full px-4 sm:px-6 py-4 flex items-center justify-between text-left hover:bg-white/[0.04] transition-colors min-h-[56px] touch-manipulation"
                   aria-expanded={isOpen}
                 >

@@ -1,4 +1,4 @@
-import { useState, memo } from 'react';
+import { useState, memo, useEffect } from 'react';
 import { DollarSign, TrendingDown, AlertCircle } from 'lucide-react';
 import { Card } from './Card';
 import { Button } from './Button';
@@ -143,6 +143,18 @@ export function FeeComparison() {
   const [monthlyEarnings, setMonthlyEarnings] = useState(10000);
   const [currency, setCurrency] = useState(currencies[0]);
   const [displayValue, setDisplayValue] = useState('10,000');
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const earnings = params.get('earnings');
+    if (earnings) {
+      const num = parseInt(earnings.replace(/[^0-9]/g, ''), 10);
+      if (num > 0) {
+        setMonthlyEarnings(num);
+        setDisplayValue(num.toLocaleString());
+      }
+    }
+  }, []);
 
   const formatNumber = (value: string): string => {
     const numbers = value.replace(/[^0-9]/g, '');

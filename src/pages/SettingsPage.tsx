@@ -7,6 +7,8 @@ import { WalletAddressManager } from '../components/WalletAddressManager';
 import { CurrencySelector } from '../components/CurrencySelector';
 import { Link } from '../components/Link';
 import { supabase } from '../lib/supabase';
+import { Breadcrumbs } from '../components/Breadcrumbs';
+import { ReferralLinkGenerator } from '../components/ReferralLinkGenerator';
 import {
   User, Wallet, MapPin,
   Settings as SettingsIcon, Save, Upload, Camera, Zap, Check, AlertCircle, LayoutDashboard,
@@ -27,6 +29,7 @@ export function SettingsPage() {
     projectFollowers: 0,
   });
 
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [profileForm, setProfileForm] = useState({
     username: '',
     bio: '',
@@ -99,9 +102,13 @@ export function SettingsPage() {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
+    const file = files[0];
+    const reader = new FileReader();
+    reader.onload = () => setAvatarPreview(reader.result as string);
+    reader.readAsDataURL(file);
+
     setProcessing(true);
     try {
-      const file = files[0];
       const fileExt = file.name.split('.').pop();
       const fileName = `${user!.id}-avatar-${Date.now()}.${fileExt}`;
 
@@ -130,11 +137,13 @@ export function SettingsPage() {
       }
 
       setProfileForm({ ...profileForm, avatar_url: publicUrl });
+      setAvatarPreview(null);
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 3000);
       console.log('Avatar saved successfully');
     } catch (error) {
       console.error('Error uploading avatar:', error);
+      setAvatarPreview(null);
       alert(`Failed to upload avatar: ${(error as Error).message}`);
     } finally {
       setProcessing(false);
@@ -198,6 +207,7 @@ export function SettingsPage() {
   return (
     <div className="min-h-screen bg-charcoal-950 pt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
+        <Breadcrumbs items={[{ label: 'Dashboard', href: '/dashboard' }, { label: 'Settings' }]} className="mb-6" />
 
         <div className="mb-12">
           <h1 className="text-5xl font-black text-white mb-3 bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
@@ -271,9 +281,9 @@ export function SettingsPage() {
                           </div>
                         )}
                         <div className="absolute -bottom-16 left-8">
-                          {profileForm.avatar_url ? (
+                          {(avatarPreview || profileForm.avatar_url) ? (
                             <img
-                              src={profileForm.avatar_url}
+                              src={avatarPreview || profileForm.avatar_url}
                               alt="Avatar Preview"
                               className="w-32 h-32 rounded-full object-cover border-4 border-black shadow-2xl"
                             />
@@ -381,10 +391,10 @@ export function SettingsPage() {
                         className="relative group cursor-pointer"
                         disabled={processing}
                       >
-                        {profileForm.avatar_url ? (
+                        {(avatarPreview || profileForm.avatar_url) ? (
                           <div className="relative">
                             <img
-                              src={profileForm.avatar_url}
+                              src={avatarPreview || profileForm.avatar_url}
                               alt="Avatar"
                               className="w-32 h-32 rounded-full object-cover border-4 border-orange-500 shadow-[0_0_30px_rgba(255,135,0,0.3)]"
                             />
@@ -482,6 +492,8 @@ export function SettingsPage() {
                   </div>
 
                   <div className="pt-6 border-t border-white/10">
+                    <ReferralLinkGenerator />
+
                     <Button
                       type="submit"
                       className="w-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-black text-lg py-4 shadow-[0_0_30px_rgba(255,135,0,0.3)]"

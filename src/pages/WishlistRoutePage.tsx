@@ -16,7 +16,13 @@ export function WishlistRoutePage() {
         description="Support this creator's wishlist with Bitcoin Lightning on KATOA. Zero platform fees, instant donations."
         path={`/w/${slug}`}
       />
-      <WishlistPage slug={slug} />
+      <WishlistPage
+        slug={slug}
+        breadcrumbItems={[
+          { label: 'Explore', href: '/explore' },
+          { label: 'Wishlist' },
+        ]}
+      />
     </>
   );
 }

@@ -9,6 +9,9 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-route
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { MobileNav } from './components/MobileNav';
+import { PwaInstallPrompt } from './components/PwaInstallPrompt';
+import { ChangelogModal } from './components/ChangelogModal';
+import { RouteTransition } from './components/RouteTransition';
 import { useAuth } from './contexts/AuthContext';
 
 const HomePage = lazy(() => import('./pages/HomePage').then((m) => ({ default: m.HomePage })));
@@ -26,6 +29,7 @@ const PrivacyPage = lazy(() => import('./pages/PrivacyPage').then((m) => ({ defa
 const AuthPage = lazy(() => import('./pages/AuthPage').then((m) => ({ default: m.AuthPage })));
 const FAQPage = lazy(() => import('./pages/FAQPage').then((m) => ({ default: m.FAQPage })));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })));
+const PitchPage = lazy(() => import('./pages/PitchPage').then((m) => ({ default: m.PitchPage })));
 
 function PageLoader() {
   return (
@@ -59,30 +63,33 @@ function AppShell() {
         <ErrorBoundary>
           <Suspense fallback={<PageLoader />}>
             <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/explore" element={<ExplorePage />} />
-              <Route path="/wishlist/:slug" element={<WishlistRoutePage />} />
+              <Route path="/" element={<RouteTransition><HomePage /></RouteTransition>} />
+              <Route path="/explore" element={<RouteTransition><ExplorePage /></RouteTransition>} />
+              <Route path="/wishlist/:slug" element={<RouteTransition><WishlistRoutePage /></RouteTransition>} />
               <Route path="/wishlist" element={<Navigate to="/explore" replace />} />
-              <Route path="/auth" element={<AuthPage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="/faq" element={<FAQPage />} />
-              <Route path="/pricing" element={<PricingPage />} />
-              <Route path="/comparison" element={<ComparisonPage />} />
+              <Route path="/auth" element={<RouteTransition><AuthPage /></RouteTransition>} />
+              <Route path="/about" element={<RouteTransition><AboutPage /></RouteTransition>} />
+              <Route path="/contact" element={<RouteTransition><ContactPage /></RouteTransition>} />
+              <Route path="/faq" element={<RouteTransition><FAQPage /></RouteTransition>} />
+              <Route path="/pricing" element={<RouteTransition><PricingPage /></RouteTransition>} />
+              <Route path="/comparison" element={<RouteTransition><ComparisonPage /></RouteTransition>} />
               <Route path="/compare" element={<Navigate to="/comparison" replace />} />
-              <Route path="/terms" element={<TermsPage />} />
-              <Route path="/privacy" element={<PrivacyPage />} />
-              <Route path="/dashboard" element={<DashboardPage />} />
-              <Route path="/project" element={<ProjectPage />} />
-              <Route path="/settings" element={<SettingsPage />} />
-              <Route path="/404" element={<NotFoundPage />} />
-              <Route path="*" element={<NotFoundPage />} />
+              <Route path="/pitch" element={<RouteTransition><PitchPage /></RouteTransition>} />
+              <Route path="/terms" element={<RouteTransition><TermsPage /></RouteTransition>} />
+              <Route path="/privacy" element={<RouteTransition><PrivacyPage /></RouteTransition>} />
+              <Route path="/dashboard" element={<RouteTransition><DashboardPage /></RouteTransition>} />
+              <Route path="/project" element={<RouteTransition><ProjectPage /></RouteTransition>} />
+              <Route path="/settings" element={<RouteTransition><SettingsPage /></RouteTransition>} />
+              <Route path="/404" element={<RouteTransition><NotFoundPage /></RouteTransition>} />
+              <Route path="*" element={<RouteTransition><NotFoundPage /></RouteTransition>} />
             </Routes>
           </Suspense>
         </ErrorBoundary>
       </main>
       <Footer />
       <MobileNav />
+      <PwaInstallPrompt />
+      <ChangelogModal />
     </>
   );
 }

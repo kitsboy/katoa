@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { Link } from '../components/Link';
@@ -200,6 +200,20 @@ const pricingFaqs = [
 export function PricingPage() {
   const { t } = useLanguage();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [showStickyCta, setShowStickyCta] = useState(false);
+  const heroRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const hero = heroRef.current;
+    if (!hero) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setShowStickyCta(!entry.isIntersecting),
+      { threshold: 0, rootMargin: '0px' }
+    );
+    observer.observe(hero);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 text-white">
@@ -209,7 +223,7 @@ export function PricingPage() {
         path="/pricing"
       />
       {/* Hero */}
-      <section className="relative pt-24 sm:pt-28 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <section ref={heroRef} className="relative pt-24 sm:pt-28 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-20 left-1/4 w-72 h-72 bg-bitcoin-orange-500/10 rounded-full blur-3xl" />
           <div className="absolute top-32 right-1/4 w-96 h-96 bg-neon-cyan-500/8 rounded-full blur-3xl" />
@@ -476,6 +490,24 @@ export function PricingPage() {
           </div>
         </div>
       </section>
+
+      {showStickyCta && (
+        <div className="md:hidden fixed bottom-[calc(56px+env(safe-area-inset-bottom))] inset-x-0 z-40 px-4 pb-2 animate-slide-up">
+          <div className="max-w-lg mx-auto p-3 rounded-2xl bg-charcoal-950/95 backdrop-blur-xl border border-bitcoin-orange-500/30 shadow-[0_-8px_32px_rgba(0,0,0,0.5)] flex gap-2">
+            <Link href="/auth" className="flex-1">
+              <Button variant="bitcoin" className="w-full font-bold min-h-[48px]">
+                <Zap size={18} className="mr-2" />
+                Start Free
+              </Button>
+            </Link>
+            <Link href="/comparison" className="shrink-0">
+              <Button variant="outline" className="min-h-[48px] px-4 border-white/15">
+                Compare
+              </Button>
+            </Link>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

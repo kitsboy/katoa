@@ -9,6 +9,7 @@ import { ProgressBar } from '../components/ProgressBar';
 import { MediaCard } from '../components/MediaCard';
 import { SatsDisplay } from '../components/SatsDisplay';
 import { DemoBanner } from '../components/DemoBanner';
+import { EmptyState } from '../components/EmptyState';
 import { CardSkeleton } from '../components/Skeleton';
 import { supabase } from '../lib/supabase';
 import { mockWishlists } from '../data/mockWishlists';
@@ -247,10 +248,21 @@ export function ExplorePage() {
   const [favorites, setFavorites] = useState<string[]>(() =>
     getStorage<string[]>(STORAGE_KEYS.exploreFavorites, [])
   );
+  const [favoritesOnly, setFavoritesOnly] = useState(() =>
+    getStorage<boolean>(STORAGE_KEYS.exploreFavoritesOnly, false)
+  );
 
   useEffect(() => {
     loadWishlists();
     loadCategories();
+    const savedY = sessionStorage.getItem('katoa_explore_scroll');
+    if (savedY) {
+      requestAnimationFrame(() => window.scrollTo(0, parseInt(savedY, 10)));
+      sessionStorage.removeItem('katoa_explore_scroll');
+    }
+    return () => {
+      sessionStorage.setItem('katoa_explore_scroll', String(window.scrollY));
+    };
   }, []);
 
   useEffect(() => {
@@ -302,6 +314,10 @@ export function ExplorePage() {
       filtered = filtered.filter((w) => (w as Wishlist & { category?: string }).category === selectedCategory);
     }
 
+    if (favoritesOnly) {
+      filtered = filtered.filter((w) => favorites.includes(w.id));
+    }
+
     switch (sortBy) {
       case 'trending':
         filtered.sort((a, b) => (b.total_sats_raised || 0) - (a.total_sats_raised || 0));
@@ -321,7 +337,7 @@ export function ExplorePage() {
     }
 
     setFilteredWishlists(filtered);
-  }, [debouncedSearch, selectedCountry, selectedCategory, sortBy, wishlists]);
+  }, [debouncedSearch, selectedCountry, selectedCategory, sortBy, wishlists, favoritesOnly, favorites]);
 
   async function loadWishlists() {
     try {
@@ -372,14 +388,24 @@ export function ExplorePage() {
     });
   }, []);
 
+  const toggleFavoritesOnly = useCallback(() => {
+    setFavoritesOnly((prev) => {
+      const next = !prev;
+      setStorage(STORAGE_KEYS.exploreFavoritesOnly, next);
+      return next;
+    });
+  }, []);
+
   const clearFilters = useCallback(() => {
     setSelectedCategory('');
     setSelectedCountry('');
     setSortBy('recent');
     setSearchTerm('');
+    setFavoritesOnly(false);
+    setStorage(STORAGE_KEYS.exploreFavoritesOnly, false);
   }, []);
 
-  const hasActiveFilters = selectedCategory || selectedCountry || sortBy !== 'recent' || searchTerm;
+  const hasActiveFilters = selectedCategory || selectedCountry || sortBy !== 'recent' || searchTerm || favoritesOnly;
 
   const countries = Array.from(new Set(wishlists.map((w) => w.country).filter(Boolean) as string[])).sort();
 
@@ -544,6 +570,16 @@ export function ExplorePage() {
                   <Globe size={20} className="mr-2" />
                   Map
                 </Button>
+
+                <Button
+                  variant={favoritesOnly ? 'primary' : 'outline'}
+                  onClick={toggleFavoritesOnly}
+                  className="flex-1 sm:flex-none"
+                  aria-pressed={favoritesOnly}
+                >
+                  <Heart size={20} className={`mr-2 ${favoritesOnly ? 'fill-current' : ''}`} />
+                  Favorites only
+                </Button>
               </div>
             </div>
 
@@ -697,14 +733,20 @@ export function ExplorePage() {
             ))}
           </div>
         ) : (
-          <Card className="p-12 text-center" variant="glass">
-            <Gift size={64} className="text-gray-600 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-white mb-2">
-              {debouncedSearch || selectedCountry ? 'No results found' : 'No projects yet'}
-            </h3>
-            <p className="text-gray-300">
-              {debouncedSearch || selectedCountry ? 'Try adjusting your filters' : 'Check back soon!'}
-            </p>
+          <Card variant="glass">
+            <EmptyState
+              icon={<Gift size={32} />}
+              title={favoritesOnly ? 'No favorites yet' : debouncedSearch || selectedCountry ? 'No results found' : 'No projects yet'}
+              description={
+                favoritesOnly
+                  ? 'Tap the heart on projects you love — they will show up here.'
+                  : debouncedSearch || selectedCountry
+                  ? 'Try adjusting your filters or search terms.'
+                  : 'Check back soon for new creators and causes!'
+              }
+              actionLabel={favoritesOnly ? 'Browse all projects' : hasActiveFilters ? 'Clear filters' : undefined}
+              onAction={favoritesOnly || hasActiveFilters ? clearFilters : undefined}
+            />
           </Card>
         )}
       </div>

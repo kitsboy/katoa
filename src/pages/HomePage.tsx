@@ -8,6 +8,7 @@ import { SectionHeader } from '../components/SectionHeader';
 import { OnboardingChecklist } from '../components/OnboardingChecklist';
 import { useLanguage } from '../contexts/LanguageContext';
 import { supabase } from '../lib/supabase';
+import { SocialProofTicker } from '../components/SocialProofTicker';
 import { ArrowRight, Zap, Shield, Globe, ChevronDown } from 'lucide-react';
 
 const FeeComparison = lazy(() => import('../components/FeeComparison').then((m) => ({ default: m.FeeComparison })));
@@ -114,6 +115,8 @@ export function HomePage() {
           <ChevronDown size={28} className="text-gray-500" />
         </div>
       </section>
+
+      <SocialProofTicker />
 
       {/* Onboarding checklist */}
       <section className="relative py-12 sm:py-16 px-4 sm:px-6">

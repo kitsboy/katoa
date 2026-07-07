@@ -9,6 +9,9 @@ import { StatsCard } from '../components/StatsCard';
 import { supabase } from '../lib/supabase';
 import { Plus, Edit, Trash2, Settings, Gift, DollarSign, Users, FolderOpen, Globe, Lock, FileText, ExternalLink, TrendingUp, Eye, Heart, Filter, Camera, Upload } from 'lucide-react';
 import { PageMeta } from '../components/PageMeta';
+import { ConfirmDialog } from '../components/ConfirmDialog';
+import { EmptyState } from '../components/EmptyState';
+import { Breadcrumbs } from '../components/Breadcrumbs';
 
 interface Project {
   id: string;
@@ -46,6 +49,7 @@ export function DashboardPage() {
     totalRaised: 0,
   });
 
+  const [deleteProjectId, setDeleteProjectId] = useState<string | null>(null);
   const [followFilter, setFollowFilter] = useState<'all' | 'projects' | 'wishlists' | 'creators'>('all');
   const [following, setFollowing] = useState<{
     projects: any[];
@@ -209,10 +213,7 @@ export function DashboardPage() {
   }
 
   async function handleDeleteProject(projectId: string) {
-    if (!confirm('Are you sure you want to delete this project? This will also delete all associated wishlists.')) {
-      return;
-    }
-
+    setProcessing(true);
     try {
       const { error } = await supabase
         .from('projects')
@@ -223,9 +224,12 @@ export function DashboardPage() {
 
       await loadProjects();
       await loadStats();
+      setDeleteProjectId(null);
     } catch (error) {
       console.error('Error deleting project:', error);
       alert('Failed to delete project');
+    } finally {
+      setProcessing(false);
     }
   }
 
@@ -367,6 +371,7 @@ export function DashboardPage() {
         path="/dashboard"
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
+        <Breadcrumbs items={[{ label: 'Dashboard' }]} className="mb-6" />
 
         {isDemoUser && (
           <div className="mb-6 p-4 rounded-xl bg-neon-cyan/10 border border-neon-cyan/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -461,23 +466,14 @@ export function DashboardPage() {
         </div>
 
         {projects.length === 0 ? (
-          <Card className="text-center py-20 ">
-            <div className="max-w-md mx-auto">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-orange-500 to-amber-600 rounded-2xl mb-6 shadow-[0_0_30px_rgba(255,135,0,0.4)]">
-                <FolderOpen size={40} className="text-white" />
-              </div>
-              <h3 className="text-3xl font-black text-white mb-3">Start Your First Project</h3>
-              <p className="text-gray-300 mb-8 text-lg leading-relaxed">
-                Projects help you organize multiple wishlists under one umbrella. Perfect for campaigns, causes, or creator portfolios.
-              </p>
-              <Button
-                onClick={() => setShowCreateModal(true)}
-                className="bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 shadow-[0_0_20px_rgba(255,135,0,0.3)] font-bold text-lg px-8 py-3"
-              >
-                <Plus size={24} className="mr-2" />
-                Create Your First Project
-              </Button>
-            </div>
+          <Card>
+            <EmptyState
+              icon={<FolderOpen size={32} />}
+              title="Start Your First Project"
+              description="Projects help you organize multiple wishlists under one umbrella. Perfect for campaigns, causes, or creator portfolios."
+              actionLabel="Create Your First Project"
+              onAction={() => setShowCreateModal(true)}
+            />
           </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -620,7 +616,7 @@ export function DashboardPage() {
                         </Button>
                         <Button
                           variant="outline"
-                          onClick={() => handleDeleteProject(project.id)}
+                          onClick={() => setDeleteProjectId(project.id)}
                           className="border-white/10 text-gray-300 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/50"
                         >
                           <Trash2 size={18} />
@@ -892,6 +888,17 @@ export function DashboardPage() {
           </div>
         </form>
       </Modal>
+
+      <ConfirmDialog
+        isOpen={deleteProjectId !== null}
+        title="Delete Project"
+        message="Are you sure you want to delete this project? This will also delete all associated wishlists."
+        confirmLabel="Delete"
+        variant="danger"
+        loading={processing}
+        onConfirm={() => deleteProjectId && handleDeleteProject(deleteProjectId)}
+        onCancel={() => setDeleteProjectId(null)}
+      />
     </div>
   );
 }

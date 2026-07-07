@@ -6,10 +6,27 @@ import { Input } from '../components/Input';
 import { Link } from '../components/Link';
 import { Gift, Mail, Lock, User, Zap, ArrowLeft } from 'lucide-react';
 import { PageMeta } from '../components/PageMeta';
+import { STORAGE_KEYS } from '../lib/storage';
+
+function getPasswordStrength(password: string): 'weak' | 'medium' | 'strong' | null {
+  if (!password) return null;
+  let score = 0;
+  if (password.length >= 8) score++;
+  if (password.length >= 12) score++;
+  if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
+  if (/\d/.test(password)) score++;
+  if (/[^a-zA-Z0-9]/.test(password)) score++;
+  if (score <= 2) return 'weak';
+  if (score <= 4) return 'medium';
+  return 'strong';
+}
 
 export function AuthPage() {
   const { signUp, signIn, signInWithGoogle, signInWithNostr, signInAsDemo, canUseDemoAuth, session } = useAuth();
-  const [isSignUp, setIsSignUp] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(() => {
+    const saved = sessionStorage.getItem(STORAGE_KEYS.authTab);
+    return saved === 'signup';
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [formData, setFormData] = useState({
@@ -17,6 +34,12 @@ export function AuthPage() {
     password: '',
     username: '',
   });
+
+  useEffect(() => {
+    sessionStorage.setItem(STORAGE_KEYS.authTab, isSignUp ? 'signup' : 'signin');
+  }, [isSignUp]);
+
+  const passwordStrength = isSignUp ? getPasswordStrength(formData.password) : null;
 
   useEffect(() => {
     const handleAuthCallback = async () => {
@@ -269,6 +292,31 @@ export function AuthPage() {
                   minLength={6}
                 />
               </div>
+              {isSignUp && passwordStrength && (
+                <div className="mt-2">
+                  <div className="flex gap-1 mb-1">
+                    {(['weak', 'medium', 'strong'] as const).map((level) => (
+                      <div
+                        key={level}
+                        className={`h-1 flex-1 rounded-full transition-colors ${
+                          passwordStrength === 'weak' && level === 'weak'
+                            ? 'bg-red-500'
+                            : passwordStrength === 'medium' && (level === 'weak' || level === 'medium')
+                            ? 'bg-amber-500'
+                            : passwordStrength === 'strong'
+                            ? 'bg-emerald-500'
+                            : 'bg-white/10'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <p className={`text-xs font-medium ${
+                    passwordStrength === 'weak' ? 'text-red-400' : passwordStrength === 'medium' ? 'text-amber-400' : 'text-emerald-400'
+                  }`}>
+                    Password strength: {passwordStrength}
+                  </p>
+                </div>
+              )}
             </div>
 
             <Button

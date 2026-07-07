@@ -83,13 +83,25 @@ export function Tooltip({ content, children, icon = false, position = 'bottom' }
     <>
       <span
         ref={triggerRef}
+        role="button"
+        tabIndex={0}
         onMouseEnter={() => setIsVisible(true)}
         onMouseLeave={() => setIsVisible(false)}
+        onFocus={() => setIsVisible(true)}
+        onBlur={() => setIsVisible(false)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setIsVisible((v) => !v);
+          }
+          if (e.key === 'Escape') setIsVisible(false);
+        }}
         onClick={(e) => {
           e.stopPropagation();
           setIsVisible(!isVisible);
         }}
-        className="inline-flex items-center cursor-help z-50 relative"
+        className="inline-flex items-center cursor-help z-50 relative touch-manipulation"
+        aria-expanded={isVisible}
       >
         {children}
         {icon && (

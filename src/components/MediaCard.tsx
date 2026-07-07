@@ -76,6 +76,7 @@ export function MediaCard({
             hasVideo ? 'group-hover:opacity-0' : ''
           }`}
           loading="lazy"
+          decoding="async"
           onError={(e) => {
             e.currentTarget.style.display = 'none';
           }}

@@ -13,12 +13,23 @@ import { mockWishlists, mockWishlistItems } from '../data/mockWishlists';
 import { getStorage, setStorage, STORAGE_KEYS } from '../lib/storage';
 import { copyToClipboard } from '../lib/clipboard';
 import { getQrImageUrl, lightningQrData } from '../lib/qr';
+import { Breadcrumbs, BreadcrumbItem } from '../components/Breadcrumbs';
+import { PaymentMethodTabs, PaymentTab } from '../components/PaymentMethodTabs';
 import { Gift, ExternalLink, Zap, Bitcoin, Check, Copy, MapPin, QrCode, ArrowLeft, Heart, TrendingUp, Package } from 'lucide-react';
 
 const SAT_PRESETS = [
   { label: '1K', value: 1000 },
   { label: '10K', value: 10000 },
   { label: '21K', value: 21000 },
+] as const;
+
+const THEME_PRESETS = [
+  { color: '#f97316', label: 'Orange' },
+  { color: '#14E6FF', label: 'Cyan' },
+  { color: '#a855f7', label: 'Purple' },
+  { color: '#22c55e', label: 'Green' },
+  { color: '#ec4899', label: 'Pink' },
+  { color: '#3b82f6', label: 'Blue' },
 ] as const;
 
 interface GiftDraft {
@@ -70,7 +81,7 @@ interface Wishlist {
   };
 }
 
-export function WishlistPage({ slug }: { slug: string }) {
+export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; breadcrumbItems?: BreadcrumbItem[] }) {
   const [wishlist, setWishlist] = useState<Wishlist | null>(null);
   const [items, setItems] = useState<WishlistItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -89,11 +100,37 @@ export function WishlistPage({ slug }: { slug: string }) {
   const [mockInvoice, setMockInvoice] = useState('');
   const [paymentQrUrl, setPaymentQrUrl] = useState('');
   const [amountPreset, setAmountPreset] = useState<'custom' | number>('custom');
+  const [paymentTab, setPaymentTab] = useState<PaymentTab>('lightning');
+  const [themeColor, setThemeColor] = useState(() =>
+    getStorage<string>(STORAGE_KEYS.wishlistTheme(slug), '#f97316')
+  );
+  const [paymentCountdown, setPaymentCountdown] = useState(180);
   const [isDemoWishlist, setIsDemoWishlist] = useState(false);
 
   useEffect(() => {
     loadWishlist();
   }, [slug]);
+
+  useEffect(() => {
+    setThemeColor(getStorage<string>(STORAGE_KEYS.wishlistTheme(slug), '#f97316'));
+  }, [slug]);
+
+  useEffect(() => {
+    if (!showPaymentModal) return;
+    setPaymentCountdown(180);
+    const interval = setInterval(() => {
+      setPaymentCountdown((c) => (c <= 1 ? 0 : c - 1));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [showPaymentModal]);
+
+  function handleThemeChange(color: string) {
+    setThemeColor(color);
+    setStorage(STORAGE_KEYS.wishlistTheme(slug), color);
+    if (wishlist) {
+      setWishlist({ ...wishlist, theme_color: color });
+    }
+  }
 
   useEffect(() => {
     if (!slug) return;
@@ -277,8 +314,22 @@ export function WishlistPage({ slug }: { slug: string }) {
     ? (wishlist.total_sats_raised / wishlist.total_sats_goal) * 100
     : 0;
 
+  const resolvedBreadcrumbs: BreadcrumbItem[] = breadcrumbItems.length > 0
+    ? breadcrumbItems.map((item, i) =>
+        i === breadcrumbItems.length - 1 && wishlist
+          ? { ...item, label: wishlist.title }
+          : item
+      )
+    : [];
+
+  const formatCountdown = (secs: number) => {
+    const m = Math.floor(secs / 60);
+    const s = secs % 60;
+    return `${m}:${s.toString().padStart(2, '0')}`;
+  };
+
   return (
-    <div className="min-h-screen bg-charcoal-950 pb-24 md:pb-0">
+    <div className="min-h-screen bg-charcoal-950 pb-24 md:pb-0" style={{ '--wishlist-accent': themeColor } as React.CSSProperties}>
       {isDemoWishlist && (
         <div className="bg-bitcoin-orange-500/10 border-b border-bitcoin-orange-500/30 px-4 py-2 text-center text-sm text-bitcoin-orange-200">
           Demo wishlist — payments auto-complete after 3 seconds for preview.
@@ -333,6 +384,28 @@ export function WishlistPage({ slug }: { slug: string }) {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {resolvedBreadcrumbs.length > 0 && (
+          <Breadcrumbs items={resolvedBreadcrumbs} className="mb-6" />
+        )}
+
+        <div className="mb-8 p-4 rounded-xl bg-white/[0.03] border border-white/10">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Theme color</p>
+          <div className="flex flex-wrap gap-2">
+            {THEME_PRESETS.map((preset) => (
+              <button
+                key={preset.color}
+                type="button"
+                onClick={() => handleThemeChange(preset.color)}
+                className={`w-10 h-10 rounded-full border-2 transition-transform hover:scale-110 touch-manipulation ${
+                  themeColor === preset.color ? 'border-white scale-110' : 'border-white/20'
+                }`}
+                style={{ backgroundColor: preset.color }}
+                aria-label={`${preset.label} theme`}
+                aria-pressed={themeColor === preset.color}
+              />
+            ))}
+          </div>
+        </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
           <div className="lg:col-span-2 space-y-8">
             <Card className=" p-8 group hover:border-orange-500/50 transition-all duration-300" title="Creator information">
@@ -552,6 +625,7 @@ export function WishlistPage({ slug }: { slug: string }) {
         title={selectedItem ? `Fund ${selectedItem.title}` : 'Send a Gift'}
       >
         <form onSubmit={handleGiftSubmit} className="space-y-4">
+          <PaymentMethodTabs value={paymentTab} onChange={setPaymentTab} />
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">Amount (sats)</label>
             <div className="flex flex-wrap gap-2 mb-3">
@@ -669,10 +743,16 @@ export function WishlistPage({ slug }: { slug: string }) {
             </div>
           </div>
 
-          <div className="flex items-center justify-center gap-2 text-bitcoin-orange-500" role="status" aria-live="polite">
+          <div className="flex items-center justify-center gap-3 text-bitcoin-orange-500" role="status" aria-live="polite">
             <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-bitcoin-orange-500" aria-hidden />
             <span>Waiting for payment…</span>
+            <span className="font-mono text-sm text-gray-400 tabular-nums">
+              {formatCountdown(paymentCountdown)}
+            </span>
           </div>
+          {paymentCountdown === 0 && (
+            <p className="text-center text-amber-400 text-sm">Invoice expired — close and generate a new one.</p>
+          )}
 
           <p className="text-xs text-gray-500 text-center">
             Demo mode — payment auto-completes in ~3 seconds.

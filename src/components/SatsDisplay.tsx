@@ -1,3 +1,5 @@
+import { useEffect, useState, useRef } from 'react';
+
 interface SatsDisplayProps {
   sats: number;
   showBtc?: boolean;
@@ -35,11 +37,35 @@ export function SatsDisplay({
   };
 
   const styles = sizeClasses[size];
+  const [displaySats, setDisplaySats] = useState(sats);
+  const displayRef = useRef(sats);
+
+  useEffect(() => {
+    const start = displayRef.current;
+    if (sats === start) return;
+    const diff = sats - start;
+    const duration = 600;
+    const startTime = performance.now();
+    let frame = 0;
+
+    const tick = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const next = Math.round(start + diff * eased);
+      displayRef.current = next;
+      setDisplaySats(next);
+      if (progress < 1) frame = requestAnimationFrame(tick);
+    };
+
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [sats]);
 
   return (
     <div className={`flex flex-col ${className}`}>
-      <span className={`${styles.primary} text-white font-mono`}>
-        {formatSats(sats)} <span className="text-bitcoin-orange-500">sats</span>
+      <span className={`${styles.primary} text-white font-mono tabular-nums`}>
+        {formatSats(displaySats)} <span className="text-bitcoin-orange-500">sats</span>
       </span>
       {showBtc && (
         <span className={`${styles.secondary} text-gray-400 font-mono`}>

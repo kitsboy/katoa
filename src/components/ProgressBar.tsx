@@ -51,7 +51,7 @@ export function ProgressBar({
           )}
         </div>
       )}
-      <div className={`w-full bg-white/10 rounded-full overflow-hidden ${heightClasses[height]}`}>
+      <div className={`w-full bg-white/10 rounded-full overflow-hidden ${heightClasses[height]} relative`}>
         <div
           className={`
             ${heightClasses[height]} bg-gradient-to-r ${gradient} rounded-full
@@ -60,6 +60,11 @@ export function ProgressBar({
           `}
           style={{ width: `${percentage}%` }}
         >
+          {showPercentage && percentage > 12 && (
+            <span className="hidden sm:block absolute inset-0 flex items-center justify-end pr-2 text-[10px] font-bold text-white/90">
+              {percentage.toFixed(0)}%
+            </span>
+          )}
           {animated && (
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
           )}

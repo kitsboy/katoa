@@ -40,6 +40,18 @@ export function PageMeta({ title, description, path = '', image = 'https://katoa
       document.head.appendChild(canonical);
     }
     canonical.href = `https://katoa.org${path || '/'}`;
+
+    const hreflangs = ['en', 'es', 'pt', 'fr', 'de', 'ja', 'zh'] as const;
+    hreflangs.forEach((lang) => {
+      let link = document.querySelector(`link[rel="alternate"][hreflang="${lang}"]`) as HTMLLinkElement | null;
+      if (!link) {
+        link = document.createElement('link');
+        link.rel = 'alternate';
+        document.head.appendChild(link);
+      }
+      link.hreflang = lang;
+      link.href = `https://katoa.org${path || '/'}?lang=${lang}`;
+    });
   }, [title, description, path, image]);
 
   return null;

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Check, X, Shield, Globe, Zap, Lock, DollarSign, Users, ChevronRight } from 'lucide-react';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
@@ -6,8 +6,33 @@ import { Link } from '../components/Link';
 import { FeeComparison } from '../components/FeeComparison';
 import { PageMeta } from '../components/PageMeta';
 
+function calculateSavings(amount: number) {
+  const onlyfans = amount * 0.20;
+  const throne = amount * 0.10;
+  const linktree = amount * 0.09 + 40;
+  return {
+    vsOnlyFans: onlyfans,
+    vsThrone: throne,
+    vsLinktree: linktree,
+    max: Math.max(onlyfans, throne, linktree),
+    yearly: Math.max(onlyfans, throne, linktree) * 12,
+  };
+}
+
 export function ComparisonPage() {
   const [tableScrolled, setTableScrolled] = useState(false);
+  const [monthlyEarnings, setMonthlyEarnings] = useState(10000);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const earnings = params.get('earnings');
+    if (earnings) {
+      const num = parseInt(earnings.replace(/[^0-9]/g, ''), 10);
+      if (num > 0) setMonthlyEarnings(num);
+    }
+  }, []);
+
+  const savings = useMemo(() => calculateSavings(monthlyEarnings), [monthlyEarnings]);
 
   const features = [
     {
@@ -125,6 +150,30 @@ export function ComparisonPage() {
             and committed to 0% fees forever. Here's how we stack up.
           </p>
         </div>
+
+        {monthlyEarnings > 0 && (
+          <Card className="mb-12 p-6 sm:p-8 bg-emerald-500/10 border-2 border-emerald-500/30 animate-slide-up">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">
+                  Save up to ${savings.max.toLocaleString()}/month with KATOA
+                </h2>
+                <p className="text-emerald-300 text-sm sm:text-base">
+                  Based on ${monthlyEarnings.toLocaleString()}/mo earnings — that's{' '}
+                  <strong>${savings.yearly.toLocaleString()}/year</strong> back in your pocket.
+                </p>
+                <p className="text-gray-400 text-xs mt-2">
+                  vs OnlyFans (${savings.vsOnlyFans.toLocaleString()}) · Throne (${savings.vsThrone.toLocaleString()}) · Linktree (${savings.vsLinktree.toLocaleString()})
+                </p>
+              </div>
+              <Link href={`/comparison?earnings=${monthlyEarnings}`} className="shrink-0">
+                <Button variant="bitcoin" className="w-full sm:w-auto">
+                  Adjust in calculator ↓
+                </Button>
+              </Link>
+            </div>
+          </Card>
+        )}
 
         <FeeComparison />
 

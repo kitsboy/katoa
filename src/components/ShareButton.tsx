@@ -36,12 +36,29 @@ export function ShareButton({ url, title, description, className = '' }: ShareBu
     }
   };
 
+  const handleShareClick = async () => {
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    if (isMobile && typeof navigator.share === 'function') {
+      try {
+        await navigator.share({
+          title,
+          text: description || title,
+          url: fullUrl,
+        });
+        return;
+      } catch (err) {
+        if ((err as Error).name === 'AbortError') return;
+      }
+    }
+    setShowMenu(!showMenu);
+  };
+
   return (
     <div className={`relative ${className}`}>
       <Button
         variant="outline"
         size="sm"
-        onClick={() => setShowMenu(!showMenu)}
+        onClick={handleShareClick}
         className="gap-2 border-white/15 hover:border-neon-cyan-500/50 text-white font-bold bg-white/5 hover:bg-white/10 backdrop-blur-sm"
         aria-expanded={showMenu}
         aria-haspopup="menu"

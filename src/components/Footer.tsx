@@ -3,6 +3,7 @@ import { Link } from './Link';
 import { useLanguage } from '../contexts/LanguageContext';
 import { FooterBitcoinStrip } from './FooterBitcoinStrip';
 import { FooterJobBoard } from './FooterJobBoard';
+import { ContributorsWall } from './ContributorsWall';
 import { DonateQRModal } from './DonateQRModal';
 import {
   Bitcoin,
@@ -13,6 +14,7 @@ import {
   Check,
   ChevronDown,
   Github,
+  Sparkles,
   Zap,
   Globe,
   Code2,
@@ -44,11 +46,15 @@ export function Footer() {
   const [showDonation, setShowDonation] = useState(false);
   const [copied, setCopied] = useState(false);
   const [qrExpanded, setQrExpanded] = useState(false);
+  const [jobsExpanded, setJobsExpanded] = useState(false);
 
-  const handleCopyAddress = () => {
-    navigator.clipboard.writeText(bitcoinAddress);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleCopyAddress = async () => {
+    const { copyToClipboard } = await import('../lib/clipboard');
+    const ok = await copyToClipboard(bitcoinAddress);
+    if (ok) {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   return (
@@ -182,8 +188,30 @@ export function Footer() {
 
             {/* Jobs */}
             <div className="lg:col-span-7">
-              <FooterJobBoard />
+              <button
+                type="button"
+                onClick={() => setJobsExpanded(!jobsExpanded)}
+                className="lg:hidden w-full flex items-center justify-between mb-4 p-3 rounded-xl bg-white/[0.03] border border-white/10 text-white font-semibold touch-manipulation"
+                aria-expanded={jobsExpanded}
+              >
+                <span className="flex items-center gap-2">
+                  Open Roles
+                  <Sparkles size={16} className="text-neon-cyan-500" />
+                </span>
+                <ChevronDown size={18} className={`transition-transform ${jobsExpanded ? 'rotate-180' : ''}`} />
+              </button>
+              <div className={`${jobsExpanded ? 'block' : 'hidden'} lg:block`}>
+                <FooterJobBoard />
+              </div>
             </div>
+          </div>
+
+          {/* Contributors */}
+          <div className="mb-12">
+            <h3 className="text-white font-display font-bold mb-4 text-xs uppercase tracking-widest text-gray-300">
+              Contributors
+            </h3>
+            <ContributorsWall />
           </div>
 
           {/* Bottom bar */}
