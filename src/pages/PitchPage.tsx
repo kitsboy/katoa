@@ -128,7 +128,16 @@ export function PitchPage() {
         className="min-h-[100dvh] flex flex-col pt-16 pb-safe"
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
+        role="region"
+        aria-roledescription="carousel"
+        aria-label="KATOA pitch deck"
       >
+        <p className="sr-only" aria-live="polite">
+          Slide {current + 1} of {slides.length}: {slide.title}
+        </p>
+        <p className="hidden sm:block text-center text-xs text-gray-500 px-4 pt-2">
+          Use arrow keys or swipe to navigate
+        </p>
         <div className="flex-1 flex flex-col justify-center px-4 sm:px-8 py-8 max-w-2xl mx-auto w-full">
           <p className="text-[10px] uppercase tracking-[0.2em] text-neon-cyan-400 font-semibold mb-3">
             {slide.eyebrow}
@@ -255,7 +264,7 @@ export function PitchPage() {
                       Start Earning 100%
                     </Button>
                   </Link>
-                  <Link href="/comparison">
+                  <Link href="/comparison?earnings=10000">
                     <Button variant="outline" size="lg" className="w-full">
                       Compare Platforms
                     </Button>

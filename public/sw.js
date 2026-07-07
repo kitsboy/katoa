@@ -1,7 +1,7 @@
-const CACHE_NAME = 'katoa-static-v1';
+const CACHE_NAME = 'katoa-static-v2';
 const OFFLINE_URL = '/offline.html';
 
-const PRECACHE = ['/', '/index.html', OFFLINE_URL, '/sats.png', '/manifest.json'];
+const PRECACHE = ['/', '/index.html', OFFLINE_URL, '/sats.png', '/manifest.json', '/explore'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -24,6 +24,10 @@ function isStaticAsset(url) {
   );
 }
 
+function isWishlistRoute(url) {
+  return url.pathname.startsWith('/wishlist/');
+}
+
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   if (request.method !== 'GET') return;
@@ -32,28 +36,45 @@ self.addEventListener('fetch', (event) => {
   if (url.origin !== self.location.origin) return;
 
   const isNavigation = request.mode === 'navigate';
-  const isAsset = isStaticAsset(url) || url.pathname === '/' || url.pathname.endsWith('.html');
+  const isAsset = isStaticAsset(url);
+  const isWishlist = isWishlistRoute(url);
 
-  if (!isNavigation && !isAsset) return;
+  if (!isNavigation && !isAsset && !isWishlist) return;
+
+  if (isAsset) {
+    event.respondWith(
+      caches.open(CACHE_NAME).then(async (cache) => {
+        const cached = await cache.match(request);
+        const fetchPromise = fetch(request)
+          .then((response) => {
+            if (response.ok) cache.put(request, response.clone());
+            return response;
+          })
+          .catch(() => cached);
+        return cached || fetchPromise;
+      })
+    );
+    return;
+  }
 
   event.respondWith(
-    caches.match(request).then((cached) => {
-      if (cached) return cached;
-
-      return fetch(request)
-        .then((response) => {
-          if (response.ok && isAsset) {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
-          }
-          return response;
-        })
-        .catch(() => {
-          if (isNavigation) {
-            return caches.match(OFFLINE_URL);
-          }
-          return undefined;
-        });
-    })
+    fetch(request)
+      .then((response) => {
+        if (response.ok) {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+        }
+        return response;
+      })
+      .catch(async () => {
+        const cached = await caches.match(request);
+        if (cached) return cached;
+        if (isNavigation || isWishlist) {
+          const offline = await caches.match(OFFLINE_URL);
+          if (offline) return offline;
+          return caches.match('/index.html');
+        }
+        return undefined;
+      })
   );
 });

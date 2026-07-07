@@ -31,6 +31,8 @@ export function PageMeta({ title, description, path = '', image = 'https://katoa
     setMeta('twitter:title', fullTitle);
     setMeta('og:url', `https://katoa.org${path}`, 'property');
     setMeta('og:image', image, 'property');
+    setMeta('og:type', 'website', 'property');
+    setMeta('twitter:card', 'summary_large_image');
     setMeta('twitter:image', image);
 
     let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;

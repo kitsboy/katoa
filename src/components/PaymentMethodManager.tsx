@@ -3,6 +3,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { Button } from './Button';
 import { Card } from './Card';
 import { ConfirmDialog } from './ConfirmDialog';
+import { EmptyState } from './EmptyState';
 import { Modal } from './Modal';
 import { Input } from './Input';
 import { QRScanner } from './QRScanner';
@@ -236,14 +237,13 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
       </div>
 
       {methods.length === 0 ? (
-        <Card className="text-center py-8 bg-charcoal-900/50 border-white/10">
-          <Bitcoin size={48} className="mx-auto text-gray-500 mb-3" />
-          <p className="text-gray-400 mb-4">No payment methods configured</p>
-          <Button onClick={() => openModal()} variant="outline">
-            <Plus size={16} className="mr-2" />
-            Add Your First Payment Method
-          </Button>
-        </Card>
+        <EmptyState
+          icon={<Bitcoin size={32} />}
+          title="No payment methods configured"
+          description="Add multiple payment methods to accept Bitcoin via different networks"
+          actionLabel="Add Your First Payment Method"
+          onAction={() => openModal()}
+        />
       ) : (
         <div className="space-y-3">
           {methods.map((method) => (
