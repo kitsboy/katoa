@@ -44,8 +44,8 @@ export function ShareButton({ url, title, description, className = '' }: ShareBu
   };
 
   const handleCopyLink = async () => {
-    const ok = await copyToClipboard(fullUrl);
-    if (ok) {
+    const result = await copyToClipboard(fullUrl);
+    if (result === 'success') {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }

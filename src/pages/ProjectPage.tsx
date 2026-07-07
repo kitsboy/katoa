@@ -12,6 +12,7 @@ import { useToast } from '../components/Toast';
 import { useLanguage } from '../contexts/LanguageContext';
 import { PageMeta } from '../components/PageMeta';
 import { supabase } from '../lib/supabase';
+import type { Visibility } from '../types/database';
 import { parseProductUrl } from '../lib/productParser';
 import {
   Plus, Edit, Trash2, Settings, Gift, ArrowLeft,
@@ -179,8 +180,6 @@ export function ProjectPage() {
       const fileExt = file.name.split('.').pop();
       const fileName = `${project.id}-${Date.now()}.${fileExt}`;
 
-      console.log('Uploading project background:', fileName);
-
       const { error: uploadError } = await supabase.storage
         .from('media')
         .upload(fileName, file);
@@ -194,8 +193,6 @@ export function ProjectPage() {
         .from('media')
         .getPublicUrl(fileName);
 
-      console.log('Background uploaded, URL:', publicUrl);
-
       const { error: updateError } = await supabase
         .from('projects')
         .update({ background_url: publicUrl })
@@ -207,7 +204,6 @@ export function ProjectPage() {
       }
 
       await loadProject();
-      console.log('Project background saved successfully');
     } catch (error) {
       console.error('Error uploading background:', error);
       toast(`${t('error.uploadBackground')}: ${(error as Error).message}`, 'error');
@@ -574,7 +570,7 @@ export function ProjectPage() {
               </div>
               <select
                 value={formData.visibility}
-                onChange={(e) => setFormData({ ...formData, visibility: e.target.value as any })}
+                onChange={(e) => setFormData({ ...formData, visibility: e.target.value as Visibility })}
                 className="w-full px-5 py-4 bg-black border-2 border-white/10 rounded-xl text-white font-bold text-lg focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 cursor-pointer hover:border-purple-500/50 transition-colors"
               >
                 <option value="draft">�� Draft - Only you can see this project</option>
@@ -697,7 +693,7 @@ export function ProjectPage() {
                       </label>
                       <select
                         value={editWishlistForm.visibility}
-                        onChange={(e) => setEditWishlistForm({ ...editWishlistForm, visibility: e.target.value as any })}
+                        onChange={(e) => setEditWishlistForm({ ...editWishlistForm, visibility: e.target.value as Visibility })}
                         className="w-full px-5 py-4 bg-black border-2 border-white/10 rounded-xl text-white font-bold text-lg focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 cursor-pointer"
                       >
                         <option value="draft">🔒 Draft - Only you can see this</option>

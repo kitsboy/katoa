@@ -249,8 +249,6 @@ export function DashboardPage() {
       const fileExt = file.name.split('.').pop();
       const fileName = `${user!.id}-project-${projectId}-${Date.now()}.${fileExt}`;
 
-      console.log('Uploading project background:', fileName);
-
       const { error: uploadError } = await supabase.storage
         .from('media')
         .upload(fileName, file);
@@ -264,8 +262,6 @@ export function DashboardPage() {
         .from('media')
         .getPublicUrl(fileName);
 
-      console.log('Background uploaded, URL:', publicUrl);
-
       const { error: updateError } = await supabase
         .from('projects')
         .update({ background_url: publicUrl })
@@ -277,7 +273,6 @@ export function DashboardPage() {
       }
 
       await loadProjects();
-      console.log('Project background saved successfully');
     } catch (error) {
       console.error('Error uploading background:', error);
       toast(`${t('error.uploadBackground')}: ${(error as Error).message}`, 'error');
@@ -547,7 +542,7 @@ export function DashboardPage() {
                       />
                       <select
                         value={editFormData.visibility}
-                        onChange={(e) => setEditFormData({ ...editFormData, visibility: e.target.value as any })}
+                        onChange={(e) => setEditFormData({ ...editFormData, visibility: e.target.value as Project['visibility'] })}
                         className="w-full px-4 py-3 bg-black border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
                       >
                         <option value="draft">Draft - Only you can see</option>

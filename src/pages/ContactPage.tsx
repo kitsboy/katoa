@@ -39,8 +39,8 @@ export function ContactPage() {
   };
 
   const copyEmail = async () => {
-    const ok = await copyToClipboard(EMAIL);
-    toast(ok ? 'Email copied!' : 'Could not copy email', ok ? 'success' : 'error');
+    const result = await copyToClipboard(EMAIL);
+    toast(result === 'success' ? 'Email copied!' : 'Could not copy email', result === 'success' ? 'success' : 'error');
   };
 
   return (

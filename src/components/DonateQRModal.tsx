@@ -43,8 +43,8 @@ export function DonateQRModal({ isOpen, onClose, address }: DonateQRModalProps) 
   }, [isOpen, onClose]);
 
   const copyAddress = useCallback(async () => {
-    const ok = await copyToClipboard(address);
-    if (ok) {
+    const result = await copyToClipboard(address);
+    if (result === 'success') {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }

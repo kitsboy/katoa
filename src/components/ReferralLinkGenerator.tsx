@@ -11,7 +11,8 @@ export function ReferralLinkGenerator() {
   const url = `${typeof window !== 'undefined' ? window.location.origin : 'https://katoa.org'}/?utm_source=referral&utm_medium=share&utm_campaign=${ref}`;
 
   const copy = async () => {
-    const ok = await copyToClipboard(url);
+    const result = await copyToClipboard(url);
+    const ok = result === 'success';
     setCopied(ok);
     toast(ok ? 'Referral link copied!' : 'Copy failed', ok ? 'success' : 'error');
     setTimeout(() => setCopied(false), 2000);

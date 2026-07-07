@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useToast } from './Toast';
 import { Link } from './Link';
 import { useLanguage } from '../contexts/LanguageContext';
 import { FooterBitcoinStrip } from './FooterBitcoinStrip';
@@ -43,6 +44,7 @@ function BlocksIcon({ size = 16, className = '' }: { size?: number; className?: 
 
 export function Footer() {
   const { t } = useLanguage();
+  const { toast } = useToast();
   const [showDonation, setShowDonation] = useState(false);
   const [copied, setCopied] = useState(false);
   const [qrExpanded, setQrExpanded] = useState(false);
@@ -50,10 +52,12 @@ export function Footer() {
 
   const handleCopyAddress = async () => {
     const { copyToClipboard } = await import('../lib/clipboard');
-    const ok = await copyToClipboard(bitcoinAddress);
-    if (ok) {
+    const result = await copyToClipboard(bitcoinAddress);
+    if (result === 'success') {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+    } else {
+      toast('Could not copy address', 'error');
     }
   };
 
@@ -275,6 +279,7 @@ export function Footer() {
           <button
             type="button"
             onClick={() => setShowDonation(false)}
+            aria-label="Close donation drawer"
             className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/10 hover:bg-white/15 border border-white/10 text-gray-400 hover:text-white flex items-center justify-center transition-all"
           >
             <ChevronDown size={20} />
@@ -296,6 +301,7 @@ export function Footer() {
                   onClick={() => setQrExpanded(true)}
                   className="w-36 h-36 bg-white p-2 rounded-xl shadow-lg hover:opacity-90 active:scale-[0.98] transition-all touch-manipulation ring-2 ring-transparent hover:ring-bitcoin-orange-500/30"
                   aria-label="Expand donation QR code"
+                  aria-expanded={qrExpanded}
                 >
                   <img
                     src="/donations-qr.png"

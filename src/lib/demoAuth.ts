@@ -12,6 +12,7 @@ export const DEMO_PROFILE = {
   nostr_pubkey: null as string | null,
   bio: 'Preview account — explore the Katoa dashboard before Supabase is connected.',
   banner_url: null as string | null,
+  preferred_currency: 'USD' as string | null,
   banner_video_url: null as string | null,
   profile_video_url: null as string | null,
   video_title: null as string | null,

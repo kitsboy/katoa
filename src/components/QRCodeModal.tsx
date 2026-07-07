@@ -25,8 +25,8 @@ export function QRCodeModal({ isOpen, onClose, address, amount, title }: QRCodeM
   }, [isOpen, address, amount]);
 
   const copyAddress = async () => {
-    const ok = await copyToClipboard(address);
-    if (ok) {
+    const result = await copyToClipboard(address);
+    if (result === 'success') {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }

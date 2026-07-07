@@ -118,8 +118,6 @@ export function SettingsPage() {
       const fileExt = file.name.split('.').pop();
       const fileName = `${user!.id}-avatar-${Date.now()}.${fileExt}`;
 
-      console.log('Uploading avatar:', fileName);
-
       const { error: uploadError } = await supabase.storage
         .from('media')
         .upload(fileName, file);
@@ -133,8 +131,6 @@ export function SettingsPage() {
         .from('media')
         .getPublicUrl(fileName);
 
-      console.log('Avatar uploaded, URL:', publicUrl);
-
       const result = await updateProfile({ avatar_url: publicUrl });
 
       if (result.error) {
@@ -146,7 +142,6 @@ export function SettingsPage() {
       setAvatarPreview(null);
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 3000);
-      console.log('Avatar saved successfully');
     } catch (error) {
       console.error('Error uploading avatar:', error);
       setAvatarPreview(null);
@@ -166,8 +161,6 @@ export function SettingsPage() {
       const fileExt = file.name.split('.').pop();
       const fileName = `${user!.id}-banner-${Date.now()}.${fileExt}`;
 
-      console.log('Uploading banner:', fileName);
-
       const { error: uploadError } = await supabase.storage
         .from('media')
         .upload(fileName, file);
@@ -181,8 +174,6 @@ export function SettingsPage() {
         .from('media')
         .getPublicUrl(fileName);
 
-      console.log('Banner uploaded, URL:', publicUrl);
-
       const result = await updateProfile({ banner_url: publicUrl });
 
       if (result.error) {
@@ -193,7 +184,6 @@ export function SettingsPage() {
       setProfileForm({ ...profileForm, banner_url: publicUrl });
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 3000);
-      console.log('Banner saved successfully');
     } catch (error) {
       console.error('Error uploading banner:', error);
       toast(`${t('error.uploadBanner')}: ${(error as Error).message}`, 'error');
