@@ -297,6 +297,26 @@ export function FeeComparison({ variant = 'default' }: { variant?: 'default' | '
           ))}
         </div>
 
+        <table className="sr-only mt-4 w-full">
+          <caption>Platform fee comparison for monthly earnings</caption>
+          <thead>
+            <tr>
+              <th scope="col">Platform</th>
+              <th scope="col">Monthly fees</th>
+              <th scope="col">You keep</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[results.onlyfans, results.throne, results.linktree, results.katoa].map((platform) => (
+              <tr key={platform.platform}>
+                <th scope="row">{platform.platform}</th>
+                <td>{formatCurrency(platform.fees)}</td>
+                <td>{formatCurrency(platform.net)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
         <div className="mt-8 p-6 bg-emerald-500/10 border-2 border-emerald-500/30 rounded-xl">
           <div className="flex items-start gap-4">
             <div className="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center flex-shrink-0">

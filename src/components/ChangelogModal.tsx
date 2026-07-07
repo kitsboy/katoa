@@ -4,9 +4,7 @@ import { Modal } from './Modal';
 import { Button } from './Button';
 import { useLanguage } from '../contexts/LanguageContext';
 import changelog from '../data/changelog.json';
-import { getStorage, setStorage } from '../lib/storage';
-
-const SEEN_KEY = 'katoa_changelog_seen';
+import { getStorage, setStorage, STORAGE_KEYS } from '../lib/storage';
 
 export function ChangelogModal() {
   const { t } = useLanguage();
@@ -14,7 +12,7 @@ export function ChangelogModal() {
   const latest = changelog.versions[0];
 
   useEffect(() => {
-    const seen = getStorage<string>(SEEN_KEY, '');
+    const seen = getStorage<string>(STORAGE_KEYS.changelogSeen, '');
     if (seen !== latest.version) {
       const timer = setTimeout(() => setOpen(true), 1500);
       return () => clearTimeout(timer);
@@ -22,7 +20,7 @@ export function ChangelogModal() {
   }, [latest.version]);
 
   const dismiss = () => {
-    setStorage(SEEN_KEY, latest.version);
+    setStorage(STORAGE_KEYS.changelogSeen, latest.version);
     setOpen(false);
   };
 

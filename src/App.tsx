@@ -46,8 +46,52 @@ function PageLoader() {
 function ScrollToTop() {
   const { pathname } = useLocation();
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' as ScrollBehavior : 'auto' });
+    window.scrollTo({ top: 0, behavior: 'auto' });
   }, [pathname]);
+  return null;
+}
+
+function RouteAnnouncer() {
+  const { pathname } = useLocation();
+  const { t } = useLanguage();
+
+  const pageName = (() => {
+    const segment = pathname.split('/').filter(Boolean)[0] ?? 'home';
+    const labels: Record<string, string> = {
+      '': 'Home',
+      home: 'Home',
+      explore: 'Explore',
+      wishlist: 'Wishlist',
+      dashboard: t('dashboard.title'),
+      settings: 'Settings',
+      auth: t('common.signIn'),
+      about: 'About',
+      contact: 'Contact',
+      faq: 'FAQ',
+      pricing: 'Pricing',
+      comparison: 'Comparison',
+      pitch: 'Pitch',
+      terms: 'Terms',
+      privacy: 'Privacy',
+      project: 'Project',
+    };
+    return labels[segment] ?? segment;
+  })();
+
+  return (
+    <p className="sr-only" aria-live="polite" aria-atomic="true">
+      Navigated to {pageName}
+    </p>
+  );
+}
+
+function ExplorePreload() {
+  useEffect(() => {
+    const links = document.querySelectorAll('a[href="/explore"], a[href^="/explore"]');
+    const preload = () => { void import('./pages/ExplorePage'); };
+    links.forEach((el) => el.addEventListener('mouseenter', preload, { once: true }));
+    return () => links.forEach((el) => el.removeEventListener('mouseenter', preload));
+  }, []);
   return null;
 }
 
@@ -61,7 +105,9 @@ function AppShell() {
       </a>
       <Navbar />
       {isDemoUser && <DemoBanner />}
-      <main id="main" className="pb-20 md:pb-0">
+      <ExplorePreload />
+      <RouteAnnouncer />
+      <main id="main" tabIndex={-1} className="pb-20 md:pb-0 outline-none">
         <ErrorBoundary>
           <Suspense fallback={<PageLoader />}>
             <Routes>
@@ -80,6 +126,7 @@ function AppShell() {
               <Route path="/terms" element={<RouteTransition><TermsPage /></RouteTransition>} />
               <Route path="/privacy" element={<RouteTransition><PrivacyPage /></RouteTransition>} />
               <Route path="/dashboard" element={<RouteTransition><DashboardPage /></RouteTransition>} />
+              <Route path="/project/:slug" element={<RouteTransition><ProjectPage /></RouteTransition>} />
               <Route path="/project" element={<RouteTransition><ProjectPage /></RouteTransition>} />
               <Route path="/settings" element={<RouteTransition><SettingsPage /></RouteTransition>} />
               <Route path="/404" element={<RouteTransition><NotFoundPage /></RouteTransition>} />

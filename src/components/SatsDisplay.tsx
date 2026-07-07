@@ -64,8 +64,12 @@ export const SatsDisplay = memo(function SatsDisplay({
     return () => cancelAnimationFrame(frame);
   }, [sats]);
 
+  const ariaLabel = showFiat && fiatAmount !== undefined
+    ? `${formatSats(displaySats)} sats, approximately ${new Intl.NumberFormat(language, { style: 'currency', currency: fiatCurrency }).format(fiatAmount)}`
+    : `${formatSats(displaySats)} sats${showBtc ? `, ${satsToBtc(sats)} BTC` : ''}`;
+
   return (
-    <div className={`flex flex-col ${className}`}>
+    <div className={`flex flex-col ${className}`} aria-label={ariaLabel}>
       <span className={`${styles.primary} text-white font-mono tabular-nums`}>
         {new Intl.NumberFormat(language).format(displaySats)} <span className="text-bitcoin-orange-500">sats</span>
       </span>

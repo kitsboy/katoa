@@ -269,21 +269,21 @@ export function ComparisonPage() {
                 <table className="w-full min-w-[640px]">
                   <thead>
                     <tr className="border-b border-white/10">
-                      <th className="text-left text-white font-semibold pb-4 pr-4 min-w-[140px]">{t('comparison.table.feature')}</th>
-                      <th className="text-center text-emerald-600 font-bold pb-4 px-2">
+                      <th scope="col" className="text-left text-white font-semibold pb-4 pr-4 min-w-[140px]">{t('comparison.table.feature')}</th>
+                      <th scope="col" className="text-center text-emerald-600 font-bold pb-4 px-2">
                         <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-600/20 rounded-lg">KATOA</div>
                       </th>
-                      <th className="text-center text-white font-semibold pb-4 px-2 text-sm">Throne</th>
-                      <th className="text-center text-white font-semibold pb-4 px-2 text-sm">Linktree</th>
-                      <th className="text-center text-white font-semibold pb-4 px-2 text-sm">OnlyFans</th>
-                      <th className="text-center text-white font-semibold pb-4 px-2 text-sm">Kickstarter</th>
-                      <th className="text-center text-white font-semibold pb-4 px-2 text-sm">Indiegogo</th>
+                      <th scope="col" className="text-center text-white font-semibold pb-4 px-2 text-sm">Throne</th>
+                      <th scope="col" className="text-center text-white font-semibold pb-4 px-2 text-sm">Linktree</th>
+                      <th scope="col" className="text-center text-white font-semibold pb-4 px-2 text-sm">OnlyFans</th>
+                      <th scope="col" className="text-center text-white font-semibold pb-4 px-2 text-sm">Kickstarter</th>
+                      <th scope="col" className="text-center text-white font-semibold pb-4 px-2 text-sm">Indiegogo</th>
                     </tr>
                   </thead>
                   <tbody>
                     {category.items.map((item) => (
                       <tr key={item.featureKey} className="border-b border-white/10 hover:bg-white/[0.05] transition-colors">
-                        <td className="text-white py-4 pr-4 font-medium">{t(item.featureKey)}</td>
+                        <th scope="row" className="text-white py-4 pr-4 font-medium text-left">{t(item.featureKey)}</th>
                         <td className="text-center py-4 px-2">
                           <div className="font-bold">{renderValue(item.katoa)}</div>
                         </td>

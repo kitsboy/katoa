@@ -33,4 +33,6 @@ export const STORAGE_KEYS = {
   authTab: 'katoa_auth_tab',
   wishlistTheme: (slug: string) => `katoa_wishlist_theme_${slug}`,
   wishlistItemOrder: (slug: string) => `katoa_wishlist_order_${slug}`,
+  changelogSeen: 'katoa_changelog_seen',
+  pwaInstallDismissed: 'katoa_pwa_install_dismissed',
 } as const;
