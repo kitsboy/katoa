@@ -167,7 +167,7 @@ export function HomePage() {
             align="left"
           />
           <Suspense fallback={<div className="h-64 lp-skeleton rounded-2xl" />}>
-            <FeeComparison />
+            <FeeComparison variant="landing" />
           </Suspense>
         </div>
       </section>

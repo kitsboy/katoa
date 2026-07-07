@@ -49,14 +49,14 @@ export function OnboardingChecklist() {
       <div className="flex items-start justify-between gap-4 mb-6">
         <div>
           <p className="lp-eyebrow mb-2">{t('onboarding.badge')}</p>
-          <h3 className="text-xl sm:text-2xl font-semibold text-white tracking-tight mb-1">
+          <h3 className="lp-onboarding-title">
             {t('onboarding.title')}
           </h3>
-          <p className="text-sm text-gray-500">{t('onboarding.subtitle')}</p>
+          <p className="lp-onboarding-subtitle">{t('onboarding.subtitle')}</p>
         </div>
         <div className="text-right shrink-0 tabular-nums">
-          <span className="text-2xl font-semibold text-white">{completedCount}</span>
-          <span className="text-gray-500 text-sm">/{items.length}</span>
+          <span className="lp-onboarding-count">{completedCount}</span>
+          <span className="lp-onboarding-count-total">/{items.length}</span>
         </div>
       </div>
 
@@ -74,11 +74,11 @@ export function OnboardingChecklist() {
                 >
                   {isChecked ? <Check size={14} /> : <Circle size={14} />}
                 </button>
-                <span className={`flex-1 text-sm ${isChecked ? 'text-gray-500 line-through' : 'text-gray-300'}`}>
+                <span className={`lp-onboarding-label ${isChecked ? 'lp-onboarding-label--done' : ''}`}>
                   {t(item.labelKey)}
                 </span>
                 {!isChecked && (
-                  <Link href={item.href} className="text-xs font-medium text-white hover:text-gray-300 shrink-0">
+                  <Link href={item.href} className="lp-onboarding-link shrink-0">
                     {t('common.go')} →
                   </Link>
                 )}

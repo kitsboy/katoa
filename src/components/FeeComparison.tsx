@@ -139,7 +139,8 @@ const PlatformCard = memo(function PlatformCard({
   );
 });
 
-export function FeeComparison() {
+export function FeeComparison({ variant = 'default' }: { variant?: 'default' | 'landing' }) {
+  const isLanding = variant === 'landing';
   const [monthlyEarnings, setMonthlyEarnings] = useState(10000);
   const [currency, setCurrency] = useState(currencies[0]);
   const [displayValue, setDisplayValue] = useState('10,000');
@@ -224,19 +225,21 @@ export function FeeComparison() {
   };
 
   return (
-    <div className="space-y-8">
-      <div className="text-center mb-8 bg-white/[0.03] border border-white/10 py-8 px-4 rounded-2xl backdrop-blur-md">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4">
-          The True Cost of Platform Fees
-        </h2>
-        <p className="text-lg sm:text-xl md:text-2xl text-gray-300 font-medium max-w-3xl mx-auto">
-          See how much you're losing to competitors' fees. KATOA keeps it simple: 0% forever.
-        </p>
-      </div>
+    <div className={isLanding ? 'lp-fee space-y-8' : 'space-y-8'}>
+      {!isLanding && (
+        <div className="text-center mb-8 bg-white/[0.03] border border-white/10 py-8 px-4 rounded-2xl backdrop-blur-md">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4">
+            The True Cost of Platform Fees
+          </h2>
+          <p className="text-lg sm:text-xl md:text-2xl text-gray-300 font-medium max-w-3xl mx-auto">
+            See how much you're losing to competitors' fees. KATOA keeps it simple: 0% forever.
+          </p>
+        </div>
+      )}
 
-      <Card variant="glass" padding="lg">
+      <Card variant="glass" padding="lg" className={isLanding ? 'lp-fee-panel' : ''}>
         <div className="mb-8">
-          <label className="block text-xl sm:text-2xl md:text-3xl font-bold text-white mb-4 text-center">
+          <label className={`block text-xl sm:text-2xl md:text-3xl font-bold mb-4 text-center ${isLanding ? 'lp-fee-label' : 'text-white'}`}>
             What's your monthly project goal?
           </label>
 
@@ -323,7 +326,7 @@ export function FeeComparison() {
       </Card>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <Card hover padding="lg" className="text-center">
+        <Card hover padding="lg" className={`text-center ${isLanding ? 'lp-fee-feature' : ''}`}>
           <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-6 bg-gradient-to-br from-blue-500 via-cyan-500 to-teal-500 rounded-full flex items-center justify-center shadow-2xl shadow-blue-500/40">
             <DollarSign size={48} className="text-white" strokeWidth={2.5} />
           </div>
@@ -338,7 +341,7 @@ export function FeeComparison() {
           </div>
         </Card>
 
-        <Card hover padding="lg" className="text-center">
+        <Card hover padding="lg" className={`text-center ${isLanding ? 'lp-fee-feature' : ''}`}>
           <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-6 bg-gradient-to-br from-orange-500 via-amber-500 to-yellow-500 rounded-full flex items-center justify-center shadow-2xl shadow-orange-500/40">
             <TrendingDown size={48} className="text-white" strokeWidth={2.5} />
           </div>
@@ -353,7 +356,7 @@ export function FeeComparison() {
           </div>
         </Card>
 
-        <Card hover padding="lg" className="text-center">
+        <Card hover padding="lg" className={`text-center ${isLanding ? 'lp-fee-feature' : ''}`}>
           <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-6 bg-gradient-to-br from-purple-500 via-pink-500 to-rose-500 rounded-full flex items-center justify-center shadow-2xl shadow-purple-500/40">
             <AlertCircle size={48} className="text-white" strokeWidth={2.5} />
           </div>
