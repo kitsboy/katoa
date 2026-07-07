@@ -234,4 +234,31 @@
 
 ---
 
+## Handoff to Kimi — 2026-07-07 (creator video cards + 50 upgrades)
+
+**Machine:** M3 (Grok)
+**Project:** katoa
+
+### Done
+- [x] Batch 6A (`cc1f5ff`): Creator video cards (OnlyFans-style layout), MOV/MP4/WebM/M4V upload (200MB), Luna + Sasha mock creators on `/explore`, hover video preview, `?videos=1` filter, prerender routes
+- [x] Batch 6B (`c043f9a`): 50 polish upgrades — Spanish video i18n, mute/unmute (7 langs), validateAddress refactor, CoverVideoUpload on ProjectPage, VideoObject JSON-LD, ogVideo, PWA sw v11, sitemap, tall skeletons, dashboard hints, cross-page creator copy
+- [x] `npm run check` + `npm run build` pass (22 tests)
+
+### Decisions
+- "Sexy" examples use subscription-platform UI (#00aff0, tall cards, exclusive badge) with tasteful Pexels stock video — no explicit imagery
+- Showcase section shows first 2 creator cards; deduped from main grid
+- `card_style: 'creator'` drives tall hero on WishlistPage and CreatorVideoCard in Explore grid
+
+### What's Next
+- Verify live deploy: https://katoa.org/explore shows Luna + Sasha with hover preview
+- Test `/explore?videos=1` filter and `/wishlist/luna-exclusive-videos` hero
+- Consider avatar images for Luna/Sasha mocks (currently null)
+
+### Git State
+- Last commit SHA: c043f9a
+- Branch: main
+- Unpushed: none
+
+---
+
 *Safe Harbour · Part of the [Give A Bit](https://giveabit.io) family.*
