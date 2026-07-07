@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { Modal } from './Modal';
 import { Button } from './Button';
 import { Download, Copy, Check, X } from 'lucide-react';
+import { bitcoinQrData, getQrImageUrl } from '../lib/qr';
+import { copyToClipboard } from '../lib/clipboard';
 
 interface QRCodeModalProps {
   isOpen: boolean;
@@ -17,22 +19,16 @@ export function QRCodeModal({ isOpen, onClose, address, amount, title }: QRCodeM
 
   useEffect(() => {
     if (isOpen && address) {
-      const qrData = amount
-        ? `bitcoin:${address}?amount=${amount / 100000000}`
-        : `bitcoin:${address}`;
-
-      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(qrData)}`;
-      setQrCodeUrl(qrUrl);
+      const qrData = bitcoinQrData(address, amount);
+      setQrCodeUrl(getQrImageUrl(qrData, 300));
     }
   }, [isOpen, address, amount]);
 
   const copyAddress = async () => {
-    try {
-      await navigator.clipboard.writeText(address);
+    const ok = await copyToClipboard(address);
+    if (ok) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error('Failed to copy:', err);
     }
   };
 
@@ -84,7 +80,7 @@ export function QRCodeModal({ isOpen, onClose, address, amount, title }: QRCodeM
                 type="text"
                 value={address}
                 readOnly
-                className="flex-1 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white text-sm font-mono"
+                className="flex-1 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm font-mono focus:ring-2 focus:ring-neon-cyan-500/50"
               />
               <Button
                 variant="outline"

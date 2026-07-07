@@ -196,7 +196,7 @@ export function SettingsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-black pt-16">
+    <div className="min-h-screen bg-charcoal-950 pt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
 
         <div className="mb-12">
@@ -215,7 +215,7 @@ export function SettingsPage() {
 
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="lg:w-80 flex-shrink-0">
-            <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 sticky top-24 p-3">
+            <Card className=" sticky top-24 p-3">
               <nav className="space-y-2">
                 {tabs.map((tab) => {
                   const Icon = tab.icon;
@@ -227,10 +227,10 @@ export function SettingsPage() {
                       className={`w-full flex items-center gap-4 px-5 py-4 rounded-xl text-left transition-all duration-300 group ${
                         isActive
                           ? `bg-gradient-to-r ${tab.color} shadow-lg text-white font-bold`
-                          : 'text-gray-400 hover:text-white hover:bg-gray-800'
+                          : 'text-gray-400 hover:text-white hover:bg-white/5'
                       }`}
                     >
-                      <div className={`p-2 rounded-lg ${isActive ? 'bg-white/20' : 'bg-gray-800 group-hover:bg-gray-700'}`}>
+                      <div className={`p-2 rounded-lg ${isActive ? 'bg-white/20' : 'bg-white/5 group-hover:bg-white/10'}`}>
                         <Icon size={22} />
                       </div>
                       <span className="text-lg">{tab.label}</span>
@@ -243,7 +243,7 @@ export function SettingsPage() {
 
           <div className="flex-1">
             {activeTab === 'profile' && (
-              <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 p-8">
+              <Card className=" p-8">
                 <div className="flex items-center gap-3 mb-8">
                   <div className="p-3 bg-orange-500/20 rounded-xl">
                     <User size={28} className="text-orange-500" />
@@ -266,7 +266,7 @@ export function SettingsPage() {
                             style={{ backgroundImage: `url(${profileForm.banner_url})` }}
                           />
                         ) : (
-                          <div className="w-full h-64 bg-gradient-to-r from-gray-800 to-gray-900 flex items-center justify-center">
+                          <div className="w-full h-64 bg-charcoal-900 flex items-center justify-center">
                             <Camera size={64} className="text-gray-700" />
                           </div>
                         )}
@@ -326,7 +326,7 @@ export function SettingsPage() {
                   />
 
                   {/* Clickable Banner Upload Section */}
-                  <div className="p-6 bg-black rounded-xl border border-gray-700">
+                  <div className="p-6 bg-black rounded-xl border border-white/10">
                     <label className="block text-sm font-bold text-gray-200 mb-4 uppercase tracking-wider">
                       Profile Banner
                     </label>
@@ -341,7 +341,7 @@ export function SettingsPage() {
                           <img
                             src={profileForm.banner_url}
                             alt="Banner"
-                            className="w-full h-48 rounded-xl object-cover border-2 border-gray-700 shadow-lg"
+                            className="w-full h-48 rounded-xl object-cover border-2 border-white/10 shadow-lg"
                           />
                           <div className="absolute inset-0 bg-black/60 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                             <div className="text-center">
@@ -352,7 +352,7 @@ export function SettingsPage() {
                           </div>
                         </div>
                       ) : (
-                        <div className="h-48 rounded-xl bg-gradient-to-r from-gray-800 to-gray-900 border-2 border-dashed border-gray-700 flex items-center justify-center hover:border-orange-500 transition-colors">
+                        <div className="h-48 rounded-xl bg-charcoal-900 border-2 border-dashed border-white/10 flex items-center justify-center hover:border-orange-500 transition-colors">
                           <div className="text-center">
                             <Upload size={64} className="mx-auto text-gray-600 mb-3 group-hover:text-orange-500 transition-colors" />
                             <p className="text-gray-500 font-bold group-hover:text-white transition-colors">Click to upload banner</p>
@@ -370,7 +370,7 @@ export function SettingsPage() {
                   </div>
 
                   {/* Clickable Avatar Upload Section */}
-                  <div className="p-6 bg-black rounded-xl border border-gray-700">
+                  <div className="p-6 bg-black rounded-xl border border-white/10">
                     <label className="block text-sm font-bold text-gray-200 mb-4 uppercase tracking-wider">
                       Profile Picture
                     </label>
@@ -418,7 +418,7 @@ export function SettingsPage() {
                       onChange={(e) => setProfileForm({ ...profileForm, username: e.target.value })}
                       placeholder="johndoe"
                       required
-                      className="bg-black border-gray-700 text-white text-lg py-4"
+                      className="bg-black border-white/10 text-white text-lg py-4"
                     />
 
                     <div>
@@ -429,7 +429,7 @@ export function SettingsPage() {
                         value={profileForm.bio}
                         onChange={(e) => setProfileForm({ ...profileForm, bio: e.target.value })}
                         placeholder="Tell the world about yourself..."
-                        className="w-full px-4 py-4 bg-black border border-gray-700 rounded-xl text-white text-lg placeholder-gray-500 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all"
+                        className="w-full px-4 py-4 bg-black border border-white/10 rounded-xl text-white text-lg placeholder-gray-500 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all"
                         rows={4}
                       />
                     </div>
@@ -441,14 +441,14 @@ export function SettingsPage() {
                         onChange={(e) => setProfileForm({ ...profileForm, lightning_address: e.target.value })}
                         placeholder="username@wallet.com"
                         icon={<Zap size={18} className="text-amber-500" />}
-                        className="bg-black border-gray-700 text-white"
+                        className="bg-black border-white/10 text-white"
                       />
 
                       <div>
                         <label className="block text-sm font-bold text-gray-200 mb-3 uppercase tracking-wider">
                           Display Currency
                         </label>
-                        <div className="px-4 py-4 bg-black border border-gray-700 rounded-xl">
+                        <div className="px-4 py-4 bg-black border border-white/10 rounded-xl">
                           <CurrencySelector />
                           <p className="text-xs text-gray-500 mt-2">All amounts stored in sats — display preference only</p>
                         </div>
@@ -460,17 +460,17 @@ export function SettingsPage() {
                       value={profileForm.nostr_pubkey}
                       onChange={(e) => setProfileForm({ ...profileForm, nostr_pubkey: e.target.value })}
                       placeholder="npub1..."
-                      className="bg-black border-gray-700 text-white font-mono"
+                      className="bg-black border-white/10 text-white font-mono"
                     />
 
-                    <div className="p-6 bg-black rounded-xl border border-gray-700">
+                    <div className="p-6 bg-black rounded-xl border border-white/10">
                       <label className="block text-sm font-bold text-gray-200 mb-4 uppercase tracking-wider">
                         Theme Accent Color
                       </label>
                       <div className="flex items-center gap-4">
                         <input
                           type="color"
-                          className="w-20 h-20 rounded-xl cursor-pointer border-4 border-gray-700 hover:border-orange-500 transition-colors"
+                          className="w-20 h-20 rounded-xl cursor-pointer border-4 border-white/10 hover:border-orange-500 transition-colors"
                           defaultValue="#ff8700"
                         />
                         <div>
@@ -481,14 +481,14 @@ export function SettingsPage() {
                     </div>
                   </div>
 
-                  <div className="pt-6 border-t border-gray-700">
+                  <div className="pt-6 border-t border-white/10">
                     <Button
                       type="submit"
                       className="w-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-black text-lg py-4 shadow-[0_0_30px_rgba(255,135,0,0.3)]"
-                      disabled={processing}
+                      loading={processing}
                     >
                       <Save size={24} className="mr-3" />
-                      {processing ? 'Saving Changes...' : 'Save Profile'}
+                      Save Profile
                     </Button>
                   </div>
                 </form>
@@ -496,7 +496,7 @@ export function SettingsPage() {
             )}
 
             {activeTab === 'wallet' && (
-              <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 p-8">
+              <Card className=" p-8">
                 <div className="flex items-center gap-3 mb-8">
                   <div className="p-3 bg-emerald-500/20 rounded-xl">
                     <Wallet size={28} className="text-emerald-500" />
@@ -511,7 +511,7 @@ export function SettingsPage() {
             )}
 
             {activeTab === 'projects' && (
-              <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 p-8">
+              <Card className=" p-8">
                 <div className="flex items-center gap-3 mb-8">
                   <div className="p-3 bg-cyan-500/20 rounded-xl">
                     <LayoutDashboard size={28} className="text-cyan-500" />
@@ -569,7 +569,7 @@ export function SettingsPage() {
                     </div>
                   </div>
 
-                  <div className="p-8 bg-black rounded-xl border border-gray-700">
+                  <div className="p-8 bg-black rounded-xl border border-white/10">
                     <div className="flex items-center gap-4 mb-6">
                       <div className="p-4 bg-cyan-500/20 rounded-xl">
                         <TrendingUp size={32} className="text-cyan-500" />
@@ -591,7 +591,7 @@ export function SettingsPage() {
             )}
 
             {activeTab === 'shipping' && (
-              <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 p-8">
+              <Card className=" p-8">
                 <div className="flex items-center gap-3 mb-8">
                   <div className="p-3 bg-purple-500/20 rounded-xl">
                     <MapPin size={28} className="text-purple-500" />
@@ -601,7 +601,7 @@ export function SettingsPage() {
                     <p className="text-gray-400">Add locations where you can receive physical items</p>
                   </div>
                 </div>
-                <div className="text-center py-16 bg-black rounded-xl border border-gray-700">
+                <div className="text-center py-16 bg-black rounded-xl border border-white/10">
                   <div className="inline-flex items-center justify-center w-20 h-20 bg-purple-500/20 rounded-2xl mb-6">
                     <MapPin size={40} className="text-purple-500" />
                   </div>
@@ -616,7 +616,7 @@ export function SettingsPage() {
             )}
 
             {activeTab === 'advanced' && (
-              <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 p-8">
+              <Card className=" p-8">
                 <div className="flex items-center gap-3 mb-8">
                   <div className="p-3 bg-gray-500/20 rounded-xl">
                     <SettingsIcon size={28} className="text-gray-400" />
@@ -628,20 +628,20 @@ export function SettingsPage() {
                 </div>
 
                 <div className="space-y-6">
-                  <div className="p-6 bg-black rounded-xl border border-gray-700">
+                  <div className="p-6 bg-black rounded-xl border border-white/10">
                     <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                       <User size={20} className="text-gray-400" />
                       Account Information
                     </h3>
                     <div className="space-y-4">
-                      <div className="flex items-center justify-between p-4 bg-gray-900 rounded-lg border border-gray-700">
+                      <div className="flex items-center justify-between p-4 bg-white/[0.03] rounded-lg border border-white/10">
                         <div>
                           <p className="text-gray-400 text-sm font-medium">Email Address</p>
                           <p className="text-white font-bold text-lg">{user?.email}</p>
                         </div>
                         <Check size={20} className="text-emerald-500" />
                       </div>
-                      <div className="flex items-center justify-between p-4 bg-gray-900 rounded-lg border border-gray-700">
+                      <div className="flex items-center justify-between p-4 bg-white/[0.03] rounded-lg border border-white/10">
                         <div>
                           <p className="text-gray-400 text-sm font-medium">Account ID</p>
                           <p className="text-white font-mono text-sm">{user?.id}</p>

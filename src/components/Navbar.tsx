@@ -1,17 +1,32 @@
 import { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Link } from './Link';
 import { Button } from './Button';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage, languageFlags, languageNames } from '../contexts/LanguageContext';
-import { Menu, X, User, LogOut, LayoutDashboard, Settings, Zap, Globe } from 'lucide-react';
+import { Menu, X, User, LogOut, LayoutDashboard, Settings, Zap, Globe, HelpCircle, Bitcoin } from 'lucide-react';
 import { CurrencySelector } from './CurrencySelector';
+import { getBitcoinPrice, formatUsd } from '../lib/bitcoinPrice';
 
 export function Navbar() {
   const { user, profile, signOut } = useAuth();
   const { language, setLanguage, t } = useLanguage();
+  const location = useLocation();
   const [showMenu, setShowMenu] = useState(false);
   const [showLangMenu, setShowLangMenu] = useState(false);
+  const [btcPrice, setBtcPrice] = useState<number | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setShowMenu(false);
+    setShowLangMenu(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    getBitcoinPrice().then((price) => {
+      if (price > 0) setBtcPrice(price);
+    });
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -61,6 +76,17 @@ export function Navbar() {
               </Link>
 
               <CurrencySelector compact />
+
+              {btcPrice !== null && (
+                <div
+                  className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-gray-300"
+                  title="Bitcoin USD price"
+                  aria-label={`Bitcoin price ${formatUsd(btcPrice)}`}
+                >
+                  <Bitcoin size={14} className="text-bitcoin-orange-500" aria-hidden />
+                  <span className="text-bitcoin-orange-400 font-semibold">{formatUsd(btcPrice)}</span>
+                </div>
+              )}
 
               <div className="relative">
                 <button
@@ -147,13 +173,21 @@ export function Navbar() {
               )}
             </div>
 
-            <button
-              className="md:hidden text-neon-cyan p-2 hover:bg-white/5 rounded-lg transition-colors"
-              onClick={() => setShowMenu(!showMenu)}
-              aria-label="Toggle menu"
-            >
-              {showMenu ? <X size={28} /> : <Menu size={28} />}
-            </button>
+            <div className="md:hidden flex items-center gap-2">
+              {btcPrice !== null && (
+                <span className="text-[10px] font-mono text-bitcoin-orange-400 px-2 py-1 rounded-lg bg-white/5 border border-white/10" aria-label={`BTC ${formatUsd(btcPrice)}`}>
+                  ₿ {btcPrice >= 1000 ? `${(btcPrice / 1000).toFixed(1)}k` : btcPrice}
+                </span>
+              )}
+              <button
+                className="text-neon-cyan p-2 hover:bg-white/5 rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+                onClick={() => setShowMenu(!showMenu)}
+                aria-label="Toggle menu"
+                aria-expanded={showMenu}
+              >
+                {showMenu ? <X size={28} /> : <Menu size={28} />}
+              </button>
+            </div>
           </div>
         </div>
       </nav>
@@ -167,22 +201,30 @@ export function Navbar() {
           />
           <div
             ref={menuRef}
-            className="fixed top-0 right-0 bottom-0 w-full max-w-sm bg-gradient-to-b from-charcoal-950 via-black to-black border-l border-white/10 shadow-2xl md:hidden overflow-y-auto"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="mobile-nav-title"
+            className="fixed top-0 right-0 bottom-0 w-full max-w-sm bg-charcoal-950/98 backdrop-blur-xl border-l border-white/10 shadow-2xl md:hidden overflow-y-auto overscroll-contain animate-slide-in-right pb-safe"
             style={{ zIndex: 99999 }}
           >
             <div className="p-6 space-y-6">
               <div className="flex items-center justify-between pb-4 border-b border-white/10">
                 <div className="flex items-center gap-3">
-                  <img src="/sats.png" alt="KATOA" className="w-10 h-10 rounded-full" />
-                  <span className="text-xl font-black text-white">KATOA Menu</span>
+                  <img src="/sats.png" alt="" className="w-10 h-10 rounded-full" aria-hidden />
+                  <span id="mobile-nav-title" className="text-xl font-black text-white">KATOA Menu</span>
                 </div>
                 <button
                   onClick={() => setShowMenu(false)}
-                  className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-white transition-colors"
-                  title="Close menu"
+                  className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-white transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+                  aria-label="Close menu"
                 >
                   <X size={24} />
                 </button>
+              </div>
+
+              <div className="px-1">
+                <p className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-2">Currency</p>
+                <CurrencySelector />
               </div>
 
               <div className="space-y-2">
@@ -207,7 +249,28 @@ export function Navbar() {
                   </div>
                   <span className="font-bold text-lg">Why KATOA?</span>
                 </Link>
+
+                <Link
+                  href="/faq"
+                  className="flex items-center gap-3 px-5 py-4 text-white bg-white/5 hover:bg-neon-cyan/10 rounded-xl transition-all duration-200 group border border-white/10 hover:border-neon-cyan/50"
+                  onClick={() => setShowMenu(false)}
+                >
+                  <div className="p-2 bg-neon-cyan/15 rounded-lg group-hover:bg-neon-cyan/25 transition-colors">
+                    <HelpCircle size={20} className="text-neon-cyan" />
+                  </div>
+                  <span className="font-bold text-lg">FAQ</span>
+                </Link>
               </div>
+
+              {btcPrice !== null && (
+                <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-bitcoin-orange-500/10 border border-bitcoin-orange-500/30">
+                  <Bitcoin size={20} className="text-bitcoin-orange-500" />
+                  <div>
+                    <p className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">BTC Price</p>
+                    <p className="text-white font-bold font-mono">{formatUsd(btcPrice)}</p>
+                  </div>
+                </div>
+              )}
 
               <div className="border-t border-white/10 pt-6">
                 <p className="text-sm text-gray-400 font-bold mb-4 px-2 uppercase tracking-wider">

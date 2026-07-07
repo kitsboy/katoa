@@ -20,6 +20,7 @@ export default defineConfig({
           supabase: ['@supabase/supabase-js'],
           nostr: ['nostr-tools'],
           ui: ['lucide-react'],
+          leaflet: ['leaflet'],
         },
       },
     },

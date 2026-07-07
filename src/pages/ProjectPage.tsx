@@ -344,7 +344,7 @@ export function ProjectPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-black flex items-center justify-center">
+      <div className="min-h-screen bg-charcoal-950 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-4 border-orange-500 border-t-transparent mx-auto mb-4"></div>
           <div className="text-white text-xl font-bold">Loading project...</div>
@@ -355,7 +355,7 @@ export function ProjectPage() {
 
   if (!project) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-black flex items-center justify-center">
+      <div className="min-h-screen bg-charcoal-950 flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-3xl font-black text-white mb-4">Project Not Found</h2>
           <p className="text-gray-400 mb-8">This project doesn't exist or you don't have access to it.</p>
@@ -371,7 +371,7 @@ export function ProjectPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-black">
+    <div className="min-h-screen bg-charcoal-950">
       <div className="relative">
         <input
           type="file"
@@ -403,7 +403,7 @@ export function ProjectPage() {
               </div>
             </div>
           ) : (
-            <div className="h-96 bg-gradient-to-br from-gray-800 to-gray-900 relative flex items-center justify-center hover:bg-gradient-to-br hover:from-gray-700 hover:to-gray-800 transition-colors">
+            <div className="h-96 bg-charcoal-900 relative flex items-center justify-center hover:bg-white/5 transition-colors">
               <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-70" />
               <div className="text-center relative z-10">
                 <Upload size={80} className="mx-auto text-gray-600 group-hover/banner:text-orange-500 transition-colors mb-3" />
@@ -456,7 +456,7 @@ export function ProjectPage() {
                   <textarea
                     value={formData.description}
                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    className="w-full px-5 py-4 bg-black/50 backdrop-blur-md border-2 border-gray-700 rounded-xl text-white text-lg placeholder-gray-400 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
+                    className="w-full px-5 py-4 bg-black/50 backdrop-blur-md border-2 border-white/10 rounded-xl text-white text-lg placeholder-gray-400 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
                     rows={3}
                     placeholder="Describe your project and what you're building..."
                     title="Edit your project description"
@@ -480,11 +480,11 @@ export function ProjectPage() {
                     <Button
                       onClick={handleUpdateProject}
                       className="bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 font-bold shadow-[0_0_20px_rgba(16,185,129,0.3)]"
-                      disabled={processing}
+                      loading={processing}
                       title="Save your changes"
                     >
                       <Save size={18} className="mr-2" />
-                      {processing ? 'Saving...' : 'Save'}
+                      Save
                     </Button>
                     <Button
                       variant="outline"
@@ -499,7 +499,7 @@ export function ProjectPage() {
                           visibility: project.visibility,
                         });
                       }}
-                      className="border-gray-700 text-gray-300 hover:bg-gray-800 backdrop-blur-sm bg-black/30"
+                      className="border-white/10 text-gray-300 hover:bg-white/5 backdrop-blur-sm bg-black/30"
                       title="Cancel editing"
                     >
                       <X size={18} />
@@ -525,7 +525,7 @@ export function ProjectPage() {
 
         {editing && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
-            <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 p-8">
+            <Card className=" p-8">
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-3 bg-orange-500/20 rounded-xl">
                   <Camera size={24} className="text-orange-500" />
@@ -546,7 +546,7 @@ export function ProjectPage() {
               </div>
             </Card>
 
-            <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 p-8">
+            <Card className=" p-8">
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-3 bg-purple-500/20 rounded-xl">
                   <Settings size={24} className="text-purple-500" />
@@ -559,7 +559,7 @@ export function ProjectPage() {
               <select
                 value={formData.visibility}
                 onChange={(e) => setFormData({ ...formData, visibility: e.target.value as any })}
-                className="w-full px-5 py-4 bg-black border-2 border-gray-700 rounded-xl text-white font-bold text-lg focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 cursor-pointer hover:border-purple-500/50 transition-colors"
+                className="w-full px-5 py-4 bg-black border-2 border-white/10 rounded-xl text-white font-bold text-lg focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 cursor-pointer hover:border-purple-500/50 transition-colors"
               >
                 <option value="draft">�� Draft - Only you can see this project</option>
                 <option value="private">🔗 Private - Anyone with the link can view</option>
@@ -572,7 +572,7 @@ export function ProjectPage() {
           </div>
         )}
 
-        <Card className="mb-12 bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 p-8 group/payment hover:border-emerald-500/50 transition-all duration-300" title="Configure where you receive Bitcoin payments">
+        <Card className="mb-12  p-8 group/payment hover:border-emerald-500/50 transition-all duration-300" title="Configure where you receive Bitcoin payments">
           <div className="flex items-center gap-3 mb-6">
             <div className="p-3 bg-emerald-500/20 rounded-xl group-hover/payment:bg-emerald-500/30 transition-colors">
               <Wallet size={28} className="text-emerald-500 group-hover/payment:scale-110 transition-transform" />
@@ -626,7 +626,7 @@ export function ProjectPage() {
         </div>
 
         {wishlists.length === 0 ? (
-          <Card className="text-center py-20 bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700">
+          <Card className="text-center py-20 ">
             <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl mb-6 shadow-[0_0_40px_rgba(168,85,247,0.5)]">
               <Gift size={48} className="text-white" />
             </div>
@@ -647,7 +647,7 @@ export function ProjectPage() {
             {wishlists.map((wishlist) => (
               <Card
                 key={wishlist.id}
-                className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 hover:border-purple-500/50 transition-all duration-300 p-8 group hover:shadow-[0_0_40px_rgba(168,85,247,0.25)]"
+                className=" hover:border-purple-500/50 transition-all duration-300 p-8 group hover:shadow-[0_0_40px_rgba(168,85,247,0.25)]"
               >
                 {editingWishlist === wishlist.id && editWishlistForm ? (
                   <div className="space-y-5">
@@ -660,7 +660,7 @@ export function ProjectPage() {
                         value={editWishlistForm.title}
                         onChange={(e) => setEditWishlistForm({ ...editWishlistForm, title: e.target.value })}
                         placeholder="e.g., Recording Equipment Fund"
-                        className="w-full px-5 py-4 bg-black border-2 border-gray-700 rounded-xl text-white text-lg font-bold placeholder-gray-500 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20"
+                        className="w-full px-5 py-4 bg-black border-2 border-white/10 rounded-xl text-white text-lg font-bold placeholder-gray-500 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20"
                       />
                     </div>
                     <div>
@@ -671,7 +671,7 @@ export function ProjectPage() {
                         value={editWishlistForm.description}
                         onChange={(e) => setEditWishlistForm({ ...editWishlistForm, description: e.target.value })}
                         placeholder="Tell supporters what this wishlist is for and why it matters..."
-                        className="w-full px-5 py-4 bg-black border-2 border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 leading-relaxed"
+                        className="w-full px-5 py-4 bg-black border-2 border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 leading-relaxed"
                         rows={4}
                       />
                     </div>
@@ -682,26 +682,26 @@ export function ProjectPage() {
                       <select
                         value={editWishlistForm.visibility}
                         onChange={(e) => setEditWishlistForm({ ...editWishlistForm, visibility: e.target.value as any })}
-                        className="w-full px-5 py-4 bg-black border-2 border-gray-700 rounded-xl text-white font-bold text-lg focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 cursor-pointer"
+                        className="w-full px-5 py-4 bg-black border-2 border-white/10 rounded-xl text-white font-bold text-lg focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 cursor-pointer"
                       >
                         <option value="draft">🔒 Draft - Only you can see this</option>
                         <option value="private">🔗 Private - Anyone with the link</option>
                         <option value="public">🌍 Public - Listed everywhere</option>
                       </select>
                     </div>
-                    <div className="flex gap-3 pt-4 border-t border-gray-700">
+                    <div className="flex gap-3 pt-4 border-t border-white/10">
                       <Button
                         onClick={() => handleUpdateWishlist(wishlist.id)}
                         className="flex-1 bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 font-black text-lg py-4 shadow-[0_0_20px_rgba(16,185,129,0.3)]"
-                        disabled={processing}
+                        loading={processing}
                       >
                         <Save size={20} className="mr-2" />
-                        {processing ? 'Saving...' : 'Save Changes'}
+                        Save Changes
                       </Button>
                       <Button
                         variant="outline"
                         onClick={cancelWishlistEdit}
-                        className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800 font-bold text-lg py-4"
+                        className="flex-1 border-white/10 text-gray-300 hover:bg-white/5 font-bold text-lg py-4"
                         disabled={processing}
                       >
                         <X size={20} className="mr-2" />
@@ -726,7 +726,7 @@ export function ProjectPage() {
                     </div>
 
                     {(wishlist.total_sats_goal > 0 || wishlist.total_sats_raised > 0) && (
-                      <div className="mb-6 p-5 bg-black/50 rounded-xl border border-gray-700">
+                      <div className="mb-6 p-5 bg-black/50 rounded-xl border border-white/10">
                         <div className="flex justify-between items-center mb-3">
                           <span className="text-gray-400 text-sm font-bold uppercase tracking-wider">Progress</span>
                           <span className="text-white font-bold">
@@ -754,14 +754,14 @@ export function ProjectPage() {
                       <Button
                         variant="outline"
                         onClick={() => startEditingWishlist(wishlist)}
-                        className="border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-purple-400 hover:border-purple-500/50 px-5"
+                        className="border-white/10 text-gray-300 hover:bg-white/5 hover:text-purple-400 hover:border-purple-500/50 px-5"
                       >
                         <Edit size={20} />
                       </Button>
                       <Button
                         variant="outline"
                         onClick={() => handleDeleteWishlist(wishlist.id)}
-                        className="border-gray-700 text-gray-300 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/50 px-5"
+                        className="border-white/10 text-gray-300 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/50 px-5"
                       >
                         <Trash2 size={20} />
                       </Button>
@@ -818,14 +818,14 @@ export function ProjectPage() {
           />
 
           <div>
-            <label className="block text-sm font-medium text-night-blue-200 mb-2">
+            <label className="block text-sm font-medium text-gray-300 mb-2">
               Description
             </label>
             <textarea
               value={wishlistForm.description}
               onChange={(e) => setWishlistForm({ ...wishlistForm, description: e.target.value })}
               placeholder="What is this wishlist for?"
-              className="w-full px-4 py-2 bg-night-blue-500 border border-night-blue-400 rounded-lg text-white placeholder-night-blue-400 focus:outline-none focus:border-emerald-500"
+              className="w-full px-4 py-2 bg-white/[0.03] border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-neon-cyan-500"
               rows={4}
             />
           </div>
@@ -843,9 +843,9 @@ export function ProjectPage() {
             <Button
               type="submit"
               className="flex-1 bg-gradient-to-r from-emerald-500 to-cyan-600"
-              disabled={processing}
+              loading={processing}
             >
-              {processing ? 'Creating...' : 'Create Wishlist'}
+              Create Wishlist
             </Button>
           </div>
         </form>

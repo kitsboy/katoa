@@ -23,3 +23,10 @@ export function removeStorage(key: string): void {
     /* ignore */
   }
 }
+
+export const STORAGE_KEYS = {
+  exploreFilters: 'katoa_explore_filters',
+  exploreFavorites: 'katoa_explore_favorites',
+  recentlyViewedWishlists: 'katoa_recent_wishlists',
+  giftDraft: 'katoa_gift_draft',
+} as const;

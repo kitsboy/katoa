@@ -10,7 +10,29 @@ import { SatsDisplay } from '../components/SatsDisplay';
 import { Link } from '../components/Link';
 import { supabase } from '../lib/supabase';
 import { mockWishlists, mockWishlistItems } from '../data/mockWishlists';
+import { getStorage, setStorage, STORAGE_KEYS } from '../lib/storage';
+import { copyToClipboard } from '../lib/clipboard';
+import { getQrImageUrl, lightningQrData } from '../lib/qr';
 import { Gift, ExternalLink, Zap, Bitcoin, Check, Copy, MapPin, QrCode, ArrowLeft, Heart, TrendingUp, Package } from 'lucide-react';
+
+const SAT_PRESETS = [
+  { label: '1K', value: 1000 },
+  { label: '10K', value: 10000 },
+  { label: '21K', value: 21000 },
+] as const;
+
+interface GiftDraft {
+  slug: string;
+  amount: string;
+  name: string;
+  message: string;
+}
+
+interface RecentWishlist {
+  slug: string;
+  title: string;
+  viewedAt: number;
+}
 
 interface WishlistItem {
   id: string;
@@ -65,15 +87,39 @@ export function WishlistPage({ slug }: { slug: string }) {
   const [qrAddress, setQrAddress] = useState('');
   const [qrAmount, setQrAmount] = useState<number | undefined>();
   const [mockInvoice, setMockInvoice] = useState('');
+  const [paymentQrUrl, setPaymentQrUrl] = useState('');
+  const [amountPreset, setAmountPreset] = useState<'custom' | number>('custom');
+  const [isDemoWishlist, setIsDemoWishlist] = useState(false);
 
   useEffect(() => {
     loadWishlist();
   }, [slug]);
 
+  useEffect(() => {
+    if (!slug) return;
+    const draft = getStorage<GiftDraft | null>(STORAGE_KEYS.giftDraft, null);
+    if (draft?.slug === slug) {
+      setGiftForm({ amount: draft.amount, name: draft.name, message: draft.message });
+      const preset = SAT_PRESETS.find((p) => String(p.value) === draft.amount);
+      setAmountPreset(preset ? preset.value : 'custom');
+    }
+  }, [slug]);
+
+  useEffect(() => {
+    if (!wishlist) return;
+    const recent = getStorage<RecentWishlist[]>(STORAGE_KEYS.recentlyViewedWishlists, []);
+    const updated = [
+      { slug: wishlist.slug, title: wishlist.title, viewedAt: Date.now() },
+      ...recent.filter((r) => r.slug !== wishlist.slug),
+    ].slice(0, 8);
+    setStorage(STORAGE_KEYS.recentlyViewedWishlists, updated);
+  }, [wishlist?.slug, wishlist?.title]);
+
   async function loadWishlist() {
     try {
       const mockWishlist = mockWishlists.find(w => w.slug === slug);
       if (mockWishlist) {
+        setIsDemoWishlist(true);
         setWishlist({
           ...mockWishlist,
           theme_color: '#f97316',
@@ -85,6 +131,7 @@ export function WishlistPage({ slug }: { slug: string }) {
         setLoading(false);
         return;
       }
+      setIsDemoWishlist(false);
 
       const { data: wishlistData, error: wishlistError } = await supabase
         .from('wishlists')
@@ -134,12 +181,26 @@ export function WishlistPage({ slug }: { slug: string }) {
 
   function handleGiftClick(item: WishlistItem | null = null) {
     setSelectedItem(item);
-    setGiftForm({
-      amount: item ? String(item.price_sats - item.sats_raised) : '',
-      name: '',
-      message: '',
-    });
+    const amount = item ? String(item.price_sats - item.sats_raised) : giftForm.amount;
+    const preset = SAT_PRESETS.find((p) => String(p.value) === amount);
+    setAmountPreset(preset ? preset.value : amount ? 'custom' : 'custom');
+    setGiftForm((prev) => ({
+      ...prev,
+      amount,
+    }));
     setShowGiftModal(true);
+  }
+
+  function handlePresetSelect(value: number | 'custom') {
+    setAmountPreset(value);
+    if (value !== 'custom') {
+      setGiftForm((prev) => ({ ...prev, amount: String(value) }));
+    }
+  }
+
+  function persistGiftDraft(form: typeof giftForm) {
+    if (!slug) return;
+    setStorage(STORAGE_KEYS.giftDraft, { slug, ...form });
   }
 
   async function handleGiftSubmit(e: React.FormEvent) {
@@ -148,6 +209,8 @@ export function WishlistPage({ slug }: { slug: string }) {
 
     const invoice = `lnbc${giftForm.amount}n1p0xyz...mock_invoice_${Date.now()}`;
     setMockInvoice(invoice);
+    setPaymentQrUrl(getQrImageUrl(lightningQrData(invoice), 280));
+    persistGiftDraft(giftForm);
     setShowGiftModal(false);
     setShowPaymentModal(true);
 
@@ -177,13 +240,13 @@ export function WishlistPage({ slug }: { slug: string }) {
     }, 3000);
   }
 
-  function copyToClipboard(text: string) {
-    navigator.clipboard.writeText(text);
+  async function handleCopyInvoice(text: string) {
+    await copyToClipboard(text);
   }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-black flex items-center justify-center">
+      <div className="min-h-screen bg-charcoal-950 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-4 border-orange-500 border-t-transparent mx-auto mb-4"></div>
           <div className="text-white text-xl font-bold">Loading wishlist...</div>
@@ -194,8 +257,8 @@ export function WishlistPage({ slug }: { slug: string }) {
 
   if (!wishlist) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-black flex items-center justify-center">
-        <Card className="p-12 text-center max-w-md bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700">
+      <div className="min-h-screen bg-charcoal-950 flex items-center justify-center">
+        <Card className="p-12 text-center max-w-md" variant="glass">
           <Gift size={64} className="text-gray-600 mx-auto mb-4" />
           <h2 className="text-3xl font-black text-white mb-2">Wishlist Not Found</h2>
           <p className="text-gray-400 mb-6">This wishlist doesn't exist or has been removed.</p>
@@ -215,7 +278,12 @@ export function WishlistPage({ slug }: { slug: string }) {
     : 0;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950">
+    <div className="min-h-screen bg-charcoal-950 pb-24 md:pb-0">
+      {isDemoWishlist && (
+        <div className="bg-bitcoin-orange-500/10 border-b border-bitcoin-orange-500/30 px-4 py-2 text-center text-sm text-bitcoin-orange-200">
+          Demo wishlist — payments auto-complete after 3 seconds for preview.
+        </div>
+      )}
       <div className="relative">
         <MediaCard
           className="!aspect-auto h-56 sm:h-72 md:h-96"
@@ -267,7 +335,7 @@ export function WishlistPage({ slug }: { slug: string }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
           <div className="lg:col-span-2 space-y-8">
-            <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 p-8 group hover:border-orange-500/50 transition-all duration-300" title="Creator information">
+            <Card className=" p-8 group hover:border-orange-500/50 transition-all duration-300" title="Creator information">
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-amber-600 rounded-full flex items-center justify-center text-white font-black text-2xl ring-4 ring-orange-500/20">
                   {wishlist.creator.username[0].toUpperCase()}
@@ -284,12 +352,12 @@ export function WishlistPage({ slug }: { slug: string }) {
               </div>
 
               {wishlist.creator.bio && (
-                <p className="text-gray-300 leading-relaxed border-t border-gray-700 pt-6">{wishlist.creator.bio}</p>
+                <p className="text-gray-300 leading-relaxed border-t border-white/10 pt-6">{wishlist.creator.bio}</p>
               )}
             </Card>
 
             {wishlist.full_story && (
-              <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 p-8" title="Project story">
+              <Card className=" p-8" title="Project story">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="p-3 bg-purple-500/20 rounded-xl">
                     <Heart size={24} className="text-purple-500" />
@@ -305,7 +373,7 @@ export function WishlistPage({ slug }: { slug: string }) {
 
           <div className="space-y-6">
             {wishlist.total_sats_goal > 0 && (
-              <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 p-8 hover:border-emerald-500/50 transition-all duration-300" title="Funding progress">
+              <Card className=" p-8 hover:border-emerald-500/50 transition-all duration-300" title="Funding progress">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="p-3 bg-emerald-500/20 rounded-xl">
                     <TrendingUp size={24} className="text-emerald-500" />
@@ -322,7 +390,7 @@ export function WishlistPage({ slug }: { slug: string }) {
                       {totalProgress.toFixed(0)}%
                     </span>
                   </div>
-                  <div className="w-full h-4 bg-gray-700 rounded-full overflow-hidden">
+                  <div className="w-full h-4 bg-white/10 rounded-full overflow-hidden">
                     <div
                       className="h-full bg-gradient-to-r from-emerald-500 to-cyan-600 transition-all duration-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]"
                       style={{ width: `${Math.min(totalProgress, 100)}%` }}
@@ -335,7 +403,7 @@ export function WishlistPage({ slug }: { slug: string }) {
               </Card>
             )}
 
-            <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 p-6 space-y-4">
+            <Card className=" p-6 space-y-4">
               <Button
                 className="w-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 font-black text-lg py-4 shadow-[0_0_30px_rgba(255,135,0,0.3)]"
                 onClick={() => handleGiftClick()}
@@ -347,7 +415,7 @@ export function WishlistPage({ slug }: { slug: string }) {
 
               <Button
                 variant="outline"
-                className="w-full border-gray-700 text-gray-300 hover:bg-gray-800 hover:border-orange-500/50 font-bold py-4"
+                className="w-full border-white/10 text-gray-300 hover:bg-gray-800 hover:border-orange-500/50 font-bold py-4"
                 onClick={() => {
                   setQrAddress('bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh');
                   setQrAmount(undefined);
@@ -374,7 +442,7 @@ export function WishlistPage({ slug }: { slug: string }) {
           </div>
 
           {items.length === 0 ? (
-            <Card className="p-20 text-center bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700">
+            <Card className="p-20 text-center ">
               <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl mb-6 shadow-[0_0_40px_rgba(168,85,247,0.5)]">
                 <Gift size={48} className="text-white" />
               </div>
@@ -389,7 +457,7 @@ export function WishlistPage({ slug }: { slug: string }) {
                 return (
                   <Card
                     key={item.id}
-                    className={`overflow-hidden bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 hover:border-purple-500/50 transition-all duration-300 hover:shadow-[0_0_40px_rgba(168,85,247,0.25)] ${item.is_funded ? 'ring-2 ring-emerald-500/50' : ''}`}
+                    className={`overflow-hidden  hover:border-purple-500/50 transition-all duration-300 hover:shadow-[0_0_40px_rgba(168,85,247,0.25)] ${item.is_funded ? 'ring-2 ring-emerald-500/50' : ''}`}
                     title={item.is_funded ? "This item has been fully funded!" : "Click to support this item"}
                   >
                     {(item.image_url || item.video_url) && (
@@ -405,7 +473,7 @@ export function WishlistPage({ slug }: { slug: string }) {
                           showPlayIndicator={Boolean(item.video_url)}
                         />
                         {item.is_funded && (
-                          <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px] flex items-center justify-center z-10">
+                          <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] flex items-center justify-center z-10">
                             <div className="bg-emerald-500 rounded-full p-4 sm:p-5 shadow-2xl ring-4 ring-white/30">
                               <Check size={32} className="text-white sm:w-10 sm:h-10" />
                             </div>
@@ -419,7 +487,7 @@ export function WishlistPage({ slug }: { slug: string }) {
                         <p className="text-gray-300 leading-relaxed">{item.description}</p>
                       </div>
 
-                      <div className="space-y-3 p-5 bg-black/50 rounded-xl border border-gray-700">
+                      <div className="space-y-3 p-5 bg-black/40 rounded-xl border border-white/10">
                         <div className="flex items-center justify-between">
                           <span className="text-gray-400 font-bold uppercase text-xs tracking-wider">
                             Progress
@@ -428,7 +496,7 @@ export function WishlistPage({ slug }: { slug: string }) {
                             {itemProgress.toFixed(0)}%
                           </span>
                         </div>
-                        <div className="w-full h-3 bg-gray-700 rounded-full overflow-hidden">
+                        <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden">
                           <div
                             className={`h-full ${item.is_funded ? 'bg-gradient-to-r from-emerald-500 to-cyan-600' : 'bg-gradient-to-r from-orange-500 to-amber-600'} transition-all duration-500`}
                             style={{ width: `${Math.min(itemProgress, 100)}%` }}
@@ -462,7 +530,7 @@ export function WishlistPage({ slug }: { slug: string }) {
                           <Button
                             variant="outline"
                             onClick={() => window.open(item.merchant_link!, '_blank')}
-                            className="border-gray-700 text-gray-300 hover:bg-gray-800 hover:border-purple-500/50 px-5"
+                            className="border-white/10 text-gray-300 hover:bg-gray-800 hover:border-purple-500/50 px-5"
                             title="View product page"
                           >
                             <ExternalLink size={20} />
@@ -484,29 +552,75 @@ export function WishlistPage({ slug }: { slug: string }) {
         title={selectedItem ? `Fund ${selectedItem.title}` : 'Send a Gift'}
       >
         <form onSubmit={handleGiftSubmit} className="space-y-4">
-          <Input
-            label="Amount (sats)"
-            type="number"
-            value={giftForm.amount}
-            onChange={(e) => setGiftForm({ ...giftForm, amount: e.target.value })}
-            placeholder="21000"
-            required
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Amount (sats)</label>
+            <div className="flex flex-wrap gap-2 mb-3">
+              {SAT_PRESETS.map((preset) => (
+                <button
+                  key={preset.value}
+                  type="button"
+                  onClick={() => handlePresetSelect(preset.value)}
+                  className={`px-4 py-2 min-h-[44px] rounded-xl text-sm font-bold border transition-colors touch-manipulation ${
+                    amountPreset === preset.value
+                      ? 'bg-bitcoin-orange-500/20 border-bitcoin-orange-500 text-bitcoin-orange-300'
+                      : 'bg-white/5 border-white/10 text-gray-300 hover:border-neon-cyan-500/40'
+                  }`}
+                  aria-pressed={amountPreset === preset.value}
+                >
+                  {preset.label}
+                </button>
+              ))}
+              <button
+                type="button"
+                onClick={() => handlePresetSelect('custom')}
+                className={`px-4 py-2 min-h-[44px] rounded-xl text-sm font-bold border transition-colors touch-manipulation ${
+                  amountPreset === 'custom'
+                    ? 'bg-neon-cyan-500/15 border-neon-cyan-500 text-neon-cyan-300'
+                    : 'bg-white/5 border-white/10 text-gray-300 hover:border-neon-cyan-500/40'
+                }`}
+                aria-pressed={amountPreset === 'custom'}
+              >
+                Custom
+              </button>
+            </div>
+            <Input
+              type="number"
+              value={giftForm.amount}
+              onChange={(e) => {
+                setAmountPreset('custom');
+                const next = { ...giftForm, amount: e.target.value };
+                setGiftForm(next);
+                persistGiftDraft(next);
+              }}
+              placeholder="21000"
+              required
+              aria-label="Custom amount in sats"
+            />
+          </div>
           <Input
             label="Your Name (optional)"
             type="text"
             value={giftForm.name}
-            onChange={(e) => setGiftForm({ ...giftForm, name: e.target.value })}
+            onChange={(e) => {
+              const next = { ...giftForm, name: e.target.value };
+              setGiftForm(next);
+              persistGiftDraft(next);
+            }}
             placeholder="Anonymous"
           />
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">
+            <label htmlFor="gift-message" className="block text-sm font-medium text-gray-300 mb-2">
               Message (optional)
             </label>
             <textarea
+              id="gift-message"
               value={giftForm.message}
-              onChange={(e) => setGiftForm({ ...giftForm, message: e.target.value })}
-              className="w-full px-5 py-4 bg-black border-2 border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-none"
+              onChange={(e) => {
+                const next = { ...giftForm, message: e.target.value };
+                setGiftForm(next);
+                persistGiftDraft(next);
+              }}
+              className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-neon-cyan-500/50 focus:border-neon-cyan-500/30 resize-none"
               rows={3}
               placeholder="Leave a message for the creator..."
             />
@@ -528,10 +642,12 @@ export function WishlistPage({ slug }: { slug: string }) {
         title="Pay with Lightning"
       >
         <div className="space-y-6">
-          <div className="bg-white p-6 rounded-lg">
-            <div className="w-full aspect-square bg-night-blue-500 flex items-center justify-center text-white text-xs p-4 break-all">
-              QR CODE: {mockInvoice}
-            </div>
+          <div className="bg-white p-4 rounded-xl mx-auto max-w-[280px]">
+            {paymentQrUrl ? (
+              <img src={paymentQrUrl} alt="Lightning invoice QR code" className="w-full aspect-square" />
+            ) : (
+              <div className="w-full aspect-square bg-gray-200 animate-pulse rounded-lg" aria-hidden />
+            )}
           </div>
 
           <div className="space-y-2">
@@ -540,24 +656,26 @@ export function WishlistPage({ slug }: { slug: string }) {
               <input
                 value={mockInvoice}
                 readOnly
-                className="flex-1 px-4 py-2.5 bg-gray-800 border border-gray-700 rounded-lg text-white text-sm"
+                className="flex-1 px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white text-sm font-mono"
+                aria-label="Lightning invoice"
               />
               <Button
                 variant="outline"
-                onClick={() => copyToClipboard(mockInvoice)}
+                onClick={() => handleCopyInvoice(mockInvoice)}
+                aria-label="Copy invoice"
               >
                 <Copy size={18} />
               </Button>
             </div>
           </div>
 
-          <div className="flex items-center justify-center gap-2 text-orange-500">
-            <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-orange-500"></div>
-            <span>Waiting for payment...</span>
+          <div className="flex items-center justify-center gap-2 text-bitcoin-orange-500" role="status" aria-live="polite">
+            <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-bitcoin-orange-500" aria-hidden />
+            <span>Waiting for payment…</span>
           </div>
 
           <p className="text-xs text-gray-500 text-center">
-            This is a demo. Payment will auto-complete in 3 seconds.
+            Demo mode — payment auto-completes in ~3 seconds.
           </p>
         </div>
       </Modal>
@@ -569,6 +687,31 @@ export function WishlistPage({ slug }: { slug: string }) {
         amount={qrAmount}
         title={wishlist ? `Send to ${wishlist.title}` : 'Send Bitcoin'}
       />
+
+      {/* Sticky mobile CTA */}
+      <div className="md:hidden fixed bottom-[calc(56px+env(safe-area-inset-bottom))] inset-x-0 z-40 px-4 pb-2 pointer-events-none">
+        <div className="pointer-events-auto max-w-lg mx-auto flex gap-2 p-2 rounded-2xl bg-charcoal-950/95 backdrop-blur-xl border border-white/10 shadow-[0_-8px_32px_rgba(0,0,0,0.5)]">
+          <Button
+            className="flex-1 bg-gradient-to-r from-bitcoin-orange-500 to-amber-600 font-bold min-h-[48px]"
+            onClick={() => handleGiftClick()}
+          >
+            <Gift size={18} className="mr-2" />
+            Send Gift
+          </Button>
+          <Button
+            variant="outline"
+            className="min-h-[48px] min-w-[48px] px-3 border-white/15"
+            onClick={() => {
+              setQrAddress('bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh');
+              setQrAmount(undefined);
+              setShowQRModal(true);
+            }}
+            aria-label="Show QR code"
+          >
+            <QrCode size={20} />
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }

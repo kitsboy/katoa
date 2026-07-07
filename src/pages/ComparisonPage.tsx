@@ -1,10 +1,14 @@
-import { Check, X, Shield, Globe, Zap, Lock, DollarSign, Users } from 'lucide-react';
+import { useState } from 'react';
+import { Check, X, Shield, Globe, Zap, Lock, DollarSign, Users, ChevronRight } from 'lucide-react';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { Link } from '../components/Link';
 import { FeeComparison } from '../components/FeeComparison';
+import { PageMeta } from '../components/PageMeta';
 
 export function ComparisonPage() {
+  const [tableScrolled, setTableScrolled] = useState(false);
+
   const features = [
     {
       category: 'Fees & Costs',
@@ -95,6 +99,11 @@ export function ComparisonPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 pt-16">
+      <PageMeta
+        title="Platform Comparison"
+        description="Compare KATOA vs OnlyFans, Patreon, Kickstarter, and more. 0% fees, instant Lightning, no KYC."
+        path="/comparison"
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
         <div className="text-center mb-16 animate-slide-up">
           <div className="inline-flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-emerald-500/30 rounded-full mb-6">
@@ -141,11 +150,20 @@ export function ComparisonPage() {
                 {category.category}
               </h3>
 
-              <div className="overflow-x-auto">
-                <table className="w-full">
+              <div
+                className="comparison-table-scroll overflow-x-auto scrollbar-hide -mx-2 px-2 sm:mx-0 sm:px-0"
+                onScroll={(e) => setTableScrolled(e.currentTarget.scrollLeft > 8)}
+              >
+                {!tableScrolled && (
+                  <div className="comparison-scroll-hint sm:hidden flex items-center justify-end gap-1 text-xs text-gray-500 mb-2 pr-1">
+                    <span>Swipe for more</span>
+                    <ChevronRight size={14} className="text-neon-cyan-400 animate-pulse" />
+                  </div>
+                )}
+                <table className="w-full min-w-[640px]">
                   <thead>
                     <tr className="border-b border-white/10">
-                      <th className="text-left text-white font-semibold pb-4 pr-4">Feature</th>
+                      <th className="text-left text-white font-semibold pb-4 pr-4 min-w-[140px]">Feature</th>
                       <th className="text-center text-emerald-600 font-bold pb-4 px-2">
                         <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-600/20 rounded-lg">
                           KATOA
@@ -164,7 +182,7 @@ export function ComparisonPage() {
                         key={itemIdx}
                         className="border-b border-white/10 hover:bg-white/[0.05] transition-colors"
                       >
-                        <td className="text-white py-4 pr-4">{item.feature}</td>
+                        <td className="text-white py-4 pr-4 font-medium">{item.feature}</td>
                         <td className="text-center py-4 px-2">
                           <div className="font-bold">{renderValue(item.katoa)}</div>
                         </td>
@@ -183,7 +201,7 @@ export function ComparisonPage() {
         </div>
 
         <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <Card className="p-10 bg-gradient-to-br from-gray-900 via-gray-800 to-black border-2 border-gray-700 hover:border-orange-500/50 text-center hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-300 transform hover:-translate-y-1">
+          <Card hover padding="lg" className="text-center">
             <div className="w-24 h-24 mx-auto mb-8 bg-gradient-to-br from-blue-500 via-cyan-500 to-teal-500 rounded-full flex items-center justify-center shadow-2xl shadow-blue-500/60 transform hover:scale-110 hover:rotate-12 transition-all duration-300">
               <Globe size={56} className="text-white" strokeWidth={2.5} />
             </div>
@@ -191,13 +209,13 @@ export function ComparisonPage() {
             <p className="text-gray-300 text-base leading-relaxed mb-5">
               No bank account? No problem. Bitcoin works everywhere, for everyone. No discrimination.
             </p>
-            <div className="space-y-3 pt-4 border-t border-gray-700">
+            <div className="space-y-3 pt-4 border-t border-white/10">
               <div className="text-gray-400 font-semibold text-base">Throne: ~10 countries with 0% fees</div>
               <div className="text-emerald-400 font-bold text-lg bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 py-3 px-5 rounded-xl border border-emerald-500/30">KATOA: All countries, always 0%</div>
             </div>
           </Card>
 
-          <Card className="p-10 bg-gradient-to-br from-gray-900 via-gray-800 to-black border-2 border-gray-700 hover:border-orange-500/50 text-center hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-300 transform hover:-translate-y-1">
+          <Card hover padding="lg" className="text-center">
             <div className="w-24 h-24 mx-auto mb-8 bg-gradient-to-br from-purple-500 via-pink-500 to-rose-500 rounded-full flex items-center justify-center shadow-2xl shadow-purple-500/60 transform hover:scale-110 hover:rotate-12 transition-all duration-300">
               <Shield size={56} className="text-white" strokeWidth={2.5} />
             </div>
@@ -205,13 +223,13 @@ export function ComparisonPage() {
             <p className="text-gray-300 text-base leading-relaxed mb-5">
               Zero-knowledge proofs. Encrypted messaging. Decentralized storage. Your data stays yours.
             </p>
-            <div className="space-y-3 pt-4 border-t border-gray-700">
+            <div className="space-y-3 pt-4 border-t border-white/10">
               <div className="text-gray-400 font-semibold text-base">Others: Your data is their product</div>
               <div className="text-emerald-400 font-bold text-lg bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 py-3 px-5 rounded-xl border border-emerald-500/30">KATOA: Zero-knowledge proofs</div>
             </div>
           </Card>
 
-          <Card className="p-10 bg-gradient-to-br from-gray-900 via-gray-800 to-black border-2 border-gray-700 hover:border-orange-500/50 text-center hover:shadow-2xl hover:shadow-orange-500/30 transition-all duration-300 transform hover:-translate-y-1">
+          <Card hover padding="lg" className="text-center">
             <div className="w-24 h-24 mx-auto mb-8 bg-gradient-to-br from-orange-500 via-amber-500 to-yellow-500 rounded-full flex items-center justify-center shadow-2xl shadow-orange-500/60 transform hover:scale-110 hover:rotate-12 transition-all duration-300">
               <Zap size={56} className="text-white" strokeWidth={2.5} />
             </div>
@@ -219,7 +237,7 @@ export function ComparisonPage() {
             <p className="text-gray-300 text-base leading-relaxed mb-5">
               Keep 100% of your earnings. Scale globally. Build your empire without platform taxes.
             </p>
-            <div className="space-y-3 pt-4 border-t border-gray-700">
+            <div className="space-y-3 pt-4 border-t border-white/10">
               <div className="text-gray-400 font-semibold text-base">Others: Wait 7-14 days for payouts</div>
               <div className="text-emerald-400 font-bold text-lg bg-gradient-to-r from-emerald-500/20 to-cyan-500/20 py-3 px-5 rounded-xl border border-emerald-500/30">KATOA: Instant Lightning Network</div>
             </div>

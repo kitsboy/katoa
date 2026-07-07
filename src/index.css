@@ -91,6 +91,29 @@
   .motion-hero-image {
     animation: none;
   }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-shimmer,
+  .animate-float,
+  .animate-glow,
+  .animate-slide-up,
+  .animate-fade-in,
+  .animate-scale-in,
+  .animate-sheet-up,
+  .animate-slide-in-right,
+  .animate-gradient,
+  .animate-subtle-pulse,
+  .animate-lightning-pulse {
+    animation: none !important;
+  }
 }
 
 .sr-only {
@@ -111,6 +134,29 @@
 }
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+/* Comparison table: sticky first column on mobile */
+.comparison-table-scroll {
+  position: relative;
+  -webkit-overflow-scrolling: touch;
+}
+
+.comparison-table-scroll table th:first-child,
+.comparison-table-scroll table td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: #070711;
+  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.35);
+}
+
+.comparison-table-scroll table th:first-child {
+  z-index: 3;
+}
+
+.comparison-scroll-hint {
+  pointer-events: none;
 }
 
 .touch-manipulation {

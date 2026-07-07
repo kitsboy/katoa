@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Bitcoin, Copy, Check, Share2, X } from 'lucide-react';
 import { Button } from './Button';
+import { bitcoinQrData, getQrImageUrl } from '../lib/qr';
+import { copyToClipboard } from '../lib/clipboard';
 
 interface DonateQRModalProps {
   isOpen: boolean;
@@ -17,10 +19,8 @@ export function DonateQRModal({ isOpen, onClose, address }: DonateQRModalProps) 
   useEffect(() => {
     if (!isOpen || !address) return;
 
-    const qrData = `bitcoin:${address}`;
-    setQrCodeUrl(
-      `https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=12&data=${encodeURIComponent(qrData)}`
-    );
+    const qrData = bitcoinQrData(address);
+    setQrCodeUrl(getQrImageUrl(qrData, 400));
     setQrFailed(false);
     setCopied(false);
   }, [isOpen, address]);
@@ -43,12 +43,10 @@ export function DonateQRModal({ isOpen, onClose, address }: DonateQRModalProps) 
   }, [isOpen, onClose]);
 
   const copyAddress = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(address);
+    const ok = await copyToClipboard(address);
+    if (ok) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
-    } catch {
-      /* clipboard unavailable */
     }
   }, [address]);
 

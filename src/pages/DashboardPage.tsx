@@ -8,6 +8,7 @@ import { Link } from '../components/Link';
 import { StatsCard } from '../components/StatsCard';
 import { supabase } from '../lib/supabase';
 import { Plus, Edit, Trash2, Settings, Gift, DollarSign, Users, FolderOpen, Globe, Lock, FileText, ExternalLink, TrendingUp, Eye, Heart, Filter, Camera, Upload } from 'lucide-react';
+import { PageMeta } from '../components/PageMeta';
 
 interface Project {
   id: string;
@@ -352,14 +353,19 @@ export function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-black flex items-center justify-center">
+      <div className="min-h-screen bg-charcoal-950 flex items-center justify-center">
         <div className="text-white text-xl">Loading your dashboard...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-black pt-16">
+    <div className="min-h-screen bg-charcoal-950 pt-16">
+      <PageMeta
+        title="Dashboard"
+        description="Manage your KATOA projects, wishlists, and Bitcoin donations from your creator dashboard."
+        path="/dashboard"
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
 
         {isDemoUser && (
@@ -381,7 +387,7 @@ export function DashboardPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 hover:border-orange-500/50 transition-all duration-300 p-6 hover:shadow-[0_0_30px_rgba(255,135,0,0.2)]">
+          <Card className=" hover:border-orange-500/50 transition-all duration-300 p-6 hover:shadow-[0_0_30px_rgba(255,135,0,0.2)]">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-orange-500/20 rounded-xl">
                 <FolderOpen size={28} className="text-orange-500" />
@@ -397,7 +403,7 @@ export function DashboardPage() {
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 hover:border-purple-500/50 transition-all duration-300 p-6 hover:shadow-[0_0_30px_rgba(168,85,247,0.2)]">
+          <Card className=" hover:border-purple-500/50 transition-all duration-300 p-6 hover:shadow-[0_0_30px_rgba(168,85,247,0.2)]">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-purple-500/20 rounded-xl">
                 <Gift size={28} className="text-purple-500" />
@@ -413,7 +419,7 @@ export function DashboardPage() {
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 hover:border-emerald-500/50 transition-all duration-300 p-6 hover:shadow-[0_0_30px_rgba(16,185,129,0.2)]">
+          <Card className=" hover:border-emerald-500/50 transition-all duration-300 p-6 hover:shadow-[0_0_30px_rgba(16,185,129,0.2)]">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-emerald-500/20 rounded-xl">
                 <DollarSign size={28} className="text-emerald-500" />
@@ -426,7 +432,7 @@ export function DashboardPage() {
             <p className="text-xs text-gray-500 mt-2 font-medium">sats</p>
           </Card>
 
-          <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 hover:border-blue-500/50 transition-all duration-300 p-6 hover:shadow-[0_0_30px_rgba(59,130,246,0.2)]">
+          <Card className=" hover:border-blue-500/50 transition-all duration-300 p-6 hover:shadow-[0_0_30px_rgba(59,130,246,0.2)]">
             <div className="flex items-center justify-between mb-4">
               <div className="p-3 bg-blue-500/20 rounded-xl">
                 <Users size={28} className="text-blue-500" />
@@ -455,7 +461,7 @@ export function DashboardPage() {
         </div>
 
         {projects.length === 0 ? (
-          <Card className="text-center py-20 bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700">
+          <Card className="text-center py-20 ">
             <div className="max-w-md mx-auto">
               <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-orange-500 to-amber-600 rounded-2xl mb-6 shadow-[0_0_30px_rgba(255,135,0,0.4)]">
                 <FolderOpen size={40} className="text-white" />
@@ -478,7 +484,7 @@ export function DashboardPage() {
             {projects.map((project) => (
               <Card
                 key={project.id}
-                className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 hover:border-orange-500/50 transition-all duration-300 overflow-hidden group hover:shadow-[0_0_40px_rgba(255,135,0,0.25)] hover:scale-[1.02]"
+                className=" hover:border-orange-500/50 transition-all duration-300 overflow-hidden group hover:shadow-[0_0_40px_rgba(255,135,0,0.25)] hover:scale-[1.02]"
               >
                 <input
                   type="file"
@@ -511,7 +517,7 @@ export function DashboardPage() {
                       </div>
                     </div>
                   ) : (
-                    <div className="w-full h-48 bg-gradient-to-br from-gray-800 to-gray-900 relative flex items-center justify-center overflow-hidden hover:border-orange-500 transition-colors">
+                    <div className="w-full h-48 bg-charcoal-900 relative flex items-center justify-center overflow-hidden hover:border-orange-500 transition-colors">
                       <Upload size={64} className="text-gray-600 group-hover/bg:text-orange-500 transition-colors" />
                       <div className="absolute top-4 right-4">
                         {getVisibilityBadge(project.visibility)}
@@ -527,19 +533,19 @@ export function DashboardPage() {
                         value={editFormData.title}
                         onChange={(e) => setEditFormData({ ...editFormData, title: e.target.value })}
                         placeholder="Project title"
-                        className="bg-black border-gray-700 text-white font-bold"
+                        className="bg-black border-white/10 text-white font-bold"
                       />
                       <textarea
                         value={editFormData.description}
                         onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
                         placeholder="Description"
-                        className="w-full px-4 py-3 bg-black border border-gray-700 rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
+                        className="w-full px-4 py-3 bg-black border border-white/10 rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
                         rows={3}
                       />
                       <select
                         value={editFormData.visibility}
                         onChange={(e) => setEditFormData({ ...editFormData, visibility: e.target.value as any })}
-                        className="w-full px-4 py-3 bg-black border border-gray-700 rounded-lg text-white text-sm focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
+                        className="w-full px-4 py-3 bg-black border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
                       >
                         <option value="draft">Draft - Only you can see</option>
                         <option value="private">Private - Anyone with link</option>
@@ -549,14 +555,14 @@ export function DashboardPage() {
                         <Button
                           onClick={() => handleUpdateProject(project.id)}
                           className="flex-1 bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 font-bold"
-                          disabled={processing}
+                          loading={processing}
                         >
-                          {processing ? 'Saving...' : 'Save Changes'}
+                          Save Changes
                         </Button>
                         <Button
                           variant="outline"
                           onClick={cancelEditing}
-                          className="flex-1 border-gray-700 text-gray-300 hover:bg-gray-800"
+                          className="flex-1 border-white/10 text-gray-300 hover:bg-white/5"
                           disabled={processing}
                         >
                           Cancel
@@ -574,7 +580,7 @@ export function DashboardPage() {
                         </p>
                       </div>
 
-                      <div className="flex items-center gap-6 mb-6 pb-6 border-b border-gray-700">
+                      <div className="flex items-center gap-6 mb-6 pb-6 border-b border-white/10">
                         <div className="flex items-center gap-2">
                           <div className="p-2 bg-purple-500/20 rounded-lg">
                             <Gift size={18} className="text-purple-400" />
@@ -608,21 +614,21 @@ export function DashboardPage() {
                         <Button
                           variant="outline"
                           onClick={() => startEditingProject(project)}
-                          className="border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-orange-400 hover:border-orange-500/50"
+                          className="border-white/10 text-gray-300 hover:bg-white/5 hover:text-orange-400 hover:border-orange-500/50"
                         >
                           <Edit size={18} />
                         </Button>
                         <Button
                           variant="outline"
                           onClick={() => handleDeleteProject(project.id)}
-                          className="border-gray-700 text-gray-300 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/50"
+                          className="border-white/10 text-gray-300 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/50"
                         >
                           <Trash2 size={18} />
                         </Button>
                       </div>
 
                       {project.visibility === 'public' && (
-                        <div className="mt-4 pt-4 border-t border-gray-700">
+                        <div className="mt-4 pt-4 border-t border-white/10">
                           <a
                             href={`#/project/${project.slug}`}
                             target="_blank"
@@ -660,7 +666,7 @@ export function DashboardPage() {
               variant={followFilter === 'all' ? 'primary' : 'outline'}
               className={followFilter === 'all'
                 ? 'bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 font-bold whitespace-nowrap'
-                : 'border-gray-700 text-gray-300 hover:bg-gray-800 whitespace-nowrap'
+                : 'border-white/10 text-gray-300 hover:bg-white/5 whitespace-nowrap'
               }
             >
               <Filter size={18} className="mr-2" />
@@ -671,7 +677,7 @@ export function DashboardPage() {
               variant={followFilter === 'projects' ? 'primary' : 'outline'}
               className={followFilter === 'projects'
                 ? 'bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 font-bold whitespace-nowrap'
-                : 'border-gray-700 text-gray-300 hover:bg-gray-800 whitespace-nowrap'
+                : 'border-white/10 text-gray-300 hover:bg-white/5 whitespace-nowrap'
               }
             >
               <FolderOpen size={18} className="mr-2" />
@@ -682,7 +688,7 @@ export function DashboardPage() {
               variant={followFilter === 'wishlists' ? 'primary' : 'outline'}
               className={followFilter === 'wishlists'
                 ? 'bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 font-bold whitespace-nowrap'
-                : 'border-gray-700 text-gray-300 hover:bg-gray-800 whitespace-nowrap'
+                : 'border-white/10 text-gray-300 hover:bg-white/5 whitespace-nowrap'
               }
             >
               <Gift size={18} className="mr-2" />
@@ -693,7 +699,7 @@ export function DashboardPage() {
               variant={followFilter === 'creators' ? 'primary' : 'outline'}
               className={followFilter === 'creators'
                 ? 'bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 font-bold whitespace-nowrap'
-                : 'border-gray-700 text-gray-300 hover:bg-gray-800 whitespace-nowrap'
+                : 'border-white/10 text-gray-300 hover:bg-white/5 whitespace-nowrap'
               }
             >
               <Users size={18} className="mr-2" />
@@ -702,7 +708,7 @@ export function DashboardPage() {
           </div>
 
           {(following.projects.length === 0 && following.wishlists.length === 0 && following.creators.length === 0) ? (
-            <Card className="text-center py-16 bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700">
+            <Card className="text-center py-16 ">
               <Heart size={64} className="mx-auto text-rose-500/50 mb-4" />
               <h3 className="text-2xl font-bold text-white mb-2">Not Following Anyone Yet</h3>
               <p className="text-gray-400 mb-6">Explore projects and creators to start building your feed</p>
@@ -716,14 +722,14 @@ export function DashboardPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {(followFilter === 'all' || followFilter === 'projects') && following.projects.map((project: any) => (
                 <Link key={project.id} href={`/project/${project.slug}`}>
-                  <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 hover:border-rose-500/50 transition-all duration-300 overflow-hidden group hover:shadow-[0_0_30px_rgba(244,63,94,0.2)]">
+                  <Card className=" hover:border-rose-500/50 transition-all duration-300 overflow-hidden group hover:shadow-[0_0_30px_rgba(244,63,94,0.2)]">
                     {project.background_url ? (
                       <div
                         className="w-full h-32 bg-cover bg-center"
                         style={{ backgroundImage: `url(${project.background_url})` }}
                       />
                     ) : (
-                      <div className="w-full h-32 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
+                      <div className="w-full h-32 bg-charcoal-900 flex items-center justify-center">
                         <FolderOpen size={48} className="text-gray-700" />
                       </div>
                     )}
@@ -745,14 +751,14 @@ export function DashboardPage() {
 
               {(followFilter === 'all' || followFilter === 'wishlists') && following.wishlists.map((wishlist: any) => (
                 <Link key={wishlist.id} href={`/wishlist/${wishlist.slug}`}>
-                  <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 hover:border-purple-500/50 transition-all duration-300 overflow-hidden group hover:shadow-[0_0_30px_rgba(168,85,247,0.2)]">
+                  <Card className=" hover:border-purple-500/50 transition-all duration-300 overflow-hidden group hover:shadow-[0_0_30px_rgba(168,85,247,0.2)]">
                     {wishlist.cover_image ? (
                       <div
                         className="w-full h-32 bg-cover bg-center"
                         style={{ backgroundImage: `url(${wishlist.cover_image})` }}
                       />
                     ) : (
-                      <div className="w-full h-32 bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
+                      <div className="w-full h-32 bg-charcoal-900 flex items-center justify-center">
                         <Gift size={48} className="text-gray-700" />
                       </div>
                     )}
@@ -784,13 +790,13 @@ export function DashboardPage() {
 
               {(followFilter === 'all' || followFilter === 'creators') && following.creators.map((creator: any) => (
                 <Link key={creator.id} href={`/profile/${creator.username}`}>
-                  <Card className="bg-gradient-to-br from-gray-900 to-gray-800 border-gray-700 hover:border-blue-500/50 transition-all duration-300 p-6 group hover:shadow-[0_0_30px_rgba(59,130,246,0.2)]">
+                  <Card className=" hover:border-blue-500/50 transition-all duration-300 p-6 group hover:shadow-[0_0_30px_rgba(59,130,246,0.2)]">
                     <div className="flex items-center gap-4 mb-4">
                       {creator.avatar_url ? (
                         <img
                           src={creator.avatar_url}
                           alt={creator.username}
-                          className="w-16 h-16 rounded-full object-cover border-2 border-gray-700 group-hover:border-blue-500 transition-colors"
+                          className="w-16 h-16 rounded-full object-cover border-2 border-white/10 group-hover:border-blue-500 transition-colors"
                         />
                       ) : (
                         <div className="w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-cyan-600 flex items-center justify-center text-white text-2xl font-bold">
@@ -833,7 +839,7 @@ export function DashboardPage() {
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               placeholder="e.g., Community Garden Fund"
               required
-              className="bg-black border-gray-700 text-white"
+              className="bg-black border-white/10 text-white"
             />
             <p className="text-xs text-gray-500 mt-2">Choose a clear, descriptive name for your project</p>
           </div>
@@ -846,7 +852,7 @@ export function DashboardPage() {
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               placeholder="Tell people about your project and what you're trying to achieve..."
-              className="w-full px-4 py-3 bg-black border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
+              className="w-full px-4 py-3 bg-black border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20"
               rows={4}
             />
             <p className="text-xs text-gray-500 mt-2">A compelling description helps supporters understand your mission</p>
@@ -858,19 +864,19 @@ export function DashboardPage() {
               value={formData.slug}
               onChange={(e) => setFormData({ ...formData, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-') })}
               placeholder="community-garden-fund"
-              className="bg-black border-gray-700 text-white font-mono text-sm"
+              className="bg-black border-white/10 text-white font-mono text-sm"
             />
             <p className="text-xs text-gray-500 mt-2">
               Your project URL: katoa.org/project/{formData.slug || 'your-slug'}
             </p>
           </div>
 
-          <div className="flex gap-3 pt-4 border-t border-gray-700">
+          <div className="flex gap-3 pt-4 border-t border-white/10">
             <Button
               type="button"
               variant="outline"
               onClick={() => setShowCreateModal(false)}
-              className="flex-1 border-gray-700 text-gray-300"
+              className="flex-1 border-white/10 text-gray-300"
               disabled={processing}
             >
               Cancel
@@ -878,9 +884,10 @@ export function DashboardPage() {
             <Button
               type="submit"
               className="flex-1 bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 font-bold"
-              disabled={processing || !formData.title}
+              loading={processing}
+              disabled={!formData.title}
             >
-              {processing ? 'Creating...' : 'Create Project'}
+              Create Project
             </Button>
           </div>
         </form>

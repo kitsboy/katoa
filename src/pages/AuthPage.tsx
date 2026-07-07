@@ -5,6 +5,7 @@ import { Card } from '../components/Card';
 import { Input } from '../components/Input';
 import { Link } from '../components/Link';
 import { Gift, Mail, Lock, User, Zap, ArrowLeft } from 'lucide-react';
+import { PageMeta } from '../components/PageMeta';
 
 export function AuthPage() {
   const { signUp, signIn, signInWithGoogle, signInWithNostr, signInAsDemo, canUseDemoAuth, session } = useAuth();
@@ -102,6 +103,11 @@ export function AuthPage() {
 
   return (
     <div className="min-h-[100dvh] bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 flex items-center justify-center px-4 py-12 pt-24 pb-20 md:pb-12">
+      <PageMeta
+        title="Sign In"
+        description="Sign in or create your free KATOA account. Email, Google, or Nostr — start receiving Bitcoin in minutes."
+        path="/auth"
+      />
       {/* Background effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-400/8 rounded-full blur-3xl"></div>
@@ -144,7 +150,7 @@ export function AuthPage() {
                 type="button"
                 variant="primary"
                 className="w-full"
-                disabled={loading}
+                loading={loading}
                 onClick={async () => {
                   setLoading(true);
                   const { error: demoError } = await signInAsDemo();
@@ -161,7 +167,7 @@ export function AuthPage() {
           {/* Google Sign In */}
           <Button
             onClick={handleGoogleSignIn}
-            disabled={loading}
+            loading={loading}
             variant="outline"
             className="w-full mb-4 bg-white hover:bg-gray-100 text-gray-900 border-0 h-12"
           >
@@ -189,7 +195,7 @@ export function AuthPage() {
           {/* Nostr Sign In */}
           <Button
             onClick={handleNostrSignIn}
-            disabled={loading}
+            loading={loading}
             variant="outline"
             className="w-full mb-6 border-purple-500/30 hover:border-purple-500 hover:bg-purple-500/10 text-purple-300"
           >
