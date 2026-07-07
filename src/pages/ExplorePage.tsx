@@ -15,6 +15,7 @@ import { supabase } from '../lib/supabase';
 import { mockWishlists } from '../data/mockWishlists';
 import { mergeKatoaPinsWithMap } from '../lib/btcmap';
 import { getStorage, setStorage, STORAGE_KEYS } from '../lib/storage';
+import { useLanguage } from '../contexts/LanguageContext';
 import { Gift, Search, MapPin, Globe, SlidersHorizontal, Star, Heart, X } from 'lucide-react';
 
 const BTCMapSection = lazy(() =>
@@ -233,6 +234,7 @@ function FilterFields({
 }
 
 export function ExplorePage() {
+  const { t } = useLanguage();
   const savedFilters = getStorage<ExploreFilters>(STORAGE_KEYS.exploreFilters, defaultFilters);
 
   const [wishlists, setWishlists] = useState<Wishlist[]>([]);
@@ -537,8 +539,8 @@ export function ExplorePage() {
         )}
 
         <div className="mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">Explore All Projects</h1>
-          <p className="text-gray-300 mb-6 text-base sm:text-lg">Discover amazing creators and support their dreams around the world</p>
+          <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">{t('explore.allProjects')}</h1>
+          <p className="text-gray-300 mb-6 text-base sm:text-lg">{t('explore.subtitle')}</p>
 
           <div className="space-y-4 mb-6">
             <div className="flex flex-col md:flex-row gap-4">
@@ -748,7 +750,7 @@ export function ExplorePage() {
                   onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
                   className="min-h-[48px] px-8"
                 >
-                  Load more ({filteredWishlists.length - visibleCount} remaining)
+                  {t('explore.loadMore')} ({filteredWishlists.length - visibleCount} {t('explore.remaining')})
                 </Button>
               </div>
             )}

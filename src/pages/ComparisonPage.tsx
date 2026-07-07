@@ -5,6 +5,8 @@ import { Button } from '../components/Button';
 import { Link } from '../components/Link';
 import { FeeComparison } from '../components/FeeComparison';
 import { PageMeta } from '../components/PageMeta';
+import { useLanguage } from '../contexts/LanguageContext';
+import { formatNumber } from '../lib/i18nFormat';
 
 function calculateSavings(amount: number) {
   const onlyfans = amount * 0.20;
@@ -20,6 +22,7 @@ function calculateSavings(amount: number) {
 }
 
 export function ComparisonPage() {
+  const { t } = useLanguage();
   const [tableScrolled, setTableScrolled] = useState(false);
   const [monthlyEarnings, setMonthlyEarnings] = useState(10000);
 
@@ -139,15 +142,14 @@ export function ComparisonPage() {
           </div>
 
           <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
-            <span className="block text-white mb-2">Why Choose</span>
+            <span className="block text-white mb-2">{t('comparison.hero.line1')}</span>
             <span className="block bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent">
-              KATOA?
+              {t('comparison.hero.highlight')}
             </span>
           </h1>
 
           <p className="text-xl md:text-2xl text-gray-400 max-w-4xl mx-auto mb-8 leading-relaxed">
-            We're not just another creator platform. We're built on Bitcoin Lightning, designed for global creators,
-            and committed to 0% fees forever. Here's how we stack up.
+            {t('comparison.hero.subtitle')}
           </p>
         </div>
 
@@ -156,7 +158,7 @@ export function ComparisonPage() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
                 <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">
-                  Save up to ${savings.max.toLocaleString()}/month with KATOA
+                  {t('comparison.saveMonthly').replace('${amount}', formatNumber(savings.max))}
                 </h2>
                 <p className="text-emerald-300 text-sm sm:text-base">
                   Based on ${monthlyEarnings.toLocaleString()}/mo earnings — that's{' '}

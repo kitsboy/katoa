@@ -13,6 +13,7 @@ import { ConfirmDialog } from '../components/ConfirmDialog';
 import { EmptyState } from '../components/EmptyState';
 import { useToast } from '../components/Toast';
 import { useLanguage } from '../contexts/LanguageContext';
+
 import { Breadcrumbs } from '../components/Breadcrumbs';
 
 interface Project {
@@ -363,7 +364,7 @@ export function DashboardPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-charcoal-950 flex items-center justify-center">
-        <div className="text-white text-xl">Loading your dashboard...</div>
+        <div className="text-white text-xl">{t('dashboard.loading')}</div>
       </div>
     );
   }
@@ -371,17 +372,17 @@ export function DashboardPage() {
   return (
     <div className="min-h-screen bg-charcoal-950 pt-16">
       <PageMeta
-        title="Dashboard"
+        title={t('dashboard.title')}
         description="Manage your KATOA projects, wishlists, and Bitcoin donations from your creator dashboard."
         path="/dashboard"
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
-        <Breadcrumbs items={[{ label: 'Dashboard' }]} className="mb-6" />
+        <Breadcrumbs items={[{ label: t('dashboard.title') }]} className="mb-6" />
 
         {isDemoUser && (
           <div className="mb-6 p-4 rounded-xl bg-neon-cyan/10 border border-neon-cyan/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <p className="text-sm text-neon-cyan-300">
-              <strong>Demo preview</strong> — UI only. Connect Supabase to save projects and accept real payments.
+              {t('dashboard.demo')}
             </p>
             <Link href="/auth" className="text-sm font-semibold text-neon-cyan-500 hover:text-neon-cyan-400 shrink-0">
               Set up real account →
@@ -391,9 +392,9 @@ export function DashboardPage() {
 
         <div className="mb-12">
           <h1 className="text-5xl font-black text-white mb-3 bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
-            Creator Dashboard
+            {t('dashboard.title')}
           </h1>
-          <p className="text-gray-300 text-lg">Manage your projects and track your success</p>
+          <p className="text-gray-300 text-lg">{t('dashboard.subtitle')}</p>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-8 sm:mb-12">
@@ -406,7 +407,7 @@ export function DashboardPage() {
                 <p className="text-3xl font-black text-white">{stats.totalProjects}</p>
               </div>
             </div>
-            <h3 className="text-gray-400 text-sm font-semibold uppercase tracking-wider">Projects</h3>
+            <h3 className="text-gray-400 text-sm font-semibold uppercase tracking-wider">{t('dashboard.projects')}</h3>
             <div className="flex items-center gap-2 mt-2">
               <TrendingUp size={14} className="text-emerald-400" />
               <span className="text-xs text-emerald-400 font-medium">Active</span>
@@ -422,7 +423,7 @@ export function DashboardPage() {
                 <p className="text-3xl font-black text-white">{stats.totalWishlists}</p>
               </div>
             </div>
-            <h3 className="text-gray-400 text-sm font-semibold uppercase tracking-wider">Wishlists</h3>
+            <h3 className="text-gray-400 text-sm font-semibold uppercase tracking-wider">{t('dashboard.wishlists')}</h3>
             <div className="flex items-center gap-2 mt-2">
               <TrendingUp size={14} className="text-purple-400" />
               <span className="text-xs text-purple-400 font-medium">Growing</span>
@@ -438,7 +439,7 @@ export function DashboardPage() {
                 <p className="text-3xl font-black text-white">{formatSats(stats.totalRaised)}</p>
               </div>
             </div>
-            <h3 className="text-gray-400 text-sm font-semibold uppercase tracking-wider">Total Raised</h3>
+            <h3 className="text-gray-400 text-sm font-semibold uppercase tracking-wider">{t('dashboard.raised')}</h3>
             <p className="text-xs text-gray-500 mt-2 font-medium">sats</p>
           </Card>
 
@@ -888,7 +889,7 @@ export function DashboardPage() {
               loading={processing}
               disabled={!formData.title}
             >
-              Create Project
+              {t('dashboard.createProject')}
             </Button>
           </div>
         </form>

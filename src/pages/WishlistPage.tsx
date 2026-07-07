@@ -15,6 +15,7 @@ import { copyToClipboard } from '../lib/clipboard';
 import { getQrImageUrl, lightningQrData } from '../lib/qr';
 import { Breadcrumbs, BreadcrumbItem } from '../components/Breadcrumbs';
 import { PaymentMethodTabs, PaymentTab } from '../components/PaymentMethodTabs';
+import { useLanguage } from '../contexts/LanguageContext';
 import { Gift, ExternalLink, Zap, Bitcoin, Check, Copy, MapPin, QrCode, ArrowLeft, Heart, TrendingUp, Package } from 'lucide-react';
 
 const SAT_PRESETS = [
@@ -82,6 +83,7 @@ interface Wishlist {
 }
 
 export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; breadcrumbItems?: BreadcrumbItem[] }) {
+  const { t } = useLanguage();
   const [wishlist, setWishlist] = useState<Wishlist | null>(null);
   const [items, setItems] = useState<WishlistItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -286,7 +288,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
       <div className="min-h-screen bg-charcoal-950 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-4 border-orange-500 border-t-transparent mx-auto mb-4"></div>
-          <div className="text-white text-xl font-bold">Loading wishlist...</div>
+          <div className="text-white text-xl font-bold">{t('wishlist.loading')}</div>
         </div>
       </div>
     );
@@ -297,12 +299,12 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
       <div className="min-h-screen bg-charcoal-950 flex items-center justify-center">
         <Card className="p-12 text-center max-w-md" variant="glass">
           <Gift size={64} className="text-gray-600 mx-auto mb-4" />
-          <h2 className="text-3xl font-black text-white mb-2">Wishlist Not Found</h2>
-          <p className="text-gray-400 mb-6">This wishlist doesn't exist or has been removed.</p>
+          <h2 className="text-3xl font-black text-white mb-2">{t('wishlist.notFound')}</h2>
+          <p className="text-gray-400 mb-6">{t('wishlist.notFoundDesc')}</p>
           <Link href="/explore">
             <Button variant="bitcoin">
               <ArrowLeft size={18} className="mr-2" />
-              Explore Wishlists
+              {t('wishlist.explore')}
             </Button>
           </Link>
         </Card>
@@ -483,7 +485,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
                 title="Support this wishlist with Bitcoin"
               >
                 <Gift size={22} className="mr-2" />
-                Send Gift
+                {t('wishlist.sendGift')}
               </Button>
 
               <Button
@@ -510,7 +512,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             </div>
             <div>
               <h2 className="text-3xl font-black text-white">Wishlist Items</h2>
-              <p className="text-gray-400">Support specific items in this wishlist</p>
+              <p className="text-gray-400">{t('wishlist.supportItems')}</p>
             </div>
           </div>
 
@@ -776,7 +778,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             onClick={() => handleGiftClick()}
           >
             <Gift size={18} className="mr-2" />
-            Send Gift
+            {t('wishlist.sendGift')}
           </Button>
           <Button
             variant="outline"

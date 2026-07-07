@@ -1,4 +1,5 @@
 import { memo, useEffect, useState, useRef } from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface SatsDisplayProps {
   sats: number;
@@ -30,6 +31,7 @@ export const SatsDisplay = memo(function SatsDisplay({
   size = 'md',
   className = '',
 }: SatsDisplayProps) {
+  const { language } = useLanguage();
   const sizeClasses = {
     sm: { primary: 'text-sm font-bold', secondary: 'text-xs' },
     md: { primary: 'text-lg font-black', secondary: 'text-sm' },
@@ -65,7 +67,7 @@ export const SatsDisplay = memo(function SatsDisplay({
   return (
     <div className={`flex flex-col ${className}`}>
       <span className={`${styles.primary} text-white font-mono tabular-nums`}>
-        {formatSats(displaySats)} <span className="text-bitcoin-orange-500">sats</span>
+        {new Intl.NumberFormat(language).format(displaySats)} <span className="text-bitcoin-orange-500">sats</span>
       </span>
       {showBtc && (
         <span className={`${styles.secondary} text-gray-400 font-mono`}>
@@ -74,7 +76,7 @@ export const SatsDisplay = memo(function SatsDisplay({
       )}
       {showFiat && fiatAmount !== undefined && (
         <span className={`${styles.secondary} text-gray-500`}>
-          ≈ {new Intl.NumberFormat(undefined, { style: 'currency', currency: fiatCurrency }).format(fiatAmount)}
+          ≈ {new Intl.NumberFormat(language, { style: 'currency', currency: fiatCurrency }).format(fiatAmount)}
         </span>
       )}
     </div>

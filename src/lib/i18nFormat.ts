@@ -4,6 +4,14 @@ export function formatSatsLabel(sats: number, locale?: string): string {
   return `${n} ${word}`;
 }
 
+export function formatCurrency(amount: number, currency = 'USD', locale?: string): string {
+  return new Intl.NumberFormat(locale, { style: 'currency', currency, maximumFractionDigits: 0 }).format(amount);
+}
+
+export function formatNumber(value: number, locale?: string): string {
+  return new Intl.NumberFormat(locale).format(value);
+}
+
 export function formatRelativeTime(date: Date, locale?: string): string {
   const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' });
   const diffSec = Math.round((date.getTime() - Date.now()) / 1000);

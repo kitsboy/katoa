@@ -3,12 +3,14 @@ import { Card } from '../components/Card';
 import { Link } from '../components/Link';
 import { Button } from '../components/Button';
 import { PageMeta } from '../components/PageMeta';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export function AboutPage() {
+  const { t } = useLanguage();
   return (
     <div className="min-h-screen bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 text-white pt-16">
       <PageMeta
-        title="About"
+        title={t('about.title')}
         description="Learn about KATOA's mission — zero-fee, privacy-first Bitcoin commerce built by creators for creators."
         path="/about"
       />
@@ -21,18 +23,18 @@ export function AboutPage() {
 
         <div className="relative z-10 max-w-4xl mx-auto text-center">
           <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight tracking-tight">
-            The Platform That
+            {t('about.hero.line1')}
             <br />
-            <span className="text-gradient-emerald">Actually Serves Creators</span>
+            <span className="text-gradient-emerald">{t('about.hero.highlight')}</span>
           </h1>
 
           <p className="text-2xl text-gray-300 mb-8 leading-relaxed">
-            We're not just another platform. We're a movement.
+            {t('about.hero.subtitle')}
           </p>
 
           <div className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
             <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-            <span className="text-emerald-300 font-semibold">Built by creators, for creators</span>
+            <span className="text-emerald-300 font-semibold">{t('about.hero.badge')}</span>
           </div>
         </div>
       </section>
@@ -42,10 +44,10 @@ export function AboutPage() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              The Creator Economy is Broken
+              {t('about.problem.title')}
             </h2>
             <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-              Traditional platforms extract too much. Here's how much creators lose:
+              {t('about.problem.subtitle')}
             </p>
           </div>
 
