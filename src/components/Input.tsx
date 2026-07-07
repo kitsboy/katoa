@@ -1,4 +1,4 @@
-import { InputHTMLAttributes, forwardRef, ReactNode } from 'react';
+import { InputHTMLAttributes, forwardRef, ReactNode, useId } from 'react';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -8,13 +8,15 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, helperText, icon, className = '', id, ...props }, ref) => {
-    const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, '-') : undefined);
+  ({ label, error, helperText, icon, className = '', id, required, type, ...props }, ref) => {
+    const generatedId = useId();
+    const inputId = id || generatedId;
     return (
       <div className="w-full">
         {label && (
           <label htmlFor={inputId} className="block text-sm font-medium text-gray-300 mb-2">
             {label}
+            {required && <span className="text-red-400 ml-0.5" aria-hidden="true">*</span>}
           </label>
         )}
         <div className="relative">
@@ -26,6 +28,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           <input
             ref={ref}
             id={inputId}
+            type={type}
+            required={required}
+            aria-required={required || undefined}
+            inputMode={type === 'email' ? 'email' : props.inputMode}
             className={`w-full px-4 py-3 min-h-[44px] bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-neon-cyan-500/50 focus:border-neon-cyan-500/30 transition-all text-base sm:text-sm ${
               error ? 'border-red-500/50 focus:ring-red-500/50' : ''
             } ${icon ? 'pl-10' : ''} ${className}`}

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 import { Share2, Twitter, Facebook, Linkedin, Link as LinkIcon, MessageCircle, Check } from 'lucide-react';
 import { Button } from './Button';
 import { copyToClipboard } from '../lib/clipboard';
@@ -11,8 +12,22 @@ interface ShareButtonProps {
 }
 
 export function ShareButton({ url, title, description, className = '' }: ShareButtonProps) {
+  const { t } = useLanguage();
   const [showMenu, setShowMenu] = useState(false);
   const [copied, setCopied] = useState(false);
+  const triggerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!showMenu) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setShowMenu(false);
+        triggerRef.current?.querySelector('button')?.focus();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [showMenu]);
 
   const fullUrl = `${window.location.origin}${url}`;
   const encodedUrl = encodeURIComponent(fullUrl);
@@ -54,7 +69,7 @@ export function ShareButton({ url, title, description, className = '' }: ShareBu
   };
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative ${className}`} ref={triggerRef}>
       <Button
         variant="outline"
         size="sm"
@@ -64,7 +79,7 @@ export function ShareButton({ url, title, description, className = '' }: ShareBu
         aria-haspopup="menu"
       >
         <Share2 size={16} />
-        Share
+        {t('share.button')}
       </Button>
 
       {showMenu && (
@@ -75,7 +90,7 @@ export function ShareButton({ url, title, description, className = '' }: ShareBu
           />
           <div className="absolute right-0 mt-2 w-64 bg-charcoal-900/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-xl py-2 z-50" role="menu">
             <div className="px-4 py-2 border-b border-white/10">
-              <p className="text-sm font-semibold text-white">Share this wishlist</p>
+              <p className="text-sm font-semibold text-white">{t('share.title')}</p>
             </div>
 
             <div className="py-2">
@@ -84,9 +99,10 @@ export function ShareButton({ url, title, description, className = '' }: ShareBu
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 px-4 py-2 hover:bg-white/5 text-white transition-colors"
+                role="menuitem"
               >
                 <Twitter size={18} className="text-blue-400" />
-                <span className="text-sm">Share on Twitter</span>
+                <span className="text-sm">{t('share.twitter')}</span>
               </a>
 
               <a

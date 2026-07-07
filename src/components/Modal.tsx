@@ -12,9 +12,11 @@ interface ModalProps {
 export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalProps) {
   const closeRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (!isOpen) return;
+    previousFocusRef.current = document.activeElement as HTMLElement;
     document.body.style.overflow = 'hidden';
     closeRef.current?.focus();
 
@@ -56,6 +58,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
     return () => {
       document.body.style.overflow = 'unset';
       window.removeEventListener('keydown', onKey);
+      previousFocusRef.current?.focus();
     };
   }, [isOpen, onClose]);
 
@@ -73,22 +76,25 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
       <div className="absolute inset-0 bg-black/75 backdrop-blur-md animate-fade-in" onClick={onClose} aria-hidden="true" />
       <div
         ref={dialogRef}
+        onClick={(e) => e.stopPropagation()}
         className={`relative w-full ${sizes[size]} bg-charcoal-900 border border-white/10 rounded-t-[1.75rem] sm:rounded-2xl shadow-2xl max-h-[92dvh] sm:max-h-[90vh] overflow-y-auto animate-sheet-up sm:animate-scale-in pb-safe`}
       >
-        {title && (
-          <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/10 sticky top-0 bg-charcoal-900/95 backdrop-blur-md z-10">
+        <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/10 sticky top-0 bg-charcoal-900/95 backdrop-blur-md z-10">
+          {title ? (
             <h2 id="modal-title" className="text-lg sm:text-2xl font-display font-bold text-white">{title}</h2>
-            <button
-              ref={closeRef}
-              onClick={(e) => { e.stopPropagation(); onClose(); }}
-              className="text-gray-400 hover:text-white transition-colors p-2 min-h-[44px] min-w-[44px] flex items-center justify-center hover:bg-white/10 rounded-xl touch-manipulation"
-              type="button"
-              aria-label="Close dialog"
-            >
-              <X size={22} />
-            </button>
-          </div>
-        )}
+          ) : (
+            <span className="sr-only">Dialog</span>
+          )}
+          <button
+            ref={closeRef}
+            onClick={(e) => { e.stopPropagation(); onClose(); }}
+            className="text-gray-400 hover:text-white transition-colors p-2 min-h-[44px] min-w-[44px] flex items-center justify-center hover:bg-white/10 rounded-xl touch-manipulation ml-auto"
+            type="button"
+            aria-label="Close dialog"
+          >
+            <X size={22} />
+          </button>
+        </div>
         <div className="p-4 sm:p-6">{children}</div>
       </div>
     </div>

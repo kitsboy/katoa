@@ -53,7 +53,14 @@ export const ProgressBar = memo(function ProgressBar({
           )}
         </div>
       )}
-      <div className={`w-full bg-white/10 rounded-full overflow-hidden ${heightClasses[height]} relative`}>
+      <div
+        className={`w-full bg-white/10 rounded-full overflow-hidden ${heightClasses[height]} relative`}
+        role="progressbar"
+        aria-valuenow={Math.round(percentage)}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label={`${percentage.toFixed(0)}% of goal reached`}
+      >
         <div
           className={`
             ${heightClasses[height]} bg-gradient-to-r ${gradient} rounded-full

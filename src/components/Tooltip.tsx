@@ -1,4 +1,4 @@
-import { useState, ReactNode, useRef, useEffect } from 'react';
+import { useState, ReactNode, useRef, useEffect, useId } from 'react';
 import { createPortal } from 'react-dom';
 import { Info } from 'lucide-react';
 
@@ -13,11 +13,12 @@ export function Tooltip({ content, children, icon = false, position = 'bottom' }
   const [isVisible, setIsVisible] = useState(false);
   const [coords, setCoords] = useState({ top: 0, left: 0 });
   const triggerRef = useRef<HTMLSpanElement>(null);
+  const tooltipId = useId();
 
   useEffect(() => {
     if (isVisible && triggerRef.current) {
       const rect = triggerRef.current.getBoundingClientRect();
-      const tooltipWidth = 360;
+      const tooltipWidth = Math.min(360, window.innerWidth - 32);
       const tooltipHeight = 150;
       const gap = 12;
 
@@ -60,18 +61,20 @@ export function Tooltip({ content, children, icon = false, position = 'bottom' }
 
   const tooltipContent = isVisible && (
     <div
+      id={tooltipId}
+      role="tooltip"
       style={{
         position: 'absolute',
         top: `${coords.top}px`,
         left: `${coords.left}px`,
         zIndex: 999999,
-        width: '360px',
+        maxWidth: 'min(360px, calc(100vw - 2rem))',
         pointerEvents: 'auto',
       }}
       onMouseEnter={() => setIsVisible(true)}
       onMouseLeave={() => setIsVisible(false)}
     >
-      <div className="bg-charcoal-900 border border-neon-cyan-500/40 rounded-xl px-4 sm:px-6 py-4 sm:py-5 shadow-2xl max-w-[min(360px,calc(100vw-2rem))]">
+      <div className="bg-charcoal-900 border border-neon-cyan-500/40 rounded-xl px-4 sm:px-6 py-4 sm:py-5 shadow-2xl">
         <p className="text-white text-sm leading-relaxed font-medium">
           {content}
         </p>
@@ -102,6 +105,7 @@ export function Tooltip({ content, children, icon = false, position = 'bottom' }
         }}
         className="inline-flex items-center cursor-help z-50 relative touch-manipulation"
         aria-expanded={isVisible}
+        aria-describedby={isVisible ? tooltipId : undefined}
       >
         {children}
         {icon && (
@@ -109,6 +113,7 @@ export function Tooltip({ content, children, icon = false, position = 'bottom' }
             size={20}
             className="text-white/90 hover:text-white transition-colors ml-1 flex-shrink-0"
             strokeWidth={2.5}
+            aria-hidden
           />
         )}
       </span>

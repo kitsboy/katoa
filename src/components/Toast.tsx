@@ -1,10 +1,10 @@
-import { createContext, useCallback, useContext, useState, ReactNode } from 'react';
-import { Check, AlertCircle, X } from 'lucide-react';
+import { createContext, useCallback, useContext, useRef, useState, ReactNode } from 'react';
+import { Check, AlertCircle, X, Info } from 'lucide-react';
 
 type ToastType = 'success' | 'error' | 'info';
 
 interface ToastItem {
-  id: number;
+  id: string;
   message: string;
   type: ToastType;
 }
@@ -15,23 +15,42 @@ interface ToastContextType {
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
+let toastCounter = 0;
+
+function nextToastId(): string {
+  return typeof crypto !== 'undefined' && crypto.randomUUID
+    ? crypto.randomUUID()
+    : `toast-${++toastCounter}`;
+}
+
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
+  const timersRef = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
 
-  const toast = useCallback((message: string, type: ToastType = 'success') => {
-    const id = Date.now();
-    setToasts((prev) => [...prev, { id, message, type }]);
-    setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 3000);
+  const dismiss = useCallback((id: string) => {
+    const timer = timersRef.current.get(id);
+    if (timer) {
+      clearTimeout(timer);
+      timersRef.current.delete(id);
+    }
+    setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
-  const dismiss = (id: number) => setToasts((prev) => prev.filter((t) => t.id !== id));
+  const toast = useCallback((message: string, type: ToastType = 'success') => {
+    const id = nextToastId();
+    setToasts((prev) => [...prev, { id, message, type }]);
+    const timer = setTimeout(() => dismiss(id), 3000);
+    timersRef.current.set(id, timer);
+  }, [dismiss]);
+
+  const hasError = toasts.some((t) => t.type === 'error');
 
   return (
     <ToastContext.Provider value={{ toast }}>
       {children}
       <div
         className="fixed top-20 inset-x-4 sm:inset-x-auto sm:right-4 z-[200] flex flex-col gap-2 pointer-events-none"
-        aria-live="polite"
+        aria-live={hasError ? 'assertive' : 'polite'}
         aria-atomic="true"
       >
         {toasts.map((t) => (
@@ -45,7 +64,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                   : 'bg-white/10 border-white/20 text-gray-200'
             }`}
           >
-            {t.type === 'success' ? <Check size={18} /> : t.type === 'error' ? <AlertCircle size={18} /> : null}
+            {t.type === 'success' ? <Check size={18} aria-hidden /> : t.type === 'error' ? <AlertCircle size={18} aria-hidden /> : <Info size={18} aria-hidden />}
             <span className="text-sm font-medium flex-1">{t.message}</span>
             <button
               type="button"

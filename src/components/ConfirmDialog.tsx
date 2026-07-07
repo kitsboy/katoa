@@ -31,7 +31,7 @@ export function ConfirmDialog({
         <Button variant="ghost" onClick={onCancel} disabled={loading} className="min-h-[44px]">
           {cancelLabel}
         </Button>
-        <Button variant={variant} onClick={onConfirm} loading={loading} className="min-h-[44px]">
+        <Button variant={variant} onClick={onConfirm} loading={loading} className="min-h-[44px]" autoFocus>
           {confirmLabel}
         </Button>
       </div>
