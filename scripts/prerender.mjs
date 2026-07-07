@@ -79,7 +79,7 @@ function injectRoute(baseHtml, route) {
   }
 
   html = html.replace(
-    '<div id="root"></div>',
+    /<div id="root">[\s\S]*?<\/div>/,
     `<div id="root">${buildBody(route)}</div>`
   );
 
