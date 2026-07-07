@@ -1,5 +1,11 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { aboutComparisonEn } from '../i18n/aboutComparison.en';
+import { aboutComparisonEs } from '../i18n/aboutComparison.es';
+import { aboutComparisonPt } from '../i18n/aboutComparison.pt';
+import { aboutComparisonFr } from '../i18n/aboutComparison.fr';
+import { aboutComparisonDe } from '../i18n/aboutComparison.de';
+import { aboutComparisonJa } from '../i18n/aboutComparison.ja';
+import { aboutComparisonZh } from '../i18n/aboutComparison.zh';
 
 export type Language = 'en' | 'es' | 'pt' | 'fr' | 'de' | 'ja' | 'zh';
 
@@ -309,6 +315,7 @@ const pageStrings = {
     'explore.allProjects': 'Explorar todos los proyectos',
     'explore.loadMore': 'Cargar más',
     'explore.remaining': 'restantes',
+    ...aboutComparisonEs,
   },
   pt: {
     'dashboard.title': 'Painel do Criador',
@@ -338,6 +345,7 @@ const pageStrings = {
     'explore.allProjects': 'Explorar todos os projetos',
     'explore.loadMore': 'Carregar mais',
     'explore.remaining': 'restantes',
+    ...aboutComparisonPt,
   },
   fr: {
     'dashboard.title': 'Tableau de bord créateur',
@@ -367,6 +375,7 @@ const pageStrings = {
     'explore.allProjects': 'Explorer tous les projets',
     'explore.loadMore': 'Charger plus',
     'explore.remaining': 'restants',
+    ...aboutComparisonFr,
   },
   de: {
     'dashboard.title': 'Creator-Dashboard',
@@ -396,6 +405,7 @@ const pageStrings = {
     'explore.allProjects': 'Alle Projekte entdecken',
     'explore.loadMore': 'Mehr laden',
     'explore.remaining': 'übrig',
+    ...aboutComparisonDe,
   },
   ja: {
     'dashboard.title': 'クリエイターダッシュボード',
@@ -425,6 +435,7 @@ const pageStrings = {
     'explore.allProjects': 'すべてのプロジェクトを探す',
     'explore.loadMore': 'もっと読み込む',
     'explore.remaining': '件残り',
+    ...aboutComparisonJa,
   },
   zh: {
     'dashboard.title': '创作者仪表板',
@@ -454,6 +465,7 @@ const pageStrings = {
     'explore.allProjects': '探索所有项目',
     'explore.loadMore': '加载更多',
     'explore.remaining': '剩余',
+    ...aboutComparisonZh,
   },
 };
 
