@@ -1,5 +1,5 @@
 import { Link } from './Link';
-import { ArrowRight, Gift, MapPin, Zap } from 'lucide-react';
+import { ArrowRight, Gift, MapPin } from 'lucide-react';
 import { mockWishlistItems } from '../data/mockWishlists';
 
 const FEATURED = {
@@ -13,12 +13,6 @@ const FEATURED = {
   raised: 3_250_000,
   goal: 5_000_000,
 };
-
-const CREATOR_STACK = [
-  'https://images.pexels.com/photos/4050315/pexels-photo-4050315.jpeg?auto=compress&cs=tinysrgb&w=120',
-  'https://images.pexels.com/photos/1751731/pexels-photo-1751731.jpeg?auto=compress&cs=tinysrgb&w=120',
-  'https://images.pexels.com/photos/4386466/pexels-photo-4386466.jpeg?auto=compress&cs=tinysrgb&w=120',
-];
 
 interface LandingHeroProps {
   badge: string;
@@ -49,23 +43,11 @@ function ProductScreenshot() {
 
   return (
     <div className="lp-shot">
-      <div className="lp-shot-glow" aria-hidden />
-
-      <div className="lp-shot-float lp-shot-float--top">
-        <Zap size={14} />
-        <span>Instant Lightning payout</span>
-      </div>
-
-      <div className="lp-shot-float lp-shot-float--side">
-        <span className="lp-shot-float-value">0%</span>
-        <span className="lp-shot-float-label">Platform fees</span>
-      </div>
-
       <div className="lp-shot-device">
         <div className="lp-shot-chrome">
-          <span className="lp-shot-dot lp-shot-dot--rose" />
-          <span className="lp-shot-dot lp-shot-dot--amber" />
-          <span className="lp-shot-dot lp-shot-dot--mint" />
+          <span className="lp-shot-dot" />
+          <span className="lp-shot-dot" />
+          <span className="lp-shot-dot" />
           <span className="lp-shot-url">katoa.org/wishlist/medellin-skate-park</span>
         </div>
 
@@ -84,7 +66,6 @@ function ProductScreenshot() {
                 <span>{FEATURED.city}, {FEATURED.country}</span>
               </div>
             </div>
-            <span className="lp-shot-live">Live</span>
           </div>
 
           <div className="lp-shot-body">
@@ -94,6 +75,7 @@ function ProductScreenshot() {
                 <p className="lp-shot-creator-name">@{FEATURED.creator}</p>
                 <p className="lp-shot-creator-meta">carlos@getalby.com</p>
               </div>
+              <span className="lp-shot-live">Live</span>
             </div>
 
             <div className="lp-shot-progress">
@@ -108,7 +90,7 @@ function ProductScreenshot() {
             </div>
 
             <button type="button" className="lp-shot-cta" tabIndex={-1}>
-              <Gift size={16} />
+              <Gift size={15} />
               Send a gift
             </button>
 
@@ -145,8 +127,6 @@ export function LandingHero({
     <section className="lp-hero">
       <div className="lp-hero-bg" aria-hidden>
         <div className="lp-hero-gradient" />
-        <div className="lp-hero-blob lp-hero-blob--1" />
-        <div className="lp-hero-blob lp-hero-blob--2" />
       </div>
 
       <div className="lp-hero-inner">
@@ -168,23 +148,16 @@ export function LandingHero({
             <div className="lp-cta-row">
               <Link href="/dashboard" className="lp-btn-primary">
                 {ctaStart}
-                <ArrowRight size={18} strokeWidth={2} />
+                <ArrowRight size={17} strokeWidth={2} />
               </Link>
               <Link href="/comparison" className="lp-btn-secondary">
                 {ctaCompare}
               </Link>
             </div>
 
-            <div className="lp-hero-social">
-              <div className="lp-hero-avatars" aria-hidden>
-                {CREATOR_STACK.map((src) => (
-                  <img key={src} src={src} alt="" />
-                ))}
-              </div>
-              <p>
-                <strong>{stats.creators ?? '2.5K+'}</strong> creators earning on their terms
-              </p>
-            </div>
+            <p className="lp-hero-proof">
+              <strong>{stats.creators ?? '2.5K+'}</strong> creators · 0% fees · Lightning payouts
+            </p>
           </div>
 
           <div className="lp-hero-visual">
