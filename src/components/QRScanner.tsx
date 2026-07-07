@@ -1,6 +1,8 @@
 import { useRef } from 'react';
 import { Camera, X } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 import { Button } from './Button';
+import { useToast } from './Toast';
 
 interface QRScannerProps {
   onScan: (data: string) => void;
@@ -9,11 +11,13 @@ interface QRScannerProps {
 
 export function QRScanner({ onScan, onClose }: QRScannerProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
+  const { t } = useLanguage();
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-    alert('QR scanning from image requires additional library. Please paste the address manually.');
+    toast(t('error.qrImageScan'), 'info');
   };
 
   return (

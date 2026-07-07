@@ -11,6 +11,8 @@ import { Plus, Edit, Trash2, Settings, Gift, DollarSign, Users, FolderOpen, Glob
 import { PageMeta } from '../components/PageMeta';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { EmptyState } from '../components/EmptyState';
+import { useToast } from '../components/Toast';
+import { useLanguage } from '../contexts/LanguageContext';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 
 interface Project {
@@ -28,6 +30,8 @@ interface Project {
 
 export function DashboardPage() {
   const { user, isDemoUser } = useAuth();
+  const { toast } = useToast();
+  const { t } = useLanguage();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -206,7 +210,7 @@ export function DashboardPage() {
       setFormData({ title: '', description: '', slug: '' });
     } catch (error: any) {
       console.error('Error creating project:', error);
-      alert(error.message || 'Failed to create project');
+      toast(error.message || t('error.createProject'), 'error');
     } finally {
       setProcessing(false);
     }
@@ -225,9 +229,10 @@ export function DashboardPage() {
       await loadProjects();
       await loadStats();
       setDeleteProjectId(null);
+      toast(t('success.deleted'));
     } catch (error) {
       console.error('Error deleting project:', error);
-      alert('Failed to delete project');
+      toast(t('error.deleteProject'), 'error');
     } finally {
       setProcessing(false);
     }
@@ -274,7 +279,7 @@ export function DashboardPage() {
       console.log('Project background saved successfully');
     } catch (error) {
       console.error('Error uploading background:', error);
-      alert(`Failed to upload background: ${(error as Error).message}`);
+      toast(`${t('error.uploadBackground')}: ${(error as Error).message}`, 'error');
     } finally {
       setProcessing(false);
     }
@@ -314,7 +319,7 @@ export function DashboardPage() {
       cancelEditing();
     } catch (error) {
       console.error('Error updating project:', error);
-      alert('Failed to update project');
+      toast(t('error.updateProject'), 'error');
     } finally {
       setProcessing(false);
     }
@@ -891,9 +896,10 @@ export function DashboardPage() {
 
       <ConfirmDialog
         isOpen={deleteProjectId !== null}
-        title="Delete Project"
-        message="Are you sure you want to delete this project? This will also delete all associated wishlists."
-        confirmLabel="Delete"
+        title={t('confirm.deleteProject.title')}
+        message={t('confirm.deleteProject.message')}
+        confirmLabel={t('common.delete')}
+        cancelLabel={t('common.cancel')}
         variant="danger"
         loading={processing}
         onConfirm={() => deleteProjectId && handleDeleteProject(deleteProjectId)}

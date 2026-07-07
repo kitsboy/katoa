@@ -7,6 +7,9 @@ import { Input } from '../components/Input';
 import { Link } from '../components/Link';
 
 import { PaymentMethodManager } from '../components/PaymentMethodManager';
+import { ConfirmDialog } from '../components/ConfirmDialog';
+import { useToast } from '../components/Toast';
+import { useLanguage } from '../contexts/LanguageContext';
 import { supabase } from '../lib/supabase';
 import { parseProductUrl } from '../lib/productParser';
 import {
@@ -41,6 +44,8 @@ interface Wishlist {
 
 export function ProjectPage() {
   const { user } = useAuth();
+  const { toast } = useToast();
+  const { t } = useLanguage();
   const [project, setProject] = useState<Project | null>(null);
   const [wishlists, setWishlists] = useState<Wishlist[]>([]);
   const [loading, setLoading] = useState(true);
@@ -72,6 +77,7 @@ export function ProjectPage() {
   } | null>(null);
 
   const [parsingUrl, setParsingUrl] = useState(false);
+  const [deleteWishlistId, setDeleteWishlistId] = useState<string | null>(null);
 
   const slug = window.location.pathname.split('/').pop();
 
@@ -156,7 +162,7 @@ export function ProjectPage() {
       loadProject();
     } catch (error: any) {
       console.error('Error updating project:', error);
-      alert(error.message || 'Failed to update project');
+      toast(error.message || t('error.updateProject'), 'error');
     } finally {
       setProcessing(false);
     }
@@ -203,7 +209,7 @@ export function ProjectPage() {
       console.log('Project background saved successfully');
     } catch (error) {
       console.error('Error uploading background:', error);
-      alert(`Failed to upload background: ${(error as Error).message}`);
+      toast(`${t('error.uploadBackground')}: ${(error as Error).message}`, 'error');
     } finally {
       setProcessing(false);
     }
@@ -253,15 +259,14 @@ export function ProjectPage() {
       loadWishlists();
     } catch (error: any) {
       console.error('Error creating wishlist:', error);
-      alert(error.message || 'Failed to create wishlist');
+      toast(error.message || t('error.createWishlist'), 'error');
     } finally {
       setProcessing(false);
     }
   }
 
   async function handleDeleteWishlist(id: string) {
-    if (!confirm('Are you sure you want to delete this wishlist?')) return;
-
+    setProcessing(true);
     try {
       const { error } = await supabase
         .from('wishlists')
@@ -269,10 +274,14 @@ export function ProjectPage() {
         .eq('id', id);
 
       if (error) throw error;
+      setDeleteWishlistId(null);
       loadWishlists();
+      toast(t('success.deleted'));
     } catch (error) {
       console.error('Error deleting wishlist:', error);
-      alert('Failed to delete wishlist');
+      toast(t('error.deleteWishlist'), 'error');
+    } finally {
+      setProcessing(false);
     }
   }
 
@@ -311,7 +320,7 @@ export function ProjectPage() {
       loadWishlists();
     } catch (error: any) {
       console.error('Error updating wishlist:', error);
-      alert(error.message || 'Failed to update wishlist');
+      toast(error.message || t('error.updateWishlist'), 'error');
     } finally {
       setProcessing(false);
     }
@@ -760,8 +769,9 @@ export function ProjectPage() {
                       </Button>
                       <Button
                         variant="outline"
-                        onClick={() => handleDeleteWishlist(wishlist.id)}
+                        onClick={() => setDeleteWishlistId(wishlist.id)}
                         className="border-white/10 text-gray-300 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/50 px-5"
+                        aria-label={t('confirm.deleteWishlist.title')}
                       >
                         <Trash2 size={20} />
                       </Button>
@@ -850,6 +860,18 @@ export function ProjectPage() {
           </div>
         </form>
       </Modal>
+
+      <ConfirmDialog
+        isOpen={deleteWishlistId !== null}
+        title={t('confirm.deleteWishlist.title')}
+        message={t('confirm.deleteWishlist.message')}
+        confirmLabel={t('common.delete')}
+        cancelLabel={t('common.cancel')}
+        variant="danger"
+        loading={processing}
+        onConfirm={() => deleteWishlistId && handleDeleteWishlist(deleteWishlistId)}
+        onCancel={() => setDeleteWishlistId(null)}
+      />
     </div>
   );
 }

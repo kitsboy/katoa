@@ -9,6 +9,8 @@ import { Link } from '../components/Link';
 import { supabase } from '../lib/supabase';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { ReferralLinkGenerator } from '../components/ReferralLinkGenerator';
+import { useToast } from '../components/Toast';
+import { useLanguage } from '../contexts/LanguageContext';
 import {
   User, Wallet, MapPin,
   Settings as SettingsIcon, Save, Upload, Camera, Zap, Check, AlertCircle, LayoutDashboard,
@@ -19,6 +21,8 @@ type Tab = 'profile' | 'wallet' | 'projects' | 'shipping' | 'advanced';
 
 export function SettingsPage() {
   const { user, profile, updateProfile } = useAuth();
+  const { toast } = useToast();
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<Tab>('profile');
   const [processing, setProcessing] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -92,7 +96,7 @@ export function SettingsPage() {
       setTimeout(() => setShowSuccess(false), 3000);
     } catch (error) {
       console.error('Error updating profile:', error);
-      alert('Failed to update profile');
+      toast(t('error.updateProfile'), 'error');
     } finally {
       setProcessing(false);
     }
@@ -144,7 +148,7 @@ export function SettingsPage() {
     } catch (error) {
       console.error('Error uploading avatar:', error);
       setAvatarPreview(null);
-      alert(`Failed to upload avatar: ${(error as Error).message}`);
+      toast(`${t('error.uploadAvatar')}: ${(error as Error).message}`, 'error');
     } finally {
       setProcessing(false);
     }
@@ -190,7 +194,7 @@ export function SettingsPage() {
       console.log('Banner saved successfully');
     } catch (error) {
       console.error('Error uploading banner:', error);
-      alert(`Failed to upload banner: ${(error as Error).message}`);
+      toast(`${t('error.uploadBanner')}: ${(error as Error).message}`, 'error');
     } finally {
       setProcessing(false);
     }

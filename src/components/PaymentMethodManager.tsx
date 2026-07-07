@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 import { Button } from './Button';
 import { Card } from './Card';
+import { ConfirmDialog } from './ConfirmDialog';
 import { Modal } from './Modal';
 import { Input } from './Input';
 import { QRScanner } from './QRScanner';
+import { useToast } from './Toast';
 import { supabase } from '../lib/supabase';
 import {
   Plus, Edit, Trash2, Bitcoin, Zap, Hash, Shield, Star,
@@ -25,6 +28,8 @@ interface PaymentMethodManagerProps {
 }
 
 export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
+  const { t } = useLanguage();
+  const { toast } = useToast();
   const [methods, setMethods] = useState<PaymentMethod[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -40,6 +45,8 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
   });
 
   const [showQRScanner, setShowQRScanner] = useState(false);
+  const [deleteMethodId, setDeleteMethodId] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   function handleQRScan(data: string) {
     setFormData({ ...formData, address: data });
@@ -132,15 +139,14 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
       loadPaymentMethods();
     } catch (error: any) {
       console.error('Error saving payment method:', error);
-      alert(error.message || 'Failed to save payment method');
+      toast(error.message || t('error.savePaymentMethod'), 'error');
     } finally {
       setProcessing(false);
     }
   }
 
   async function handleDeleteMethod(id: string) {
-    if (!confirm('Are you sure you want to delete this payment method?')) return;
-
+    setDeleting(true);
     try {
       const { error } = await supabase
         .from('payment_methods')
@@ -148,10 +154,14 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
         .eq('id', id);
 
       if (error) throw error;
+      setDeleteMethodId(null);
       loadPaymentMethods();
+      toast(t('success.deleted'));
     } catch (error) {
       console.error('Error deleting payment method:', error);
-      alert('Failed to delete payment method');
+      toast(t('error.deletePaymentMethod'), 'error');
+    } finally {
+      setDeleting(false);
     }
   }
 
@@ -284,6 +294,7 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
                     variant="ghost"
                     onClick={() => toggleActive(method)}
                     className="text-gray-400 hover:text-white"
+                    aria-label={method.is_active ? 'Deactivate payment method' : 'Activate payment method'}
                   >
                     {method.is_active ? <X size={16} /> : <Check size={16} />}
                   </Button>
@@ -292,14 +303,16 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
                     variant="ghost"
                     onClick={() => openModal(method)}
                     className="text-gray-400 hover:text-emerald-400"
+                    aria-label="Edit payment method"
                   >
                     <Edit size={16} />
                   </Button>
                   <Button
                     size="sm"
                     variant="ghost"
-                    onClick={() => handleDeleteMethod(method.id)}
+                    onClick={() => setDeleteMethodId(method.id)}
                     className="text-red-400 hover:text-red-300"
+                    aria-label={t('confirm.deletePaymentMethod.title')}
                   >
                     <Trash2 size={16} />
                   </Button>
@@ -425,6 +438,18 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
           onClose={() => setShowQRScanner(false)}
         />
       )}
+
+      <ConfirmDialog
+        isOpen={deleteMethodId !== null}
+        title={t('confirm.deletePaymentMethod.title')}
+        message={t('confirm.deletePaymentMethod.message')}
+        confirmLabel={t('common.delete')}
+        cancelLabel={t('common.cancel')}
+        variant="danger"
+        loading={deleting}
+        onConfirm={() => deleteMethodId && handleDeleteMethod(deleteMethodId)}
+        onCancel={() => setDeleteMethodId(null)}
+      />
     </div>
   );
 }

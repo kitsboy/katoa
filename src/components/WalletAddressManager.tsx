@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { supabase } from '../lib/supabase';
 import { Button } from './Button';
 import { Card } from './Card';
+import { ConfirmDialog } from './ConfirmDialog';
+import { EmptyState } from './EmptyState';
 import { QRScanner } from './QRScanner';
+import { useToast } from './Toast';
 import { Wallet, Plus, Trash2, QrCode, Edit2, Check, X, Zap, Bitcoin, Shield, Globe } from 'lucide-react';
 
 interface WalletAddress {
@@ -17,6 +21,8 @@ interface WalletAddress {
 
 export function WalletAddressManager() {
   const { user } = useAuth();
+  const { t } = useLanguage();
+  const { toast } = useToast();
   const [addresses, setAddresses] = useState<WalletAddress[]>([]);
   const [loading, setLoading] = useState(true);
   const [showScanner, setShowScanner] = useState(false);
@@ -27,6 +33,8 @@ export function WalletAddressManager() {
     address_value: '',
     label: '',
   });
+  const [deleteAddressId, setDeleteAddressId] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -70,13 +78,12 @@ export function WalletAddressManager() {
       loadAddresses();
     } catch (error) {
       console.error('Error adding address:', error);
-      alert('Failed to add address');
+      toast(t('error.addAddress'), 'error');
     }
   }
 
   async function handleDeleteAddress(id: string) {
-    if (!confirm('Are you sure you want to delete this address?')) return;
-
+    setDeleting(true);
     try {
       const { error } = await supabase
         .from('wallet_addresses')
@@ -84,10 +91,14 @@ export function WalletAddressManager() {
         .eq('id', id);
 
       if (error) throw error;
+      setDeleteAddressId(null);
       loadAddresses();
+      toast(t('success.deleted'));
     } catch (error) {
       console.error('Error deleting address:', error);
-      alert('Failed to delete address');
+      toast(t('error.deleteAddress'), 'error');
+    } finally {
+      setDeleting(false);
     }
   }
 
@@ -271,13 +282,13 @@ export function WalletAddressManager() {
         )}
 
         {addresses.length === 0 ? (
-          <div className="text-center py-12">
-            <Wallet size={48} className="mx-auto text-gray-500 mb-4" />
-            <p className="text-gray-400 mb-2">No payment addresses yet</p>
-            <p className="text-sm text-gray-500">
-              Add your first address to start receiving Bitcoin payments
-            </p>
-          </div>
+          <EmptyState
+            icon={<Wallet size={32} />}
+            title="No payment addresses yet"
+            description="Add your first address to start receiving Bitcoin payments"
+            actionLabel="Add Address"
+            onAction={() => setShowAddForm(true)}
+          />
         ) : (
           <div className="space-y-3">
             {addresses.map((address) => (
@@ -330,22 +341,22 @@ export function WalletAddressManager() {
                   <div className="flex gap-1">
                     <button
                       onClick={() => setEditingId(address.id)}
-                      className="p-2 text-gray-400 hover:text-white transition-colors"
-                      title="Edit label"
+                      className="p-2 text-gray-400 hover:text-white transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center touch-manipulation"
+                      aria-label="Edit label"
                     >
                       <Edit2 size={16} />
                     </button>
                     <button
                       onClick={() => handleToggleActive(address.id, address.is_active)}
-                      className="p-2 text-gray-400 hover:text-emerald-400 transition-colors"
-                      title={address.is_active ? 'Deactivate' : 'Activate'}
+                      className="p-2 text-gray-400 hover:text-emerald-400 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center touch-manipulation"
+                      aria-label={address.is_active ? 'Deactivate address' : 'Activate address'}
                     >
                       {address.is_active ? <Check size={16} /> : <X size={16} />}
                     </button>
                     <button
-                      onClick={() => handleDeleteAddress(address.id)}
-                      className="p-2 text-gray-400 hover:text-red-400 transition-colors"
-                      title="Delete"
+                      onClick={() => setDeleteAddressId(address.id)}
+                      className="p-2 text-gray-400 hover:text-red-400 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center touch-manipulation"
+                      aria-label={t('confirm.deleteAddress.title')}
                     >
                       <Trash2 size={16} />
                     </button>
@@ -366,6 +377,18 @@ export function WalletAddressManager() {
           onClose={() => setShowScanner(false)}
         />
       )}
+
+      <ConfirmDialog
+        isOpen={deleteAddressId !== null}
+        title={t('confirm.deleteAddress.title')}
+        message={t('confirm.deleteAddress.message')}
+        confirmLabel={t('common.delete')}
+        cancelLabel={t('common.cancel')}
+        variant="danger"
+        loading={deleting}
+        onConfirm={() => deleteAddressId && handleDeleteAddress(deleteAddressId)}
+        onCancel={() => setDeleteAddressId(null)}
+      />
     </div>
   );
 }
