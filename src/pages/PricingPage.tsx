@@ -4,6 +4,7 @@ import { Button } from '../components/Button';
 import { Link } from '../components/Link';
 import { FeeComparison } from '../components/FeeComparison';
 import { PageMeta } from '../components/PageMeta';
+import { Breadcrumbs } from '../components/Breadcrumbs';
 import { SectionHeader } from '../components/SectionHeader';
 import { GlassCallout } from '../components/GlassCallout';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -222,8 +223,11 @@ export function PricingPage() {
         description="KATOA pricing: $0/month, 0% platform fees forever. Keep 100% of your Bitcoin earnings on Lightning."
         path="/pricing"
       />
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-20">
+        <Breadcrumbs items={[{ label: t('pricing.title') }]} />
+      </div>
       {/* Hero */}
-      <section ref={heroRef} className="relative pt-24 sm:pt-28 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <section ref={heroRef} className="relative pt-8 sm:pt-12 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-20 left-1/4 w-72 h-72 bg-bitcoin-orange-500/10 rounded-full blur-3xl" />
           <div className="absolute top-32 right-1/4 w-96 h-96 bg-neon-cyan-500/8 rounded-full blur-3xl" />

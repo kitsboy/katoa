@@ -32,4 +32,5 @@ export const STORAGE_KEYS = {
   giftDraft: 'katoa_gift_draft',
   authTab: 'katoa_auth_tab',
   wishlistTheme: (slug: string) => `katoa_wishlist_theme_${slug}`,
+  wishlistItemOrder: (slug: string) => `katoa_wishlist_order_${slug}`,
 } as const;

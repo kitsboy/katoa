@@ -14,9 +14,10 @@ import { getStorage, setStorage, STORAGE_KEYS } from '../lib/storage';
 import { copyToClipboard } from '../lib/clipboard';
 import { getQrImageUrl, lightningQrData } from '../lib/qr';
 import { Breadcrumbs, BreadcrumbItem } from '../components/Breadcrumbs';
+import { PageMeta } from '../components/PageMeta';
 import { PaymentMethodTabs, PaymentTab } from '../components/PaymentMethodTabs';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Gift, ExternalLink, Zap, Bitcoin, Check, Copy, MapPin, QrCode, ArrowLeft, Heart, TrendingUp, Package } from 'lucide-react';
+import { Gift, ExternalLink, Zap, Bitcoin, Check, Copy, MapPin, QrCode, ArrowLeft, Heart, TrendingUp, Package, ChevronUp, ChevronDown } from 'lucide-react';
 
 const SAT_PRESETS = [
   { label: '1K', value: 1000 },
@@ -165,7 +166,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
         } as Wishlist);
 
         const mockItems = mockWishlistItems[mockWishlist.id] || [];
-        setItems(mockItems as any);
+        setItems(applyItemOrder(mockItems as WishlistItem[], slug));
 
         setLoading(false);
         return;
@@ -206,12 +207,32 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
         .order('sort_order');
 
       if (itemsError) throw itemsError;
-      setItems(itemsData || []);
+      setItems(applyItemOrder((itemsData || []) as WishlistItem[], slug));
     } catch (error) {
       console.error('Error loading wishlist:', error);
     } finally {
       setLoading(false);
     }
+  }
+
+  function applyItemOrder(loaded: WishlistItem[], listSlug: string): WishlistItem[] {
+    const order = getStorage<string[]>(STORAGE_KEYS.wishlistItemOrder(listSlug), []);
+    if (order.length === 0) return loaded;
+    const map = new Map(loaded.map((i) => [i.id, i]));
+    const sorted = order.map((id) => map.get(id)).filter(Boolean) as WishlistItem[];
+    const rest = loaded.filter((i) => !order.includes(i.id));
+    return [...sorted, ...rest];
+  }
+
+  function moveItem(id: string, direction: 'up' | 'down') {
+    const idx = items.findIndex((i) => i.id === id);
+    if (idx < 0) return;
+    const newIdx = direction === 'up' ? idx - 1 : idx + 1;
+    if (newIdx < 0 || newIdx >= items.length) return;
+    const next = [...items];
+    [next[idx], next[newIdx]] = [next[newIdx], next[idx]];
+    setItems(next);
+    setStorage(STORAGE_KEYS.wishlistItemOrder(slug), next.map((i) => i.id));
   }
 
   function formatSats(sats: number): string {
@@ -332,6 +353,12 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
 
   return (
     <div className="min-h-screen bg-charcoal-950 pb-24 md:pb-0" style={{ '--wishlist-accent': themeColor } as React.CSSProperties}>
+      <PageMeta
+        title={wishlist.title}
+        description={wishlist.description?.slice(0, 160) || `Support ${wishlist.creator.username}'s wishlist with Bitcoin on KATOA.`}
+        path={`/wishlist/${slug}`}
+        image={wishlist.cover_image || undefined}
+      />
       {isDemoWishlist && (
         <div className="bg-bitcoin-orange-500/10 border-b border-bitcoin-orange-500/30 px-4 py-2 text-center text-sm text-bitcoin-orange-200">
           Demo wishlist — payments auto-complete after 3 seconds for preview.
@@ -557,8 +584,32 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
                       </div>
                     )}
                     <div className="p-8 space-y-5">
+                      <div className="flex items-start justify-between gap-2">
+                        <h3 className="text-2xl font-black text-white mb-3 line-clamp-2 flex-1">{item.title}</h3>
+                        {items.length > 1 && (
+                          <div className="flex flex-col gap-1 shrink-0">
+                            <button
+                              type="button"
+                              onClick={() => moveItem(item.id, 'up')}
+                              disabled={items.indexOf(item) === 0}
+                              className="p-2 rounded-lg bg-white/5 border border-white/10 text-gray-400 hover:text-white disabled:opacity-30 min-h-[36px] min-w-[36px] flex items-center justify-center touch-manipulation"
+                              aria-label="Move item up"
+                            >
+                              <ChevronUp size={16} />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => moveItem(item.id, 'down')}
+                              disabled={items.indexOf(item) === items.length - 1}
+                              className="p-2 rounded-lg bg-white/5 border border-white/10 text-gray-400 hover:text-white disabled:opacity-30 min-h-[36px] min-w-[36px] flex items-center justify-center touch-manipulation"
+                              aria-label="Move item down"
+                            >
+                              <ChevronDown size={16} />
+                            </button>
+                          </div>
+                        )}
+                      </div>
                       <div>
-                        <h3 className="text-2xl font-black text-white mb-3 line-clamp-2">{item.title}</h3>
                         <p className="text-gray-300 leading-relaxed">{item.description}</p>
                       </div>
 

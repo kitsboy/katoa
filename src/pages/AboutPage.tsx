@@ -1,12 +1,22 @@
-import { Shield, Zap, Globe, Users, Heart, TrendingUp, Lock, DollarSign, X } from 'lucide-react';
+import { useState } from 'react';
+import { Shield, Zap, Globe, Users, Heart, TrendingUp, Lock, DollarSign, X, ChevronDown } from 'lucide-react';
 import { Card } from '../components/Card';
 import { Link } from '../components/Link';
 import { Button } from '../components/Button';
 import { PageMeta } from '../components/PageMeta';
 import { useLanguage } from '../contexts/LanguageContext';
 
+const PROBLEM_PLATFORMS = [
+  { id: 'onlyfans', fee: '20%', name: 'OnlyFans', cardClass: 'bg-red-900/20 border-red-500/30', feeClass: 'text-red-400', reqClass: 'text-red-300', borderClass: 'border-red-500/20', body: <>A $10k/month creator loses <span className="text-red-400 font-bold">$24,000 per year</span> to fees.</>, requires: 'Bank account + KYC' },
+  { id: 'throne', fee: '10%', name: 'Throne', cardClass: 'bg-orange-900/20 border-orange-500/30', feeClass: 'text-orange-400', reqClass: 'text-orange-300', borderClass: 'border-orange-500/20', body: 'Plus currency conversion. Plus withdrawal delays. Limited to 10 countries.', requires: 'Bank account + KYC' },
+  { id: 'linktree', fee: '9%', name: 'Linktree', cardClass: 'bg-yellow-900/20 border-yellow-500/30', feeClass: 'text-yellow-400', reqClass: 'text-yellow-300', borderClass: 'border-yellow-500/20', body: "Or pay $40/month for 0% fees. Either way, they're taking your money.", requires: 'Bank account + payment processor' },
+  { id: 'kickstarter', fee: '8-10%', name: 'Kickstarter', cardClass: 'bg-blue-900/20 border-blue-500/30', feeClass: 'text-blue-400', reqClass: 'text-blue-300', borderClass: 'border-blue-500/20', body: <>Plus <span className="text-blue-400 font-bold">$5K-25K fulfillment costs</span>. All-or-nothing funding.</>, requires: 'Bank account + KYC + fulfillment' },
+  { id: 'indiegogo', fee: '8-15%', name: 'Indiegogo', cardClass: 'bg-cyan-900/20 border-cyan-500/30', feeClass: 'text-cyan-400', reqClass: 'text-cyan-300', borderClass: 'border-cyan-500/20', body: '5% holdback until delivery. 14-day payout delays. Flexible but costly.', requires: 'Bank account + KYC + fulfillment' },
+];
+
 export function AboutPage() {
   const { t } = useLanguage();
+  const [openProblem, setOpenProblem] = useState<string | null>(null);
   return (
     <div className="min-h-screen bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 text-white pt-16">
       <PageMeta
@@ -51,61 +61,39 @@ export function AboutPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Card className="p-8 bg-red-900/20 border-red-500/30">
-              <div className="text-6xl font-black text-red-400 mb-4">20%</div>
-              <h3 className="text-2xl font-bold text-white mb-3">OnlyFans</h3>
-              <p className="text-gray-300 leading-relaxed mb-3">
-                A $10k/month creator loses <span className="text-red-400 font-bold">$24,000 per year</span> to fees.
-              </p>
-              <div className="text-sm text-gray-400 border-t border-red-500/20 pt-3 mt-3">
-                <span className="text-red-300 font-semibold">Requires:</span> Bank account + KYC
-              </div>
-            </Card>
+          <div className="md:hidden space-y-2 mb-6">
+            {PROBLEM_PLATFORMS.map((p) => (
+              <Card key={p.id} className={`overflow-hidden ${p.cardClass}`}>
+                <button
+                  type="button"
+                  onClick={() => setOpenProblem(openProblem === p.id ? null : p.id)}
+                  className="w-full p-4 flex items-center justify-between text-left min-h-[48px] touch-manipulation"
+                  aria-expanded={openProblem === p.id}
+                >
+                  <span className="font-bold text-white">{p.name} — <span className={p.feeClass}>{p.fee}</span></span>
+                  <ChevronDown size={20} className={`text-gray-400 transition-transform ${openProblem === p.id ? 'rotate-180' : ''}`} />
+                </button>
+                {openProblem === p.id && (
+                  <div className="px-4 pb-4 border-t border-white/10 pt-3">
+                    <p className="text-gray-300 text-sm leading-relaxed mb-3">{p.body}</p>
+                    <p className="text-xs text-gray-400"><span className={`${p.reqClass} font-semibold`}>Requires:</span> {p.requires}</p>
+                  </div>
+                )}
+              </Card>
+            ))}
+          </div>
 
-            <Card className="p-8 bg-orange-900/20 border-orange-500/30">
-              <div className="text-6xl font-black text-orange-400 mb-4">10%</div>
-              <h3 className="text-2xl font-bold text-white mb-3">Throne</h3>
-              <p className="text-gray-300 leading-relaxed mb-3">
-                Plus currency conversion. Plus withdrawal delays. Limited to 10 countries.
-              </p>
-              <div className="text-sm text-gray-400 border-t border-orange-500/20 pt-3 mt-3">
-                <span className="text-orange-300 font-semibold">Requires:</span> Bank account + KYC
-              </div>
-            </Card>
-
-            <Card className="p-8 bg-yellow-900/20 border-yellow-500/30">
-              <div className="text-6xl font-black text-yellow-400 mb-4">9%</div>
-              <h3 className="text-2xl font-bold text-white mb-3">Linktree</h3>
-              <p className="text-gray-300 leading-relaxed mb-3">
-                Or pay $40/month for 0% fees. Either way, they're taking your money.
-              </p>
-              <div className="text-sm text-gray-400 border-t border-yellow-500/20 pt-3 mt-3">
-                <span className="text-yellow-300 font-semibold">Requires:</span> Bank account + payment processor
-              </div>
-            </Card>
-
-            <Card className="p-8 bg-blue-900/20 border-blue-500/30">
-              <div className="text-6xl font-black text-blue-400 mb-4">8-10%</div>
-              <h3 className="text-2xl font-bold text-white mb-3">Kickstarter</h3>
-              <p className="text-gray-300 leading-relaxed mb-3">
-                Plus <span className="text-blue-400 font-bold">$5K-25K fulfillment costs</span>. All-or-nothing funding.
-              </p>
-              <div className="text-sm text-gray-400 border-t border-blue-500/20 pt-3 mt-3">
-                <span className="text-blue-300 font-semibold">Requires:</span> Bank account + KYC + fulfillment
-              </div>
-            </Card>
-
-            <Card className="p-8 bg-cyan-900/20 border-cyan-500/30">
-              <div className="text-6xl font-black text-cyan-400 mb-4">8-15%</div>
-              <h3 className="text-2xl font-bold text-white mb-3">Indiegogo</h3>
-              <p className="text-gray-300 leading-relaxed mb-3">
-                5% holdback until delivery. 14-day payout delays. Flexible but costly.
-              </p>
-              <div className="text-sm text-gray-400 border-t border-cyan-500/20 pt-3 mt-3">
-                <span className="text-cyan-300 font-semibold">Requires:</span> Bank account + KYC + fulfillment
-              </div>
-            </Card>
+          <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {PROBLEM_PLATFORMS.map((p) => (
+              <Card key={p.id} className={`p-8 ${p.cardClass}`}>
+                <div className={`text-6xl font-black ${p.feeClass} mb-4`}>{p.fee}</div>
+                <h3 className="text-2xl font-bold text-white mb-3">{p.name}</h3>
+                <p className="text-gray-300 leading-relaxed mb-3">{p.body}</p>
+                <div className={`text-sm text-gray-400 border-t ${p.borderClass} pt-3 mt-3`}>
+                  <span className={`${p.reqClass} font-semibold`}>Requires:</span> {p.requires}
+                </div>
+              </Card>
+            ))}
 
             <Card className="p-8 bg-emerald-900/30 border-emerald-500/50 relative overflow-hidden">
               <div className="absolute top-0 right-0 px-3 py-1 bg-emerald-500 text-white text-xs font-bold rounded-bl-lg">

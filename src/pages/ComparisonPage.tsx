@@ -5,6 +5,7 @@ import { Button } from '../components/Button';
 import { Link } from '../components/Link';
 import { FeeComparison } from '../components/FeeComparison';
 import { PageMeta } from '../components/PageMeta';
+import { Breadcrumbs } from '../components/Breadcrumbs';
 import { useLanguage } from '../contexts/LanguageContext';
 import { formatNumber } from '../lib/i18nFormat';
 
@@ -34,6 +35,14 @@ export function ComparisonPage() {
       if (num > 0) setMonthlyEarnings(num);
     }
   }, []);
+
+  useEffect(() => {
+    if (monthlyEarnings <= 0) return;
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('earnings') === String(monthlyEarnings)) return;
+    url.searchParams.set('earnings', String(monthlyEarnings));
+    window.history.replaceState({}, '', `${url.pathname}${url.search}`);
+  }, [monthlyEarnings]);
 
   const savings = useMemo(() => calculateSavings(monthlyEarnings), [monthlyEarnings]);
 
@@ -133,6 +142,13 @@ export function ComparisonPage() {
         path="/comparison"
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
+        <Breadcrumbs
+          items={[
+            { label: t('footer.pricing'), href: '/pricing' },
+            { label: t('comparison.hero.highlight').replace('?', '') },
+          ]}
+          className="mb-6"
+        />
         <div className="text-center mb-16 animate-slide-up">
           <div className="inline-flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-emerald-500/30 rounded-full mb-6">
             <Shield className="text-emerald-400" size={18} />
@@ -152,6 +168,27 @@ export function ComparisonPage() {
             {t('comparison.hero.subtitle')}
           </p>
         </div>
+
+        <Card className="mb-8 p-6 sm:p-8 bg-white/[0.03] border border-white/10">
+          <label htmlFor="comparison-earnings" className="block text-sm font-medium text-gray-300 mb-3">
+            Your monthly earnings (USD)
+          </label>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+            <input
+              id="comparison-earnings"
+              type="range"
+              min={1000}
+              max={100000}
+              step={1000}
+              value={monthlyEarnings}
+              onChange={(e) => setMonthlyEarnings(Number(e.target.value))}
+              className="flex-1 accent-emerald-500 min-h-[44px]"
+            />
+            <span className="text-2xl font-black text-white tabular-nums shrink-0">
+              ${formatNumber(monthlyEarnings)}
+            </span>
+          </div>
+        </Card>
 
         {monthlyEarnings > 0 && (
           <Card className="mb-12 p-6 sm:p-8 bg-emerald-500/10 border-2 border-emerald-500/30 animate-slide-up">
