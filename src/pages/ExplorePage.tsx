@@ -60,6 +60,32 @@ const defaultFilters: ExploreFilters = {
   sortBy: 'recent',
 };
 
+const SORT_OPTIONS = new Set(['recent', 'trending', 'funded', 'goal']);
+
+function readExploreFiltersFromUrl(): {
+  filters: ExploreFilters;
+  showMap: boolean;
+  favoritesOnly: boolean;
+} {
+  const params = new URLSearchParams(window.location.search);
+  const sort = params.get('sort');
+  return {
+    filters: {
+      searchTerm: params.get('search') ?? '',
+      selectedCountry: params.get('country') ?? '',
+      selectedCategory: params.get('category') ?? '',
+      sortBy: sort && SORT_OPTIONS.has(sort) ? sort : 'recent',
+    },
+    showMap: params.get('map') === '1' || params.get('map') === 'true',
+    favoritesOnly: params.get('favorites') === '1' || params.get('favorites') === 'true',
+  };
+}
+
+function hasUrlExploreFilters(): boolean {
+  const params = new URLSearchParams(window.location.search);
+  return ['search', 'country', 'category', 'sort', 'map', 'favorites'].some((key) => params.has(key));
+}
+
 const PAGE_SIZE = 12;
 
 const WishlistCard = memo(function WishlistCard({
@@ -241,19 +267,31 @@ function FilterFields({
 
 export function ExplorePage() {
   const { t } = useLanguage();
+  const urlState = readExploreFiltersFromUrl();
   const savedFilters = getStorage<ExploreFilters>(STORAGE_KEYS.exploreFilters, defaultFilters);
+  const useUrlFilters = hasUrlExploreFilters();
 
   const [wishlists, setWishlists] = useState<Wishlist[]>([]);
   const [filteredWishlists, setFilteredWishlists] = useState<Wishlist[]>([]);
   const [loading, setLoading] = useState(true);
   const [usingMockData, setUsingMockData] = useState(false);
-  const [searchTerm, setSearchTerm] = useState(savedFilters.searchTerm);
-  const [debouncedSearch, setDebouncedSearch] = useState(savedFilters.searchTerm);
-  const [selectedCountry, setSelectedCountry] = useState(savedFilters.selectedCountry);
-  const [selectedCategory, setSelectedCategory] = useState(savedFilters.selectedCategory);
-  const [sortBy, setSortBy] = useState(savedFilters.sortBy);
+  const [searchTerm, setSearchTerm] = useState(
+    useUrlFilters ? urlState.filters.searchTerm : savedFilters.searchTerm
+  );
+  const [debouncedSearch, setDebouncedSearch] = useState(
+    useUrlFilters ? urlState.filters.searchTerm : savedFilters.searchTerm
+  );
+  const [selectedCountry, setSelectedCountry] = useState(
+    useUrlFilters ? urlState.filters.selectedCountry : savedFilters.selectedCountry
+  );
+  const [selectedCategory, setSelectedCategory] = useState(
+    useUrlFilters ? urlState.filters.selectedCategory : savedFilters.selectedCategory
+  );
+  const [sortBy, setSortBy] = useState(
+    useUrlFilters ? urlState.filters.sortBy : savedFilters.sortBy
+  );
   const [showMap, setShowMap] = useState(() =>
-    getStorage<boolean>(STORAGE_KEYS.exploreShowMap, false)
+    useUrlFilters ? urlState.showMap : getStorage<boolean>(STORAGE_KEYS.exploreShowMap, false)
   );
 
   useEffect(() => {
@@ -265,7 +303,7 @@ export function ExplorePage() {
     getStorage<string[]>(STORAGE_KEYS.exploreFavorites, [])
   );
   const [favoritesOnly, setFavoritesOnly] = useState(() =>
-    getStorage<boolean>(STORAGE_KEYS.exploreFavoritesOnly, false)
+    useUrlFilters ? urlState.favoritesOnly : getStorage<boolean>(STORAGE_KEYS.exploreFavoritesOnly, false)
   );
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
@@ -299,6 +337,36 @@ export function ExplorePage() {
       sortBy,
     });
   }, [searchTerm, selectedCountry, selectedCategory, sortBy]);
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    const params = url.searchParams;
+
+    if (searchTerm) params.set('search', searchTerm);
+    else params.delete('search');
+
+    if (selectedCountry) params.set('country', selectedCountry);
+    else params.delete('country');
+
+    if (selectedCategory) params.set('category', selectedCategory);
+    else params.delete('category');
+
+    if (sortBy !== 'recent') params.set('sort', sortBy);
+    else params.delete('sort');
+
+    if (showMap) params.set('map', '1');
+    else params.delete('map');
+
+    if (favoritesOnly) params.set('favorites', '1');
+    else params.delete('favorites');
+
+    const nextSearch = params.toString();
+    const nextUrl = `${url.pathname}${nextSearch ? `?${nextSearch}` : ''}`;
+    const currentUrl = `${url.pathname}${url.search}`;
+    if (currentUrl !== nextUrl) {
+      window.history.replaceState({}, '', nextUrl);
+    }
+  }, [searchTerm, selectedCountry, selectedCategory, sortBy, showMap, favoritesOnly]);
 
   async function loadCategories() {
     try {

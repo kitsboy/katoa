@@ -19,10 +19,10 @@ export function ContactPage() {
 
   const validate = () => {
     const e: Record<string, string> = {};
-    if (!formData.name.trim()) e.name = 'Name is required';
-    if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) e.email = 'Valid email required';
-    if (!formData.subject.trim()) e.subject = 'Subject is required';
-    if (formData.message.trim().length < 10) e.message = 'Message must be at least 10 characters';
+    if (!formData.name.trim()) e.name = t('contact.error.name');
+    if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) e.email = t('contact.error.email');
+    if (!formData.subject.trim()) e.subject = t('contact.error.subject');
+    if (formData.message.trim().length < 10) e.message = t('contact.error.message');
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -107,13 +107,16 @@ export function ContactPage() {
                 id="contact-message"
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                className="w-full px-4 py-3 min-h-[140px] bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-neon-cyan-500/50 resize-none text-base"
+                className={`w-full px-4 py-3 min-h-[140px] bg-white/5 border rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-neon-cyan-500/50 resize-none text-base ${
+                  errors.message ? 'border-red-500/50 focus:ring-red-500/50' : 'border-white/10'
+                }`}
                 rows={5}
                 required
                 autoComplete="off"
                 aria-invalid={errors.message ? true : undefined}
+                aria-describedby={errors.message ? 'contact-message-error' : undefined}
               />
-              {errors.message && <p className="mt-1 text-sm text-red-400" role="alert">{errors.message}</p>}
+              {errors.message && <p id="contact-message-error" className="mt-1 text-sm text-red-400" role="alert">{errors.message}</p>}
             </div>
             <Button type="submit" variant="bitcoin" className="w-full min-h-[52px] touch-manipulation">
               <Send size={18} className="mr-2" /> {t('contact.send')}

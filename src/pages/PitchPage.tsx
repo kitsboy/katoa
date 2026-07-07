@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, TouchEvent } from 'react';
 import { Link } from '../components/Link';
 import { PageMeta } from '../components/PageMeta';
 import { Button } from '../components/Button';
+import { useLanguage } from '../contexts/LanguageContext';
 import { ChevronLeft, ChevronRight, Zap } from 'lucide-react';
 
 const slides = [
@@ -89,6 +90,7 @@ const slides = [
 ];
 
 export function PitchPage() {
+  const { t } = useLanguage();
   const [current, setCurrent] = useState(0);
   const touchStart = useRef(0);
 
@@ -119,8 +121,8 @@ export function PitchPage() {
   return (
     <div className="min-h-[100dvh] bg-charcoal-950 text-white overflow-hidden">
       <PageMeta
-        title="Pitch Deck"
-        description="KATOA marketing presentation — zero-fee Bitcoin creator platform."
+        title={t('pitch.metaTitle')}
+        description={t('pitch.metaDesc')}
         path="/pitch"
         noindex
       />
@@ -134,10 +136,13 @@ export function PitchPage() {
         aria-label="KATOA pitch deck"
       >
         <p className="sr-only" aria-live="polite">
-          Slide {current + 1} of {slides.length}: {slide.title}
+          {t('pitch.slideAnnouncement')
+            .replace('${current}', String(current + 1))
+            .replace('${total}', String(slides.length))
+            .replace('${title}', slide.title)}
         </p>
         <p className="hidden sm:block text-center text-xs text-gray-500 px-4 pt-2">
-          Use arrow keys or swipe to navigate
+          {t('pitch.navHint')}
         </p>
         <div className="flex-1 flex flex-col justify-center px-4 sm:px-8 py-8 max-w-2xl mx-auto w-full">
           <p className="text-[10px] uppercase tracking-[0.2em] text-neon-cyan-400 font-semibold mb-3">
@@ -262,12 +267,12 @@ export function PitchPage() {
                   <Link href="/auth">
                     <Button variant="bitcoin" size="lg" className="w-full gap-2">
                       <Zap size={18} />
-                      Start Earning 100%
+                      {t('pitch.startEarning')}
                     </Button>
                   </Link>
                   <Link href="/comparison?earnings=10000">
                     <Button variant="outline" size="lg" className="w-full">
-                      Compare Platforms
+                      {t('pitch.comparePlatforms')}
                     </Button>
                   </Link>
                 </div>
@@ -282,7 +287,7 @@ export function PitchPage() {
             onClick={() => go(-1)}
             disabled={current === 0}
             className="p-3 rounded-xl bg-white/5 border border-white/10 disabled:opacity-30 touch-manipulation"
-            aria-label="Previous slide"
+            aria-label={t('pitch.prevSlide')}
           >
             <ChevronLeft size={22} />
           </button>
@@ -296,7 +301,7 @@ export function PitchPage() {
                 className={`h-1.5 rounded-full transition-all touch-manipulation ${
                   i === current ? 'w-6 bg-neon-cyan-400' : 'w-1.5 bg-white/20'
                 }`}
-                aria-label={`Go to slide ${i + 1}`}
+                aria-label={t('pitch.goToSlide').replace('${n}', String(i + 1))}
               />
             ))}
           </div>
@@ -306,7 +311,7 @@ export function PitchPage() {
             onClick={() => go(1)}
             disabled={current === slides.length - 1}
             className="p-3 rounded-xl bg-white/5 border border-white/10 disabled:opacity-30 touch-manipulation"
-            aria-label="Next slide"
+            aria-label={t('pitch.nextSlide')}
           >
             <ChevronRight size={22} />
           </button>

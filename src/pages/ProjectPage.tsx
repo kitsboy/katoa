@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
@@ -72,14 +72,7 @@ export function ProjectPage() {
 
   const slug = window.location.pathname.split('/').pop();
 
-  useEffect(() => {
-    if (user && slug) {
-      loadProject();
-      loadWishlists();
-    }
-  }, [user, slug]);
-
-  async function loadProject() {
+  const loadProject = useCallback(async () => {
     if (!slug) return;
     try {
       const { data, error } = await supabase
@@ -108,9 +101,9 @@ export function ProjectPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [slug, user]);
 
-  async function loadWishlists() {
+  const loadWishlists = useCallback(async () => {
     if (!slug) return;
     try {
       const { data: projectData } = await supabase
@@ -133,7 +126,14 @@ export function ProjectPage() {
     } catch (error) {
       console.error('Error loading wishlists:', error);
     }
-  }
+  }, [slug]);
+
+  useEffect(() => {
+    if (user && slug) {
+      loadProject();
+      loadWishlists();
+    }
+  }, [user, slug, loadProject, loadWishlists]);
 
   async function handleUpdateProject(e: React.FormEvent) {
     e.preventDefault();
@@ -157,9 +157,10 @@ export function ProjectPage() {
 
       setEditing(false);
       loadProject();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error updating project:', error);
-      toast(error.message || t('error.updateProject'), 'error');
+      const message = error instanceof Error ? error.message : t('error.updateProject');
+      toast(message, 'error');
     } finally {
       setProcessing(false);
     }
@@ -249,9 +250,10 @@ export function ProjectPage() {
       setShowCreateWishlist(false);
       setWishlistForm({ title: '', description: '', slug: '', url: '' });
       loadWishlists();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error creating wishlist:', error);
-      toast(error.message || t('error.createWishlist'), 'error');
+      const message = error instanceof Error ? error.message : t('error.createWishlist');
+      toast(message, 'error');
     } finally {
       setProcessing(false);
     }
@@ -310,9 +312,10 @@ export function ProjectPage() {
       setEditingWishlist(null);
       setEditWishlistForm(null);
       loadWishlists();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error updating wishlist:', error);
-      toast(error.message || t('error.updateWishlist'), 'error');
+      const message = error instanceof Error ? error.message : t('error.updateWishlist');
+      toast(message, 'error');
     } finally {
       setProcessing(false);
     }

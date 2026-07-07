@@ -5,7 +5,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
 import { Link } from '../components/Link';
-import { Gift, Mail, Lock, User, Zap, ArrowLeft } from 'lucide-react';
+import { Gift, Mail, Lock, User, Zap, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { PageMeta } from '../components/PageMeta';
 import { STORAGE_KEYS } from '../lib/storage';
 
@@ -32,6 +32,7 @@ export function AuthPage() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -251,7 +252,7 @@ export function AuthPage() {
                     value={formData.username}
                     onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                     className="w-full pl-10 pr-4 py-3 min-h-[44px] bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-neon-cyan-500/50 text-base"
-                    placeholder="johndoe"
+                    placeholder={t('auth.placeholder.username')}
                     autoComplete="username"
                     required
                   />
@@ -270,7 +271,7 @@ export function AuthPage() {
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-neon-cyan-500/50 min-h-[44px] text-base"
-                  placeholder="you@example.com"
+                  placeholder={t('auth.placeholder.email')}
                   autoComplete="email"
                   required
                 />
@@ -284,15 +285,23 @@ export function AuthPage() {
               <div className="relative">
                 <Lock size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-neon-cyan-500/50 min-h-[44px] text-base"
-                  placeholder="••••••••"
+                  className="w-full pl-10 pr-12 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-neon-cyan-500/50 min-h-[44px] text-base"
+                  placeholder={t('auth.placeholder.password')}
                   autoComplete={isSignUp ? 'new-password' : 'current-password'}
                   required
                   minLength={6}
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-500 hover:text-gray-300 transition-colors"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
               </div>
               {isSignUp && passwordStrength && (
                 <div className="mt-2" aria-live="polite">

@@ -4,12 +4,11 @@ import { PageMeta } from '../components/PageMeta';
 
 export function PrivacyPage() {
   const { t } = useLanguage();
-  const lastUpdated = "October 27, 2025";
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 text-white pt-24 pb-16">
       <PageMeta
-        title="Privacy Policy"
+        title={t('privacy.title')}
         description="KATOA Privacy Policy — how we protect your data on our privacy-first Bitcoin wishlist platform."
         path="/privacy"
       />
@@ -19,9 +18,9 @@ export function PrivacyPage() {
             <Shield size={32} className="text-white" />
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-cyan-500 bg-clip-text text-transparent">
-            Privacy Policy
+            {t('privacy.title')}
           </h1>
-          <p className="text-gray-400">Last Updated: {lastUpdated}</p>
+          <p className="text-gray-400">{t('privacy.lastUpdated')}</p>
         </div>
 
         <div className="prose prose-invert prose-blue max-w-none">

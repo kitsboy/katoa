@@ -423,7 +423,7 @@ export function SettingsPage() {
                       label="Username"
                       value={profileForm.username}
                       onChange={(e) => setProfileForm({ ...profileForm, username: e.target.value })}
-                      placeholder="johndoe"
+                      placeholder={t('settings.placeholder.username')}
                       required
                       className="bg-black border-white/10 text-white text-lg py-4"
                     />
@@ -435,7 +435,7 @@ export function SettingsPage() {
                       <textarea
                         value={profileForm.bio}
                         onChange={(e) => setProfileForm({ ...profileForm, bio: e.target.value })}
-                        placeholder="Tell the world about yourself..."
+                        placeholder={t('settings.placeholder.bio')}
                         className="w-full px-4 py-4 bg-black border border-white/10 rounded-xl text-white text-lg placeholder-gray-500 focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all"
                         rows={4}
                       />
@@ -446,7 +446,7 @@ export function SettingsPage() {
                         label="Lightning Address"
                         value={profileForm.lightning_address}
                         onChange={(e) => setProfileForm({ ...profileForm, lightning_address: e.target.value })}
-                        placeholder="username@wallet.com"
+                        placeholder={t('settings.placeholder.lightning')}
                         icon={<Zap size={18} className="text-amber-500" />}
                         className="bg-black border-white/10 text-white"
                       />
@@ -466,7 +466,7 @@ export function SettingsPage() {
                       label="Nostr Public Key"
                       value={profileForm.nostr_pubkey}
                       onChange={(e) => setProfileForm({ ...profileForm, nostr_pubkey: e.target.value })}
-                      placeholder="npub1..."
+                      placeholder={t('settings.placeholder.nostr')}
                       className="bg-black border-white/10 text-white font-mono"
                     />
 

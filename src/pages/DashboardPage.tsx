@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
@@ -68,15 +68,7 @@ export function DashboardPage() {
     creators: [],
   });
 
-  useEffect(() => {
-    if (user) {
-      loadProjects();
-      loadStats();
-      loadFollowing();
-    }
-  }, [user]);
-
-  async function loadFollowing() {
+  const loadFollowing = useCallback(async () => {
     if (!user) return;
 
     try {
@@ -127,9 +119,9 @@ export function DashboardPage() {
     } catch (error) {
       console.error('Error loading following:', error);
     }
-  }
+  }, [user]);
 
-  async function loadProjects() {
+  const loadProjects = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('projects')
@@ -167,9 +159,9 @@ export function DashboardPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [user]);
 
-  async function loadStats() {
+  const loadStats = useCallback(async () => {
     try {
       const { data: projectData, count: projectCount } = await supabase
         .from('projects')
@@ -193,7 +185,15 @@ export function DashboardPage() {
     } catch (error) {
       console.error('Error loading stats:', error);
     }
-  }
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      loadProjects();
+      loadStats();
+      loadFollowing();
+    }
+  }, [user, loadProjects, loadStats, loadFollowing]);
 
   async function handleCreateProject(e: React.FormEvent) {
     e.preventDefault();
@@ -219,9 +219,10 @@ export function DashboardPage() {
       await loadStats();
       setShowCreateModal(false);
       setFormData({ title: '', description: '', slug: '' });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error creating project:', error);
-      toast(error.message || t('error.createProject'), 'error');
+      const message = error instanceof Error ? error.message : t('error.createProject');
+      toast(message, 'error');
     } finally {
       setProcessing(false);
     }
@@ -726,7 +727,7 @@ export function DashboardPage() {
             </Card>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {(followFilter === 'all' || followFilter === 'projects') && following.projects.map((project: any) => (
+              {(followFilter === 'all' || followFilter === 'projects') && following.projects.map((project) => (
                 <Link key={project.id} href={`/project/${project.slug}`}>
                   <Card className=" hover:border-rose-500/50 transition-all duration-300 overflow-hidden group hover:shadow-[0_0_30px_rgba(244,63,94,0.2)]">
                     {project.background_url ? (
@@ -755,7 +756,7 @@ export function DashboardPage() {
                 </Link>
               ))}
 
-              {(followFilter === 'all' || followFilter === 'wishlists') && following.wishlists.map((wishlist: any) => (
+              {(followFilter === 'all' || followFilter === 'wishlists') && following.wishlists.map((wishlist) => (
                 <Link key={wishlist.id} href={`/wishlist/${wishlist.slug}`}>
                   <Card className=" hover:border-purple-500/50 transition-all duration-300 overflow-hidden group hover:shadow-[0_0_30px_rgba(168,85,247,0.2)]">
                     {wishlist.cover_image ? (
@@ -794,7 +795,7 @@ export function DashboardPage() {
                 </Link>
               ))}
 
-              {(followFilter === 'all' || followFilter === 'creators') && following.creators.map((creator: any) => (
+              {(followFilter === 'all' || followFilter === 'creators') && following.creators.map((creator) => (
                 <Link key={creator.id} href={`/profile/${creator.username}`}>
                   <Card className=" hover:border-blue-500/50 transition-all duration-300 p-6 group hover:shadow-[0_0_30px_rgba(59,130,246,0.2)]">
                     <div className="flex items-center gap-4 mb-4">
