@@ -35,6 +35,20 @@ export interface KatoaMapPin {
   cover_image?: string | null;
 }
 
+export interface BTCMapPlace {
+  id: number;
+  name: string;
+  lat: number;
+  lon: number;
+  icon?: string;
+  address?: string;
+  website?: string;
+  verified_at?: string;
+  boosted_until?: string;
+}
+
+const PLACE_SEARCH_FIELDS = 'id,name,lat,lon,icon,address,website,verified_at,boosted_until';
+
 function getApiBaseUrl(): string {
   const configured = import.meta.env.VITE_BTCMAP_API_URL;
   if (configured) return configured;
@@ -43,7 +57,7 @@ function getApiBaseUrl(): string {
   return PRODUCTION_API;
 }
 
-function getAppBaseUrl(): string {
+export function getAppBaseUrl(): string {
   return import.meta.env.VITE_BTCMAP_APP_URL || PRODUCTION_APP;
 }
 
@@ -100,6 +114,55 @@ export function mergeKatoaPinsWithMap(
       zoom: withCoords.length === 1 ? 12 : 4,
     },
   };
+}
+
+/** Map zoom → search radius (km), aligned with btcmap.org density tiers. */
+export function zoomToRadiusKm(zoom: number): number {
+  if (zoom >= 16) return 8;
+  if (zoom >= 14) return 25;
+  if (zoom >= 12) return 75;
+  if (zoom >= 10) return 200;
+  return 500;
+}
+
+/** Fetch Bitcoin-accepting merchants near a point (btcmap-api v4). */
+export async function fetchPlacesNearby(
+  lat: number,
+  lon: number,
+  radiusKm: number,
+  signal?: AbortSignal
+): Promise<BTCMapPlace[]> {
+  const base = getApiBaseUrl();
+  const params = new URLSearchParams({
+    lat: String(lat),
+    lon: String(lon),
+    radius_km: String(radiusKm),
+    fields: PLACE_SEARCH_FIELDS,
+  });
+
+  const response = await fetch(`${base}/v4/places/search/?${params}`, {
+    headers: { Accept: 'application/json' },
+    signal,
+  });
+
+  if (!response.ok) {
+    throw new Error(`BTC Map places API error: ${response.status}`);
+  }
+
+  const data = await response.json();
+  if (!Array.isArray(data)) return [];
+
+  return data.filter(
+    (p: BTCMapPlace) =>
+      typeof p.id === 'number' &&
+      typeof p.lat === 'number' &&
+      typeof p.lon === 'number' &&
+      p.name
+  );
+}
+
+export function buildBTCMapPlaceUrl(placeId: number): string {
+  return `${getAppBaseUrl()}/place/${placeId}`;
 }
 
 /** Feature flag — flip when btcmap-api proxy is configured in production. */

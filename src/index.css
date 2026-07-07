@@ -1338,7 +1338,9 @@
   font-family: inherit;
 }
 
-.katoa-pin-marker {
+.katoa-pin-marker,
+.katoa-logo-marker,
+.btc-merchant-marker {
   background: transparent !important;
   border: none !important;
 }
@@ -1349,6 +1351,366 @@
 
 .leaflet-control-zoom a {
   color: #111 !important;
+}
+
+/* ── Unified BTC Map ── */
+.unified-btcmap__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.unified-btcmap__title-block {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.unified-btcmap__title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.unified-btcmap__subtitle {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin: 0.15rem 0 0;
+}
+
+.unified-btcmap__external {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #14e6ff;
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 0.35rem 0.65rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(20, 230, 255, 0.25);
+  background: rgba(20, 230, 255, 0.06);
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.unified-btcmap__external:hover {
+  background: rgba(20, 230, 255, 0.12);
+  border-color: rgba(20, 230, 255, 0.45);
+}
+
+.unified-btcmap__frame {
+  position: relative;
+  border-radius: 1.25rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #070711;
+  box-shadow:
+    0 0 0 1px rgba(247, 147, 26, 0.08),
+    0 0 48px rgba(247, 147, 26, 0.1),
+    0 24px 48px rgba(0, 0, 0, 0.35);
+  transition: box-shadow 0.3s;
+}
+
+.unified-btcmap__frame--expanded {
+  position: fixed;
+  inset: 1rem;
+  z-index: 100;
+  height: calc(100vh - 2rem) !important;
+}
+
+.unified-btcmap__expand-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 30;
+  padding: 0.5rem;
+  border-radius: 0.75rem;
+  background: rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.unified-btcmap__toolbar {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  right: 3.5rem;
+  z-index: 25;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.unified-btcmap__layer {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #9ca3af;
+  background: rgba(7, 7, 17, 0.88);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.unified-btcmap__layer:hover {
+  border-color: rgba(255, 255, 255, 0.22);
+  color: #e5e7eb;
+}
+
+.unified-btcmap__layer--on {
+  color: #14e6ff;
+  border-color: rgba(20, 230, 255, 0.4);
+  background: rgba(20, 230, 255, 0.1);
+  box-shadow: 0 0 16px rgba(20, 230, 255, 0.15);
+}
+
+.unified-btcmap__layer--katoa.unified-btcmap__layer--on {
+  color: #f7931a;
+  border-color: rgba(247, 147, 26, 0.45);
+  background: rgba(247, 147, 26, 0.12);
+  box-shadow: 0 0 16px rgba(247, 147, 26, 0.2);
+}
+
+.unified-btcmap__layer--icon {
+  padding: 0.45rem 0.55rem;
+  margin-left: auto;
+}
+
+.unified-btcmap__layer-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.unified-btcmap__layer-dot--merchant {
+  background: #14e6ff;
+  box-shadow: 0 0 8px rgba(20, 230, 255, 0.7);
+}
+
+.unified-btcmap__layer-count {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 0.1rem 0.4rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: inherit;
+}
+
+.unified-btcmap__canvas {
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  z-index: 1;
+}
+
+.unified-btcmap__legend {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 0.75rem;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  padding: 0.4rem 0.65rem;
+  border-radius: 0.65rem;
+  font-size: 0.65rem;
+  color: #9ca3af;
+  background: rgba(7, 7, 17, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+}
+
+.unified-btcmap__legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.unified-btcmap__legend-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.unified-btcmap__legend-swatch--merchant {
+  background: #14e6ff;
+}
+
+.unified-btcmap__empty-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(7, 7, 17, 0.55);
+  pointer-events: none;
+}
+
+.unified-btcmap__error-banner {
+  position: absolute;
+  top: 3.25rem;
+  left: 0.75rem;
+  right: 0.75rem;
+  z-index: 22;
+  padding: 0.4rem 0.65rem;
+  border-radius: 0.5rem;
+  font-size: 0.7rem;
+  color: #fbbf24;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.unified-btcmap__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.unified-btcmap__chip {
+  font-size: 0.75rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  background: rgba(247, 147, 26, 0.12);
+  border: 1px solid rgba(247, 147, 26, 0.3);
+  color: #f7931a;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.unified-btcmap__chip:hover {
+  background: rgba(247, 147, 26, 0.22);
+}
+
+.unified-btcmap__attribution {
+  margin-top: 0.65rem;
+  font-size: 0.65rem;
+  color: #6b7280;
+  text-align: center;
+}
+
+/* Map pin markers */
+.katoa-logo-pin {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, #1a1a24, #0a0a0f);
+  border: 2px solid #f7931a;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  box-shadow: 0 0 16px rgba(247, 147, 26, 0.55), 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.katoa-logo-pin img {
+  transform: rotate(45deg);
+  border-radius: 4px;
+  object-fit: contain;
+}
+
+.btc-merchant-pin {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #050509;
+  background: linear-gradient(135deg, #14e6ff, #06b6d4);
+  border: 2px solid #fff;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  box-shadow: 0 0 12px rgba(20, 230, 255, 0.5);
+}
+
+.btc-merchant-pin--boosted {
+  background: linear-gradient(135deg, #fbbf24, #f7931a);
+  box-shadow: 0 0 14px rgba(251, 191, 36, 0.65);
+}
+
+/* Leaflet popups — dark theme */
+.btcmap-leaflet-popup .leaflet-popup-content-wrapper {
+  background: #0f0f18;
+  color: #e5e7eb;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+.btcmap-leaflet-popup .leaflet-popup-tip {
+  background: #0f0f18;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.btcmap-popup {
+  font-family: inherit;
+  min-width: 160px;
+}
+
+.btcmap-popup__eyebrow {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #14e6ff;
+  margin: 0 0 0.25rem;
+  font-weight: 600;
+}
+
+.btcmap-popup--katoa .btcmap-popup__eyebrow {
+  color: #f7931a;
+}
+
+.btcmap-popup__title {
+  display: block;
+  font-size: 0.9rem;
+  color: #fff;
+  margin-bottom: 0.35rem;
+}
+
+.btcmap-popup__meta {
+  font-size: 0.7rem;
+  color: #9ca3af;
+  margin: 0 0 0.5rem;
+  line-height: 1.4;
+}
+
+.btcmap-popup__link {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #14e6ff;
+  text-decoration: none;
+}
+
+.btcmap-popup__link--katoa {
+  color: #f7931a;
+}
+
+.btcmap-popup__link:hover {
+  text-decoration: underline;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .unified-btcmap__frame {
+    transition: none;
+  }
 }
 
 @keyframes shimmer {
