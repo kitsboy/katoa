@@ -1,4 +1,4 @@
-import * as Icons from 'lucide-react';
+import { getCategoryIcon } from '../lib/categoryIcons';
 
 interface CategoryBadgeProps {
   name: string;
@@ -15,7 +15,7 @@ export function CategoryBadge({
   size = 'md',
   onClick,
 }: CategoryBadgeProps) {
-  const IconComponent = (Icons as any)[icon] || Icons.Tag;
+  const IconComponent = getCategoryIcon(icon);
 
   const sizeClasses = {
     sm: 'px-2 py-1 text-xs',

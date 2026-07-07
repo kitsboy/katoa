@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { aboutComparisonEn } from '../i18n/aboutComparison.en';
 
 export type Language = 'en' | 'es' | 'pt' | 'fr' | 'de' | 'ja' | 'zh';
 
@@ -278,6 +279,7 @@ const pageStrings = {
     'explore.allProjects': 'Explore All Projects',
     'explore.loadMore': 'Load more',
     'explore.remaining': 'remaining',
+    ...aboutComparisonEn,
   },
   es: {
     'dashboard.title': 'Panel del Creador',
@@ -1068,7 +1070,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   };
 
   const t = (key: string): string => {
-    return translations[language][key] || key;
+    return translations[language][key] || translations.en[key] || key;
   };
 
   return (

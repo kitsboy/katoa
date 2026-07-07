@@ -14,21 +14,23 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <title>KATOA - Privacy-First Zero-Fee Bitcoin Commerce Platform | Lightning Network Marketplace</title>
-    <meta name="description" content="KATOA is a privacy-centric, zero-fee decentralized marketplace powered by Bitcoin Lightning Network and Nostr protocol. Create wishlists, receive gifts, and trade peer-to-peer with complete privacy." />
-    <meta name="keywords" content="Bitcoin Lightning Network, decentralized marketplace, privacy-focused commerce, zero-fee payments, Nostr commerce, BOLT 12, peer-to-peer gifting, censorship-resistant platform, Bitcoin wishlist" />
+    <title>Katoa: Zero-Fee Bitcoin Creator Platform | Lightning & Nostr</title>
+    <meta name="description" content="Create Bitcoin wishlists, receive Lightning gifts instantly, and keep 100% of earnings. Zero platform fees, no KYC, works in 195+ countries." />
+    <meta name="keywords" content="zero fee creator platform, bitcoin lightning wishlist, nostr creator support, keep 100% creator earnings, bitcoin donation platform" />
 
     <link rel="canonical" href="https://katoa.org/" />
 
-    <meta property="og:title" content="KATOA - Privacy-First Zero-Fee Bitcoin Commerce Platform" />
-    <meta property="og:description" content="Create wishlists and receive Bitcoin gifts instantly with zero fees. Privacy-centric decentralized marketplace powered by Lightning Network and Nostr." />
+    <meta property="og:title" content="Katoa: Zero-Fee Bitcoin Creator Platform" />
+    <meta property="og:description" content="Create wishlists and receive Bitcoin gifts instantly with zero fees. Privacy-first creator platform on Lightning and Nostr." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://katoa.org/" />
     <meta property="og:image" content="https://katoa.org/sats.png" />
+    <meta property="og:site_name" content="KATOA" />
+    <meta property="og:locale" content="en_US" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="KATOA - Privacy-First Zero-Fee Bitcoin Commerce" />
-    <meta name="twitter:description" content="Decentralized marketplace for wishlists and gifting. Lightning Network payments with complete privacy." />
+    <meta name="twitter:title" content="Katoa: Zero-Fee Bitcoin Creator Platform" />
+    <meta name="twitter:description" content="Zero-fee wishlists and gifting on Bitcoin Lightning. Keep 100% of creator earnings." />
     <meta name="twitter:image" content="https://katoa.org/sats.png" />
 
     <meta name="author" content="KATOA" />
@@ -40,28 +42,61 @@
       "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "KATOA",
-      "description": "Privacy-centric decentralized marketplace powered by Bitcoin Lightning Network and Nostr protocol",
+      "description": "Zero-fee Bitcoin creator platform powered by Lightning Network and Nostr",
       "url": "https://katoa.org",
       "applicationCategory": "FinanceApplication",
       "operatingSystem": "Web Browser",
       "offers": {
         "@type": "Offer",
         "price": "0",
-        "priceCurrency": "BTC"
+        "priceCurrency": "USD"
       },
       "featureList": [
         "Zero-fee Bitcoin payments",
         "Lightning Network integration",
         "Nostr protocol support",
         "Privacy-first design",
-        "Decentralized marketplace",
+        "Creator wishlists",
         "Peer-to-peer gifting"
       ]
     }
     </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "KATOA",
+      "url": "https://katoa.org",
+      "logo": "https://katoa.org/sats.png",
+      "description": "Zero-fee Bitcoin creator platform — part of the Give A Bit family",
+      "sameAs": [
+        "https://github.com/kitsboy/katoa",
+        "https://giveabit.io"
+      ]
+    }
+    </script>
+    <style>
+      #prerender-content { max-width: 48rem; margin: 0 auto; padding: 2rem 1.5rem; font-family: Inter, system-ui, sans-serif; color: #e5e7eb; }
+      #prerender-content h1 { font-size: 2rem; font-weight: 800; color: #fff; margin-bottom: 1rem; }
+      #prerender-content p { line-height: 1.6; margin-bottom: 0.75rem; color: #9ca3af; }
+      #prerender-content nav { margin-top: 1.5rem; font-size: 0.875rem; }
+      #prerender-content a { color: #22d3ee; }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <main id="prerender-content">
+        <h1>Keep 100% of Your Creator Earnings</h1>
+        <p>KATOA is a zero-fee, privacy-first Bitcoin creator platform powered by Lightning Network and Nostr.</p>
+        <p>Create wishlists, share your story, and receive instant Bitcoin support — no bank account required.</p>
+        <nav aria-label="Primary">
+          <a href="/explore">Explore Projects</a> ·
+          <a href="/about">About</a> ·
+          <a href="/comparison">Compare Platforms</a> ·
+          <a href="/pricing">Pricing</a>
+        </nav>
+      </main>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
