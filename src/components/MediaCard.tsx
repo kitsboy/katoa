@@ -1,4 +1,4 @@
-import { ReactNode, useRef, useState } from 'react';
+import { ReactNode, useEffect, useRef, useState } from 'react';
 import { Gift, Play, Volume2, VolumeX } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -45,28 +45,36 @@ export function MediaCard({
   const videoRef = useRef<HTMLVideoElement>(null);
   const [muted, setMuted] = useState(true);
   const [videoFailed, setVideoFailed] = useState(false);
+  const [previewing, setPreviewing] = useState(false);
   const prefersReducedMotion =
     typeof window !== 'undefined' &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const shouldAutoplay = autoplayOnHover && !prefersReducedMotion;
 
-  const hasVideo = Boolean(media.videoUrl) && !videoFailed;
+  const canPreview = Boolean(media.videoUrl) && !videoFailed;
+  const hasVideo = canPreview;
   const hasImage = Boolean(media.imageUrl);
 
-  const playPreview = () => {
-    if (!hasVideo || !videoRef.current) return;
-    videoRef.current.play().catch(() => undefined);
-  };
+  useEffect(() => {
+    if (!previewing || !canPreview || !videoRef.current) return;
+    videoRef.current.play().catch(() => setVideoFailed(true));
+  }, [previewing, canPreview]);
 
   const stopPreview = () => {
-    if (!hasVideo || !videoRef.current) return;
-    videoRef.current.pause();
-    videoRef.current.currentTime = 0;
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
+    setPreviewing(false);
+  };
+
+  const startPreview = () => {
+    if (!shouldAutoplay || !canPreview) return;
+    setPreviewing(true);
   };
 
   const handleMouseEnter = () => {
-    if (!shouldAutoplay || !hasVideo) return;
-    playPreview();
+    startPreview();
   };
 
   const handleMouseLeave = () => {
@@ -82,7 +90,7 @@ export function MediaCard({
       }`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onTouchStart={shouldAutoplay ? playPreview : undefined}
+      onTouchStart={shouldAutoplay ? startPreview : undefined}
       onTouchEnd={shouldAutoplay ? stopPreview : undefined}
     >
       {!hasVideo && !hasImage && (
@@ -95,8 +103,8 @@ export function MediaCard({
         <img
           src={media.imageUrl!}
           alt={media.alt}
-          className={`absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${
-            hasVideo ? 'group-hover:opacity-0' : ''
+          className={`absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${
+            previewing && canPreview ? 'opacity-0' : 'opacity-100'
           }`}
           loading="lazy"
           decoding="async"
@@ -106,17 +114,20 @@ export function MediaCard({
         />
       )}
 
-      {hasVideo && (
+      {previewing && canPreview && (
         <video
           ref={videoRef}
           src={media.videoUrl!}
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover z-[1]"
           muted={muted}
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
           poster={media.imageUrl || undefined}
-          onError={() => setVideoFailed(true)}
+          onError={() => {
+            setVideoFailed(true);
+            setPreviewing(false);
+          }}
         />
       )}
 

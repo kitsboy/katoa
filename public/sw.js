@@ -1,4 +1,4 @@
-const CACHE_NAME = 'katoa-static-v11';
+const CACHE_NAME = 'katoa-static-v12';
 const OFFLINE_URL = '/offline.html';
 
 const PRECACHE = [OFFLINE_URL, '/logo2.png', '/favicon.ico', '/manifest.json'];

@@ -1738,6 +1738,15 @@
   line-height: 1.4;
 }
 
+/* Explore grid cards — keep progress/footer visible inside stretched rows */
+.explore-wishlist-card {
+  overflow: visible !important;
+}
+
+.explore-wishlist-card > *:last-child {
+  padding-bottom: 0.25rem;
+}
+
 /* ── Creator video cards (subscription-style previews) ── */
 .creator-video-card {
   border: 1px solid rgba(0, 175, 240, 0.2);

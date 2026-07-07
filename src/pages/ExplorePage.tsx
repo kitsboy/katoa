@@ -120,16 +120,17 @@ const WishlistCard = memo(function WishlistCard({
   const w = wishlist as Wishlist & { country_flag?: string };
 
   return (
-    <Link href={`/wishlist/${wishlist.slug}`} className="group">
-      <Card hover className="overflow-hidden animate-fade-in h-full flex flex-col">
-        <MediaCard
-          media={{
-            imageUrl: wishlist.cover_image,
-            videoUrl: wishlist.cover_video_url,
-            alt: wishlist.title,
-          }}
-          aspect="wide"
-          className="!aspect-[16/11]"
+    <Link href={`/wishlist/${wishlist.slug}`} className="group block h-full min-h-0">
+      <Card hover className="animate-fade-in h-full min-h-0 flex flex-col explore-wishlist-card">
+        <div className="shrink-0 overflow-hidden rounded-t-2xl">
+          <MediaCard
+            media={{
+              imageUrl: wishlist.cover_image,
+              videoUrl: wishlist.cover_video_url,
+              alt: wishlist.title,
+            }}
+            aspect="wide"
+            className="!aspect-[16/11]"
           topLeft={
             <>
               {isTrending && <TrendingBadge type="trending" />}
@@ -173,10 +174,11 @@ const WishlistCard = memo(function WishlistCard({
               <span className="px-2 py-0.5 bg-amber-600/90 rounded text-white text-[10px] font-black">₿</span>
             </>
           }
-        />
+          />
+        </div>
 
-        <div className="p-4 sm:p-5 space-y-3 flex-1 flex flex-col">
-          <div className="flex-1">
+        <div className="p-4 sm:p-5 pb-5 flex flex-col flex-1 min-h-0 gap-3">
+          <div className="flex-1 min-h-0">
             <h3 className="text-lg font-bold text-white mb-1.5 line-clamp-1 group-hover:text-neon-cyan-400 transition-colors">
               {wishlist.title}
             </h3>
@@ -192,7 +194,7 @@ const WishlistCard = memo(function WishlistCard({
           </div>
 
           {wishlist.creator?.username && (
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-2.5 shrink-0">
               <div className="w-9 h-9 bg-gradient-to-r from-bitcoin-orange-500 to-amber-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
                 {wishlist.creator.username[0].toUpperCase()}
               </div>
@@ -201,7 +203,7 @@ const WishlistCard = memo(function WishlistCard({
           )}
 
           {wishlist.total_sats_goal > 0 && (
-            <div className="space-y-2 pt-1">
+            <div className="shrink-0 space-y-2 pt-1 pb-0.5">
               <SatsDisplay sats={wishlist.total_sats_raised} size="sm" />
               <ProgressBar
                 current={wishlist.total_sats_raised}
@@ -702,7 +704,7 @@ export function ExplorePage() {
                 {t('explore.hoverPreview')}
               </span>
             </div>
-            <div className="grid grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 max-w-3xl mx-auto lg:max-w-4xl">
+            <div className="grid grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 max-w-3xl mx-auto lg:max-w-4xl items-stretch [&>a]:min-h-0">
               {videoCreators.slice(0, 2).map((wishlist) => (
                 <CreatorVideoCard
                   key={wishlist.id}
@@ -949,7 +951,7 @@ export function ExplorePage() {
           </div>
         ) : gridWishlists.length > 0 ? (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 items-stretch [&>a]:min-h-0">
               {gridWishlists.slice(0, visibleCount).map((wishlist) =>
                 isCreatorVideoCard(wishlist) ? (
                   <CreatorVideoCard

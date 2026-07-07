@@ -48,14 +48,15 @@ export const CreatorVideoCard = memo(function CreatorVideoCard({
   const subscribers = wishlist.subscriber_count ?? Math.floor(wishlist.total_sats_raised / 1200) + 42;
 
   return (
-    <Link href={`/wishlist/${wishlist.slug}`} className="group block h-full" data-testid="creator-video-card">
+    <Link href={`/wishlist/${wishlist.slug}`} className="group block h-full min-h-0" data-testid="creator-video-card">
       <Card
         hover
-        className={`creator-video-card overflow-hidden h-full flex flex-col ${
+        className={`creator-video-card explore-wishlist-card h-full min-h-0 flex flex-col ${
           compact ? 'creator-video-card--compact' : ''
         }`}
       >
-        <MediaCard
+        <div className="shrink-0 overflow-hidden rounded-t-2xl">
+          <MediaCard
           media={{
             imageUrl: wishlist.cover_image,
             videoUrl: wishlist.cover_video_url,
@@ -101,9 +102,10 @@ export const CreatorVideoCard = memo(function CreatorVideoCard({
               {t('explore.video')}
             </span>
           }
-        />
+          />
+        </div>
 
-        <div className="p-4 flex-1 flex flex-col bg-gradient-to-b from-charcoal-900 to-charcoal-950 border-t border-[#00aff0]/20">
+        <div className="p-4 pb-5 flex flex-col flex-1 min-h-0 bg-gradient-to-b from-charcoal-900 to-charcoal-950 border-t border-[#00aff0]/20">
           <div className="flex items-center gap-3 mb-3">
             <div className="relative shrink-0">
               {wishlist.creator.avatar_url ? (
@@ -132,20 +134,22 @@ export const CreatorVideoCard = memo(function CreatorVideoCard({
             {wishlist.title}
           </h3>
           {!compact && (
-            <p className="text-gray-400 text-sm line-clamp-2 mb-3 flex-1">{wishlist.description}</p>
+            <p className="text-gray-400 text-sm line-clamp-2 mb-3 flex-1 min-h-0">{wishlist.description}</p>
           )}
 
-          <ProgressBar
-            current={wishlist.total_sats_raised}
-            goal={wishlist.total_sats_goal}
-            showPercentage={false}
-            showValues={false}
-            height="sm"
-            gradient="from-[#00aff0] to-cyan-400"
-          />
-          <div className="flex items-center justify-between mt-2 text-xs text-gray-400">
-            <span>{Math.round(progress)}% {t('explore.raised')}</span>
-            <SatsDisplay sats={wishlist.total_sats_raised} size="sm" className="text-[#00aff0]" />
+          <div className="shrink-0 mt-auto pb-0.5">
+            <ProgressBar
+              current={wishlist.total_sats_raised}
+              goal={wishlist.total_sats_goal}
+              showPercentage={false}
+              showValues={false}
+              height="sm"
+              gradient="from-[#00aff0] to-cyan-400"
+            />
+            <div className="flex items-center justify-between mt-2 text-xs text-gray-400">
+              <span>{Math.round(progress)}% {t('explore.raised')}</span>
+              <SatsDisplay sats={wishlist.total_sats_raised} size="sm" className="text-[#00aff0]" />
+            </div>
           </div>
         </div>
       </Card>
