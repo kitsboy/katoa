@@ -43,14 +43,13 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     timersRef.current.set(id, timer);
   }, [dismiss]);
 
-  const hasError = toasts.some((t) => t.type === 'error');
-
   return (
     <ToastContext.Provider value={{ toast }}>
       {children}
       <div
         className="fixed top-20 inset-x-4 sm:inset-x-auto sm:right-4 z-[200] flex flex-col gap-2 pointer-events-none"
-        aria-live={hasError ? 'assertive' : 'polite'}
+        role="status"
+        aria-live="polite"
         aria-atomic="true"
       >
         {toasts.map((t) => (

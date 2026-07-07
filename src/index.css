@@ -1304,9 +1304,15 @@
 
 .comparison-table-scroll thead th {
   position: sticky;
-  top: 4.5rem;
+  top: var(--nav-height, 4.5rem);
   z-index: 4;
   background: #070711;
+}
+
+@media (max-width: 768px) {
+  .comparison-table-scroll thead th {
+    top: 3.5rem;
+  }
 }
 
 .comparison-scroll-hint {
@@ -1588,12 +1594,33 @@
   left: 0.75rem;
   right: 0.75rem;
   z-index: 22;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
   padding: 0.4rem 0.65rem;
   border-radius: 0.5rem;
   font-size: 0.7rem;
   color: #fbbf24;
   background: rgba(245, 158, 11, 0.12);
   border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.unified-btcmap__error-retry {
+  flex-shrink: 0;
+  padding: 0.15rem 0.5rem;
+  border-radius: 0.35rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #fbbf24;
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.unified-btcmap__error-retry:hover {
+  background: rgba(245, 158, 11, 0.35);
 }
 
 .unified-btcmap__chips {

@@ -30,14 +30,14 @@
       "sizes": "512x512",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "KATOA — zero-fee Bitcoin creator platform"
+      "label": "KATOA mobile — placeholder (512×512; replace with real narrow screenshot)"
     },
     {
       "src": "/logo2-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "KATOA creator dashboard and wishlists"
+      "label": "KATOA desktop — placeholder (512×512; replace with real wide screenshot)"
     }
   ],
   "shortcuts": [

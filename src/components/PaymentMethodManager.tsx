@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Button } from './Button';
 import { Card } from './Card';
@@ -16,6 +16,46 @@ import {
 } from 'lucide-react';
 
 type PaymentMethod = DbPaymentMethod;
+
+function validatePaymentAddress(
+  methodType: PaymentMethod['method_type'],
+  address: string
+): string | null {
+  const trimmed = address.trim();
+  if (!trimmed) return 'Address is required';
+
+  switch (methodType) {
+    case 'lightning': {
+      const lower = trimmed.toLowerCase();
+      if (trimmed.includes('@')) {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+          return 'Enter a valid Lightning address (user@domain.com)';
+        }
+        return null;
+      }
+      if (lower.startsWith('lnurl')) return null;
+      if (lower.startsWith('lnbc') || lower.startsWith('ln')) return null;
+      return 'Lightning invoice must start with ln or lnbc, or use a Lightning address';
+    }
+    case 'bitcoin_address':
+      if (trimmed.length < 26 || trimmed.length > 90) {
+        return 'Bitcoin address must be between 26 and 90 characters';
+      }
+      return null;
+    case 'bitcoin_xpub':
+      if (!/^(xpub|ypub|zpub|tpub|vpub|upub)/i.test(trimmed)) {
+        return 'Extended public key must start with xpub, ypub, or zpub';
+      }
+      return null;
+    case 'nostr':
+      if (!trimmed.startsWith('npub1')) {
+        return 'Nostr public key must start with npub1';
+      }
+      return null;
+    default:
+      return null;
+  }
+}
 
 interface PaymentMethodManagerProps {
   projectId: string;
@@ -47,11 +87,7 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
     setShowQRScanner(false);
   }
 
-  useEffect(() => {
-    loadPaymentMethods();
-  }, [projectId]);
-
-  async function loadPaymentMethods() {
+  const loadPaymentMethods = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from('payment_methods')
@@ -67,7 +103,11 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
     } finally {
       setLoading(false);
     }
-  }
+  }, [projectId]);
+
+  useEffect(() => {
+    loadPaymentMethods();
+  }, [loadPaymentMethods]);
 
   function openModal(method?: PaymentMethod) {
     if (method) {
@@ -95,6 +135,13 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
   async function handleSaveMethod(e: React.FormEvent) {
     e.preventDefault();
     if (processing) return;
+
+    const validationError = validatePaymentAddress(formData.method_type, formData.address);
+    if (validationError) {
+      toast(validationError, 'error');
+      return;
+    }
+
     setProcessing(true);
 
     try {
@@ -132,9 +179,10 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
 
       setShowModal(false);
       loadPaymentMethods();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error saving payment method:', error);
-      toast(error.message || t('error.savePaymentMethod'), 'error');
+      const message = error instanceof Error ? error.message : t('error.savePaymentMethod');
+      toast(message, 'error');
     } finally {
       setProcessing(false);
     }

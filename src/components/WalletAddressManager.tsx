@@ -14,6 +14,46 @@ import { Wallet, Plus, Trash2, QrCode, Edit2, Check, X, Zap, Bitcoin, Shield, Gl
 
 type WalletAddress = DbWalletAddress;
 
+function validateWalletAddress(
+  addressType: WalletAddressType,
+  addressValue: string
+): string | null {
+  const trimmed = addressValue.trim();
+  if (!trimmed) return 'Address is required';
+
+  switch (addressType) {
+    case 'lightning': {
+      const lower = trimmed.toLowerCase();
+      if (trimmed.includes('@')) {
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+          return 'Enter a valid Lightning address (user@domain.com)';
+        }
+        return null;
+      }
+      if (lower.startsWith('lnurl')) return null;
+      if (lower.startsWith('lnbc') || lower.startsWith('ln')) return null;
+      return 'Lightning invoice must start with ln or lnbc, or use a Lightning address';
+    }
+    case 'xpub':
+      if (!/^(xpub|ypub|zpub|tpub|vpub|upub)/i.test(trimmed)) {
+        return 'XPUB must start with xpub, ypub, or zpub';
+      }
+      return null;
+    case 'nostr':
+      if (!trimmed.startsWith('npub1')) {
+        return 'Nostr public key must start with npub1';
+      }
+      return null;
+    case 'pynym':
+      if (!trimmed.startsWith('PM8T')) {
+        return 'PYNYM payment code must start with PM8T';
+      }
+      return null;
+    default:
+      return null;
+  }
+}
+
 export function WalletAddressManager() {
   const { user } = useAuth();
   const { t } = useLanguage();
@@ -35,6 +75,7 @@ export function WalletAddressManager() {
   const [deleteAddressId, setDeleteAddressId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [adding, setAdding] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -61,7 +102,16 @@ export function WalletAddressManager() {
   }
 
   async function handleAddAddress() {
-    if (!formData.address_value.trim() || adding) return;
+    if (adding) return;
+
+    const validationError = validateWalletAddress(formData.address_type, formData.address_value);
+    if (validationError) {
+      setFormError(validationError);
+      toast(validationError, 'error');
+      return;
+    }
+
+    setFormError(null);
     setAdding(true);
 
     try {
@@ -206,9 +256,10 @@ export function WalletAddressManager() {
                 </label>
                 <select
                   value={formData.address_type}
-                  onChange={(e) =>
-                    setFormData({ ...formData, address_type: e.target.value as WalletAddress['address_type'] })
-                  }
+                  onChange={(e) => {
+                    setFormError(null);
+                    setFormData({ ...formData, address_type: e.target.value as WalletAddress['address_type'] });
+                  }}
                   className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 >
                   <option value="lightning">Lightning Address</option>
@@ -226,9 +277,12 @@ export function WalletAddressManager() {
                   <input
                     type="text"
                     value={formData.address_value}
-                    onChange={(e) =>
-                      setFormData({ ...formData, address_value: e.target.value })
-                    }
+                    onChange={(e) => {
+                      setFormError(null);
+                      setFormData({ ...formData, address_value: e.target.value });
+                    }}
+                    aria-invalid={formError ? true : undefined}
+                    aria-describedby={formError ? 'wallet-address-error' : undefined}
                     placeholder={
                       formData.address_type === 'lightning'
                         ? 'you@getalby.com'
@@ -248,6 +302,11 @@ export function WalletAddressManager() {
                     <QrCode size={20} />
                   </Button>
                 </div>
+                {formError && (
+                  <p id="wallet-address-error" className="mt-1 text-sm text-red-400" role="alert">
+                    {formError}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -275,6 +334,7 @@ export function WalletAddressManager() {
                 <Button
                   onClick={() => {
                     setShowAddForm(false);
+                    setFormError(null);
                     setFormData({ address_type: 'lightning', address_value: '', label: '' });
                   }}
                   variant="outline"

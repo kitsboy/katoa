@@ -297,7 +297,7 @@ export function Navbar() {
             <div className="p-6 space-y-6">
               <div className="flex items-center justify-between pb-4 border-b border-white/10">
                 <div className="flex items-center gap-3">
-                  <img src="/sats.png" alt="" className="w-10 h-10 rounded-full" aria-hidden />
+                  <img src="/logo2.png" alt="KATOA" className="w-10 h-10 rounded-full" />
                   <span id="mobile-nav-title" className="text-xl font-black text-white">{t('nav.menu')}</span>
                 </div>
                 <button

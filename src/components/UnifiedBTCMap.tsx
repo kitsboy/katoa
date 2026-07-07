@@ -349,7 +349,7 @@ export function UnifiedBTCMap({
             onClick={() => setShowKatoa((v) => !v)}
             aria-pressed={showKatoa}
           >
-            <img src="/logo2.png" alt="" width={16} height={16} className="rounded-sm" />
+            <img src="/logo2.png" alt="" width={16} height={16} className="rounded-sm" aria-hidden />
             <span>{t('map.katoa')}</span>
             <span className="unified-btcmap__layer-count">{katoaPins.length}</span>
           </button>
@@ -395,7 +395,17 @@ export function UnifiedBTCMap({
 
         {merchantError && showMerchants && (
           <div className="unified-btcmap__error-banner" role="status">
-            {t('map.merchantsUnavailable')} · {merchantError}
+            <span>{t('map.merchantsUnavailable')} · {merchantError}</span>
+            <button
+              type="button"
+              className="unified-btcmap__error-retry"
+              onClick={() => {
+                const map = mapRef.current;
+                if (map) import('leaflet').then((L) => loadMerchants(map, L));
+              }}
+            >
+              Retry
+            </button>
           </div>
         )}
 
@@ -403,7 +413,7 @@ export function UnifiedBTCMap({
 
         <div className="unified-btcmap__legend">
           <span><span className="unified-btcmap__legend-swatch unified-btcmap__legend-swatch--merchant" /> ₿ {t('map.legendMerchant')}</span>
-          <span><img src="/logo2.png" alt="" width={14} height={14} className="rounded-sm" /> {t('map.legendKatoa')}</span>
+          <span><img src="/logo2.png" alt="" width={14} height={14} className="rounded-sm" aria-hidden /> {t('map.legendKatoa')}</span>
         </div>
       </div>
 
@@ -414,7 +424,9 @@ export function UnifiedBTCMap({
               key={pin.id}
               href={`/wishlist/${pin.slug}`}
               className="unified-btcmap__chip"
+              title="Click to fly to pin · ⌘/Ctrl-click to open wishlist"
               onClick={(e) => {
+                if (e.metaKey || e.ctrlKey) return;
                 e.preventDefault();
                 flyToPin(pin);
               }}
