@@ -1,5 +1,5 @@
 # Katoa — Directory Map
-**Generated:** 2026-06-30 — For Grok integration handoff
+**Generated:** 2026-07-06 — For Grok / Kimi integration handoff
 
 ```
 katoa
@@ -179,23 +179,64 @@ katoa/src/pages/HomePage.tsx
 | Field | Value |
 |-------|-------|
 | Framework | React 18 + TypeScript + Vite |
-| Router | Custom `useRouter` hook (pathname-based) |
-| Auth | Supabase (`@supabase/supabase-js`) |
-| Payments | Lightning + Nostr (`nostr-tools`) |
-| i18n | Custom `LanguageContext` (built-in, replaceable) |
-| Pages | 16 (Home, Explore, Wishlist, Dashboard, Project, Settings, About, Contact, Pricing, Comparison, Terms, Privacy, Auth, FAQ, +2) |
-| Deploy | Cloudflare Pages (original: Netlify) |
-| Public URL | https://katoa.org + https://katoa.giveabit.io |
+| Router | React Router DOM v6 (`BrowserRouter` in `App.tsx`) |
+| Auth | Supabase (`@supabase/supabase-js`) + Nostr NIP-07 |
+| Payments | Lightning + Nostr (`nostr-tools`) + BTCPay stubs |
+| i18n | `LanguageContext` — 7 langs (en, es, pt, fr, de, ja, zh) + `pageStrings` |
+| Components | 57 under `src/components/` |
+| Pages | 17 lazy-loaded routes (see `App.tsx`) |
+| Deploy | Cloudflare Pages |
+| Public URL | https://katoa.org |
 | GitHub | kitsboy/katoa |
 | Dev | `cd ~/projects/katoa && npm run dev` |
 | Build | `npm run build` → `dist/` |
+| Sitemap | `npm run sitemap` → `public/sitemap.xml` |
+| Last commit | `c65d1ed` — hero overlay card + floating navbar |
+
+## Routes (`App.tsx`)
+
+| Path | Page |
+|------|------|
+| `/` | HomePage |
+| `/explore` | ExplorePage |
+| `/wishlist/:slug` | WishlistRoutePage |
+| `/dashboard` | DashboardPage |
+| `/project` | ProjectPage |
+| `/settings` | SettingsPage |
+| `/auth` | AuthPage |
+| `/about` | AboutPage |
+| `/contact` | ContactPage |
+| `/faq` | FAQPage |
+| `/pricing` | PricingPage |
+| `/comparison` | ComparisonPage |
+| `/pitch` | PitchPage |
+| `/terms` | TermsPage |
+| `/privacy` | PrivacyPage |
+| `*` | NotFoundPage |
+
+## Key Components (not in tree above)
+
+```
+src/components/HeroOverlayCard.tsx
+src/components/HeroMotionBackground.tsx
+src/components/Toast.tsx
+src/components/ConfirmDialog.tsx
+src/components/PageMeta.tsx
+src/components/Breadcrumbs.tsx
+src/components/PwaInstallPrompt.tsx
+src/components/ContributorsWall.tsx
+src/components/SatsDisplay.tsx
+scripts/generate-sitemap.mjs
+public/sw.js
+```
 
 ## Notes for Grok
 
 - Uses TypeScript (`.tsx`) — stricter than giveabit.io's JSX
-- Has its own `LanguageContext` — could be refactored to use shared `I18nProvider` from giveabit
-- Custom router (`useRouter`) — different from giveabit's React Router
-- `netlify.toml` exists but project now uses CF Pages
-- `public/_redirects` has `/* /index.html 200` (SPA routing) — keep for CF Pages
-- AuthContext wraps entire app — Supabase session management
-- 16 page components under `src/pages/` — homegrown routing
+- `LanguageContext` has embedded `pageStrings` for page-specific i18n (7 languages)
+- `useRouter.tsx` is **deprecated** — use React Router v6 hooks (`useNavigate`, `useLocation`)
+- All 17 pages are `React.lazy()` loaded with `Suspense` fallback
+- Lucide icons split per-route (no monolithic `ui` chunk)
+- `netlify.toml` exists for headers reference; live host is Cloudflare Pages
+- `public/_redirects` has `/* /index.html 200` (SPA routing)
+- Providers: Auth → Language → Currency → Toast → BrowserRouter

@@ -1,6 +1,6 @@
 # Katoa — Technical Context Map
 
-> **Generated:** 2026-07-02
+> **Generated:** 2026-07-06
 > **Audit target:** `~/projects/katoa/` on M3
 
 ---
@@ -43,34 +43,27 @@ katoa/
 │   ├── index.css              # Global styles + Tailwind directives
 │   ├── vite-env.d.ts          # Vite type declarations
 │   │
-│   ├── pages/                 # Route pages (15 pages)
-│   │   ├── HomePage.tsx, AuthPage.tsx, DashboardPage.tsx, ExplorePage.tsx
-│   │   ├── WishlistPage.tsx, WishlistRoutePage.tsx, ProjectPage.tsx
-│   │   ├── SettingsPage.tsx, AboutPage.tsx, PricingPage.tsx
-│   │   ├── ComparisonPage.tsx, FAQPage.tsx, ContactPage.tsx
-│   │   ├── TermsPage.tsx, PrivacyPage.tsx
+│   ├── pages/                 # Route pages (17, all lazy-loaded)
+│   │   ├── HomePage, ExplorePage, WishlistRoutePage, DashboardPage
+│   │   ├── ProjectPage, SettingsPage, PitchPage, ComparisonPage
+│   │   ├── PricingPage, AboutPage, ContactPage, FAQPage
+│   │   ├── AuthPage, TermsPage, PrivacyPage, NotFoundPage
+│   │   └── WishlistPage (dashboard embed)
 │   │
-│   ├── components/            # Reusable UI components (40+)
-│   │   ├── Navbar.tsx, Footer.tsx, MobileNav.tsx
-│   │   ├── Button.tsx, Card.tsx, Modal.tsx, Input.tsx, Link.tsx
-│   │   ├── SatsDisplay.tsx, BitcoinPulse.tsx, BitcoinStats.tsx
-│   │   ├── BTCMapEmbed.tsx, BTCMapSection.tsx, KatoaPinsMap.tsx
-│   │   ├── WishlistItemsList.tsx, ContributionCard.tsx
-│   │   ├── MediaCard.tsx, MediaUpload.tsx
-│   │   ├── WalletAddressManager.tsx, PaymentMethodManager.tsx
-│   │   ├── SubscriptionTiers.tsx, LightningField.tsx
-│   │   ├── QRCodeModal.tsx, QRScanner.tsx, DonateQRModal.tsx
-│   │   ├── CurrencySelector.tsx, CategoryBadge.tsx, TrendingBadge.tsx
-│   │   ├── ProgressBar.tsx, StatsCard.tsx, FeeComparison.tsx
-│   │   ├── Tooltip.tsx, ShareButton.tsx, SocialFeedEmbed.tsx
-│   │   ├── ProtocolUpdates.tsx, GlassSection.tsx
-│   │   └── FooterBitcoinStrip.tsx, FooterJobBoard.tsx
+│   ├── components/            # 57 reusable UI components
+│   │   ├── Navbar (floating island), Footer, MobileNav
+│   │   ├── HeroOverlayCard, HeroMotionBackground, PageHero
+│   │   ├── Toast, ConfirmDialog, PageMeta, Breadcrumbs, EmptyState
+│   │   ├── Button, Card, Modal, Input, Link, GlassSection
+│   │   ├── FeeComparison, DonateQRModal, FooterBitcoinStrip
+│   │   ├── SatsDisplay, ContributorsWall, PwaInstallPrompt
+│   │   └── WalletAddressManager, PaymentMethodManager, etc.
 │   │
 │   ├── contexts/              # React contexts
 │   │   ├── AuthContext.tsx, CurrencyContext.tsx, LanguageContext.tsx
 │   │
 │   ├── hooks/
-│   │   └── useRouter.tsx
+│   │   └── useRouter.tsx      # DEPRECATED — React Router v6 in App.tsx
 │   │
 │   ├── lib/                   # Library/API modules
 │   │   ├── supabase.ts, nostr.ts, btcpay.ts, btcmap.ts
@@ -186,7 +179,7 @@ Used to proxy BTC Map API requests locally — avoids CORS issues in development
 
 - **Format:** Static SPA (index.html + JS/CSS chunks + assets)
 - **Output:** dist/ (~2.9 MB)
-- **Chunks:** vendor (react), supabase, nostr, ui (lucide-react)
+- **Chunks:** vendor (react), supabase, nostr; Lucide split per-route (no monolithic ui chunk)
 - **Caching:** 1-year immutable for /assets/* and images
 - **SPA routing:** /* -> /index.html 200
 - **Security headers:** HSTS, X-Frame-Options, CSP
@@ -204,6 +197,8 @@ Used to proxy BTC Map API requests locally — avoids CORS issues in development
 
 ## 9. Key Design Details
 
-- **Design tokens:** sand-tan, night-blue, charcoal, neon-cyan, bitcoin-orange colors; Inter, DM Serif Display, Space Grotesk, JetBrains Mono fonts
+- **Design tokens:** charcoal, neon-cyan, bitcoin-orange (modern); night-blue/sand-tan legacy in CSS only
+- **Hero/nav CSS:** `.hero-overlay-card`, `.nav-island`, `.hero-headline-accent` in index.css
+- **PWA:** public/sw.js v2; `npm run sitemap` for sitemap generation
 - **SEO:** OG tags, Twitter Cards, JSON-LD structured data in index.html
 - **Integrations:** Nostr (decentralized identity), BTC Map (Leaflet), BTCPay Server (optional), Lightning Network

@@ -60,11 +60,11 @@ A revolutionary creator platform enabling anyone, anywhere to receive support vi
 - [docs/marketing/KATOA-Marketing-Presentation.pdf](./docs/marketing/KATOA-Marketing-Presentation.pdf) — Slide deck (PDF)
 
 **Start here for handoff / big picture**:
-- [SOURCE-OF-TRUTH.md](./SOURCE-OF-TRUTH.md) — Single source of truth (GitHub, live URL, deploy details, pitch, files, mission, gaps, how-to-run)
-- [KIMI-HANDOFF-katoa-2026-06-10.md](./KIMI-HANDOFF-katoa-2026-06-10.md) — Clean self-contained prompt for Kimi (M4/Obsidian/HERMES) — update MASTER-BRAIN, Kanban, vault, educate Hermes
-- [EXECUTIVE-SUMMARY.md](./EXECUTIVE-SUMMARY.md) — Robust high-level overview (what it is, why it matters, current state, gaps)
-- [MARKETING.md](./MARKETING.md) — Full pitch, value props, comparisons, messaging, CTAs, Give A Bit alignment
-- [STATUS.md](./STATUS.md) — Living project health snapshot
+- [docs/KIMI-HANDOFF.md](./docs/KIMI-HANDOFF.md) — Rolling handoff log for Kimi (M4/Obsidian/HERMES)
+- [LATEST-UPDATE.md](./LATEST-UPDATE.md) — One-line session summary + last commit
+- [docs/EXECUTIVE-SUMMARY.md](./docs/EXECUTIVE-SUMMARY.md) — Robust high-level overview (what it is, why it matters, current state, gaps)
+- [docs/MARKETING.md](./docs/MARKETING.md) — Full pitch, value props, comparisons, messaging, CTAs, Give A Bit alignment
+- [docs/README.md](./docs/README.md) — Documentation index
 
 **Guides & Reference**:
 - [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) — System overview, DB schema (from 23 migrations), Nostr/BTCPay layers, security model, data flows, extension points (excellent for Kimi + devs)
@@ -99,9 +99,9 @@ All docs are Obsidian-friendly Markdown. Run the `giveabit-project-handoff` skil
 - ✅ Direct Lightning Address + on-chain + payment code (LNURL) support
 - ✅ Multiple wallet addresses per creator with labels
 - ✅ Beautiful QR code generation + scanner
-- ✅ Real-time Bitcoin price + sats conversion
-- ✅ **Bitcoin Pulse** live widget + **Protocol Updates** feed (new)
+- ✅ Real-time Bitcoin price + sats conversion (footer strip, navbar ticker)
 - ✅ **Fee Comparison** calculator (shows exactly how much traditional platforms take)
+- ✅ Motion hero with glass overlay card, floating island navbar, PWA install prompt
 - ✅ BTCPay Server integration **code + comprehensive guide ready** (full live wiring is the current priority gap)
 - ✅ Nostr-powered Lightning address resolution
 
@@ -113,9 +113,10 @@ All docs are Obsidian-friendly Markdown. Run the `giveabit-project-handoff` skil
 - ✅ Share buttons everywhere
 
 ### Platform & UX
-- ✅ Multi-language support (7 languages framework)
-- ✅ Stunning responsive glassmorphic design (mobile-first, premium feel)
-- ✅ Interactive portal tooltips, smooth animations, accessible
+- ✅ Multi-language support (7 languages via `LanguageContext` + `pageStrings`)
+- ✅ Charcoal/glass design system across all pages (mobile-first, premium feel)
+- ✅ Toast notifications, ConfirmDialog, EmptyState, Breadcrumbs, PageMeta (dynamic OG)
+- ✅ PWA service worker v2, offline fallback, `npm run sitemap`
 - ✅ Nostr authentication (NIP-07 browser extension: Alby etc.) — full profile sync + wishlist publishing (NIP-78)
 - ✅ Dashboard for full self-serve management
 
@@ -125,7 +126,7 @@ All docs are Obsidian-friendly Markdown. Run the `giveabit-project-handoff` skil
 - 🚧 Real-time notifications polish, email (privacy-preserving), analytics
 - See [docs/ROADMAP.md](./docs/ROADMAP.md) for full phased plan
 
-**Live differentiators you can feel today**: Bitcoin Pulse widget, Protocol Updates, the fee calculator, Nostr login flow, and the instant "keep 100%" story.
+**Live differentiators you can feel today**: Motion hero, fee calculator, Nostr login flow, explore pagination, and the instant "keep 100%" story.
 
 ## 🛠️ Tech Stack
 
@@ -158,43 +159,22 @@ All docs are Obsidian-friendly Markdown. Run the `giveabit-project-handoff` skil
 
 ```
 /src
-  /components     # Reusable UI components
-    - BitcoinStats.tsx
-    - FeeComparison.tsx
-    - QRCodeModal.tsx
-    - Tooltip.tsx (with React portals)
-    - PaymentMethodManager.tsx
-    - WalletAddressManager.tsx
-    - And 15+ more components
-  /contexts       # React contexts
-    - AuthContext.tsx (Authentication)
-    - LanguageContext.tsx (i18n)
-  /data           # Mock data for development
-  /hooks          # Custom React hooks
-    - useRouter.tsx
-  /lib            # Utilities
-    - supabase.ts (Database client)
-    - nostr.ts (Nostr integration)
-    - btcpay.ts (Payment integration)
-    - bitcoinPrice.ts (Price fetching)
-    - productParser.ts (URL parsing)
-  /pages          # Page components
-    - HomePage.tsx
-    - DashboardPage.tsx
-    - WishlistPage.tsx
-    - ProjectPage.tsx
-    - ExplorePage.tsx
-    - ComparisonPage.tsx
-    - PricingPage.tsx
-    - SettingsPage.tsx
-    - And 5+ more pages
-/supabase
-  /migrations     # Database migrations (20+ files)
-/public           # Static assets
-  - sats.svg (KATOA logo)
-  - donations-qr.png
-  - robots.txt
-  - sitemap.xml
+  /components     # 57 reusable UI components
+    - HeroOverlayCard, HeroMotionBackground, Navbar (floating island)
+    - Toast, ConfirmDialog, PageMeta, Breadcrumbs, EmptyState
+    - FeeComparison, DonateQRModal, FooterBitcoinStrip, PwaInstallPrompt
+    - PaymentMethodManager, WalletAddressManager, QRCodeModal, etc.
+  /contexts       # AuthContext, LanguageContext, CurrencyContext
+  /data           # changelog.json, mock data
+  /hooks          # useRouter.tsx (deprecated — React Router v6 in App.tsx)
+  /lib            # supabase, nostr, btcpay, bitcoinPrice, productParser
+  /pages          # 17 route pages (lazy-loaded)
+    - Home, Explore, WishlistRoute, Dashboard, Project, Settings
+    - About, Contact, FAQ, Pricing, Comparison, Pitch, Auth
+    - Terms, Privacy, NotFound (+ WishlistPage for dashboard embed)
+/scripts          # generate-sitemap.mjs, setup-supabase.sh, etc.
+/supabase/migrations  # 23 database migrations
+/public           # sw.js, robots.txt, sitemap.xml, static assets
 ```
 
 ## 🔧 Available Scripts
@@ -205,6 +185,7 @@ npm run build      # Build for production
 npm run preview    # Preview production build
 npm run typecheck  # TypeScript type checking
 npm run lint       # ESLint code linting
+npm run sitemap    # Regenerate public/sitemap.xml
 ```
 
 ## 🌍 Environment Variables
@@ -281,14 +262,13 @@ This project welcomes contributions! (See the basic process in the old text belo
 - Kimi integrates the structured docs into MASTER-BRAIN.md, Kanban, and the permanent vault (no raw chat dumps).
 - Sync the hand-off files (and/or project folder) via Tailscale to the M4 Obsidian location for nightly backups.
 
-**Current hand-off package (as of 2026-06-10)** is exceptionally robust:
-- SOURCE-OF-TRUTH.md
-- KIMI-HANDOFF-katoa-2026-06-10.md
-- EXECUTIVE-SUMMARY.md
-- MARKETING.md
-- Updated STATUS + organized docs/
+**Current hand-off package (as of 2026-07-06)**:
+- `docs/KIMI-HANDOFF.md` — rolling session log
+- `LATEST-UPDATE.md` — last commit one-liner
+- `docs/EXECUTIVE-SUMMARY.md`, `docs/MARKETING.md`, `docs/DESIGN.md`
+- `docs/GROK-HANDOFF.md` — developer quick-start
 
-Always keep the "Template Rule" in SOURCE-OF-TRUTH: GitHub, live URL, deploy details, key docs, simple pitch, git snapshot, mission, gaps, hand-off notes, startup instructions.
+Run the **giveabit-project-handoff** skill at session end per `GROK-SESSION-PROTOCOL.md`.
 
 ---
 
@@ -348,10 +328,11 @@ MIT License — See [LICENSE](./LICENSE) (newly added during 2026-06-10 organiza
 
 See the full living roadmap: **[docs/ROADMAP.md](./docs/ROADMAP.md)** (rebranded from early BitWish notes, cleaned during handoff prep).
 
-**High-level status (2026-06-10)**:
-- ✅ Phase 1–3 largely complete and live (auth, wishlists/projects, media, social follows/leaderboards/explore, Nostr full stack, basic Bitcoin rails, beautiful UX, live widgets)
-- 🚧 Phase 4 privacy + full BTCPay (Nostr auth & publishing done; BTCPay guide + code stubs excellent, end-to-end prod integration is the clear next engineering priority)
-- 📋 Later phases (mobile, advanced monetization, AI, scale) planned per Give A Bit vision
+**High-level status (2026-07-06)**:
+- ✅ Phase 1–3 complete and live (auth, wishlists/projects, media, social, Nostr, Bitcoin rails, charcoal/glass UI, 200 frontend improvements)
+- ✅ Frontend polish: hero motion, floating nav, PWA, i18n pageStrings, ConfirmDialog/toast, lazy routes
+- 🚧 Phase 4 privacy + full BTCPay (end-to-end prod integration is the clear next engineering priority)
+- 📋 Later phases (mobile app, advanced monetization, scale) planned per Give A Bit vision
 
 The product is already a credible, usable, beautiful 0% fee Bitcoin creator platform today.
 
@@ -392,4 +373,4 @@ The product is already a credible, usable, beautiful 0% fee Bitcoin creator plat
 **Part of the Give A Bit ecosystem** — [giveabit.io](https://giveabit.io)  
 Bitcoin sovereignty tools for private, feel-good giving. Privacy (Lightning + Nostr + PYNYM), education, Safe Harbour, open source.
 
-**For Kimi / future hand-offs**: See SOURCE-OF-TRUTH.md + KIMI-HANDOFF-katoa-2026-06-10.md. Documentation is the most important deliverable for seamless M3↔M4 continuity.
+**For Kimi / future hand-offs**: See `docs/KIMI-HANDOFF.md` + `LATEST-UPDATE.md`. Documentation is the most important deliverable for seamless M3↔M4 continuity.

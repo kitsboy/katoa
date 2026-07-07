@@ -9,6 +9,7 @@
 - [x] Batch 3C (141–160): pageStrings i18n for dashboard/wishlist/about/comparison/explore (7 langs); Intl formatting in SatsDisplay
 - [x] Batch 3D (161–180): About mobile accordions; wishlist item reorder; dynamic OG meta; comparison earnings slider + breadcrumbs
 - [x] Batch 3E (181–200): SW v2; generate-sitemap.mjs; ContributorsWall polish; pitch a11y; EmptyState in PaymentMethodManager
+- [x] Hero/nav refresh (`c65d1ed`): HeroOverlayCard, HeroMotionBackground, floating island Navbar
 
 ### Decisions
 - Removed monolithic lucide manual chunk — icons now split per route (ExplorePage chunk larger, other routes smaller)
@@ -24,6 +25,41 @@
 - Last commit SHA: 1373ea1e568e7c1bc835332e4aca4a339ca3605c
 - Branch: main
 - Unpushed: none
+
+---
+
+*Safe Harbour · Part of the [Give A Bit](https://giveabit.io) family.*
+
+## Handoff to Kimi — 2026-07-06 (docs pass)
+
+**Machine:** M3 (Grok)
+**Project:** katoa
+
+### Done
+- [x] Audited and updated all stale project docs to match codebase @ `c65d1ed`
+- [x] README.md — removed Bitcoin Pulse/Protocol Updates, updated structure, scripts, handoff paths
+- [x] docs/DESIGN.md — floating island nav, hero overlay card, motion CSS classes
+- [x] docs/ARCHITECTURE.md — 57 components, 17 pages, PWA, removed widgets note
+- [x] docs/DIRECTORY-MAP.md — React Router v6, routes table, quick facts
+- [x] docs/EXECUTIVE-SUMMARY.md, ROADMAP.md, GROK-HANDOFF.md — July 2026 status
+- [x] docs/I18N.md — full LanguageContext + pageStrings documentation
+- [x] docs/SEO.md — filled template placeholders with KATOA data
+- [x] public/content/updates.md — replaced wrong Saint-Martin content with v1.1.0 changelog
+- [x] .ai_docs/context_map.md + docs/.ai_docs/context_map.md — current counts and removed components
+- [x] LATEST-UPDATE.md — session one-liner
+
+### Decisions
+- Kept ROADMAP.md implementation phases intact; added "Completed Since Last Review" snapshot at top
+- Did not regenerate full DIRECTORY-MAP tree (600+ lines); updated Quick Facts + routes + key components instead
+
+### What's Next
+- ExplorePage Lucide chunk optimization
+- Prerender/SSR for SEO (see docs/SEO.md audit)
+- Backend: BTCPay wiring, Supabase live data (out of scope for docs pass)
+
+### Git State
+- Last commit SHA: (docs commit pending)
+- Branch: main
 
 ---
 

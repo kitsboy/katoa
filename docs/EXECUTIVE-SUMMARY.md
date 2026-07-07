@@ -1,9 +1,9 @@
 # KATOA — Executive Summary
 
-**Date:** 2026-07-01  
+**Date:** 2026-07-06  
 **Project:** KATOA (katoa.org)  
-**Version:** 1.0.0  
-**Status:** Live MVP · UI modernization in progress · Supabase + Cloudflare staged  
+**Version:** 1.1.0  
+**Status:** Live MVP · charcoal/glass UI complete · 200 frontend improvements shipped · Supabase + Cloudflare staged
 **Ecosystem:** [Give A Bit](https://giveabit.io) — Bitcoin sovereignty tools for private, feel-good giving  
 **License:** MIT (open source)
 
@@ -60,12 +60,13 @@ Givers want to send real value **directly and privately**. Instead they get surv
 
 ### Product (live at katoa.org)
 
-- **Full SPA:** Home, Explore, Wishlists, Dashboard, Projects, Auth, Settings, About, FAQ, Pricing, Comparison, Contact, Legal
-- **Modern UI pass:** React Router v6, lazy-loaded pages, `MobileNav`, glass `Card`/`Button`, redesigned Footer (jobs board, live Bitcoin strip, donate QR sheet), enhanced Pricing page
-- **Education & conversion:** Fee comparison calculator, platform comparison tables, movement CTAs
-- **Bitcoin surface area:** QR codes, Lightning addresses, on-chain support, live price/mempool widgets, BTC Map integration
-- **Nostr:** NIP-07 login, profile sync, wishlist publishing, encrypted messaging foundations
-- **i18n:** 7 languages via `LanguageContext`
+- **Full SPA:** 17 lazy-loaded routes including Pitch, WishlistRoute (`/wishlist/:slug`), 404
+- **Modern UI:** Charcoal/glass across all pages; motion hero (`HeroOverlayCard`, `HeroMotionBackground`); floating island navbar; redesigned Footer
+- **UX infrastructure:** Toast, ConfirmDialog, PageMeta (dynamic OG), Breadcrumbs, EmptyState, PWA v2, `npm run sitemap`
+- **Education & conversion:** Fee comparison calculator with URL-synced params, earnings slider, platform comparison tables
+- **Bitcoin surface area:** QR codes, Lightning addresses, on-chain support, live price strip (footer + navbar), BTC Map integration
+- **Nostr:** NIP-07 login, profile sync, wishlist publishing (NIP-78), encrypted messaging foundations
+- **i18n:** 7 languages via `LanguageContext` + `pageStrings`; Intl formatting in `SatsDisplay`
 
 ### Engineering
 
@@ -181,7 +182,7 @@ Drive prospects to `/comparison` and the live calculator — let the math close.
 | “0% forever” promise | Architectural + cultural commitment; document in MISSION |
 | BTCPay not fully live | Market what works today (addresses, QR, Nostr); transparent roadmap |
 | Early-stage social proof | Lean on open source, live widgets, comparison math |
-| Legacy UI pockets | Migrate to `DESIGN.md` system page by page |
+| ExplorePage bundle size | Lucide chunk ~698KB — further tree-shaking needed |
 
 ---
 

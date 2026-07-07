@@ -1,6 +1,6 @@
 # ARCHITECTURE — KATOA
 
-**Date**: 2026-07-01 (updated with Router v6 + design system)  
+**Date**: 2026-07-06 (Router v6, charcoal/glass UI, PWA, frontend polish batches)
 **Audience**: Kimi, future developers, Give A Bit architects. Keep it simple + accurate.  
 **Related**: [`DESIGN.md`](./DESIGN.md) · [`EXECUTIVE-SUMMARY.md`](./EXECUTIVE-SUMMARY.md)
 
@@ -17,7 +17,7 @@ The product lets creators publish rich "support surfaces" (wishlists / projects)
 - Row Level Security (RLS) is the source of truth for authorization — never trust client code alone.
 - Nostr is a first-class identity and distribution layer (not bolted on).
 - Bitcoin payment options are plural and progressive (direct addresses today → full BTCPay invoices + BOLT12 tomorrow).
-- UI is premium but accessible; "glassmorphic" aesthetic with live network widgets to make the Bitcoin reality feel alive.
+- UI is premium but accessible; charcoal/glass aesthetic with motion hero, live Bitcoin price strip, and accessible overlays (toast, confirm dialogs).
 - Everything is open source (MIT) so users can audit, fork, or self-host the frontend.
 
 ---
@@ -29,25 +29,26 @@ The product lets creators publish rich "support surfaces" (wishlists / projects)
 - Vite (fast HMR, simple build to `dist/`)
 - Tailwind CSS + custom design tokens (bitcoin-orange, neon-cyan, glass effects, glows)
 - Lucide icons, react-markdown, html-react-parser
-- No heavy global state lib — React Context for Auth + Language only
+- No heavy global state lib — React Context for Auth, Language, Currency + ToastProvider
 - React Router DOM v6 (`BrowserRouter` in `App.tsx`) — `src/hooks/useRouter.tsx` is deprecated
 
 **Structure**:
 ```
 src/
-  main.tsx + App.tsx          # Providers (Auth, Language) + top-level router
-  components/ (30+)           # Reusable, presentational + interactive
-    - GlassSection, Card, Button, Input, Modal, Tooltip (portal)
-    - FooterBitcoinStrip, SocialProofTicker (live / data-driven)
-    - FeeComparison (educational + marketing)
-    - QRCodeModal + QRScanner
-    - PaymentMethodManager, WalletAddressManager, HeroMotionBackground
-    - ContributionCard, WishlistItemsList, MediaUpload
-    - Navbar, Footer, ShareButton, SocialFeedEmbed, etc.
-  pages/                      # Route-level screens (Home, Explore, Dashboard, Project/Wishlist, Auth, Settings, Legal, Comparison, etc.)
+  main.tsx + App.tsx          # Providers (Auth, Language, Currency, Toast) + lazy router
+  components/ (57)            # Reusable, presentational + interactive
+    - Primitives: Card, Button, Input, Modal, Tooltip, GlassSection, EmptyState
+    - Chrome: Navbar (floating island), Footer, MobileNav, Breadcrumbs, PageMeta
+    - Hero: HeroOverlayCard, HeroMotionBackground, PageHero
+    - UX: Toast, ConfirmDialog, PwaInstallPrompt, ChangelogModal, OnboardingChecklist
+    - Bitcoin: FeeComparison, DonateQRModal, FooterBitcoinStrip, QRCodeModal, SatsDisplay
+    - Data: PaymentMethodManager, WalletAddressManager, WishlistItemsList, ContributorsWall
+  pages/ (17, lazy-loaded)    # Home, Explore, WishlistRoute, Dashboard, Project, Settings,
+                              # About, Contact, FAQ, Pricing, Comparison, Pitch, Auth, Legal, 404
   contexts/
     AuthContext.tsx           # Email/password + full Nostr NIP-07 flows, profile sync
-    LanguageContext.tsx
+    LanguageContext.tsx       # 7 langs + pageStrings for page-specific copy
+    CurrencyContext.tsx       # Fiat display preference
   lib/                        # Pure(ish) utilities & service clients
     supabase.ts               # Client + comprehensive hand-written Database types (profiles, wishlists, items, txns, notifications, shipping, wallet_addresses...)
     nostr.ts                  # NostrService: relays, profile fetch, publishWishlist (kind 30078), getLightningAddress, encrypted DM, zap requests
@@ -60,13 +61,17 @@ src/
 **Data flow examples**:
 - Auth: Supabase signIn → create/update profile row (also Nostr path: window.nostr.getPublicKey → kind 0 metadata → upsert profile + nostr_pubkey)
 - Create wishlist: Dashboard form → supabase insert (creator_id = auth.user) → optional nostrService.publishWishlist(...) → toast
-- View public wishlist: slug route → supabase select (public RLS) + items + contributions → render progress + LightningField/QR
+- View public wishlist: `/wishlist/:slug` → supabase select (public RLS) + items + contributions → render progress + QR/donate modal
 - Contribute: User enters name/message/amount → pick or paste address / future invoice → record pending transaction row → (future) poll or webhook confirms → triggers (future) funding total functions + notifications
 
-**Live widgets** (new polish):
-- FooterBitcoinStrip fetches BTC price via cached client API
-- ChangelogModal surfaces version notes from src/data/changelog.json
-- These make the site feel connected to the real network.
+**Live / ambient UI**:
+- FooterBitcoinStrip + Navbar BTC ticker fetch price via cached client API
+- HeroMotionBackground + HeroOverlayCard on homepage (motion orbs, glass card)
+- ChangelogModal surfaces version notes from `src/data/changelog.json`
+- PWA: `public/sw.js` v2 with offline fallback; `PwaInstallPrompt` for install UX
+- SocialProofTicker, ContributorsWall for social proof on explore/pitch pages
+
+**Removed (2026-07-06)**: `BitcoinPulse.tsx`, `ProtocolUpdates.tsx`, `LightningField.tsx` — homepage simplified to motion hero + stats strip.
 
 ---
 

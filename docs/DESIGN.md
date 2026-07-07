@@ -1,6 +1,6 @@
 # KATOA Design System
 
-**Last updated:** 2026-07-01  
+**Last updated:** 2026-07-06  
 **Status:** Living document — reflects current codebase; edit when tokens or patterns change.
 
 > **Quick links:** Tokens live in [`tailwind.config.js`](../tailwind.config.js) and [`src/index.css`](../src/index.css).  
@@ -41,9 +41,9 @@ KATOA is a **dark, glassy, Bitcoin-native** product UI. It should feel:
 
 **Legacy tokens in CSS only:** `night-blue-*` / `sand-tan` remain in `index.css` for reference — no longer used in components.
 
-**Migrated to charcoal/glass (2026-07-06+):** All pages + WalletAddressManager, PaymentMethodManager, ContributionCard, StatsCard, SubscriptionTiers, QRScanner, CategoryBadge, TrendingBadge, BitcoinStats, SocialFeedEmbed, Tooltip, WishlistItemsList
+**Migrated to charcoal/glass (2026-07-06):** All 17 pages + all shared components. Legacy `night-blue` tokens remain in CSS only for reference.
 
-When building **new** UI, use the **modern** palette. When touching legacy pages, migrate toward charcoal/glass incrementally.
+When building **new** UI, use the **modern** palette exclusively.
 
 ---
 
@@ -217,7 +217,7 @@ At `max-width: 640px`, inputs use `font-size: 16px !important` to prevent iOS zo
 
 ```
 px-4 sm:px-6 lg:px-8        — horizontal page gutter
-pt-24 sm:pt-28              — below fixed navbar (h-16)
+pt-28 sm:pt-32              — below floating island navbar (~80px + top offset)
 pb-16 sm:pb-24              — section bottom (desktop)
 ```
 
@@ -227,7 +227,7 @@ pb-16 sm:pb-24              — section bottom (desktop)
 <main className="pb-20 md:pb-0">   — clears MobileNav on small screens
 ```
 
-Navbar height: `h-16` (64px). Account for it on all full-page layouts.
+Floating navbar: ~56px island + `top-3`/`top-4` offset. Use `pt-28 sm:pt-32` on full-page heroes.
 
 ### Grid patterns
 
@@ -296,6 +296,8 @@ shadow-[0_-8px_60px_rgba(247,147,26,0.2)]         — bottom sheet upward glow
 | `animate-shimmer` | 2s linear | Loading placeholders |
 | `animate-gradient` | 6s | Animated gradient bg |
 | `animate-subtle-pulse` | 3s | Status indicators |
+| `animate-orb-drift` | 20–28s | Hero background orbs |
+| `animate-orb-drift-reverse` | 24–32s | Hero background orbs (counter) |
 
 ### Interaction transitions
 
@@ -393,12 +395,24 @@ bg-white/5 border-white/10 focus:ring-neon-cyan-500/50 rounded-xl
 
 ## 9. Patterns by feature
 
-### Sticky navigation
+### Floating island navigation (`Navbar.tsx`)
+
+The navbar is a **floating glass island** — not a full-width sticky bar.
 
 ```tsx
-className="fixed top-0 inset-x-0 z-50 border-b border-white/10 bg-charcoal-950/70 backdrop-blur-xl"
-// inner: max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16
+// Outer wrapper: fixed, centered, pointer-events-none
+className="fixed top-3 sm:top-4 inset-x-0 z-50 px-4 sm:px-6 pointer-events-none"
+
+// Inner island (.nav-island in index.css)
+className="nav-island pointer-events-auto max-w-7xl mx-auto rounded-2xl"
+// scrolled state adds .nav-island-scrolled — stronger blur + border
 ```
+
+**CSS classes** (`src/index.css`):
+- `.nav-island` — glass fill, subtle border, backdrop-blur
+- `.nav-island-scrolled` — elevated shadow when `scrollY > 12`
+
+Nav links use **pill style** (`rounded-full px-3 py-1.5`) with cyan active state.
 
 ### Mobile bottom nav
 
@@ -436,6 +450,25 @@ className="md:hidden fixed bottom-0 inset-x-0 z-50 border-t border-white/10 bg-c
 
 Orange warm accents, `font-mono` for addresses, QR on white background with `imageRendering: crisp-edges`.
 
+### Homepage hero (`HeroOverlayCard` + `HeroMotionBackground`)
+
+```tsx
+// Motion background: drifting orbs, scan lines, vignette
+<HeroMotionBackground />
+
+// Glass overlay card
+<div className="hero-overlay-card ...">
+  <div className="hero-overlay-grid" />  {/* subtle grid texture */}
+</div>
+```
+
+**CSS classes** (`src/index.css`):
+- `.hero-overlay-card` — mesh glow, refined glass, corner accents
+- `.hero-overlay-grid` — low-opacity grid texture overlay
+- `.hero-headline-accent` — gradient text with subtle glow on hero H1
+
+Primary CTA on hero uses **white pill** (`bg-white text-charcoal-950 rounded-full`); secondary uses glass outline.
+
 ---
 
 ## 10. Accessibility & mobile checklist
@@ -457,11 +490,13 @@ Orange warm accents, `font-mono` for addresses, QR on white background with `ima
 
 | Page / component | What to copy |
 |------------------|--------------|
-| [`HomePage.tsx`](../src/pages/HomePage.tsx) | Hero scale, glow text, cyan/orange balance |
-| [`PricingPage.tsx`](../src/pages/PricingPage.tsx) | Section structure, feature grid, plan cards, badge wrapper |
+| [`HomePage.tsx`](../src/pages/HomePage.tsx) | Motion hero, overlay card, white pill CTAs, stats strip |
+| [`HeroOverlayCard.tsx`](../src/components/HeroOverlayCard.tsx) | Glass card, mesh glow, grid texture |
+| [`HeroMotionBackground.tsx`](../src/components/HeroMotionBackground.tsx) | Drifting orbs, scan lines, vignette |
+| [`Navbar.tsx`](../src/components/Navbar.tsx) | Floating island nav, pill links, scroll state |
+| [`PricingPage.tsx`](../src/pages/PricingPage.tsx) | Section structure, feature grid, plan cards |
 | [`Footer.tsx`](../src/components/Footer.tsx) | Ambient glow, job board, donation drawer |
 | [`DonateQRModal.tsx`](../src/components/DonateQRModal.tsx) | Mobile sheet, z-index, copy/share pattern |
-| [`Navbar.tsx`](../src/components/Navbar.tsx) | Sticky glass nav, dropdown panels |
 | [`MobileNav.tsx`](../src/components/MobileNav.tsx) | Bottom tab bar, active state |
 
 ---

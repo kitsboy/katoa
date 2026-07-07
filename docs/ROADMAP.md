@@ -1,9 +1,25 @@
 # KATOA Implementation Roadmap
 ## Production-Ready MVP Enhancement Plan
 
-**Last reviewed:** 2026-07-01  
-**Status snapshot:** Live on katoa.org · UI modernization (Footer, Pricing, DonateQR, Design system) · Supabase/Cloudflare ops staged  
+**Last reviewed:** 2026-07-06  
+**Status snapshot:** Live on katoa.org · charcoal/glass UI complete (17 pages, 57 components) · 200 frontend improvements (batches 3A–3E + hero/nav refresh @ `c65d1ed`) · Supabase/Cloudflare ops staged  
 **Pitch context:** [`EXECUTIVE-SUMMARY.md`](./EXECUTIVE-SUMMARY.md) · [`MARKETING.md`](./MARKETING.md)
+
+---
+
+## Completed Since Last Review (Frontend — July 2026)
+
+- ✅ Removed Bitcoin Pulse, Protocol Updates, LightningField from homepage
+- ✅ Motion hero + glass overlay card + floating island navbar
+- ✅ ConfirmDialog + toast (replaced all `confirm()` / `alert()`)
+- ✅ `pageStrings` i18n for dashboard/wishlist/about/comparison/explore (7 langs)
+- ✅ Lazy routes, per-route Lucide splits, explore pagination, FeeComparison URL sync
+- ✅ PWA service worker v2, `scripts/generate-sitemap.mjs`, dynamic OG per wishlist
+- ✅ About accordions, wishlist reorder (localStorage), breadcrumbs, ContributorsWall
+
+**Next frontend priorities:** ExplorePage lucide tree-shaking · remaining hardcoded About/Comparison body copy i18n · prerender/SSR for SEO
+
+---
 
 This document outlines concrete improvements to transform your existing KATOA app into a production-ready platform with advanced Bitcoin payment features.
 
