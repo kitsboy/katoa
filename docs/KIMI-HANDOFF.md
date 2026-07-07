@@ -148,4 +148,36 @@
 
 ---
 
+## Handoff to Kimi — 2026-07-07 (200 upgrades)
+
+**Machine:** M3 (Grok)
+**Project:** katoa
+
+### Done
+- [x] 200 upgrades in 8 batches of 25, each committed and pushed to main
+- [x] Batch 1 (`de76eae`): PageMeta noindex/lang, ErrorBoundary, Button a11y, CSP headers, favicon QR fix
+- [x] Batch 2 (`d6c4846`): Full nav i18n (7 langs), Auth UX, home pillars translated, FAQ desktop link
+- [x] Batch 3 (`e5be00f`): Input/Modal/Toast/Link/Tooltip/ShareButton/CurrencySelector polish
+- [x] Batch 4 (`1c86952`): Page SEO/a11y — Explore JSON-LD, FAQ, Contact honeypot, noindex pages
+- [x] Batch 5 (`0cb669c`): PWA v8, manifest shortcuts, BTC price fallback, CSS a11y
+- [x] Batch 6 (`77097c7`): Types/unions, clipboard enum, debug log removal, RouteTransition focus
+- [x] Batch 7 (`abb408f`): robots.txt, COOP/CORP headers, semantic breadcrumbs
+- [x] Batch 8 (`a668494`): Route announcer, explore preload, FeeComparison scope, STORAGE_KEYS
+- [x] `npm run build` passes after batch 8
+
+### Decisions
+- Batched commits for clean deploy history on Cloudflare Pages
+- navUiStrings block added to LanguageContext for shared nav/demo/pwa/changelog keys
+
+### What's Next
+- Monitor Cloudflare deploy for CSP header regressions
+- Typecheck still has pre-existing errors (MediaUpload, DashboardPage Supabase types) — not introduced by upgrades
+
+### Git State
+- Last commit SHA: a668494
+- Branch: main
+- Unpushed: none
+
+---
+
 *Safe Harbour · Part of the [Give A Bit](https://giveabit.io) family.*
