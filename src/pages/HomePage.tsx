@@ -2,13 +2,12 @@ import { useEffect, useState, lazy, Suspense } from 'react';
 import { Link } from '../components/Link';
 import { GlassSection } from '../components/GlassSection';
 import { GlassCallout } from '../components/GlassCallout';
-import { HeroMotionBackground } from '../components/HeroMotionBackground';
-import { HeroOverlayCard } from '../components/HeroOverlayCard';
+import { LandingHero } from '../components/LandingHero';
 import { PageMeta } from '../components/PageMeta';
 import { SectionHeader } from '../components/SectionHeader';
 import { useLanguage } from '../contexts/LanguageContext';
 import { supabase } from '../lib/supabase';
-import { ArrowRight, Zap, Shield, Globe, ChevronDown } from 'lucide-react';
+import { ArrowRight, Zap, Shield, Globe } from 'lucide-react';
 
 const FeeComparison = lazy(() => import('../components/FeeComparison').then((m) => ({ default: m.FeeComparison })));
 const SocialProofTicker = lazy(() => import('../components/SocialProofTicker').then((m) => ({ default: m.SocialProofTicker })));
@@ -51,82 +50,23 @@ export function HomePage() {
         path="/"
       />
 
-      {/* Hero */}
-      <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden px-3 sm:px-6 pt-28 sm:pt-32 pb-16">
-        <HeroMotionBackground />
-        <div className="relative z-10 max-w-5xl mx-auto text-center w-full">
-          <HeroOverlayCard>
-            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-white/10 bg-white/[0.04] mb-6 sm:mb-8">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full rounded-full bg-neon-cyan-400 opacity-60 motion-safe:animate-ping" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-neon-cyan-500" />
-              </span>
-              <span className="text-[11px] sm:text-xs font-medium tracking-wide text-gray-300 uppercase">
-                {t('home.badge')}
-              </span>
-            </div>
-
-            <h1 className="font-display font-bold tracking-tight mb-5 sm:mb-6">
-              <span className="block text-3xl sm:text-4xl md:text-5xl text-white/90 mb-2 sm:mb-3">
-                {t('home.keep')}
-              </span>
-              <span className="block text-6xl sm:text-7xl md:text-8xl lg:text-[7.5rem] font-black leading-[0.9] hero-headline-accent">
-                {t('home.percent')}
-              </span>
-              <span className="block mt-3 sm:mt-4 text-xl sm:text-2xl md:text-3xl text-gray-400 font-medium">
-                {t('home.earnings')}
-              </span>
-            </h1>
-
-            <p className="text-sm sm:text-base md:text-lg text-gray-400 max-w-xl mx-auto mb-8 sm:mb-10 leading-relaxed">
-              {t('home.subtitle')}
-              <span className="hidden sm:inline"> · </span>
-              <span className="block sm:inline mt-1 sm:mt-0 text-gray-500">{t('home.subtitle2')}</span>
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8 sm:mb-10 max-w-md sm:max-w-none mx-auto">
-              <Link
-                href="/dashboard"
-                className="inline-flex items-center justify-center min-h-[48px] sm:min-h-[52px] px-8 text-sm sm:text-base font-semibold bg-white text-charcoal-950 hover:bg-gray-100 rounded-full transition-all duration-200 touch-manipulation active:scale-[0.98] shadow-[0_0_32px_rgba(255,255,255,0.15)]"
-              >
-                {t('home.cta.start')}
-                <ArrowRight className="ml-2" size={18} strokeWidth={2.5} />
-              </Link>
-              <Link
-                href="/comparison"
-                className="inline-flex items-center justify-center min-h-[48px] sm:min-h-[52px] px-8 text-sm sm:text-base font-semibold text-white/90 border border-white/15 hover:border-white/30 hover:bg-white/[0.06] rounded-full transition-all duration-200 touch-manipulation active:scale-[0.98]"
-              >
-                {t('home.cta.compare')}
-              </Link>
-            </div>
-
-            <div className="inline-flex flex-wrap items-center justify-center gap-px p-1 rounded-2xl border border-white/[0.08] bg-black/20">
-              {[
-                { value: stats.volume, label: t('home.stats.processed'), accent: 'text-bitcoin-orange-400' },
-                { value: stats.countries, label: t('home.stats.countries'), accent: 'text-neon-cyan-400' },
-                { value: '0%', label: t('home.stats.fees'), accent: 'text-emerald-400' },
-              ].map((stat, i) => (
-                <div
-                  key={stat.label}
-                  className={`hero-stat-pill flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl text-left sm:text-center ${
-                    i > 0 ? 'border-l border-white/[0.06] sm:border-l-0' : ''
-                  }`}
-                >
-                  <span className={`text-sm sm:text-base font-bold font-mono tabular-nums ${stat.accent}`}>
-                    {stat.value}
-                  </span>
-                  <span className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">{stat.label}</span>
-                </div>
-              ))}
-            </div>
-          </HeroOverlayCard>
-        </div>
-
-        <div className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 motion-safe:animate-bounce" aria-hidden="true">
-          <span className="text-[10px] uppercase tracking-widest text-gray-600">Scroll</span>
-          <ChevronDown size={20} className="text-gray-500" strokeWidth={1.5} />
-        </div>
-      </section>
+      <LandingHero
+        badge={t('home.badge')}
+        keepLabel={t('home.keep')}
+        percentLabel={t('home.percent')}
+        earningsLabel={t('home.earnings')}
+        subtitle={t('home.subtitle')}
+        subtitle2={t('home.subtitle2')}
+        ctaStart={t('home.cta.start')}
+        ctaCompare={t('home.cta.compare')}
+        stats={{
+          volume: stats.volume,
+          countries: stats.countries,
+          feesLabel: t('home.stats.fees'),
+          processedLabel: t('home.stats.processed'),
+          countriesLabel: t('home.stats.countries'),
+        }}
+      />
 
       <Suspense fallback={null}>
         <SocialProofTicker />

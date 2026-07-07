@@ -20,6 +20,7 @@ export function Navbar() {
   const menuRef = useRef<HTMLDivElement>(null);
 
   const isActive = (path: string) => location.pathname === path;
+  const isHomeHero = location.pathname === '/' && !scrolled;
 
   useEffect(() => {
     setShowMenu(false);
@@ -69,8 +70,8 @@ export function Navbar() {
     <>
       <header className="fixed top-0 inset-x-0 z-50 px-3 sm:px-4 pt-3 sm:pt-4 pointer-events-none">
         <nav
-          className={`nav-island pointer-events-auto max-w-7xl mx-auto rounded-2xl transition-all duration-300 ${
-            scrolled ? 'nav-island-scrolled' : ''
+          className={`nav-island pointer-events-auto max-w-7xl mx-auto rounded-2xl transition-all duration-500 ${
+            isHomeHero ? 'nav-island-hero' : scrolled ? 'nav-island-scrolled' : ''
           }`}
         >
           <div className="px-3 sm:px-5 lg:px-6">
