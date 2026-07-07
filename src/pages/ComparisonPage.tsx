@@ -267,7 +267,7 @@ export function ComparisonPage() {
                   </div>
                 )}
                 <table className="w-full min-w-[640px]">
-                  <thead>
+                  <thead className="comparison-table-sticky-header">
                     <tr className="border-b border-white/10">
                       <th scope="col" className="text-left text-white font-semibold pb-4 pr-4 min-w-[140px]">{t('comparison.table.feature')}</th>
                       <th scope="col" className="text-center text-emerald-600 font-bold pb-4 px-2">

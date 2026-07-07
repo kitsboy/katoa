@@ -101,6 +101,7 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
 
   async function handleSaveMethod(e: React.FormEvent) {
     e.preventDefault();
+    if (processing) return;
     setProcessing(true);
 
     try {
@@ -335,7 +336,7 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
             </label>
             <select
               value={formData.method_type}
-              onChange={(e) => setFormData({ ...formData, method_type: e.target.value as any })}
+              onChange={(e) => setFormData({ ...formData, method_type: e.target.value as PaymentMethod['method_type'] })}
               className="w-full px-4 py-3 bg-charcoal-900/50 border border-white/20 rounded-lg text-white focus:outline-none focus:border-emerald-500"
               disabled={!!editingMethod}
             >

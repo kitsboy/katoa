@@ -22,7 +22,7 @@ export const ContributorsWall = memo(function ContributorsWall() {
   }
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3" role="list">
+    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3" role="list" aria-label="Project contributors">
       {contributors.map((c) => (
         <div
           key={c.name}

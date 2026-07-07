@@ -35,6 +35,7 @@ export function WalletAddressManager() {
   });
   const [deleteAddressId, setDeleteAddressId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [adding, setAdding] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -60,7 +61,8 @@ export function WalletAddressManager() {
   }
 
   async function handleAddAddress() {
-    if (!formData.address_value.trim()) return;
+    if (!formData.address_value.trim() || adding) return;
+    setAdding(true);
 
     try {
       const { error } = await supabase.from('wallet_addresses').insert({
@@ -79,6 +81,8 @@ export function WalletAddressManager() {
     } catch (error) {
       console.error('Error adding address:', error);
       toast(t('error.addAddress'), 'error');
+    } finally {
+      setAdding(false);
     }
   }
 
@@ -203,7 +207,7 @@ export function WalletAddressManager() {
                 <select
                   value={formData.address_type}
                   onChange={(e) =>
-                    setFormData({ ...formData, address_type: e.target.value as any })
+                    setFormData({ ...formData, address_type: e.target.value as WalletAddress['address_type'] })
                   }
                   className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 >
@@ -262,6 +266,7 @@ export function WalletAddressManager() {
               <div className="flex gap-2">
                 <Button
                   onClick={handleAddAddress}
+                  disabled={adding}
                   className="flex-1 bg-gradient-to-r from-emerald-500 to-cyan-600"
                 >
                   <Check size={20} className="mr-2" />
