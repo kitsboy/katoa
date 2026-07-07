@@ -122,4 +122,30 @@
 
 ---
 
+## Handoff to Kimi — 2026-07-07 (favicon + landing palette)
+
+**Machine:** M3 (Grok)
+**Project:** katoa
+
+### Done
+- [x] Full warm landing palette across homepage (`dedb007`): `lp-*` classes, FeeComparison `variant="landing"`, SectionHeader/OnboardingChecklist light theme
+- [x] Favicon from logo2 brush mark (`4aa1e92`, `09cb2dd`): `public/logo2.png`, all favicon sizes, manifest PWA icons, `index.html` links
+- [x] Regenerated favicon.ico (285KB → 5KB); SW cache bumped to v7
+
+### Decisions
+- User path `/Users/cam/Desktop/Images/image/logo2.png` not on M3 — used identical file from `~/Downloads/Sats (1).png` (same MD5 as `public/logo2.png`)
+- Navbar/footer still use `/sats.png`; only favicon/PWA icons switched to logo2 brush mark
+
+### What's Next
+- If Cam has a different `logo2.png`, copy to `public/logo2.png` and regenerate favicon sizes
+- Optional: align navbar logo with new favicon for brand consistency
+- Footer still dark below warm `lp-page` — user may want transition
+
+### Git State
+- Last commit SHA: 09cb2dd
+- Branch: main
+- Unpushed: none
+
+---
+
 *Safe Harbour · Part of the [Give A Bit](https://giveabit.io) family.*
