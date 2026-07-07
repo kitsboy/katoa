@@ -57,6 +57,8 @@ const defaultFilters: ExploreFilters = {
   sortBy: 'recent',
 };
 
+const PAGE_SIZE = 12;
+
 const WishlistCard = memo(function WishlistCard({
   wishlist,
   isFavorite,
@@ -251,6 +253,11 @@ export function ExplorePage() {
   const [favoritesOnly, setFavoritesOnly] = useState(() =>
     getStorage<boolean>(STORAGE_KEYS.exploreFavoritesOnly, false)
   );
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [debouncedSearch, selectedCountry, selectedCategory, sortBy, favoritesOnly]);
 
   useEffect(() => {
     loadWishlists();
@@ -722,16 +729,30 @@ export function ExplorePage() {
             ))}
           </div>
         ) : filteredWishlists.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {filteredWishlists.map((wishlist) => (
-              <WishlistCard
-                key={wishlist.id}
-                wishlist={wishlist}
-                isFavorite={favorites.includes(wishlist.id)}
-                onToggleFavorite={toggleFavorite}
-              />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {filteredWishlists.slice(0, visibleCount).map((wishlist) => (
+                <WishlistCard
+                  key={wishlist.id}
+                  wishlist={wishlist}
+                  isFavorite={favorites.includes(wishlist.id)}
+                  onToggleFavorite={toggleFavorite}
+                />
+              ))}
+            </div>
+            {visibleCount < filteredWishlists.length && (
+              <div className="mt-8 text-center">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+                  className="min-h-[48px] px-8"
+                >
+                  Load more ({filteredWishlists.length - visibleCount} remaining)
+                </Button>
+              </div>
+            )}
+          </>
         ) : (
           <Card variant="glass">
             <EmptyState

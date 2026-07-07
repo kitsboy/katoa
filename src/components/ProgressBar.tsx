@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 interface ProgressBarProps {
   current: number;
   goal: number;
@@ -8,7 +10,7 @@ interface ProgressBarProps {
   animated?: boolean;
 }
 
-export function ProgressBar({
+export const ProgressBar = memo(function ProgressBar({
   current,
   goal,
   showPercentage = true,
@@ -79,4 +81,4 @@ export function ProgressBar({
       )}
     </div>
   );
-}
+});

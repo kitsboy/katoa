@@ -19,14 +19,11 @@ export default defineConfig({
           vendor: ['react', 'react-dom'],
           supabase: ['@supabase/supabase-js'],
           nostr: ['nostr-tools'],
-          ui: ['lucide-react'],
           leaflet: ['leaflet'],
         },
       },
     },
   },
   plugins: [react()],
-  optimizeDeps: {
-    exclude: ['lucide-react'],
-  },
+
 });

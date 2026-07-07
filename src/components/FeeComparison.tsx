@@ -156,6 +156,14 @@ export function FeeComparison() {
     }
   }, []);
 
+  useEffect(() => {
+    if (monthlyEarnings <= 0) return;
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('earnings') === String(monthlyEarnings)) return;
+    url.searchParams.set('earnings', String(monthlyEarnings));
+    window.history.replaceState({}, '', `${url.pathname}${url.search}`);
+  }, [monthlyEarnings]);
+
   const formatNumber = (value: string): string => {
     const numbers = value.replace(/[^0-9]/g, '');
     return numbers.replace(/\B(?=(\d{3})+(?!\d))/g, ',');

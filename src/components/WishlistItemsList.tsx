@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { ExternalLink, Check } from 'lucide-react';
 import { Card } from './Card';
 
@@ -20,7 +21,7 @@ interface WishlistItemsListProps {
   onItemClick?: (item: WishlistItem) => void;
 }
 
-export function WishlistItemsList({ items, onItemClick }: WishlistItemsListProps) {
+export const WishlistItemsList = memo(function WishlistItemsList({ items, onItemClick }: WishlistItemsListProps) {
   if (!items || items.length === 0) {
     return null;
   }
@@ -58,6 +59,8 @@ export function WishlistItemsList({ items, onItemClick }: WishlistItemsListProps
                 <img
                   src={item.image_url}
                   alt={item.title}
+                  loading="lazy"
+                  decoding="async"
                   className="w-20 h-20 object-cover rounded-lg"
                   onError={(e) => {
                     e.currentTarget.src = 'https://images.pexels.com/photos/2599244/pexels-photo-2599244.jpeg?auto=compress&cs=tinysrgb&w=400';
@@ -131,4 +134,4 @@ export function WishlistItemsList({ items, onItemClick }: WishlistItemsListProps
       })}
     </div>
   );
-}
+});

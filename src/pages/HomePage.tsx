@@ -5,13 +5,13 @@ import { GlassCallout } from '../components/GlassCallout';
 import { HeroMotionBackground } from '../components/HeroMotionBackground';
 import { PageMeta } from '../components/PageMeta';
 import { SectionHeader } from '../components/SectionHeader';
-import { OnboardingChecklist } from '../components/OnboardingChecklist';
 import { useLanguage } from '../contexts/LanguageContext';
 import { supabase } from '../lib/supabase';
-import { SocialProofTicker } from '../components/SocialProofTicker';
 import { ArrowRight, Zap, Shield, Globe, ChevronDown } from 'lucide-react';
 
 const FeeComparison = lazy(() => import('../components/FeeComparison').then((m) => ({ default: m.FeeComparison })));
+const SocialProofTicker = lazy(() => import('../components/SocialProofTicker').then((m) => ({ default: m.SocialProofTicker })));
+const OnboardingChecklist = lazy(() => import('../components/OnboardingChecklist').then((m) => ({ default: m.OnboardingChecklist })));
 
 const howItWorksSteps = [
   { titleKey: 'home.step1.title', descKey: 'home.step1.desc', step: '01' },
@@ -116,11 +116,15 @@ export function HomePage() {
         </div>
       </section>
 
-      <SocialProofTicker />
+      <Suspense fallback={null}>
+        <SocialProofTicker />
+      </Suspense>
 
       {/* Onboarding checklist */}
       <section className="relative py-12 sm:py-16 px-4 sm:px-6">
-        <OnboardingChecklist />
+        <Suspense fallback={<div className="h-32 animate-shimmer bg-white/5 rounded-2xl" />}>
+          <OnboardingChecklist />
+        </Suspense>
       </section>
 
       {/* How it works — horizontal scroll */}

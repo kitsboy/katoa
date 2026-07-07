@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { memo, useEffect, useState, useRef } from 'react';
 
 interface SatsDisplayProps {
   sats: number;
@@ -21,7 +21,7 @@ function satsToBtc(sats: number): string {
   return btc.toFixed(8);
 }
 
-export function SatsDisplay({
+export const SatsDisplay = memo(function SatsDisplay({
   sats,
   showBtc = true,
   showFiat = false,
@@ -79,4 +79,4 @@ export function SatsDisplay({
       )}
     </div>
   );
-}
+});
