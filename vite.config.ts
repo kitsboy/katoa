@@ -24,6 +24,18 @@ export default defineConfig({
       },
     },
   },
-  plugins: [react()],
+  plugins: [
+    react(),
+    {
+      name: 'css-first',
+      transformIndexHtml(html) {
+        const css = html.match(/<link rel="stylesheet" crossorigin href="\/assets\/[^"]+\.css">/);
+        if (!css) return html;
+        return html
+          .replace(css[0], '')
+          .replace('</style>', `</style>\n    ${css[0]}`);
+      },
+    },
+  ],
 
 });

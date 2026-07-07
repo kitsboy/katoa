@@ -226,8 +226,7 @@
 /* ── Landing page — creator-forward light system ── */
 
 .lp-page {
-  background: #fffbf9;
-  color: #1f2937;
+  background: #050509;
 }
 
 .lp-container {
@@ -856,13 +855,13 @@
 }
 
 .lp-section-muted {
-  background: #fff5f2;
-  border-top: 1px solid rgba(0, 0, 0, 0.04);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  background: rgba(255, 255, 255, 0.015);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .lp-skeleton {
-  background: rgba(0, 0, 0, 0.04);
+  background: rgba(255, 255, 255, 0.04);
   animation: shimmer 1.5s ease-in-out infinite;
 }
 
@@ -896,15 +895,14 @@
 .lp-step-index span {
   font-size: 12px;
   font-weight: 600;
-  color: #be123c;
+  color: #6b7280;
   font-family: 'JetBrains Mono', monospace;
   width: 2rem;
   height: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(244, 63, 94, 0.2);
-  background: rgba(244, 63, 94, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
 }
 
@@ -915,7 +913,7 @@
 .lp-step-content h3 {
   font-size: 1.0625rem;
   font-weight: 600;
-  color: #111827;
+  color: #fff;
   margin-bottom: 0.5rem;
   letter-spacing: -0.02em;
 }
@@ -928,8 +926,11 @@
 
 .lp-bento {
   display: grid;
-  gap: 1rem;
+  gap: 1px;
+  background: rgba(255, 255, 255, 0.08);
   border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 @media (min-width: 768px) {
@@ -938,10 +939,7 @@
 
 .lp-bento-card {
   padding: 2rem;
-  background: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  background: #050509;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -954,9 +952,8 @@
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-  border: 1px solid rgba(244, 63, 94, 0.15);
-  background: rgba(244, 63, 94, 0.06);
-  color: #e11d48;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
   margin-bottom: 0.25rem;
 }
 
@@ -964,7 +961,6 @@
   font-size: 1.125rem;
   font-weight: 600;
   letter-spacing: -0.02em;
-  color: #111827;
 }
 
 .lp-bento-card p {
@@ -980,31 +976,30 @@
   gap: 1rem;
   padding-top: 1rem;
   margin-top: 0.5rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
   font-size: 12px;
 }
 
 .lp-bento-compare span {
   display: block;
-  color: #9ca3af;
+  color: #6b7280;
   margin-bottom: 2px;
 }
 
 .lp-bento-compare strong {
-  color: #6b7280;
+  color: #e5e7eb;
   font-weight: 500;
 }
 
 .lp-bento-compare div:last-child strong {
-  color: #111827;
+  color: #fff;
 }
 
 .lp-onboarding {
   padding: 2rem;
   border-radius: 16px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  background: #fff;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .lp-onboarding-item {
@@ -1013,27 +1008,27 @@
   gap: 12px;
   padding: 12px 14px;
   border-radius: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  background: #fffbf9;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.15);
 }
 
 .lp-onboarding-check {
   width: 28px;
   height: 28px;
   border-radius: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #9ca3af;
+  color: #6b7280;
   flex-shrink: 0;
   transition: border-color 0.15s, background 0.15s;
 }
 
 .lp-onboarding-check-done {
-  background: rgba(244, 63, 94, 0.08);
-  border-color: rgba(244, 63, 94, 0.25);
-  color: #e11d48;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
 }
 
 .lp-section-cta {
@@ -1043,23 +1038,21 @@
 .lp-cta-panel {
   text-align: center;
   padding: 4rem 2rem;
-  border-radius: 24px;
-  border: 1px solid rgba(244, 63, 94, 0.12);
-  background: linear-gradient(135deg, #fff 0%, #fff5f2 100%);
-  box-shadow: 0 16px 48px rgba(244, 63, 94, 0.08);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .lp-cta-panel h2 {
   font-size: clamp(1.75rem, 4vw, 2.5rem);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -0.03em;
   margin-bottom: 1rem;
-  color: #111827;
 }
 
 .lp-cta-panel > p:first-of-type {
   font-size: 1.0625rem;
-  color: #6b7280;
+  color: #9ca3af;
   max-width: 36rem;
   margin: 0 auto 2rem;
   line-height: 1.65;
@@ -1082,7 +1075,7 @@
   gap: 2rem 3rem;
   margin-top: 3rem;
   padding-top: 2rem;
-  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .lp-cta-stats div {
@@ -1093,8 +1086,8 @@
 
 .lp-cta-stats strong {
   font-size: 1.5rem;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 600;
+  color: #fff;
 }
 
 .lp-cta-stats span {
