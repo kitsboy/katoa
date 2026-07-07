@@ -58,8 +58,9 @@
 - Backend: BTCPay wiring, Supabase live data (out of scope for docs pass)
 
 ### Git State
-- Last commit SHA: (docs commit pending)
+- Last commit SHA: b23dcd88c2af663f403f00fb80dcf49648e2f080
 - Branch: main
+- Unpushed: none
 
 ---
 
