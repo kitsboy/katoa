@@ -189,7 +189,7 @@ export function Footer() {
           {/* Bottom bar */}
           <div className="pt-8 border-t border-white/10">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-              <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-3 gap-y-1 text-xs text-gray-500">
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-3 gap-y-2 text-xs text-gray-500">
                 <span>&copy; {new Date().getFullYear()} KATOA (katoa.org)</span>
                 <span className="hidden sm:inline text-gray-700">·</span>
                 <span className="font-mono text-[10px] text-gray-600">v{packageJson.version}</span>
@@ -201,6 +201,16 @@ export function Footer() {
                   className="text-gray-500 hover:text-neon-cyan-400 transition-colors"
                 >
                   A Give A Bit project
+                </a>
+                <a
+                  href="https://github.com/kitsboy/katoa"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/5 border border-white/10 hover:border-white/25 hover:bg-white/10 transition-all text-gray-400 hover:text-white"
+                  aria-label="KATOA on GitHub — MIT License"
+                >
+                  <Github size={14} />
+                  <span className="font-mono text-[10px] tracking-wide">MIT</span>
                 </a>
               </div>
 

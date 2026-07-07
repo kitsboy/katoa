@@ -1,5 +1,6 @@
 import { useLanguage } from '../contexts/LanguageContext';
 import { Shield, Lock, Eye, Database, Cookie, Globe, Mail, UserCheck } from 'lucide-react';
+import { PageMeta } from '../components/PageMeta';
 
 export function PrivacyPage() {
   const { t } = useLanguage();
@@ -7,6 +8,11 @@ export function PrivacyPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 text-white pt-24 pb-16">
+      <PageMeta
+        title="Privacy Policy"
+        description="KATOA Privacy Policy — how we protect your data on our privacy-first Bitcoin wishlist platform."
+        path="/privacy"
+      />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-cyan-600 mb-4">

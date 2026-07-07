@@ -2,10 +2,16 @@ import { Shield, Zap, Globe, Users, Heart, TrendingUp, Lock, DollarSign, X } fro
 import { Card } from '../components/Card';
 import { Link } from '../components/Link';
 import { Button } from '../components/Button';
+import { PageMeta } from '../components/PageMeta';
 
 export function AboutPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 text-white pt-16">
+      <PageMeta
+        title="About"
+        description="Learn about KATOA's mission — zero-fee, privacy-first Bitcoin commerce built by creators for creators."
+        path="/about"
+      />
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 px-6 overflow-hidden">

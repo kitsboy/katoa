@@ -1,5 +1,6 @@
 import { useLanguage } from '../contexts/LanguageContext';
 import { FileText, Shield, AlertCircle, Scale } from 'lucide-react';
+import { PageMeta } from '../components/PageMeta';
 
 export function TermsPage() {
   const { t } = useLanguage();
@@ -7,6 +8,11 @@ export function TermsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 text-white pt-24 pb-16">
+      <PageMeta
+        title="Terms of Service"
+        description="KATOA Terms of Service — rules and guidelines for using our zero-fee Bitcoin creator platform."
+        path="/terms"
+      />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-orange-500 to-yellow-600 mb-4">

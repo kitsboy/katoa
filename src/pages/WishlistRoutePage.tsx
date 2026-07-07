@@ -1,4 +1,5 @@
 import { Navigate, useParams } from 'react-router-dom';
+import { PageMeta } from '../components/PageMeta';
 import { WishlistPage } from './WishlistPage';
 
 export function WishlistRoutePage() {
@@ -8,5 +9,14 @@ export function WishlistRoutePage() {
     return <Navigate to="/explore" replace />;
   }
 
-  return <WishlistPage slug={slug} />;
+  return (
+    <>
+      <PageMeta
+        title="Wishlist"
+        description="Support this creator's wishlist with Bitcoin Lightning on KATOA. Zero platform fees, instant donations."
+        path={`/w/${slug}`}
+      />
+      <WishlistPage slug={slug} />
+    </>
+  );
 }

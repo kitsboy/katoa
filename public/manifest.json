@@ -1,0 +1,26 @@
+{
+  "name": "KATOA — Zero-Fee Bitcoin Creator Platform",
+  "short_name": "KATOA",
+  "description": "Privacy-first wishlists and donations on Bitcoin Lightning. Keep 100% of your earnings — 0% fees forever.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#050509",
+  "theme_color": "#050509",
+  "categories": ["finance", "social", "utilities"],
+  "icons": [
+    {
+      "src": "/sats.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/sats.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

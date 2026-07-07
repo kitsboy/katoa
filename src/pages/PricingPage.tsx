@@ -1,7 +1,11 @@
+import { useState } from 'react';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { Link } from '../components/Link';
 import { FeeComparison } from '../components/FeeComparison';
+import { PageMeta } from '../components/PageMeta';
+import { SectionHeader } from '../components/SectionHeader';
+import { GlassCallout } from '../components/GlassCallout';
 import { useLanguage } from '../contexts/LanguageContext';
 import {
   Check,
@@ -19,6 +23,8 @@ import {
   Building2,
   ArrowRight,
   Infinity,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react';
 
 const features = [
@@ -176,11 +182,32 @@ const steps = [
   },
 ];
 
+const pricingFaqs = [
+  {
+    question: 'Are there really zero platform fees?',
+    answer: 'Yes — forever. KATOA charges 0% on every donation. You only pay tiny Lightning network fees, typically fractions of a cent.',
+  },
+  {
+    question: 'Do I need a bank account or KYC?',
+    answer: 'No. Sign up with email, Google, or Nostr. Connect a Lightning wallet when you are ready to receive — no identity verification required.',
+  },
+  {
+    question: 'How fast do I receive donations?',
+    answer: 'Instantly. Lightning settlements arrive in seconds, directly to your wallet. No 7-day holds or payout minimums.',
+  },
+];
+
 export function PricingPage() {
   const { t } = useLanguage();
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 text-white">
+      <PageMeta
+        title="Pricing"
+        description="KATOA pricing: $0/month, 0% platform fees forever. Keep 100% of your Bitcoin earnings on Lightning."
+        path="/pricing"
+      />
       {/* Hero */}
       <section className="relative pt-24 sm:pt-28 pb-12 sm:pb-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
@@ -383,13 +410,48 @@ export function PricingPage() {
               ))}
             </div>
 
-            <div className="mt-10 p-4 sm:p-6 rounded-2xl bg-black/30 border border-white/10 text-center">
-              <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
-                <span className="font-semibold text-white">No hidden fees.</span> Lightning network costs are tiny and
-                typically paid by supporters. KATOA never touches your balance.
-              </p>
-            </div>
+            <GlassCallout variant="bitcoin" className="mt-10 text-center">
+              <span className="font-semibold text-white">No hidden fees.</span> Lightning network costs are tiny and
+              typically paid by supporters. KATOA never touches your balance.
+            </GlassCallout>
           </Card>
+
+          {/* Mini FAQ */}
+          <div className="mt-12 sm:mt-16">
+            <SectionHeader
+              eyebrow="FAQ"
+              title="Quick answers"
+              subtitle="Three things creators ask most about zero-fee pricing"
+            />
+            <div className="space-y-3 max-w-3xl mx-auto">
+              {pricingFaqs.map((faq, index) => {
+                const isOpen = openFaq === index;
+                return (
+                  <div key={faq.question} className="bg-white/[0.03] backdrop-blur-md rounded-2xl border border-white/10 overflow-hidden">
+                    <button
+                      type="button"
+                      onClick={() => setOpenFaq(isOpen ? null : index)}
+                      className="w-full px-4 sm:px-6 py-4 flex items-center justify-between text-left hover:bg-white/[0.04] transition-colors min-h-[56px] touch-manipulation"
+                      aria-expanded={isOpen}
+                    >
+                      <h3 className="text-base sm:text-lg font-semibold text-white pr-4">{faq.question}</h3>
+                      {isOpen ? <ChevronUp className="text-gray-400 shrink-0" size={20} /> : <ChevronDown className="text-gray-400 shrink-0" size={20} />}
+                    </button>
+                    {isOpen && (
+                      <div className="px-4 sm:px-6 py-4 border-t border-white/10 bg-charcoal-900/50">
+                        <p className="text-gray-300 text-sm sm:text-base leading-relaxed">{faq.answer}</p>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            <p className="text-center mt-6">
+              <Link href="/faq" className="text-sm text-neon-cyan-400 hover:underline">
+                View full FAQ →
+              </Link>
+            </p>
+          </div>
 
           {/* CTA */}
           <div className="mt-10 sm:mt-12 text-center">
