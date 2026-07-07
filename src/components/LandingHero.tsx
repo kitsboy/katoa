@@ -1,5 +1,5 @@
 import { Link } from './Link';
-import { ArrowRight, Gift, MapPin } from 'lucide-react';
+import { ArrowRight, Gift, MapPin, Zap } from 'lucide-react';
 import { mockWishlistItems } from '../data/mockWishlists';
 
 const FEATURED = {
@@ -45,9 +45,9 @@ function ProductScreenshot() {
     <div className="lp-shot">
       <div className="lp-shot-device">
         <div className="lp-shot-chrome">
-          <span className="lp-shot-dot" />
-          <span className="lp-shot-dot" />
-          <span className="lp-shot-dot" />
+          <span className="lp-shot-dot lp-shot-dot--close" />
+          <span className="lp-shot-dot lp-shot-dot--min" />
+          <span className="lp-shot-dot lp-shot-dot--max" />
           <span className="lp-shot-url">katoa.org/wishlist/medellin-skate-park</span>
         </div>
 
@@ -123,6 +123,12 @@ export function LandingHero({
   ctaCompare,
   stats,
 }: LandingHeroProps) {
+  const metricItems = [
+    { value: stats.volume, label: stats.processedLabel, accent: 'orange' as const },
+    { value: stats.countries, label: stats.countriesLabel, accent: 'cyan' as const },
+    { value: '0%', label: stats.feesLabel, accent: 'emerald' as const },
+  ];
+
   return (
     <section className="lp-hero">
       <div className="lp-hero-bg" aria-hidden>
@@ -155,9 +161,16 @@ export function LandingHero({
               </Link>
             </div>
 
-            <p className="lp-hero-proof">
-              <strong>{stats.creators ?? '2.5K+'}</strong> creators · 0% fees · Lightning payouts
-            </p>
+            <div className="lp-hero-proof">
+              <span className="lp-proof-chip lp-proof-chip--warm">
+                <strong>{stats.creators ?? '2.5K+'}</strong> creators
+              </span>
+              <span className="lp-proof-chip lp-proof-chip--orange">0% fees</span>
+              <span className="lp-proof-chip lp-proof-chip--cyan">
+                <Zap size={12} />
+                Lightning
+              </span>
+            </div>
           </div>
 
           <div className="lp-hero-visual">
@@ -166,12 +179,8 @@ export function LandingHero({
         </div>
 
         <div className="lp-metrics">
-          {[
-            { value: stats.volume, label: stats.processedLabel },
-            { value: stats.countries, label: stats.countriesLabel },
-            { value: '0%', label: stats.feesLabel },
-          ].map((item) => (
-            <div key={item.label} className="lp-metric">
+          {metricItems.map((item) => (
+            <div key={item.label} className={`lp-metric lp-metric--${item.accent}`}>
               <span className="lp-metric-value">{item.value}</span>
               <span className="lp-metric-label">{item.label}</span>
             </div>

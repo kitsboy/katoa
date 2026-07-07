@@ -85,7 +85,7 @@ export function Navbar() {
                 <span className="hidden sm:inline text-base font-display font-semibold tracking-tight truncate">KATOA</span>
                 <span className={`hidden md:inline text-[10px] font-medium px-2 py-0.5 rounded-md shrink-0 uppercase tracking-wider ${
                   isHomeHero
-                    ? 'text-stone-600 bg-stone-900/8 border border-stone-900/12'
+                    ? 'text-orange-800 bg-orange-500/12 border border-orange-500/25'
                     : 'text-neon-cyan-400/90 bg-neon-cyan-500/10 border border-neon-cyan-500/20'
                 }`}>
                   Beta
@@ -213,7 +213,7 @@ export function Navbar() {
                       size="sm"
                       className={`font-semibold rounded-full px-5 ${
                         isHomeHero
-                          ? 'bg-stone-800 text-stone-50 hover:bg-stone-900'
+                          ? 'bg-bitcoin-orange-500 text-charcoal-950 hover:bg-bitcoin-orange-400'
                           : 'bg-white text-charcoal-950 hover:bg-gray-100'
                       }`}
                     >
