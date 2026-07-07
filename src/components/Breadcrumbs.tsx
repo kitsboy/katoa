@@ -1,4 +1,5 @@
 import { Link } from './Link';
+import { useLanguage } from '../contexts/LanguageContext';
 import { ChevronRight, Home } from 'lucide-react';
 
 export interface BreadcrumbItem {
@@ -12,13 +13,14 @@ interface BreadcrumbsProps {
 }
 
 export function Breadcrumbs({ items, className = '' }: BreadcrumbsProps) {
+  const { t } = useLanguage();
   return (
     <nav aria-label="Breadcrumb" className={`text-xs sm:text-sm text-gray-500 overflow-x-auto scrollbar-hide ${className}`}>
       <ol className="flex items-center gap-1 list-none m-0 p-0">
         <li className="flex items-center gap-1 shrink-0">
           <Link href="/" className="hover:text-neon-cyan-400 transition-colors flex items-center gap-1 touch-manipulation">
             <Home size={14} aria-hidden />
-            <span className="sr-only sm:not-sr-only">Home</span>
+            <span className="sr-only sm:not-sr-only">{t('breadcrumb.home')}</span>
           </Link>
         </li>
         {items.map((item, i) => (

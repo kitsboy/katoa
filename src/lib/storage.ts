@@ -35,4 +35,8 @@ export const STORAGE_KEYS = {
   wishlistItemOrder: (slug: string) => `katoa_wishlist_order_${slug}`,
   changelogSeen: 'katoa_changelog_seen',
   pwaInstallDismissed: 'katoa_pwa_install_dismissed',
+  exploreShowMap: 'katoa_explore_show_map',
+  mapShowMerchants: 'katoa_map_show_merchants',
+  mapShowKatoa: 'katoa_map_show_katoa',
+  onboardingChecklist: 'katoa-onboarding-checklist',
 } as const;

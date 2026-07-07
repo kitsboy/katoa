@@ -1,12 +1,15 @@
-const wins = [
-  'Creator in Nigeria saved $2,400/yr',
-  'Skate park in Medellín — 65% funded',
-  '0% fees — 100% to creators',
-  'Lightning payout in 3 seconds',
-  '195+ countries supported',
-];
+import { useLanguage } from '../contexts/LanguageContext';
 
 export function SocialProofTicker() {
+  const { t } = useLanguage();
+  const wins = [
+    t('ticker.1'),
+    t('ticker.2'),
+    t('ticker.3'),
+    t('ticker.4'),
+    t('ticker.5'),
+  ];
+
   return (
     <div className="overflow-hidden border-y border-white/5 bg-charcoal-900/50 py-2.5" aria-hidden>
       <div className="flex motion-safe:animate-[ticker_40s_linear_infinite] motion-reduce:animate-none gap-8 whitespace-nowrap">

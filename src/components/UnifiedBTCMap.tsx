@@ -1,12 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ExternalLink, Layers, Loader2, MapPin, Maximize2, Minimize2 } from 'lucide-react';
+import { Crosshair, ExternalLink, Layers, Loader2, MapPin, Maximize2, Minimize2 } from 'lucide-react';
 import { Link } from './Link';
 import { Button } from './Button';
+import { useLanguage } from '../contexts/LanguageContext';
+import { getStorage, setStorage, STORAGE_KEYS } from '../lib/storage';
 import {
   BTCMAP_ATTRIBUTION,
   type BTCMapCoordinates,
   type KatoaMapPin,
   buildBTCMapPlaceUrl,
+  escapeMapPopupText,
   fetchPlacesNearby,
   getAppBaseUrl,
   isBTCMapEnabled,
@@ -60,8 +63,30 @@ export function UnifiedBTCMap({
   const abortRef = useRef<AbortController | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const [showMerchants, setShowMerchants] = useState(true);
-  const [showKatoa, setShowKatoa] = useState(true);
+  const { t } = useLanguage();
+  const [showMerchants, setShowMerchants] = useState(() =>
+    getStorage(STORAGE_KEYS.mapShowMerchants, true)
+  );
+  const [showKatoa, setShowKatoa] = useState(() =>
+    getStorage(STORAGE_KEYS.mapShowKatoa, true)
+  );
+
+  useEffect(() => {
+    setStorage(STORAGE_KEYS.mapShowMerchants, showMerchants);
+  }, [showMerchants]);
+
+  useEffect(() => {
+    setStorage(STORAGE_KEYS.mapShowKatoa, showKatoa);
+  }, [showKatoa]);
+
+  useEffect(() => {
+    if (!expanded) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setExpanded(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [expanded]);
   const [expanded, setExpanded] = useState(false);
   const [merchantCount, setMerchantCount] = useState<number | null>(null);
   const [loadingMerchants, setLoadingMerchants] = useState(false);
@@ -97,8 +122,8 @@ export function UnifiedBTCMap({
         const popup = `
           <div class="btcmap-popup">
             <p class="btcmap-popup__eyebrow">BTC Map merchant${boosted ? ' · Boosted' : ''}</p>
-            <strong class="btcmap-popup__title">${place.name}</strong>
-            ${place.address ? `<p class="btcmap-popup__meta">${place.address}</p>` : ''}
+            <strong class="btcmap-popup__title">${escapeMapPopupText(place.name)}</strong>
+            ${place.address ? `<p class="btcmap-popup__meta">${escapeMapPopupText(place.address)}</p>` : ''}
             <a href="${buildBTCMapPlaceUrl(place.id)}" target="_blank" rel="noopener noreferrer" class="btcmap-popup__link">
               View on BTC Map →
             </a>
@@ -130,7 +155,7 @@ export function UnifiedBTCMap({
       const popup = `
         <div class="btcmap-popup btcmap-popup--katoa">
           <p class="btcmap-popup__eyebrow">KATOA creator project</p>
-          <strong class="btcmap-popup__title">${pin.title}</strong>
+          <strong class="btcmap-popup__title">${escapeMapPopupText(pin.title)}</strong>
           <p class="btcmap-popup__meta">${formatSats(pin.total_sats_raised)} sats raised</p>
           <a href="/wishlist/${pin.slug}" class="btcmap-popup__link btcmap-popup__link--katoa">
             View wishlist →
@@ -243,14 +268,37 @@ export function UnifiedBTCMap({
 
   const bothOff = !showMerchants && !showKatoa;
 
+  const flyToPin = (pin: KatoaMapPin) => {
+    mapRef.current?.flyTo([pin.latitude, pin.longitude], 14, { duration: 0.8 });
+  };
+
+  const fitAllPins = () => {
+    if (!mapRef.current || katoaPins.length === 0) return;
+    import('leaflet').then((L) => {
+      const bounds = L.latLngBounds(katoaPins.map((p) => [p.latitude, p.longitude] as [number, number]));
+      mapRef.current?.fitBounds(bounds, { padding: [48, 48], maxZoom: 12 });
+    });
+  };
+
+  const locateMe = () => {
+    if (!navigator.geolocation || !mapRef.current) return;
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        mapRef.current?.flyTo([pos.coords.latitude, pos.coords.longitude], 13, { duration: 0.8 });
+      },
+      () => setMerchantError('Location permission denied'),
+      { enableHighAccuracy: true, timeout: 8000 }
+    );
+  };
+
   return (
     <div className={`unified-btcmap ${className}`}>
       <div className="unified-btcmap__header">
         <div className="unified-btcmap__title-block">
           <MapPin size={20} className="text-bitcoin-orange-500 shrink-0" />
           <div>
-            <h3 className="unified-btcmap__title">Bitcoin Map</h3>
-            <p className="unified-btcmap__subtitle">Merchants + KATOA creator projects · toggle layers</p>
+            <h3 className="unified-btcmap__title">{t('map.title')}</h3>
+            <p className="unified-btcmap__subtitle">{t('map.subtitle')}</p>
           </div>
         </div>
         <a
@@ -287,7 +335,7 @@ export function UnifiedBTCMap({
             aria-pressed={showMerchants}
           >
             <span className="unified-btcmap__layer-dot unified-btcmap__layer-dot--merchant" />
-            <span>₿ Merchants</span>
+            <span>₿ {t('map.merchants')}</span>
             {merchantCount !== null && showMerchants && (
               <span className="unified-btcmap__layer-count">{merchantCount}</span>
             )}
@@ -301,15 +349,37 @@ export function UnifiedBTCMap({
             aria-pressed={showKatoa}
           >
             <img src="/logo2.png" alt="" width={16} height={16} className="rounded-sm" />
-            <span>KATOA</span>
+            <span>{t('map.katoa')}</span>
             <span className="unified-btcmap__layer-count">{katoaPins.length}</span>
           </button>
 
           <button
             type="button"
             className="unified-btcmap__layer unified-btcmap__layer--icon"
+            onClick={locateMe}
+            aria-label={t('map.locateMe')}
+            title={t('map.locateMe')}
+          >
+            <Crosshair size={16} />
+          </button>
+
+          {katoaPins.length > 1 && (
+            <button
+              type="button"
+              className="unified-btcmap__layer unified-btcmap__layer--icon"
+              onClick={fitAllPins}
+              aria-label={t('map.fitAll')}
+              title={t('map.fitAll')}
+            >
+              <Layers size={16} />
+            </button>
+          )}
+
+          <button
+            type="button"
+            className="unified-btcmap__layer unified-btcmap__layer--icon"
             onClick={() => setExpanded((e) => !e)}
-            aria-label={expanded ? 'Collapse map' : 'Expand map'}
+            aria-label={expanded ? t('map.collapse') : t('map.expand')}
           >
             {expanded ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
           </button>
@@ -318,21 +388,21 @@ export function UnifiedBTCMap({
         {bothOff && (
           <div className="unified-btcmap__empty-overlay">
             <Layers size={28} className="text-gray-500 mb-2" />
-            <p className="text-gray-400 text-sm">Turn on a layer to see the map</p>
+            <p className="text-gray-400 text-sm">{t('map.turnOnLayer')}</p>
           </div>
         )}
 
         {merchantError && showMerchants && (
           <div className="unified-btcmap__error-banner" role="status">
-            Merchants unavailable · {merchantError}
+            {t('map.merchantsUnavailable')} · {merchantError}
           </div>
         )}
 
         <div ref={containerRef} className="unified-btcmap__canvas" />
 
         <div className="unified-btcmap__legend">
-          <span><span className="unified-btcmap__legend-swatch unified-btcmap__legend-swatch--merchant" /> ₿ BTC Map merchant</span>
-          <span><img src="/logo2.png" alt="" width={14} height={14} className="rounded-sm" /> KATOA project</span>
+          <span><span className="unified-btcmap__legend-swatch unified-btcmap__legend-swatch--merchant" /> ₿ {t('map.legendMerchant')}</span>
+          <span><img src="/logo2.png" alt="" width={14} height={14} className="rounded-sm" /> {t('map.legendKatoa')}</span>
         </div>
       </div>
 
@@ -343,6 +413,10 @@ export function UnifiedBTCMap({
               key={pin.id}
               href={`/wishlist/${pin.slug}`}
               className="unified-btcmap__chip"
+              onClick={(e) => {
+                e.preventDefault();
+                flyToPin(pin);
+              }}
             >
               {pin.title.length > 32 ? `${pin.title.slice(0, 32)}…` : pin.title}
             </Link>
@@ -364,7 +438,7 @@ export function UnifiedBTCMap({
             setShowKatoa(true);
           }}
         >
-          Show all layers
+          {t('map.showAllLayers')}
         </Button>
       </p>
     </div>

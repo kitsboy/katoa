@@ -311,10 +311,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      console.log('Updating profile with:', updates);
-      console.log('User ID:', user.id);
-
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('profiles')
         .update(updates)
         .eq('id', user.id)
@@ -325,7 +322,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         throw error;
       }
 
-      console.log('Profile updated successfully:', data);
       await loadProfile(user.id);
       return { error: null };
     } catch (error) {

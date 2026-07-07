@@ -13,7 +13,7 @@ interface EmptyStateProps {
 
 export function EmptyState({ icon, title, description, actionLabel, actionHref, onAction }: EmptyStateProps) {
   return (
-    <div className="text-center py-12 sm:py-16 px-4">
+    <div className="text-center py-12 sm:py-16 px-4" role="region" aria-label={title}>
       <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/5 border border-white/10 mb-4 text-gray-500" aria-hidden="true">
         {icon}
       </div>

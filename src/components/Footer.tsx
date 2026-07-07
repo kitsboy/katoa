@@ -78,7 +78,7 @@ export function Footer() {
             <div className="lg:col-span-3">
               <Link href="/" className="inline-flex items-center gap-3 mb-5 group">
                 <img
-                  src="/sats.png"
+                  src="/logo2.png"
                   alt="KATOA"
                   className="w-11 h-11 rounded-full ring-2 ring-bitcoin-orange-500/30 group-hover:ring-neon-cyan-500/50 transition-all"
                 />
@@ -134,7 +134,7 @@ export function Footer() {
               <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/10">
                 <p className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-2 flex items-center gap-1.5">
                   <Zap size={12} className="text-neon-cyan-500" />
-                  Developer APIs
+                  {t('footer.apis')}
                 </p>
                 <ul className="space-y-2">
                   {apiLinks.map((item) => (
@@ -159,7 +159,7 @@ export function Footer() {
             <div className="lg:col-span-2 grid grid-cols-2 gap-6">
               <div>
                 <h3 className="text-white font-display font-bold mb-4 text-xs uppercase tracking-widest text-gray-300">
-                  Company
+                  {t('footer.company')}
                 </h3>
                 <ul className="space-y-2.5">
                   <FooterLink href="/about">{t('footer.about')}</FooterLink>
@@ -170,7 +170,7 @@ export function Footer() {
               </div>
               <div>
                 <h3 className="text-white font-display font-bold mb-4 text-xs uppercase tracking-widest text-gray-300">
-                  Product
+                  {t('footer.product')}
                 </h3>
                 <ul className="space-y-2.5">
                   <FooterLink href="/explore">Explore</FooterLink>
@@ -181,7 +181,7 @@ export function Footer() {
               </div>
               <div className="col-span-2">
                 <h3 className="text-white font-display font-bold mb-4 text-xs uppercase tracking-widest text-gray-300">
-                  Legal
+                  {t('footer.legal')}
                 </h3>
                 <ul className="space-y-2.5 sm:flex sm:flex-wrap sm:gap-x-6 sm:gap-y-2.5 sm:space-y-0">
                   <FooterLink href="/terms">{t('footer.terms')}</FooterLink>

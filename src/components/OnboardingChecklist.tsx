@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 import { Check, Circle } from 'lucide-react';
 import { Link } from './Link';
 import { useLanguage } from '../contexts/LanguageContext';
-
-const STORAGE_KEY = 'katoa-onboarding-checklist';
+import { STORAGE_KEYS } from '../lib/storage';
 
 interface ChecklistItem {
   id: string;
@@ -20,7 +19,7 @@ const items: ChecklistItem[] = [
 
 function loadProgress(): Record<string, boolean> {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(STORAGE_KEYS.onboardingChecklist);
     return raw ? JSON.parse(raw) : {};
   } catch {
     return {};
@@ -32,7 +31,7 @@ export function OnboardingChecklist() {
   const [checked, setChecked] = useState<Record<string, boolean>>(loadProgress);
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(checked));
+    localStorage.setItem(STORAGE_KEYS.onboardingChecklist, JSON.stringify(checked));
   }, [checked]);
 
   const completedCount = items.filter((item) => checked[item.id]).length;

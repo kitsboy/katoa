@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface ProgressBarProps {
   current: number;
@@ -19,6 +20,7 @@ export const ProgressBar = memo(function ProgressBar({
   height = 'md',
   animated = true,
 }: ProgressBarProps) {
+  const { t } = useLanguage();
   const percentage = goal > 0 ? Math.min((current / goal) * 100, 100) : 0;
 
   const heightClasses = {
@@ -82,7 +84,7 @@ export const ProgressBar = memo(function ProgressBar({
       {percentage >= 100 && (
         <div className="text-center">
           <span className="inline-flex items-center gap-1 px-3 py-1 bg-emerald-500/20 text-emerald-400 rounded-full text-xs font-bold animate-scale-in">
-            🎉 Goal Reached!
+            🎉 {t('progress.goalReached')}
           </span>
         </div>
       )}

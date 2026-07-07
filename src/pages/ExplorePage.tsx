@@ -247,7 +247,13 @@ export function ExplorePage() {
   const [selectedCountry, setSelectedCountry] = useState(savedFilters.selectedCountry);
   const [selectedCategory, setSelectedCategory] = useState(savedFilters.selectedCategory);
   const [sortBy, setSortBy] = useState(savedFilters.sortBy);
-  const [showMap, setShowMap] = useState(false);
+  const [showMap, setShowMap] = useState(() =>
+    getStorage<boolean>(STORAGE_KEYS.exploreShowMap, false)
+  );
+
+  useEffect(() => {
+    setStorage(STORAGE_KEYS.exploreShowMap, showMap);
+  }, [showMap]);
   const [showFilters, setShowFilters] = useState(false);
   const [categories, setCategories] = useState<{ id: string; slug: string; name: string; icon?: string; color?: string }[]>([]);
   const [favorites, setFavorites] = useState<string[]>(() =>
@@ -461,8 +467,12 @@ export function ExplorePage() {
   );
 
   const resultCountLabel = loading
-    ? 'Loading projects'
-    : `${filteredWishlists.length} project${filteredWishlists.length === 1 ? '' : 's'} found`;
+    ? t('explore.loadingResults')
+    : filteredWishlists.length === 1
+      ? t('explore.resultsCountOne')
+      : t('explore.resultsCount').replace('${count}', String(filteredWishlists.length));
+
+  const mapStatusLabel = showMap ? t('explore.mapOpened') : t('explore.mapClosed');
 
   return (
     <div className="min-h-screen bg-charcoal-950 pt-16 pb-20 md:pb-8">
@@ -569,7 +579,7 @@ export function ExplorePage() {
           <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">{t('explore.allProjects')}</h1>
           <p className="text-gray-300 mb-2 text-base sm:text-lg">{t('explore.subtitle')}</p>
           <p className="sr-only" aria-live="polite" aria-atomic="true">
-            {resultCountLabel}
+            {resultCountLabel}. {mapStatusLabel}
           </p>
 
           <div className="space-y-4 mb-6">
@@ -607,7 +617,7 @@ export function ExplorePage() {
                   aria-pressed={showMap}
                 >
                   <Globe size={20} className="mr-2" />
-                  Map
+                  {t('explore.map')}
                 </Button>
 
                 <Button

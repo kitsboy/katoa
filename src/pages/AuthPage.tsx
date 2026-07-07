@@ -315,7 +315,7 @@ export function AuthPage() {
                   <p className={`text-xs font-medium ${
                     passwordStrength === 'weak' ? 'text-red-400' : passwordStrength === 'medium' ? 'text-amber-400' : 'text-emerald-400'
                   }`}>
-                    Password strength: {passwordStrength}
+                    {passwordStrength === 'weak' ? t('auth.passwordWeak') : passwordStrength === 'medium' ? t('auth.passwordMedium') : t('auth.passwordStrong')}
                   </p>
                 </div>
               )}

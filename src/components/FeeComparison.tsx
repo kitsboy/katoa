@@ -44,7 +44,7 @@ const PlatformCard = memo(function PlatformCard({
         <span className="flex items-center gap-2">
           {platform.platform === 'KATOA' && (
             <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center p-1 shadow-md">
-              <img src="/sats.svg" alt="KATOA" className="w-full h-full" />
+              <img src="/logo2.png" alt="KATOA" className="w-full h-full object-contain" />
             </div>
           )}
           {platform.platform === 'OnlyFans' && (

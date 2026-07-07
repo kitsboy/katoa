@@ -1,7 +1,7 @@
-const CACHE_NAME = 'katoa-static-v8';
+const CACHE_NAME = 'katoa-static-v9';
 const OFFLINE_URL = '/offline.html';
 
-const PRECACHE = [OFFLINE_URL, '/sats.png', '/favicon.ico', '/manifest.json'];
+const PRECACHE = [OFFLINE_URL, '/sats.png', '/logo2.png', '/favicon.ico', '/manifest.json'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(

@@ -48,6 +48,27 @@ export interface BTCMapPlace {
 }
 
 const PLACE_SEARCH_FIELDS = 'id,name,lat,lon,icon,address,website,verified_at,boosted_until';
+const PLACES_CACHE_TTL_MS = 90_000;
+
+interface PlacesCacheEntry {
+  key: string;
+  places: BTCMapPlace[];
+  fetchedAt: number;
+}
+
+let placesCache: PlacesCacheEntry | null = null;
+
+function placesCacheKey(lat: number, lon: number, radiusKm: number): string {
+  return `${lat.toFixed(3)}:${lon.toFixed(3)}:${radiusKm}`;
+}
+
+export function escapeMapPopupText(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
 
 function getApiBaseUrl(): string {
   const configured = import.meta.env.VITE_BTCMAP_API_URL;
@@ -140,6 +161,15 @@ export async function fetchPlacesNearby(
     fields: PLACE_SEARCH_FIELDS,
   });
 
+  const cacheKey = placesCacheKey(lat, lon, radiusKm);
+  if (
+    placesCache &&
+    placesCache.key === cacheKey &&
+    Date.now() - placesCache.fetchedAt < PLACES_CACHE_TTL_MS
+  ) {
+    return placesCache.places;
+  }
+
   const response = await fetch(`${base}/v4/places/search/?${params}`, {
     headers: { Accept: 'application/json' },
     signal,
@@ -152,13 +182,16 @@ export async function fetchPlacesNearby(
   const data = await response.json();
   if (!Array.isArray(data)) return [];
 
-  return data.filter(
+  const places = data.filter(
     (p: BTCMapPlace) =>
       typeof p.id === 'number' &&
       typeof p.lat === 'number' &&
       typeof p.lon === 'number' &&
       p.name
   );
+
+  placesCache = { key: cacheKey, places, fetchedAt: Date.now() };
+  return places;
 }
 
 export function buildBTCMapPlaceUrl(placeId: number): string {

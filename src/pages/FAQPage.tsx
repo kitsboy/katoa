@@ -5,6 +5,7 @@ import { PageMeta } from '../components/PageMeta';
 import { PageHero } from '../components/PageHero';
 import { Input } from '../components/Input';
 import { Button } from '../components/Button';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface FAQItem {
   question: string;
@@ -35,6 +36,7 @@ const faqs: FAQItem[] = [
 const categories = Array.from(new Set(faqs.map((f) => f.category)));
 
 export function FAQPage() {
+  const { t } = useLanguage();
   const [openIndices, setOpenIndices] = useState<Set<number>>(new Set());
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [search, setSearch] = useState('');
@@ -64,15 +66,15 @@ export function FAQPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 pt-24">
-        <PageHero title="Frequently Asked Questions" subtitle="Everything about KATOA's zero-fee, privacy-first Bitcoin platform" />
+        <PageHero title={t('faq.title')} subtitle={t('faq.subtitle')} />
 
         <div className="mb-6">
           <Input
             icon={<Search size={18} />}
-            placeholder="Search questions..."
+            placeholder={t('faq.search')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            aria-label="Search FAQ"
+            aria-label={t('faq.search')}
           />
         </div>
 
@@ -87,7 +89,7 @@ export function FAQPage() {
                 selectedCategory === cat ? 'bg-bitcoin-orange-500 text-white' : 'bg-white/5 text-gray-300 hover:bg-white/10 border border-white/10'
               }`}
             >
-              {cat === 'all' ? 'All' : cat}
+              {cat === 'all' ? t('faq.all') : cat}
             </button>
           ))}
         </div>
@@ -99,7 +101,7 @@ export function FAQPage() {
             size="sm"
             onClick={() => setOpenIndices(new Set(filteredFAQs.map((_, i) => i)))}
           >
-            Expand all
+            {t('faq.expandAll')}
           </Button>
           <Button
             type="button"
@@ -107,7 +109,7 @@ export function FAQPage() {
             size="sm"
             onClick={() => setOpenIndices(new Set())}
           >
-            Collapse all
+            {t('faq.collapseAll')}
           </Button>
         </div>
 
@@ -146,11 +148,11 @@ export function FAQPage() {
                     {faq.link && (
                       isExternalLink ? (
                         <a href={faq.link} target="_blank" rel="noopener noreferrer" className="inline-block mt-3 text-sm text-neon-cyan-400 hover:underline">
-                          Learn more →
+                          {t('faq.learnMore')}
                         </a>
                       ) : (
                         <Link href={faq.link} className="inline-block mt-3 text-sm text-neon-cyan-400 hover:underline">
-                          Learn more →
+                          {t('faq.learnMore')}
                         </Link>
                       )
                     )}
@@ -162,16 +164,16 @@ export function FAQPage() {
         </div>
 
         {filteredFAQs.length === 0 && (
-          <p className="text-center text-gray-400 py-12">No questions match your search.</p>
+          <p className="text-center text-gray-400 py-12">{t('faq.noResults')}</p>
         )}
 
         <div className="mt-12 p-6 sm:p-8 rounded-2xl bg-bitcoin-orange-500/10 border border-bitcoin-orange-500/30 text-center">
-          <h2 className="text-xl sm:text-2xl font-display font-bold text-white mb-3">Still have questions?</h2>
-          <p className="text-gray-300 mb-6 text-sm sm:text-base">Reach out — we're here to help.</p>
+          <h2 className="text-xl sm:text-2xl font-display font-bold text-white mb-3">{t('faq.stillHaveQuestions')}</h2>
+          <p className="text-gray-300 mb-6 text-sm sm:text-base">{t('faq.reachOut')}</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/contact"><Button variant="bitcoin">Contact Us</Button></Link>
+            <Link href="/contact"><Button variant="bitcoin">{t('faq.contactUs')}</Button></Link>
             <a href="https://github.com/kitsboy/katoa" target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" className="w-full sm:w-auto">GitHub</Button>
+              <Button variant="outline" className="w-full sm:w-auto">{t('faq.github')}</Button>
             </a>
           </div>
         </div>

@@ -34,13 +34,13 @@ export function ContactPage() {
     const emailSubject = `From Katoa - ${formData.subject}`;
     const emailBody = `From Katoa Contact Form\n\nName: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`;
     window.location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
-    toast('Opening your mail app…');
+    toast(t('contact.openingMail'));
     setFormData({ name: '', email: '', subject: '', message: '', website: '' });
   };
 
   const copyEmail = async () => {
     const result = await copyToClipboard(EMAIL);
-    toast(result === 'success' ? 'Email copied!' : 'Could not copy email', result === 'success' ? 'success' : 'error');
+    toast(result === 'success' ? t('contact.copySuccess') : t('contact.copyFail'), result === 'success' ? 'success' : 'error');
   };
 
   return (
@@ -54,37 +54,37 @@ export function ContactPage() {
             <div className="inline-flex w-12 h-12 bg-bitcoin-orange-500/20 rounded-full items-center justify-center mb-3">
               <Mail className="text-bitcoin-orange-400" size={22} />
             </div>
-            <h3 className="font-bold text-white mb-1">Email</h3>
+            <h3 className="font-bold text-white mb-1">{t('contact.email')}</h3>
             <p className="text-gray-400 text-sm mb-3">{EMAIL}</p>
             <Button variant="ghost" size="sm" onClick={copyEmail} className="touch-manipulation">
-              <Copy size={14} className="mr-1" /> Copy
+              <Copy size={14} className="mr-1" /> {t('contact.copy')}
             </Button>
           </Card>
           <Card variant="glass" className="p-5 text-center">
             <div className="inline-flex w-12 h-12 bg-neon-cyan-500/20 rounded-full items-center justify-center mb-3">
               <MessageSquare className="text-neon-cyan-400" size={22} />
             </div>
-            <h3 className="font-bold text-white mb-1">Community</h3>
+            <h3 className="font-bold text-white mb-1">{t('contact.community')}</h3>
             <a
               href="https://github.com/kitsboy/katoa/discussions"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-400 text-sm hover:text-neon-cyan-400 transition-colors"
             >
-              GitHub Discussions
+              {t('contact.githubDiscussions')}
             </a>
           </Card>
           <Card variant="glass" className="p-5 text-center">
             <div className="inline-flex w-12 h-12 bg-emerald-500/20 rounded-full items-center justify-center mb-3">
               <Send className="text-emerald-400" size={22} />
             </div>
-            <h3 className="font-bold text-white mb-1">Response</h3>
-            <p className="text-gray-400 text-sm">Within 48 hours</p>
+            <h3 className="font-bold text-white mb-1">{t('contact.response')}</h3>
+            <p className="text-gray-400 text-sm">{t('contact.responseTime')}</p>
           </Card>
         </div>
 
         <Card variant="glass" className="p-6 sm:p-8">
-          <h2 className="text-xl font-display font-bold text-white mb-6">Send us a message</h2>
+          <h2 className="text-xl font-display font-bold text-white mb-6">{t('contact.sendMessage')}</h2>
           <form onSubmit={handleSubmit} className="space-y-5" noValidate>
             <input
               type="text"
@@ -97,12 +97,12 @@ export function ContactPage() {
               className="absolute opacity-0 pointer-events-none h-0 w-0 overflow-hidden"
             />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              <Input label="Name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} error={errors.name} required autoComplete="name" />
-              <Input label="Email" type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} error={errors.email} required autoComplete="email" />
+              <Input label={t('contact.name')} value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} error={errors.name} required autoComplete="name" />
+              <Input label={t('contact.email')} type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} error={errors.email} required autoComplete="email" />
             </div>
-            <Input label="Subject" value={formData.subject} onChange={(e) => setFormData({ ...formData, subject: e.target.value })} error={errors.subject} required autoComplete="off" />
+            <Input label={t('contact.subject')} value={formData.subject} onChange={(e) => setFormData({ ...formData, subject: e.target.value })} error={errors.subject} required autoComplete="off" />
             <div>
-              <label htmlFor="contact-message" className="block text-sm font-medium text-gray-300 mb-2">Message</label>
+              <label htmlFor="contact-message" className="block text-sm font-medium text-gray-300 mb-2">{t('contact.message')}</label>
               <textarea
                 id="contact-message"
                 value={formData.message}
@@ -116,7 +116,7 @@ export function ContactPage() {
               {errors.message && <p className="mt-1 text-sm text-red-400" role="alert">{errors.message}</p>}
             </div>
             <Button type="submit" variant="bitcoin" className="w-full min-h-[52px] touch-manipulation">
-              <Send size={18} className="mr-2" /> Send Message
+              <Send size={18} className="mr-2" /> {t('contact.send')}
             </Button>
           </form>
         </Card>

@@ -24,7 +24,7 @@ export function PageMeta({
   title,
   description,
   path = '',
-  image = `${SITE_URL}/sats.png`,
+  image = `${SITE_URL}/logo2-512.png`,
   noindex = false,
 }: PageMetaProps) {
   const { language } = useLanguage();

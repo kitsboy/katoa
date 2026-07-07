@@ -6,6 +6,7 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 
 export type Visibility = 'public' | 'private' | 'draft';
 export type PaymentMethodType = 'lightning' | 'onchain' | 'nostr' | 'bolt12' | string;
+export type AddressType = 'onchain' | 'lightning' | 'nostr' | string;
 
 type Relationships = [];
 

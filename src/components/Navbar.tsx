@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { Link } from './Link';
 import { Button } from './Button';
 import { useAuth } from '../contexts/AuthContext';
-import { useLanguage, languageFlags, languageNames } from '../contexts/LanguageContext';
+import { useLanguage, languageFlags, languageNames, type Language } from '../contexts/LanguageContext';
 import { Menu, X, User, LogOut, LayoutDashboard, Settings, Zap, Globe, HelpCircle, Bitcoin } from 'lucide-react';
 import { CurrencySelector } from './CurrencySelector';
 import { OfflineIndicator } from './OfflineIndicator';
@@ -99,7 +99,7 @@ export function Navbar() {
             <div className="flex items-center gap-2 sm:gap-3 min-w-0">
               <Link href="/" className={`flex items-center gap-2.5 hover:opacity-90 transition-opacity group min-w-0 ${isHomeHero ? 'text-gray-900' : 'text-white'}`}>
                 <div className="relative shrink-0">
-                  <img src="/sats.png" alt="KATOA" width={36} height={36} className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl group-hover:scale-105 transition-transform" />
+                  <img src="/logo2.png" alt="KATOA" width={36} height={36} className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl group-hover:scale-105 transition-transform object-contain bg-charcoal-950/80 p-0.5" />
                   <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-br from-neon-cyan-500/30 to-bitcoin-orange-500/20 blur-sm opacity-0 group-hover:opacity-100 transition-opacity -z-10" aria-hidden />
                 </div>
                 <span className="hidden sm:inline text-base font-display font-semibold tracking-tight truncate">KATOA</span>
@@ -172,7 +172,7 @@ export function Navbar() {
                       <button
                         key={lang}
                         onClick={() => {
-                          setLanguage(lang as any);
+                          setLanguage(lang as Language);
                           setShowLangMenu(false);
                         }}
                         className="w-full px-4 py-2 text-left hover:bg-white/5 text-gray-100 flex items-center gap-3 transition-colors"
@@ -368,7 +368,7 @@ export function Navbar() {
                     <button
                       key={lang}
                       onClick={() => {
-                        setLanguage(lang as any);
+                        setLanguage(lang as Language);
                         setShowMenu(false);
                       }}
                       className={`text-3xl p-4 rounded-xl transition-all duration-200 border-2 ${
