@@ -125,7 +125,7 @@ katoa/src/components/Card.tsx
 katoa/src/components/FeeComparison.tsx
 katoa/src/components/PaymentMethodManager.tsx
 katoa/src/components/SubscriptionTiers.tsx
-katoa/src/components/LightningField.tsx
+katoa/src/components/HeroMotionBackground.tsx
 katoa/src/components/WishlistItemsList.tsx
 katoa/src/components/ProgressBar.tsx
 katoa/src/components/Tooltip.tsx
@@ -133,13 +133,13 @@ katoa/src/components/StatsCard.tsx
 katoa/src/components/SocialFeedEmbed.tsx
 katoa/src/components/Footer.tsx
 katoa/src/components/MediaUpload.tsx
-katoa/src/components/BitcoinPulse.tsx
+
 katoa/src/components/BitcoinStats.tsx
 katoa/src/components/QRCodeModal.tsx
 katoa/src/components/CategoryBadge.tsx
 katoa/src/components/ShareButton.tsx
 katoa/src/components/GlassSection.tsx
-katoa/src/components/ProtocolUpdates.tsx
+
 katoa/src/components/Button.tsx
 katoa/src/components/Modal.tsx
 katoa/src/components/QRScanner.tsx

@@ -38,10 +38,10 @@ src/
   main.tsx + App.tsx          # Providers (Auth, Language) + top-level router
   components/ (30+)           # Reusable, presentational + interactive
     - GlassSection, Card, Button, Input, Modal, Tooltip (portal)
-    - BitcoinPulse, ProtocolUpdates (live / data-driven)
+    - FooterBitcoinStrip, SocialProofTicker (live / data-driven)
     - FeeComparison (educational + marketing)
     - QRCodeModal + QRScanner
-    - PaymentMethodManager, WalletAddressManager, LightningField
+    - PaymentMethodManager, WalletAddressManager, HeroMotionBackground
     - ContributionCard, WishlistItemsList, MediaUpload
     - Navbar, Footer, ShareButton, SocialFeedEmbed, etc.
   pages/                      # Route-level screens (Home, Explore, Dashboard, Project/Wishlist, Auth, Settings, Legal, Comparison, etc.)
@@ -64,8 +64,8 @@ src/
 - Contribute: User enters name/message/amount → pick or paste address / future invoice → record pending transaction row → (future) poll or webhook confirms → triggers (future) funding total functions + notifications
 
 **Live widgets** (new polish):
-- BitcoinPulse reads public/live-data/bitcoin-pulse.json (or dynamic)
-- ProtocolUpdates (hardcoded or feed-driven updates about Bitcoin/Nostr events)
+- FooterBitcoinStrip fetches BTC price via cached client API
+- ChangelogModal surfaces version notes from src/data/changelog.json
 - These make the site feel connected to the real network.
 
 ---
@@ -180,7 +180,7 @@ src/
 ## How to Extend (Practical Advice)
 
 - New page: add route in App.tsx + create pages/WhateverPage.tsx + Link in Navbar/Footer.
-- New Bitcoin method: extend wallet_address types + UI in PaymentMethodManager + wire into LightningField / QR.
+- New Bitcoin method: extend wallet_address types + UI in PaymentMethodManager + wire into QR / payment tabs.
 - Real BTCPay: implement the webhook Edge Function (see guide), call btcPayService from a "Pay" button, listen for settled → update txn row.
 - Deeper Nostr: add more event kinds (comments as kind 1 replies, reactions, badges).
 - Privacy: add pynymService.ts modeled after the sketch in the BTCPay guide.
