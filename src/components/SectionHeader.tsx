@@ -24,7 +24,7 @@ export function SectionHeader({
         <p
           className={
             isLanding
-              ? 'text-xs font-medium text-gray-500 mb-3 tracking-wide'
+              ? 'text-xs font-semibold text-rose-600 mb-3 tracking-wide uppercase'
               : 'text-[10px] uppercase tracking-[0.2em] text-neon-cyan-500 font-semibold mb-3'
           }
         >
@@ -32,11 +32,11 @@ export function SectionHeader({
         </p>
       )}
       <h2
-        className={
-          isLanding
-            ? 'text-3xl sm:text-4xl md:text-[2.75rem] font-semibold text-white mb-4 leading-[1.1] tracking-tight'
-            : 'font-display text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3 sm:mb-4 leading-tight'
-        }
+          className={
+            isLanding
+              ? 'text-3xl sm:text-4xl md:text-[2.75rem] font-bold text-gray-900 mb-4 leading-[1.1] tracking-tight'
+              : 'font-display text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3 sm:mb-4 leading-tight'
+          }
       >
         {title}
       </h2>

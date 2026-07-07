@@ -1,5 +1,24 @@
 import { Link } from './Link';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Gift, MapPin, Zap } from 'lucide-react';
+import { mockWishlistItems } from '../data/mockWishlists';
+
+const FEATURED = {
+  title: 'Skateboard Park for Medellín Youth',
+  description: 'Transform lives through skateboarding. Building a safe community space where 500+ youth can skate, learn, and grow.',
+  cover: 'https://images.pexels.com/photos/5793678/pexels-photo-5793678.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750',
+  creator: 'skate_colombia',
+  city: 'Medellín',
+  country: 'Colombia',
+  flag: '🇨🇴',
+  raised: 3_250_000,
+  goal: 5_000_000,
+};
+
+const CREATOR_STACK = [
+  'https://images.pexels.com/photos/4050315/pexels-photo-4050315.jpeg?auto=compress&cs=tinysrgb&w=120',
+  'https://images.pexels.com/photos/1751731/pexels-photo-1751731.jpeg?auto=compress&cs=tinysrgb&w=120',
+  'https://images.pexels.com/photos/4386466/pexels-photo-4386466.jpeg?auto=compress&cs=tinysrgb&w=120',
+];
 
 interface LandingHeroProps {
   badge: string;
@@ -20,48 +39,91 @@ interface LandingHeroProps {
   };
 }
 
-function ProductPreview() {
+function formatSats(n: number) {
+  return new Intl.NumberFormat().format(n);
+}
+
+function ProductScreenshot() {
+  const progress = Math.round((FEATURED.raised / FEATURED.goal) * 100);
+  const items = mockWishlistItems['mock-featured'].slice(0, 2);
+
   return (
-    <div className="lp-preview">
-      <div className="lp-preview-chrome">
-        <span className="lp-preview-dot" />
-        <span className="lp-preview-dot" />
-        <span className="lp-preview-dot" />
-        <span className="lp-preview-label">Creator dashboard</span>
+    <div className="lp-shot">
+      <div className="lp-shot-glow" aria-hidden />
+
+      <div className="lp-shot-float lp-shot-float--top">
+        <Zap size={14} />
+        <span>Instant Lightning payout</span>
       </div>
-      <div className="lp-preview-body">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-1">Wishlist</p>
-            <p className="text-lg font-semibold text-white">Medellín Skate Park</p>
-          </div>
-          <span className="lp-preview-pill">Live</span>
+
+      <div className="lp-shot-float lp-shot-float--side">
+        <span className="lp-shot-float-value">0%</span>
+        <span className="lp-shot-float-label">Platform fees</span>
+      </div>
+
+      <div className="lp-shot-device">
+        <div className="lp-shot-chrome">
+          <span className="lp-shot-dot lp-shot-dot--rose" />
+          <span className="lp-shot-dot lp-shot-dot--amber" />
+          <span className="lp-shot-dot lp-shot-dot--mint" />
+          <span className="lp-shot-url">katoa.org/wishlist/medellin-skate-park</span>
         </div>
 
-        <div className="mb-6">
-          <div className="flex justify-between text-xs text-gray-500 mb-2">
-            <span>Funded</span>
-            <span className="text-white font-medium">65%</span>
+        <div className="lp-shot-screen">
+          <div className="lp-shot-cover">
+            <img src={FEATURED.cover} alt="" loading="eager" />
+            <div className="lp-shot-cover-overlay" />
+            <div className="lp-shot-cover-copy">
+              <div className="lp-shot-title-row">
+                <h3>{FEATURED.title}</h3>
+                <span aria-hidden>{FEATURED.flag}</span>
+              </div>
+              <p>{FEATURED.description}</p>
+              <div className="lp-shot-location">
+                <MapPin size={12} />
+                <span>{FEATURED.city}, {FEATURED.country}</span>
+              </div>
+            </div>
+            <span className="lp-shot-live">Live</span>
           </div>
-          <div className="h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
-            <div className="h-full w-[65%] rounded-full bg-white" />
-          </div>
-        </div>
 
-        <div className="grid grid-cols-2 gap-3 mb-6">
-          <div className="lp-preview-stat">
-            <span className="text-[10px] text-gray-500 uppercase tracking-wider">Raised</span>
-            <span className="text-base font-semibold text-white font-mono">₿ 0.42</span>
-          </div>
-          <div className="lp-preview-stat">
-            <span className="text-[10px] text-gray-500 uppercase tracking-wider">Fee taken</span>
-            <span className="text-base font-semibold text-emerald-400 font-mono">0%</span>
-          </div>
-        </div>
+          <div className="lp-shot-body">
+            <div className="lp-shot-creator">
+              <div className="lp-shot-avatar">{FEATURED.creator[0].toUpperCase()}</div>
+              <div>
+                <p className="lp-shot-creator-name">@{FEATURED.creator}</p>
+                <p className="lp-shot-creator-meta">carlos@getalby.com</p>
+              </div>
+            </div>
 
-        <div className="lp-preview-footer">
-          <span>Payout</span>
-          <span className="text-white font-medium">Instant · Lightning</span>
+            <div className="lp-shot-progress">
+              <div className="lp-shot-progress-head">
+                <span>{formatSats(FEATURED.raised)} sats raised</span>
+                <strong>{progress}%</strong>
+              </div>
+              <div className="lp-shot-progress-bar">
+                <div style={{ width: `${progress}%` }} />
+              </div>
+              <span className="lp-shot-progress-goal">of {formatSats(FEATURED.goal)} sats goal</span>
+            </div>
+
+            <button type="button" className="lp-shot-cta" tabIndex={-1}>
+              <Gift size={16} />
+              Send a gift
+            </button>
+
+            <div className="lp-shot-items">
+              {items.map((item) => (
+                <div key={item.id} className="lp-shot-item">
+                  <img src={item.image_url} alt="" />
+                  <div>
+                    <p>{item.title}</p>
+                    <span>{formatSats(item.sats_raised)} / {formatSats(item.price_sats)} sats</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -83,6 +145,8 @@ export function LandingHero({
     <section className="lp-hero">
       <div className="lp-hero-bg" aria-hidden>
         <div className="lp-hero-gradient" />
+        <div className="lp-hero-blob lp-hero-blob--1" />
+        <div className="lp-hero-blob lp-hero-blob--2" />
       </div>
 
       <div className="lp-hero-inner">
@@ -91,18 +155,14 @@ export function LandingHero({
             <p className="lp-eyebrow">{badge}</p>
 
             <h1 className="lp-headline">
-              <span className="block text-gray-400 text-lg sm:text-xl font-medium mb-3 tracking-tight">
-                {keepLabel}
-              </span>
+              <span className="lp-headline-pre">{keepLabel}</span>
               <span className="lp-headline-accent">{percentLabel}</span>
-              <span className="block mt-4 text-2xl sm:text-3xl font-medium text-white tracking-tight">
-                {earningsLabel}
-              </span>
+              <span className="lp-headline-sub">{earningsLabel}</span>
             </h1>
 
             <p className="lp-lead">
               {subtitle}
-              <span className="text-gray-500"> {subtitle2}</span>
+              <span className="lp-lead-muted"> {subtitle2}</span>
             </p>
 
             <div className="lp-cta-row">
@@ -114,10 +174,21 @@ export function LandingHero({
                 {ctaCompare}
               </Link>
             </div>
+
+            <div className="lp-hero-social">
+              <div className="lp-hero-avatars" aria-hidden>
+                {CREATOR_STACK.map((src) => (
+                  <img key={src} src={src} alt="" />
+                ))}
+              </div>
+              <p>
+                <strong>{stats.creators ?? '2.5K+'}</strong> creators earning on their terms
+              </p>
+            </div>
           </div>
 
           <div className="lp-hero-visual">
-            <ProductPreview />
+            <ProductScreenshot />
           </div>
         </div>
 

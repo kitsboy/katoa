@@ -71,19 +71,23 @@ export function Navbar() {
       <header className="fixed top-0 inset-x-0 z-50 px-3 sm:px-4 pt-3 sm:pt-4 pointer-events-none">
         <nav
           className={`nav-island pointer-events-auto max-w-7xl mx-auto rounded-2xl transition-all duration-500 ${
-            isHomeHero ? 'nav-island-hero' : scrolled ? 'nav-island-scrolled' : ''
+            isHomeHero ? 'nav-island-hero-light' : scrolled ? 'nav-island-scrolled' : ''
           }`}
         >
           <div className="px-3 sm:px-5 lg:px-6">
             <div className="flex items-center justify-between h-14 sm:h-[3.75rem]">
             <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-              <Link href="/" className="flex items-center gap-2.5 text-white hover:opacity-90 transition-opacity group min-w-0">
+              <Link href="/" className={`flex items-center gap-2.5 hover:opacity-90 transition-opacity group min-w-0 ${isHomeHero ? 'text-gray-900' : 'text-white'}`}>
                 <div className="relative shrink-0">
                   <img src="/sats.png" alt="KATOA" width={36} height={36} className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl group-hover:scale-105 transition-transform" />
                   <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-br from-neon-cyan-500/30 to-bitcoin-orange-500/20 blur-sm opacity-0 group-hover:opacity-100 transition-opacity -z-10" aria-hidden />
                 </div>
                 <span className="hidden sm:inline text-base font-display font-semibold tracking-tight truncate">KATOA</span>
-                <span className="hidden md:inline text-[10px] font-medium text-neon-cyan-400/90 bg-neon-cyan-500/10 px-2 py-0.5 rounded-md border border-neon-cyan-500/20 shrink-0 uppercase tracking-wider">
+                <span className={`hidden md:inline text-[10px] font-medium px-2 py-0.5 rounded-md shrink-0 uppercase tracking-wider ${
+                  isHomeHero
+                    ? 'text-rose-600 bg-rose-500/10 border border-rose-500/20'
+                    : 'text-neon-cyan-400/90 bg-neon-cyan-500/10 border border-neon-cyan-500/20'
+                }`}>
                   Beta
                 </span>
               </Link>
@@ -91,7 +95,9 @@ export function Navbar() {
             </div>
 
             <div className="hidden md:flex items-center gap-1 lg:gap-2">
-              <div className="flex items-center gap-0.5 mr-2 lg:mr-4 px-1 py-1 rounded-full bg-white/[0.03] border border-white/[0.06]">
+              <div className={`flex items-center gap-0.5 mr-2 lg:mr-4 px-1 py-1 rounded-full border ${
+                isHomeHero ? 'bg-black/[0.03] border-black/[0.06]' : 'bg-white/[0.03] border-white/[0.06]'
+              }`}>
                 <Link
                   href="/explore"
                   className={`nav-link-pill ${isActive('/explore') ? 'nav-link-pill-active' : ''}`}
@@ -122,7 +128,11 @@ export function Navbar() {
               <div className="relative">
                 <button
                   onClick={() => setShowLangMenu(!showLangMenu)}
-                  className="flex items-center justify-center w-9 h-9 rounded-full bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08] transition-colors text-lg"
+                  className={`flex items-center justify-center w-9 h-9 rounded-full border transition-colors text-lg ${
+                    isHomeHero
+                      ? 'bg-black/[0.04] border-black/[0.08] hover:bg-black/[0.08]'
+                      : 'bg-white/[0.04] border-white/[0.08] hover:bg-white/[0.08]'
+                  }`}
                   aria-label="Change language"
                   aria-expanded={showLangMenu}
                 >
@@ -189,7 +199,11 @@ export function Navbar() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="text-gray-300 hover:text-white hover:bg-white/[0.06] rounded-full"
+                      className={`rounded-full ${
+                        isHomeHero
+                          ? 'text-gray-600 hover:text-gray-900 hover:bg-black/[0.05]'
+                          : 'text-gray-300 hover:text-white hover:bg-white/[0.06]'
+                      }`}
                     >
                       {t('nav.login')}
                     </Button>
@@ -197,7 +211,11 @@ export function Navbar() {
                   <Link href="/auth">
                     <Button
                       size="sm"
-                      className="bg-white text-charcoal-950 hover:bg-gray-100 font-semibold rounded-full px-5"
+                      className={`font-semibold rounded-full px-5 ${
+                        isHomeHero
+                          ? 'bg-gradient-to-r from-rose-600 to-rose-500 text-white hover:from-rose-500 hover:to-rose-400'
+                          : 'bg-white text-charcoal-950 hover:bg-gray-100'
+                      }`}
                     >
                       {t('nav.signup')}
                     </Button>
@@ -213,7 +231,11 @@ export function Navbar() {
                 </span>
               )}
               <button
-                className="text-white p-2 hover:bg-white/[0.06] rounded-xl transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center border border-white/[0.08]"
+                className={`p-2 rounded-xl transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center border ${
+                  isHomeHero
+                    ? 'text-gray-900 hover:bg-black/[0.05] border-black/[0.08]'
+                    : 'text-white hover:bg-white/[0.06] border-white/[0.08]'
+                }`}
                 onClick={() => setShowMenu(!showMenu)}
                 aria-label="Toggle menu"
                 aria-expanded={showMenu}

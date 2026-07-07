@@ -49,13 +49,13 @@ export function OnboardingChecklist() {
       <div className="flex items-start justify-between gap-4 mb-6">
         <div>
           <p className="lp-eyebrow mb-2">{t('onboarding.badge')}</p>
-          <h3 className="text-xl sm:text-2xl font-semibold text-white tracking-tight mb-1">
+          <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 tracking-tight mb-1">
             {t('onboarding.title')}
           </h3>
           <p className="text-sm text-gray-500">{t('onboarding.subtitle')}</p>
         </div>
         <div className="text-right shrink-0 tabular-nums">
-          <span className="text-2xl font-semibold text-white">{completedCount}</span>
+          <span className="text-2xl font-semibold text-gray-900">{completedCount}</span>
           <span className="text-gray-500 text-sm">/{items.length}</span>
         </div>
       </div>
@@ -74,7 +74,7 @@ export function OnboardingChecklist() {
                 >
                   {isChecked ? <Check size={14} /> : <Circle size={14} />}
                 </button>
-                <span className={`flex-1 text-sm ${isChecked ? 'text-gray-500 line-through' : 'text-gray-300'}`}>
+                <span className={`flex-1 text-sm ${isChecked ? 'text-gray-400 line-through' : 'text-gray-700'}`}>
                   {t(item.labelKey)}
                 </span>
                 {!isChecked && (

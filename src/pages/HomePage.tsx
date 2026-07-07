@@ -81,6 +81,7 @@ export function HomePage() {
         stats={{
           volume: stats.volume,
           countries: stats.countries,
+          creators: stats.creators,
           feesLabel: t('home.stats.fees'),
           processedLabel: t('home.stats.processed'),
           countriesLabel: t('home.stats.countries'),
