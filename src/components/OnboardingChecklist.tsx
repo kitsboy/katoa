@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Check, Circle, Clock } from 'lucide-react';
+import { Check, Circle } from 'lucide-react';
 import { Link } from './Link';
 import { useLanguage } from '../contexts/LanguageContext';
-import { GlassSection } from './GlassSection';
 
 const STORAGE_KEY = 'katoa-onboarding-checklist';
 
@@ -46,48 +45,40 @@ export function OnboardingChecklist() {
   if (allDone) return null;
 
   return (
-    <GlassSection glow="cyan" className="max-w-3xl mx-auto">
+    <div className="lp-onboarding">
       <div className="flex items-start justify-between gap-4 mb-6">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neon-cyan/10 border border-neon-cyan/30 text-xs font-medium text-neon-cyan mb-3">
-            <Clock size={14} />
-            {t('onboarding.badge')}
-          </div>
-          <h3 className="font-display text-xl sm:text-2xl font-bold text-white mb-1">{t('onboarding.title')}</h3>
-          <p className="text-sm text-gray-400">{t('onboarding.subtitle')}</p>
+          <p className="lp-eyebrow mb-2">{t('onboarding.badge')}</p>
+          <h3 className="text-xl sm:text-2xl font-semibold text-white tracking-tight mb-1">
+            {t('onboarding.title')}
+          </h3>
+          <p className="text-sm text-gray-500">{t('onboarding.subtitle')}</p>
         </div>
-        <div className="text-right shrink-0">
-          <span className="text-2xl font-black text-neon-cyan">{completedCount}</span>
+        <div className="text-right shrink-0 tabular-nums">
+          <span className="text-2xl font-semibold text-white">{completedCount}</span>
           <span className="text-gray-500 text-sm">/{items.length}</span>
         </div>
       </div>
 
-      <ul className="space-y-3">
+      <ul className="space-y-2">
         {items.map((item) => {
           const isChecked = !!checked[item.id];
           return (
             <li key={item.id}>
-              <div className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/10 hover:border-neon-cyan/30 transition-colors">
+              <div className="lp-onboarding-item">
                 <button
                   type="button"
                   onClick={() => toggle(item.id)}
-                  className={`shrink-0 w-8 h-8 rounded-full border flex items-center justify-center transition-all touch-manipulation ${
-                    isChecked
-                      ? 'bg-neon-cyan/20 border-neon-cyan text-neon-cyan'
-                      : 'border-white/20 text-gray-500 hover:border-neon-cyan/50'
-                  }`}
+                  className={`lp-onboarding-check ${isChecked ? 'lp-onboarding-check-done' : ''}`}
                   aria-label={isChecked ? 'Mark incomplete' : 'Mark complete'}
                 >
-                  {isChecked ? <Check size={16} /> : <Circle size={16} />}
+                  {isChecked ? <Check size={14} /> : <Circle size={14} />}
                 </button>
-                <span className={`flex-1 text-sm sm:text-base ${isChecked ? 'text-gray-500 line-through' : 'text-gray-200'}`}>
+                <span className={`flex-1 text-sm ${isChecked ? 'text-gray-500 line-through' : 'text-gray-300'}`}>
                   {t(item.labelKey)}
                 </span>
                 {!isChecked && (
-                  <Link
-                    href={item.href}
-                    className="text-xs font-semibold text-neon-cyan hover:text-neon-cyan-300 shrink-0"
-                  >
+                  <Link href={item.href} className="text-xs font-medium text-white hover:text-gray-300 shrink-0">
                     {t('common.go')} →
                   </Link>
                 )}
@@ -96,6 +87,6 @@ export function OnboardingChecklist() {
           );
         })}
       </ul>
-    </GlassSection>
+    </div>
   );
 }
