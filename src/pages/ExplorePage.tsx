@@ -436,13 +436,38 @@ export function ExplorePage() {
 
   const featured = mockWishlists.find((w) => w.slug === 'medellin-skate-park') ?? mockWishlists[0];
 
-  const recentlyViewed = getStorage<{ slug: string; title: string }[]>(STORAGE_KEYS.recentlyViewedWishlists, [])
-    .filter((r) => r.slug !== featured.slug)
-    .slice(0, 4);
+  const recentlyViewed = useMemo(
+    () =>
+      getStorage<{ slug: string; title: string }[]>(STORAGE_KEYS.recentlyViewedWishlists, [])
+        .filter((r) => r.slug !== featured.slug)
+        .slice(0, 4),
+    [featured.slug]
+  );
+
+  const itemListSchema = useMemo(
+    () => ({
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: 'KATOA Creator Wishlists',
+      numberOfItems: filteredWishlists.length,
+      itemListElement: filteredWishlists.slice(0, 20).map((w, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: `${import.meta.env.VITE_SITE_URL ?? 'https://katoa.org'}/wishlist/${w.slug}`,
+        name: w.title,
+      })),
+    }),
+    [filteredWishlists]
+  );
+
+  const resultCountLabel = loading
+    ? 'Loading projects'
+    : `${filteredWishlists.length} project${filteredWishlists.length === 1 ? '' : 's'} found`;
 
   return (
     <div className="min-h-screen bg-charcoal-950 pt-16 pb-20 md:pb-8">
       <PageMeta title="Explore" description="Browse Bitcoin creator wishlists worldwide." path="/explore" />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
       {usingMockData && (
         <DemoBanner message="Showing sample projects — live database unavailable. Explore freely with demo data." />
       )}
@@ -542,7 +567,10 @@ export function ExplorePage() {
 
         <div className="mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">{t('explore.allProjects')}</h1>
-          <p className="text-gray-300 mb-6 text-base sm:text-lg">{t('explore.subtitle')}</p>
+          <p className="text-gray-300 mb-2 text-base sm:text-lg">{t('explore.subtitle')}</p>
+          <p className="sr-only" aria-live="polite" aria-atomic="true">
+            {resultCountLabel}
+          </p>
 
           <div className="space-y-4 mb-6">
             <div className="flex flex-col md:flex-row gap-4">

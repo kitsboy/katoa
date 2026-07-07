@@ -82,6 +82,7 @@ export function FAQPage() {
               key={cat}
               type="button"
               onClick={() => setSelectedCategory(cat)}
+              aria-pressed={selectedCategory === cat}
               className={`shrink-0 snap-start px-4 py-2.5 min-h-[44px] rounded-full text-sm font-medium transition-colors touch-manipulation ${
                 selectedCategory === cat ? 'bg-bitcoin-orange-500 text-white' : 'bg-white/5 text-gray-300 hover:bg-white/10 border border-white/10'
               }`}
@@ -113,9 +114,13 @@ export function FAQPage() {
         <div className="space-y-3">
           {filteredFAQs.map((faq, index) => {
             const isOpen = openIndices.has(index);
+            const panelId = `faq-panel-${index}`;
+            const triggerId = `faq-trigger-${index}`;
+            const isExternalLink = faq.link?.startsWith('http');
             return (
               <div key={`${faq.question}-${index}`} className="bg-white/[0.03] backdrop-blur-md rounded-2xl border border-white/10 overflow-hidden">
                 <button
+                  id={triggerId}
                   type="button"
                   onClick={() => {
                     setOpenIndices((prev) => {
@@ -127,6 +132,7 @@ export function FAQPage() {
                   }}
                   className="w-full px-4 sm:px-6 py-4 flex items-center justify-between text-left hover:bg-white/[0.04] transition-colors min-h-[56px] touch-manipulation"
                   aria-expanded={isOpen}
+                  aria-controls={panelId}
                 >
                   <div className="pr-4">
                     <div className="text-xs text-bitcoin-orange-400 mb-1 font-medium">{faq.category}</div>
@@ -135,12 +141,18 @@ export function FAQPage() {
                   {isOpen ? <ChevronUp className="text-gray-400 shrink-0" size={20} /> : <ChevronDown className="text-gray-400 shrink-0" size={20} />}
                 </button>
                 {isOpen && (
-                  <div className="px-4 sm:px-6 py-4 border-t border-white/10 bg-charcoal-900/50">
+                  <div id={panelId} role="region" aria-labelledby={triggerId} className="px-4 sm:px-6 py-4 border-t border-white/10 bg-charcoal-900/50">
                     <p className="text-gray-300 text-sm sm:text-base leading-relaxed">{faq.answer}</p>
                     {faq.link && (
-                      <Link href={faq.link} className="inline-block mt-3 text-sm text-neon-cyan-400 hover:underline">
-                        Learn more →
-                      </Link>
+                      isExternalLink ? (
+                        <a href={faq.link} target="_blank" rel="noopener noreferrer" className="inline-block mt-3 text-sm text-neon-cyan-400 hover:underline">
+                          Learn more →
+                        </a>
+                      ) : (
+                        <Link href={faq.link} className="inline-block mt-3 text-sm text-neon-cyan-400 hover:underline">
+                          Learn more →
+                        </Link>
+                      )
                     )}
                   </div>
                 )}

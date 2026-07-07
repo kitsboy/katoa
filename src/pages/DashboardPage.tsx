@@ -375,6 +375,7 @@ export function DashboardPage() {
         title={t('dashboard.title')}
         description="Manage your KATOA projects, wishlists, and Bitcoin donations from your creator dashboard."
         path="/dashboard"
+        noindex
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
         <Breadcrumbs items={[{ label: t('dashboard.title') }]} className="mb-6" />
@@ -631,15 +632,13 @@ export function DashboardPage() {
 
                       {project.visibility === 'public' && (
                         <div className="mt-4 pt-4 border-t border-white/10">
-                          <a
-                            href={`#/project/${project.slug}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                          <Link
+                            href={`/wishlist/${project.slug}`}
                             className="text-sm text-gray-400 hover:text-orange-400 transition-colors flex items-center gap-2 group/link"
                           >
                             <ExternalLink size={14} className="group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
                             View Public Page
-                          </a>
+                          </Link>
                         </div>
                       )}
                     </>

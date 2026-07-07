@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
 import { Modal } from '../components/Modal';
@@ -15,6 +16,7 @@ import { copyToClipboard } from '../lib/clipboard';
 import { getQrImageUrl, lightningQrData } from '../lib/qr';
 import { Breadcrumbs, BreadcrumbItem } from '../components/Breadcrumbs';
 import { PageMeta } from '../components/PageMeta';
+import { useToast } from '../components/Toast';
 import { PaymentMethodTabs, PaymentTab } from '../components/PaymentMethodTabs';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Gift, ExternalLink, Zap, Bitcoin, Check, Copy, MapPin, QrCode, ArrowLeft, Heart, TrendingUp, Package, ChevronUp, ChevronDown } from 'lucide-react';
@@ -85,6 +87,8 @@ interface Wishlist {
 
 export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; breadcrumbItems?: BreadcrumbItem[] }) {
   const { t } = useLanguage();
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const [wishlist, setWishlist] = useState<Wishlist | null>(null);
   const [items, setItems] = useState<WishlistItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -194,7 +198,8 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
 
       if (wishlistError) throw wishlistError;
       if (!wishlistData) {
-        console.error('Wishlist not found');
+        toast(t('wishlist.notFound'), 'error');
+        navigate('/explore', { replace: true });
         return;
       }
 
@@ -210,6 +215,8 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
       setItems(applyItemOrder((itemsData || []) as WishlistItem[], slug));
     } catch (error) {
       console.error('Error loading wishlist:', error);
+      toast(t('wishlist.notFound'), 'error');
+      navigate('/explore', { replace: true });
     } finally {
       setLoading(false);
     }
@@ -386,7 +393,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
                     {wishlist.title}
                   </h1>
                   {wishlist.country_flag && (
-                    <span className="text-3xl sm:text-4xl" title={wishlist.country}>{wishlist.country_flag}</span>
+                    <span className="text-3xl sm:text-4xl" title={wishlist.country} aria-label={wishlist.country ? `Country: ${wishlist.country}` : 'Country flag'}>{wishlist.country_flag}</span>
                   )}
                 </div>
                 <p className="text-white/90 text-base sm:text-lg leading-relaxed max-w-3xl backdrop-blur-sm bg-black/30 px-3 sm:px-4 py-2 rounded-xl mb-3">

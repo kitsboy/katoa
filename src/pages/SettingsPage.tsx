@@ -51,10 +51,10 @@ export function SettingsPage() {
         username: profile.username || '',
         bio: profile.bio || '',
         avatar_url: profile.avatar_url || '',
-        banner_url: (profile as any).banner_url || '',
+        banner_url: profile.banner_url || '',
         lightning_address: profile.lightning_address || '',
         nostr_pubkey: profile.nostr_pubkey || '',
-        preferred_currency: (profile as any).preferred_currency || 'USD',
+        preferred_currency: profile.preferred_currency || 'USD',
       });
     }
   }, [profile]);
@@ -84,6 +84,7 @@ export function SettingsPage() {
       });
     } catch (error) {
       console.error('Error loading stats:', error);
+      toast('Could not load stats — try refreshing', 'error');
     }
   }
 

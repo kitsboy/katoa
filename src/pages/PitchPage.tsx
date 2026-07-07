@@ -122,6 +122,7 @@ export function PitchPage() {
         title="Pitch Deck"
         description="KATOA marketing presentation — zero-fee Bitcoin creator platform."
         path="/pitch"
+        noindex
       />
 
       <div

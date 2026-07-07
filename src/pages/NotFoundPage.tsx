@@ -6,7 +6,7 @@ import { Home, Compass } from 'lucide-react';
 export function NotFoundPage() {
   return (
     <div className="min-h-[100dvh] bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 flex items-center justify-center px-4 pt-24 pb-20">
-      <PageMeta title="Page Not Found" description="The page you're looking for doesn't exist on KATOA." path="/404" />
+      <PageMeta title="Page Not Found" description="The page you're looking for doesn't exist on KATOA." path="/404" noindex />
       <div className="text-center max-w-md animate-slide-up">
         <p className="text-8xl font-display font-black text-neon-cyan-500/30 mb-4">404</p>
         <h1 className="text-2xl sm:text-3xl font-display font-bold text-white mb-3">Page not found</h1>

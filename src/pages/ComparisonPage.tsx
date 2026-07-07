@@ -257,6 +257,7 @@ export function ComparisonPage() {
 
               <div
                 className="comparison-table-scroll overflow-x-auto scrollbar-hide -mx-2 px-2 sm:mx-0 sm:px-0"
+                aria-label={t('comparison.breakdown.title')}
                 onScroll={(e) => setTableScrolled(e.currentTarget.scrollLeft > 8)}
               >
                 {!tableScrolled && (

@@ -14,7 +14,7 @@ const EMAIL = 'hello@giveabit.io';
 export function ContactPage() {
   const { t } = useLanguage();
   const { toast } = useToast();
-  const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '', website: '' });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validate = () => {
@@ -29,12 +29,13 @@ export function ContactPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (formData.website) return;
     if (!validate()) return;
     const emailSubject = `From Katoa - ${formData.subject}`;
     const emailBody = `From Katoa Contact Form\n\nName: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`;
     window.location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
     toast('Opening your mail app…');
-    setFormData({ name: '', email: '', subject: '', message: '' });
+    setFormData({ name: '', email: '', subject: '', message: '', website: '' });
   };
 
   const copyEmail = async () => {
@@ -64,7 +65,14 @@ export function ContactPage() {
               <MessageSquare className="text-neon-cyan-400" size={22} />
             </div>
             <h3 className="font-bold text-white mb-1">Community</h3>
-            <p className="text-gray-400 text-sm">GitHub Discussions</p>
+            <a
+              href="https://github.com/kitsboy/katoa/discussions"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-400 text-sm hover:text-neon-cyan-400 transition-colors"
+            >
+              GitHub Discussions
+            </a>
           </Card>
           <Card variant="glass" className="p-5 text-center">
             <div className="inline-flex w-12 h-12 bg-emerald-500/20 rounded-full items-center justify-center mb-3">
@@ -78,11 +86,21 @@ export function ContactPage() {
         <Card variant="glass" className="p-6 sm:p-8">
           <h2 className="text-xl font-display font-bold text-white mb-6">Send us a message</h2>
           <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+            <input
+              type="text"
+              name="website"
+              value={formData.website}
+              onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              className="absolute opacity-0 pointer-events-none h-0 w-0 overflow-hidden"
+            />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              <Input label="Name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} error={errors.name} required />
-              <Input label="Email" type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} error={errors.email} required />
+              <Input label="Name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} error={errors.name} required autoComplete="name" />
+              <Input label="Email" type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} error={errors.email} required autoComplete="email" />
             </div>
-            <Input label="Subject" value={formData.subject} onChange={(e) => setFormData({ ...formData, subject: e.target.value })} error={errors.subject} required />
+            <Input label="Subject" value={formData.subject} onChange={(e) => setFormData({ ...formData, subject: e.target.value })} error={errors.subject} required autoComplete="off" />
             <div>
               <label htmlFor="contact-message" className="block text-sm font-medium text-gray-300 mb-2">Message</label>
               <textarea
@@ -92,6 +110,7 @@ export function ContactPage() {
                 className="w-full px-4 py-3 min-h-[140px] bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-neon-cyan-500/50 resize-none text-base"
                 rows={5}
                 required
+                autoComplete="off"
                 aria-invalid={errors.message ? true : undefined}
               />
               {errors.message && <p className="mt-1 text-sm text-red-400" role="alert">{errors.message}</p>}
