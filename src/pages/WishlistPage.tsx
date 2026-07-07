@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
@@ -115,10 +115,6 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
   const [isDemoWishlist, setIsDemoWishlist] = useState(false);
 
   useEffect(() => {
-    loadWishlist();
-  }, [slug]);
-
-  useEffect(() => {
     setThemeColor(getStorage<string>(STORAGE_KEYS.wishlistTheme(slug), '#f97316'));
   }, [slug]);
 
@@ -159,7 +155,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
     setStorage(STORAGE_KEYS.recentlyViewedWishlists, updated);
   }, [wishlist?.slug, wishlist?.title]);
 
-  async function loadWishlist() {
+  const loadWishlist = useCallback(async () => {
     try {
       const mockWishlist = mockWishlists.find(w => w.slug === slug);
       if (mockWishlist) {
@@ -237,7 +233,11 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
     } finally {
       setLoading(false);
     }
-  }
+  }, [slug, navigate, t, toast]);
+
+  useEffect(() => {
+    loadWishlist();
+  }, [loadWishlist]);
 
   function applyItemOrder(loaded: WishlistItem[], listSlug: string): WishlistItem[] {
     const order = getStorage<string[]>(STORAGE_KEYS.wishlistItemOrder(listSlug), []);
@@ -410,7 +410,17 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
                     {wishlist.title}
                   </h1>
                   {wishlist.country_flag && (
-                    <span className="text-3xl sm:text-4xl" title={wishlist.country} aria-label={wishlist.country ? `Country: ${wishlist.country}` : 'Country flag'}>{wishlist.country_flag}</span>
+                    <span
+                      className="text-3xl sm:text-4xl"
+                      title={wishlist.country}
+                      aria-label={
+                        wishlist.country
+                          ? t('wishlist.countryFlag').replace('${country}', wishlist.country)
+                          : t('wishlist.countryFlagGeneric')
+                      }
+                    >
+                      {wishlist.country_flag}
+                    </span>
                   )}
                 </div>
                 <p className="text-white/90 text-base sm:text-lg leading-relaxed max-w-3xl backdrop-blur-sm bg-black/30 px-3 sm:px-4 py-2 rounded-xl mb-3">

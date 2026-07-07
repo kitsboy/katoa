@@ -469,6 +469,7 @@ export function SettingsPage() {
                       placeholder={t('settings.placeholder.nostr')}
                       className="bg-black border-white/10 text-white font-mono"
                     />
+                    <p className="text-xs text-gray-500 -mt-2">{t('settings.nostrHint')}</p>
 
                     <div className="p-6 bg-black rounded-xl border border-white/10">
                       <label className="block text-sm font-bold text-gray-200 mb-4 uppercase tracking-wider">

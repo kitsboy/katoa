@@ -124,6 +124,41 @@ export const PRERENDER_ROUTES = [
     h1: 'KATOA Pitch',
     paragraphs: ['The zero-fee Bitcoin creator economy — pitch overview.'],
   },
+  {
+    path: '/wishlist/medellin-skate-park',
+    title: 'Medellín Skate Park | KATOA Wishlist',
+    description: 'Support the Medellín community skate park build with Bitcoin Lightning — zero platform fees.',
+    h1: 'Medellín Skate Park',
+    paragraphs: ['Fund community skate infrastructure with instant Bitcoin Lightning gifts on KATOA.'],
+  },
+  {
+    path: '/wishlist/guatemala-school-textbooks',
+    title: 'Guatemala School Textbooks | KATOA Wishlist',
+    description: 'Help fund textbooks for students in Guatemala via Bitcoin Lightning on KATOA.',
+    h1: 'Guatemala School Textbooks',
+    paragraphs: ['Support education with peer-to-peer Bitcoin wishlist funding.'],
+  },
+  {
+    path: '/wishlist/kenya-medical-supplies',
+    title: 'Kenya Medical Supplies | KATOA Wishlist',
+    description: 'Fund medical supplies in Kenya with Bitcoin Lightning — 0% platform fees.',
+    h1: 'Kenya Medical Supplies',
+    paragraphs: ['Global supporters can fund healthcare needs instantly via Lightning.'],
+  },
+  {
+    path: '/wishlist/berlin-community-garden',
+    title: 'Berlin Community Garden | KATOA Wishlist',
+    description: 'Support a Berlin community garden project with Bitcoin on KATOA.',
+    h1: 'Berlin Community Garden',
+    paragraphs: ['Local community goals funded without payment processor gatekeeping.'],
+  },
+  {
+    path: '/wishlist/nigeria-clean-water',
+    title: 'Nigeria Clean Water | KATOA Wishlist',
+    description: 'Fund clean water access in Nigeria via Bitcoin Lightning wishlists.',
+    h1: 'Nigeria Clean Water',
+    paragraphs: ['Bitcoin-native crowdfunding with instant settlement.'],
+  },
 ];
 
 export function breadcrumbSchema(items) {

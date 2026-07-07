@@ -4,13 +4,11 @@ import { PageMeta } from '../components/PageMeta';
 
 export function TermsPage() {
   const { t } = useLanguage();
-  const lastUpdated = "October 27, 2025";
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 text-white pt-24 pb-16">
       <PageMeta
-        title="Terms of Service"
-        description="KATOA Terms of Service — rules and guidelines for using our zero-fee Bitcoin creator platform."
+        title={t('terms.metaTitle')}
+        description={t('terms.metaDesc')}
         path="/terms"
       />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -21,7 +19,7 @@ export function TermsPage() {
           <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-orange-400 to-yellow-500 bg-clip-text text-transparent">
             {t('footer.terms')}
           </h1>
-          <p className="text-gray-400">Last Updated: {lastUpdated}</p>
+          <p className="text-gray-400">{t('terms.lastUpdated')}</p>
         </div>
 
         <div className="prose prose-invert prose-orange max-w-none">

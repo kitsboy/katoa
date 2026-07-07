@@ -482,9 +482,9 @@ export function DashboardPage() {
           <Card>
             <EmptyState
               icon={<FolderOpen size={32} />}
-              title="Start Your First Project"
-              description="Projects help you organize multiple wishlists under one umbrella. Perfect for campaigns, causes, or creator portfolios."
-              actionLabel="Create Your First Project"
+              title={t('dashboard.empty.title')}
+              description={t('dashboard.empty.description')}
+              actionLabel={t('dashboard.empty.action')}
               onAction={() => setShowCreateModal(true)}
             />
           </Card>

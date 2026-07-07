@@ -527,7 +527,7 @@ export function ExplorePage() {
     () => ({
       '@context': 'https://schema.org',
       '@type': 'ItemList',
-      name: 'KATOA Creator Wishlists',
+      name: t('explore.schemaName'),
       numberOfItems: filteredWishlists.length,
       itemListElement: filteredWishlists.slice(0, 20).map((w, i) => ({
         '@type': 'ListItem',
@@ -536,7 +536,7 @@ export function ExplorePage() {
         name: w.title,
       })),
     }),
-    [filteredWishlists]
+    [filteredWishlists, t]
   );
 
   const resultCountLabel = loading
@@ -549,7 +549,7 @@ export function ExplorePage() {
 
   return (
     <div className="min-h-screen bg-charcoal-950 pt-16 pb-20 md:pb-8">
-      <PageMeta title="Explore" description="Browse Bitcoin creator wishlists worldwide." path="/explore" />
+      <PageMeta title={t('explore.metaTitle')} description={t('explore.metaDesc')} path="/explore" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
       {usingMockData && (
         <DemoBanner message={t('explore.demoBanner')} />

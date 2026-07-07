@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from './Link';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -22,6 +22,17 @@ export function MobileNav() {
   const { t } = useLanguage();
   const location = useLocation();
   const [showMore, setShowMore] = useState(false);
+  const moreDialogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!showMore) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setShowMore(false);
+    };
+    window.addEventListener('keydown', onKey);
+    moreDialogRef.current?.querySelector<HTMLElement>('button, a')?.focus();
+    return () => window.removeEventListener('keydown', onKey);
+  }, [showMore]);
 
   const items = user
     ? mainItems
@@ -42,7 +53,7 @@ export function MobileNav() {
             onClick={() => setShowMore(false)}
             aria-label="Close menu"
           />
-          <div className="absolute bottom-[calc(56px+env(safe-area-inset-bottom))] inset-x-3 animate-sheet-up">
+          <div ref={moreDialogRef} className="absolute bottom-[calc(56px+env(safe-area-inset-bottom))] inset-x-3 animate-sheet-up">
             <div className="bg-charcoal-900/98 backdrop-blur-xl border border-white/10 rounded-2xl p-3 shadow-2xl">
               <div className="flex items-center justify-between px-2 pb-2 mb-1 border-b border-white/10">
                 <span id="more-nav-title" className="text-sm font-bold text-white">{t('nav.more')}</span>

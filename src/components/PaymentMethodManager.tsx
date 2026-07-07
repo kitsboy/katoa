@@ -368,7 +368,7 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
       <Modal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
-        title={editingMethod ? 'Edit Payment Method' : 'Add Payment Method'}
+        title={editingMethod ? t('payment.modal.edit') : t('payment.modal.add')}
       >
         <form onSubmit={handleSaveMethod} className="space-y-4">
           <div>
