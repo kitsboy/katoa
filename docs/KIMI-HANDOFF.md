@@ -205,4 +205,33 @@
 
 ---
 
+## Handoff to Kimi — 2026-07-07 (100-fix audit complete)
+
+**Machine:** M3 (Grok)
+**Project:** katoa
+
+### Done
+- [x] Batch 5A (`2e502ad`): All TypeScript errors fixed; database.ts expanded; asRow/asRows helpers
+- [x] Batch 5B (`cd33199`): Full i18n pass (7 langs) + removed 4 dead components
+- [x] Batch 5C (`1f0c076`): Branding logo2, hreflang, map chip UX, URL filter sync, validation, a11y
+- [x] Batch 5D (`c5cf9c9`): ESLint clean (0 errors); Vitest 14 tests; `npm run check`
+- [x] Batch 5E: Prerender wishlist routes, dashboard empty i18n, hooks cleanup
+
+### Decisions
+- Supabase joins simplified to flat queries + asRow/asRows casts (staged types lack FK metadata)
+- FAQ/legal body copy stays English; UI chrome fully i18n'd
+- Vitest unit tests for lib helpers only (no E2E yet)
+
+### What's Next
+- Regenerate database.ts from live Supabase when schema stable (`npm run db:types`)
+- Add Playwright smoke tests for auth/explore flows
+- FAQ Q&A content translation if needed for non-EN markets
+
+### Git State
+- Last commit SHA: 99a667e
+- Branch: main
+- Unpushed: none
+
+---
+
 *Safe Harbour · Part of the [Give A Bit](https://giveabit.io) family.*

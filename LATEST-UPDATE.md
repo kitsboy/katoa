@@ -1,4 +1,4 @@
 # katoa — Last Updated 2026-07-07 by Grok
 
-Brief: 40 polish upgrades — map i18n, logo2 branding, PWA.
-Commit: a828d3f
+Brief: 100-fix audit — TS clean, i18n, tests, branding.
+Commit: 99a667e
