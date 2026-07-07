@@ -76,6 +76,43 @@
   padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
 }
 
+@keyframes hero-ken-burns {
+  0% { transform: scale(1) translate(0, 0); }
+  50% { transform: scale(1.08) translate(-1%, -0.5%); }
+  100% { transform: scale(1.04) translate(0.5%, 0.25%); }
+}
+
+.motion-hero-image {
+  animation: hero-ken-burns 24s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-hero-image {
+    animation: none;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 .touch-manipulation {
   touch-action: manipulation;
 }

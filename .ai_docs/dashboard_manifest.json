@@ -1,0 +1,130 @@
+{
+  "project_name": "katoa",
+  "domain": "katoa.org",
+  "stack": [
+    "TypeScript",
+    "React",
+    "Vite",
+    "Tailwind CSS",
+    "Supabase"
+  ],
+  "type": "SPA",
+  "description": "Privacy-first zero-fee Bitcoin commerce platform with Lightning Network and Nostr protocol support",
+  "deploy_target": {
+    "platform": "Cloudflare Pages",
+    "project_name": "katoa",
+    "build_command": "npm run build",
+    "output_directory": "dist",
+    "auto_deploy": true,
+    "legacy": {
+      "platform": "Netlify",
+      "archived": true
+    }
+  },
+  "api_proxies": [
+    {
+      "mount": "/btcmap-api-proxy",
+      "target": "https://api.btcmap.org",
+      "change_origin": true,
+      "rewrite": "strip prefix",
+      "purpose": "BTC Map API CORS bypass for local development"
+    }
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit -p tsconfig.app.json",
+    "db:push": "supabase db push",
+    "db:types": "supabase gen types typescript --linked > src/types/database.generated.ts",
+    "db:setup": "supabase db push && npm run db:types",
+    "env:cf": "bash scripts/print-cloudflare-env.sh"
+  },
+  "env_vars": {
+    "client": {
+      "VITE_SUPABASE_URL": "https://pglqjtipbocjnqmiwmwf.supabase.co",
+      "VITE_SUPABASE_ANON_KEY": "sb_publishable_* (publishable key, not secret)",
+      "VITE_BTCMAP_API_URL": "https://api.btcmap.org",
+      "VITE_BTCMAP_APP_URL": "https://btcmap.org",
+      "VITE_BTCMAP_ENABLED": "true",
+      "VITE_APP_URL": "https://katoa.org",
+      "VITE_APP_NAME": "KATOA"
+    },
+    "server": {
+      "SUPABASE_PROJECT_REF": "pglqjtipbocjnqmiwmwf",
+      "SUPABASE_URL": "https://pglqjtipbocjnqmiwmwf.supabase.co",
+      "SUPABASE_SERVICE_ROLE_KEY": "sb_secret_* (server-side only, never in client)"
+    },
+    "optional": [
+      "VITE_API_BASE_URL",
+      "VITE_DEMO_MODE",
+      "VITE_BTCPAY_SERVER_URL",
+      "VITE_BTCPAY_STORE_ID",
+      "VITE_BTCPAY_API_KEY",
+      "VITE_BTCPAY_WEBHOOK_SECRET"
+    ]
+  },
+  "supabase": {
+    "project_ref": "pglqjtipbocjnqmiwmwf",
+    "remote_url": "https://pglqjtipbocjnqmiwmwf.supabase.co",
+    "db_version": 15,
+    "auth_providers": ["email/password", "google_oauth"],
+    "migrations_count": 24,
+    "local_ports": {
+      "api": 54321,
+      "db": 54322,
+      "studio": 54323
+    },
+    "auth_site_url": "http://localhost:5173",
+    "auth_redirect_urls": [
+      "http://localhost:5173/dashboard",
+      "https://katoa.org/dashboard"
+    ],
+    "edge_functions": true
+  },
+  "dev_server": {
+    "port": 5173,
+    "url": "http://localhost:5173",
+    "hmr": true,
+    "proxy_active": true
+  },
+  "build": {
+    "format": "static_spa",
+    "output": "dist/",
+    "size_estimate": "~2.9 MB",
+    "code_splitting": {
+      "vendor": ["react", "react-dom"],
+      "supabase": ["@supabase/supabase-js"],
+      "nostr": ["nostr-tools"],
+      "ui": ["lucide-react"]
+    },
+    "caching": {
+      "static_assets": "1 year immutable",
+      "images": "1 year immutable"
+    },
+    "spa_routing": "/* /index.html 200"
+  },
+  "integrations": [
+    "Supabase (auth, database, storage)",
+    "Nostr (decentralized identity & social)",
+    "BTC Map (Bitcoin merchant map)",
+    "BTCPay Server (self-hosted payments, optional)",
+    "Lightning Network (BOLT 12)"
+  ],
+  "design_tokens": {
+    "colors": {
+      "primary": "sand-tan",
+      "secondary": "night-blue",
+      "accent": "neon-cyan",
+      "feature": "bitcoin-orange",
+      "background": "charcoal"
+    },
+    "fonts": {
+      "sans": "Inter",
+      "serif": "DM Serif Display",
+      "display": "Space Grotesk",
+      "mono": "JetBrains Mono"
+    }
+  }
+}
