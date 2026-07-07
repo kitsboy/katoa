@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import { Upload, X, Image, Video, FileText, Loader } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 import { Button } from './Button';
 import { Card } from './Card';
 import { supabase, asRow } from '../lib/supabase';
@@ -46,6 +47,7 @@ interface MediaUploadPropsSimple {
 type MediaUploadProps = MediaUploadPropsWishlist | MediaUploadPropsSimple;
 
 export function MediaUpload(props: MediaUploadProps) {
+  const { t } = useLanguage();
   const [uploading, setUploading] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedMedia[]>([]);
   const [error, setError] = useState('');
@@ -235,7 +237,9 @@ export function MediaUpload(props: MediaUploadProps) {
           )}
         </Button>
 
-        {!isSimpleMode && (
+        {isSimpleMode ? (
+          <p className="text-xs text-gray-500 mt-2">{t('video.upload.hint')}</p>
+        ) : (
           <p className="text-xs text-gray-500 mt-2">
             Accepted: Images, Videos, PDF, Word documents. Max {maxSizeMB}MB per file.
           </p>

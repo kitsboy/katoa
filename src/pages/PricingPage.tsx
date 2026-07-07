@@ -129,6 +129,7 @@ const plans = [
     iconColor: 'text-bitcoin-orange-400',
     highlights: [
       'Everything in Starter',
+      'Video creator pages (MP4/MOV cover previews)',
       'Custom wishlist themes',
       'Advanced analytics',
       'Supporter update emails',

@@ -397,12 +397,21 @@ export function DashboardPage() {
           </div>
         )}
 
-        <div className="mb-12">
+        <div className="mb-8">
           <h1 className="text-5xl font-black text-white mb-3 bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
             {t('dashboard.title')}
           </h1>
           <p className="text-gray-300 text-lg">{t('dashboard.subtitle')}</p>
         </div>
+
+        <Card className="mb-8 p-4 border-[#00aff0]/25 bg-[#00aff0]/5">
+          <p className="text-sm text-gray-300">
+            {t('dashboard.videoHint')}{' '}
+            <Link href="/explore?videos=1" className="text-[#00aff0] font-semibold hover:underline">
+              {t('dashboard.videoHintLink')} →
+            </Link>
+          </p>
+        </Card>
 
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-8 sm:mb-12">
           <Card className=" hover:border-orange-500/50 transition-all duration-300 p-6 hover:shadow-[0_0_30px_rgba(255,135,0,0.2)]">

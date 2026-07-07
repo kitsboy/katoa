@@ -14,6 +14,7 @@ import {
   Plus, Edit, Trash2, Bitcoin, Zap, Hash, Shield, Star,
   Check, X, Scan
 } from 'lucide-react';
+import { validateBitcoinAddress, validateLightningAddress } from '../lib/validateAddress';
 
 type PaymentMethod = DbPaymentMethod;
 
@@ -25,23 +26,10 @@ function validatePaymentAddress(
   if (!trimmed) return 'Address is required';
 
   switch (methodType) {
-    case 'lightning': {
-      const lower = trimmed.toLowerCase();
-      if (trimmed.includes('@')) {
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
-          return 'Enter a valid Lightning address (user@domain.com)';
-        }
-        return null;
-      }
-      if (lower.startsWith('lnurl')) return null;
-      if (lower.startsWith('lnbc') || lower.startsWith('ln')) return null;
-      return 'Lightning invoice must start with ln or lnbc, or use a Lightning address';
-    }
+    case 'lightning':
+      return validateLightningAddress(trimmed);
     case 'bitcoin_address':
-      if (trimmed.length < 26 || trimmed.length > 90) {
-        return 'Bitcoin address must be between 26 and 90 characters';
-      }
-      return null;
+      return validateBitcoinAddress(trimmed);
     case 'bitcoin_xpub':
       if (!/^(xpub|ypub|zpub|tpub|vpub|upub)/i.test(trimmed)) {
         return 'Extended public key must start with xpub, ypub, or zpub';

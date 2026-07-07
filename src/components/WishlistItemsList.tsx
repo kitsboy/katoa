@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { ExternalLink, Check } from 'lucide-react';
 import { Card } from './Card';
+import { MediaCard } from './MediaCard';
 
 export interface WishlistItem {
   id: string;
@@ -11,6 +12,7 @@ export interface WishlistItem {
   product_url: string;
   merchant: string;
   image_url: string;
+  video_url?: string | null;
   currency: string;
   original_price: number;
   is_funded: boolean;
@@ -55,17 +57,22 @@ export const WishlistItemsList = memo(function WishlistItemsList({ items, onItem
           >
             <div className="flex gap-3">
               {/* Thumbnail */}
-              <div className="relative flex-shrink-0">
-                <img
-                  src={item.image_url}
-                  alt={item.title}
-                  loading="lazy"
-                  decoding="async"
-                  className="w-20 h-20 object-cover rounded-lg"
-                  onError={(e) => {
-                    e.currentTarget.src = 'https://images.pexels.com/photos/2599244/pexels-photo-2599244.jpeg?auto=compress&cs=tinysrgb&w=400';
-                  }}
-                />
+              <div className="relative flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden">
+                {(item.image_url || item.video_url) ? (
+                  <MediaCard
+                    media={{
+                      imageUrl: item.image_url,
+                      videoUrl: item.video_url,
+                      alt: item.title,
+                    }}
+                    aspect="square"
+                    className="!aspect-square !w-20 !h-20"
+                    showPlayIndicator={Boolean(item.video_url)}
+                    autoplayOnHover={false}
+                  />
+                ) : (
+                  <div className="w-full h-full bg-charcoal-800" />
+                )}
                 {item.is_funded && (
                   <div className="absolute -top-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
                     <Check size={14} className="text-white" />

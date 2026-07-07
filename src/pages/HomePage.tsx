@@ -178,6 +178,9 @@ export function HomePage() {
               <Link href="/explore" className="lp-btn-secondary">
                 {t('home.join.browse')}
               </Link>
+              <Link href="/explore?videos=1" className="lp-btn-secondary">
+                {t('explore.videoCreators')}
+              </Link>
             </div>
             <p className="lp-cta-note">{t('home.cta.note')}</p>
             <div className="lp-cta-stats">

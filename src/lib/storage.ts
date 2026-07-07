@@ -28,6 +28,7 @@ export const STORAGE_KEYS = {
   exploreFilters: 'katoa_explore_filters',
   exploreFavorites: 'katoa_explore_favorites',
   exploreFavoritesOnly: 'katoa_explore_favorites_only',
+  /** Persisted /explore "Videos only" quick filter (cover_video_url creators). */
   exploreVideosOnly: 'katoa_explore_videos_only',
   recentlyViewedWishlists: 'katoa_recent_wishlists',
   giftDraft: 'katoa_gift_draft',

@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
-import { PRERENDER_ROUTES, breadcrumbSchema } from './prerender-routes.mjs';
+import { PRERENDER_ROUTES, PRERENDER_ROUTE_COUNT, breadcrumbSchema } from './prerender-routes.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
@@ -100,4 +100,4 @@ for (const route of PRERENDER_ROUTES) {
   count += 1;
 }
 
-console.log(`Prerendered ${count} routes with static English SEO content`);
+console.log(`Prerendered ${count}/${PRERENDER_ROUTE_COUNT} routes with static English SEO content`);

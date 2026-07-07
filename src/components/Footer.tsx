@@ -174,6 +174,7 @@ export function Footer() {
                 </h3>
                 <ul className="space-y-2.5">
                   <FooterLink href="/explore">Explore</FooterLink>
+                  <FooterLink href="/explore?videos=1">Video Creators</FooterLink>
                   <FooterLink href="/dashboard">Dashboard</FooterLink>
                   <FooterLink href="/faq">FAQ</FooterLink>
                   <FooterLink href="/auth">Sign In</FooterLink>

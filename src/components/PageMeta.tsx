@@ -11,6 +11,8 @@ interface PageMetaProps {
   description?: string;
   path?: string;
   image?: string;
+  /** Open Graph video URL for video wishlists / creator pages */
+  ogVideo?: string;
   noindex?: boolean;
 }
 
@@ -25,6 +27,7 @@ export function PageMeta({
   description,
   path = '',
   image = `${SITE_URL}/logo2-512.png`,
+  ogVideo,
   noindex = false,
 }: PageMetaProps) {
   const { language } = useLanguage();
@@ -54,9 +57,18 @@ export function PageMeta({
     setMeta('twitter:title', fullTitle);
     setMeta('og:url', `${SITE_URL}${path}`, 'property');
     setMeta('og:image', absoluteImage, 'property');
-    setMeta('og:type', 'website', 'property');
-    setMeta('twitter:card', 'summary_large_image');
-    setMeta('twitter:image', absoluteImage);
+    setMeta('og:type', ogVideo ? 'video.other' : 'website', 'property');
+    if (ogVideo) {
+      const absoluteVideo = toAbsoluteUrl(ogVideo);
+      setMeta('og:video', absoluteVideo, 'property');
+      setMeta('og:video:secure_url', absoluteVideo, 'property');
+      setMeta('og:video:type', 'video/mp4', 'property');
+      setMeta('twitter:card', 'player');
+      setMeta('twitter:player', absoluteVideo);
+    } else {
+      setMeta('twitter:card', 'summary_large_image');
+      setMeta('twitter:image', absoluteImage);
+    }
     setMeta('robots', noindex ? 'noindex, nofollow' : 'index, follow');
 
     let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
@@ -99,7 +111,7 @@ export function PageMeta({
       setMeta('robots', 'index, follow');
       if (canonical) canonical.href = `${SITE_URL}/`;
     };
-  }, [title, description, path, absoluteImage, noindex, language]);
+  }, [title, description, path, absoluteImage, ogVideo, noindex, language]);
 
   return null;
 }

@@ -1,5 +1,6 @@
 import { ReactNode, useRef, useState } from 'react';
 import { Gift, Play, Volume2, VolumeX } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export interface MediaCardSource {
   imageUrl?: string | null;
@@ -40,6 +41,7 @@ export function MediaCard({
   autoplayOnHover = true,
   showPlayIndicator = true,
 }: MediaCardProps) {
+  const { t } = useLanguage();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [muted, setMuted] = useState(true);
   const [videoFailed, setVideoFailed] = useState(false);
@@ -143,7 +145,7 @@ export function MediaCard({
               setMuted((m) => !m);
             }}
             className="p-2 rounded-full bg-black/60 backdrop-blur-sm border border-white/20 text-white hover:bg-black/80 transition-colors touch-manipulation"
-            aria-label={muted ? 'Unmute video' : 'Mute video'}
+            aria-label={muted ? t('media.unmute') : t('media.mute')}
           >
             {muted ? <VolumeX size={14} /> : <Volume2 size={14} />}
           </button>

@@ -12,6 +12,7 @@ interface CoverVideoUploadProps {
 export function CoverVideoUpload({ onVideoUrl, currentUrl }: CoverVideoUploadProps) {
   const { t } = useLanguage();
   const [uploading, setUploading] = useState(false);
+  const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
 
   return (
     <div className="cover-video-upload rounded-xl border border-[#00aff0]/25 bg-[#00aff0]/5 p-4">
@@ -46,6 +47,7 @@ export function CoverVideoUpload({ onVideoUrl, currentUrl }: CoverVideoUploadPro
         onFilesSelected={async (files) => {
           const file = files[0];
           if (!file) return;
+          setSelectedFileName(file.name);
           setUploading(true);
           try {
             const url = URL.createObjectURL(file);
@@ -55,6 +57,12 @@ export function CoverVideoUpload({ onVideoUrl, currentUrl }: CoverVideoUploadPro
           }
         }}
       />
+
+      {selectedFileName && (
+        <p className="text-xs text-gray-300 mt-2 truncate" title={selectedFileName}>
+          Selected: <span className="text-[#00aff0] font-medium">{selectedFileName}</span>
+        </p>
+      )}
     </div>
   );
 }

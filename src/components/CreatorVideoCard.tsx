@@ -48,7 +48,7 @@ export const CreatorVideoCard = memo(function CreatorVideoCard({
   const subscribers = wishlist.subscriber_count ?? Math.floor(wishlist.total_sats_raised / 1200) + 42;
 
   return (
-    <Link href={`/wishlist/${wishlist.slug}`} className="group block h-full">
+    <Link href={`/wishlist/${wishlist.slug}`} className="group block h-full" data-testid="creator-video-card">
       <Card
         hover
         className={`creator-video-card overflow-hidden h-full flex flex-col ${

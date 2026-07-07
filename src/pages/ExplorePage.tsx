@@ -540,6 +540,19 @@ export function ExplorePage() {
     [wishlists]
   );
 
+  const showcaseVideoIds = useMemo(
+    () => new Set(videoCreators.slice(0, 2).map((w) => w.id)),
+    [videoCreators]
+  );
+
+  const gridWishlists = useMemo(
+    () =>
+      videoCreators.length > 0
+        ? filteredWishlists.filter((w) => !showcaseVideoIds.has(w.id))
+        : filteredWishlists,
+    [filteredWishlists, showcaseVideoIds, videoCreators.length]
+  );
+
   const countries = Array.from(new Set(wishlists.map((w) => w.country).filter(Boolean) as string[])).sort();
 
   const wishlistsWithLocation = filteredWishlists.filter((w) => w.latitude && w.longitude);
@@ -860,13 +873,20 @@ export function ExplorePage() {
               </div>
             )}
 
-            {categories.length > 0 && !showFilters && (
+            {!showFilters && (
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-gray-300 text-sm font-medium">{t('explore.quickFilters')}</span>
+                <CategoryBadge
+                  name={t('explore.videosOnly')}
+                  icon="Video"
+                  color="#00aff0"
+                  size="sm"
+                  onClick={toggleVideosOnly}
+                />
                 {categories.slice(0, 6).map((cat) => (
                   <CategoryBadge
                     key={cat.id}
-                    name={cat.name}
+                    name={cat.slug === 'creator' ? t('explore.creatorCategory') : cat.name}
                     icon={cat.icon ?? undefined}
                     color={cat.color ?? undefined}
                     size="sm"
@@ -924,13 +944,13 @@ export function ExplorePage() {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" aria-busy="true" aria-label={t('explore.loadingProjects')}>
             {[...Array(9)].map((_, i) => (
-              <CardSkeleton key={i} />
+              <CardSkeleton key={i} variant={videosOnly ? 'tall' : 'default'} />
             ))}
           </div>
-        ) : filteredWishlists.length > 0 ? (
+        ) : gridWishlists.length > 0 ? (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {filteredWishlists.slice(0, visibleCount).map((wishlist) =>
+              {gridWishlists.slice(0, visibleCount).map((wishlist) =>
                 isCreatorVideoCard(wishlist) ? (
                   <CreatorVideoCard
                     key={wishlist.id}
@@ -950,7 +970,7 @@ export function ExplorePage() {
                 )
               )}
             </div>
-            {visibleCount < filteredWishlists.length && (
+            {visibleCount < gridWishlists.length && (
               <div className="mt-8 text-center">
                 <Button
                   variant="outline"
@@ -958,7 +978,7 @@ export function ExplorePage() {
                   onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
                   className="min-h-[48px] px-8"
                 >
-                  {t('explore.loadMore')} ({filteredWishlists.length - visibleCount} {t('explore.remaining')})
+                  {t('explore.loadMore')} ({gridWishlists.length - visibleCount} {t('explore.remaining')})
                 </Button>
               </div>
             )}

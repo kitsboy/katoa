@@ -7,6 +7,7 @@ import { Input } from '../components/Input';
 import { Link } from '../components/Link';
 
 import { PaymentMethodManager } from '../components/PaymentMethodManager';
+import { CoverVideoUpload } from '../components/CoverVideoUpload';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { useToast } from '../components/Toast';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -52,6 +53,7 @@ export function ProjectPage() {
     lightning_address: '',
     nostr_pubkey: '',
     visibility: 'draft' as 'public' | 'private' | 'draft',
+    cover_video_url: '' as string,
   });
 
   const [wishlistForm, setWishlistForm] = useState({
@@ -95,6 +97,7 @@ export function ProjectPage() {
         lightning_address: project.lightning_address || '',
         nostr_pubkey: project.nostr_pubkey || '',
         visibility: project.visibility,
+        cover_video_url: (project.settings?.cover_video_url as string) || '',
       });
     } catch (error) {
       console.error('Error loading project:', error);
@@ -507,6 +510,7 @@ export function ProjectPage() {
                           lightning_address: project.lightning_address || '',
                           nostr_pubkey: project.nostr_pubkey || '',
                           visibility: project.visibility,
+                          cover_video_url: (project.settings?.cover_video_url as string) || '',
                         });
                       }}
                       className="border-white/10 text-gray-300 hover:bg-white/5 backdrop-blur-sm bg-black/30"
@@ -557,6 +561,21 @@ export function ProjectPage() {
             </Card>
 
             <Card className=" p-8">
+              <CoverVideoUpload
+                currentUrl={formData.cover_video_url || null}
+                onVideoUrl={(url) => setFormData({ ...formData, cover_video_url: url })}
+              />
+              <Input
+                label="Cover video URL (optional)"
+                value={formData.cover_video_url}
+                onChange={(e) => setFormData({ ...formData, cover_video_url: e.target.value })}
+                placeholder="https://…/preview.mp4"
+                helperText="Demo preview URL — persisted when project settings support is enabled."
+                className="mt-4"
+              />
+            </Card>
+
+            <Card className=" p-8 lg:col-span-2">
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-3 bg-purple-500/20 rounded-xl">
                   <Settings size={24} className="text-purple-500" />

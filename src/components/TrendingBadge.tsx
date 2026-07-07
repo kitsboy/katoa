@@ -1,7 +1,7 @@
-import { TrendingUp, Flame, Star, Zap } from 'lucide-react';
+import { TrendingUp, Flame, Star, Zap, Video } from 'lucide-react';
 
 interface TrendingBadgeProps {
-  type?: 'trending' | 'hot' | 'featured' | 'new';
+  type?: 'trending' | 'hot' | 'featured' | 'new' | 'video';
   animated?: boolean;
 }
 
@@ -30,6 +30,12 @@ export function TrendingBadge({ type = 'trending', animated = true }: TrendingBa
       label: 'New',
       gradient: 'from-blue-500 to-indigo-600',
       color: 'text-blue-400',
+    },
+    video: {
+      icon: Video,
+      label: 'Video',
+      gradient: 'from-[#00aff0] to-cyan-500',
+      color: 'text-[#00aff0]',
     },
   };
 

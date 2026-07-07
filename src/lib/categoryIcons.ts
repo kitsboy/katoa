@@ -9,6 +9,7 @@ import {
   Laptop,
   Plane,
   Tag,
+  Video,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -23,6 +24,7 @@ const CATEGORY_ICONS: Record<string, LucideIcon> = {
   Laptop,
   Plane,
   Tag,
+  Video,
 };
 
 export function getCategoryIcon(name?: string): LucideIcon {

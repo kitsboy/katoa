@@ -372,6 +372,15 @@ export function AuthPage() {
               </div>
             </div>
           )}
+
+          <div className="mt-6 text-center">
+            <Link
+              href="/explore?videos=1"
+              className="text-sm text-[#00aff0] hover:text-cyan-300 font-medium transition-colors"
+            >
+              Browse video creators →
+            </Link>
+          </div>
         </Card>
       </div>
     </div>

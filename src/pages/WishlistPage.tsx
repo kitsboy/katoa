@@ -364,13 +364,37 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
     ? (wishlist.total_sats_raised / wishlist.total_sats_goal) * 100
     : 0;
 
-  const resolvedBreadcrumbs: BreadcrumbItem[] = breadcrumbItems.length > 0
-    ? breadcrumbItems.map((item, i) =>
-        i === breadcrumbItems.length - 1 && wishlist
-          ? { ...item, label: wishlist.title }
-          : item
-      )
-    : [];
+  const resolvedBreadcrumbs: BreadcrumbItem[] = (() => {
+    if (breadcrumbItems.length === 0) return [];
+    const items = breadcrumbItems.map((item, i) =>
+      i === breadcrumbItems.length - 1 && wishlist
+        ? { ...item, label: wishlist.title }
+        : item
+    );
+    const isVideoPage =
+      wishlist?.card_style === 'creator' || Boolean(wishlist?.cover_video_url);
+    if (isVideoPage && !items.some((item) => item.href === '/explore?videos=1')) {
+      const exploreIdx = items.findIndex((item) => item.href === '/explore');
+      const insertAt = exploreIdx >= 0 ? exploreIdx + 1 : items.length - 1;
+      items.splice(insertAt, 0, {
+        label: t('explore.videoCreators'),
+        href: '/explore?videos=1',
+      });
+    }
+    return items;
+  })();
+
+  const videoObjectSchema =
+    wishlist?.cover_video_url
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'VideoObject',
+          name: wishlist.title,
+          description: wishlist.description,
+          thumbnailUrl: wishlist.cover_image ?? undefined,
+          contentUrl: wishlist.cover_video_url,
+        }
+      : null;
 
   const formatCountdown = (secs: number) => {
     const m = Math.floor(secs / 60);
@@ -385,7 +409,14 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
         description={wishlist.description?.slice(0, 160) || `Support ${wishlist.creator.username}'s wishlist with Bitcoin on KATOA.`}
         path={`/wishlist/${slug}`}
         image={wishlist.cover_image || undefined}
+        ogVideo={wishlist.cover_video_url || undefined}
       />
+      {videoObjectSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(videoObjectSchema) }}
+        />
+      )}
       {isDemoWishlist && (
         <div className="bg-bitcoin-orange-500/10 border-b border-bitcoin-orange-500/30 px-4 py-2 text-center text-sm text-bitcoin-orange-200">
           Demo wishlist — payments auto-complete after 3 seconds for preview.

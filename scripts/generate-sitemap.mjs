@@ -20,8 +20,11 @@ const STATIC_ROUTES = [
   { path: '/privacy', priority: '0.5', changefreq: 'monthly' },
 ];
 
+const VIDEO_CREATOR_SLUGS = ['luna-exclusive-videos', 'sasha-vip-content'];
+
 const mockSource = readFileSync(join(root, 'src/data/mockWishlists.ts'), 'utf8');
-const slugs = [...new Set([...mockSource.matchAll(/slug:\s*['"]([^'"]+)['"]/g)].map((m) => m[1]))];
+const extractedSlugs = [...mockSource.matchAll(/slug:\s*['"]([^'"]+)['"]/g)].map((m) => m[1]);
+const slugs = [...new Set([...VIDEO_CREATOR_SLUGS, ...extractedSlugs])];
 
 const urls = [
   ...STATIC_ROUTES.map((r) => ({ loc: `https://katoa.org${r.path}`, ...r })),

@@ -1787,7 +1787,7 @@
 }
 
 .media-card--creator {
-  ring: none;
+  outline: none;
 }
 
 .cover-video-upload {

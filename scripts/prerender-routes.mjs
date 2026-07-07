@@ -123,6 +123,12 @@ export const PRERENDER_ROUTES = [
     description: 'Premium video creator wishlist on Bitcoin Lightning — 0% platform fees.',
     h1: 'Luna — Exclusive Video Collection',
     paragraphs: ['Support independent video creators with instant Lightning tips on KATOA.'],
+    breadcrumbs: [
+      { name: 'Home', item: 'https://katoa.org/' },
+      { name: 'Explore', item: 'https://katoa.org/explore' },
+      { name: 'Video Creators', item: 'https://katoa.org/explore?videos=1' },
+      { name: 'Luna — Exclusive Video Collection', item: 'https://katoa.org/wishlist/luna-exclusive-videos' },
+    ],
   },
   {
     path: '/wishlist/sasha-vip-content',
@@ -130,6 +136,12 @@ export const PRERENDER_ROUTES = [
     description: 'VIP video content funded via Bitcoin Lightning — creators keep 100%.',
     h1: 'Sasha — VIP Video Wishlist',
     paragraphs: ['Direct-to-fan video monetization without platform cuts.'],
+    breadcrumbs: [
+      { name: 'Home', item: 'https://katoa.org/' },
+      { name: 'Explore', item: 'https://katoa.org/explore' },
+      { name: 'Video Creators', item: 'https://katoa.org/explore?videos=1' },
+      { name: 'Sasha — VIP Video Wishlist', item: 'https://katoa.org/wishlist/sasha-vip-content' },
+    ],
   },
   {
     path: '/pitch',
@@ -174,6 +186,9 @@ export const PRERENDER_ROUTES = [
     paragraphs: ['Bitcoin-native crowdfunding with instant settlement.'],
   },
 ];
+
+/** Total static prerender routes (marketing pages + featured wishlists). */
+export const PRERENDER_ROUTE_COUNT = PRERENDER_ROUTES.length;
 
 export function breadcrumbSchema(items) {
   return {
