@@ -1,8 +1,10 @@
 import { Navigate, useParams } from 'react-router-dom';
+import { useLanguage } from '../contexts/LanguageContext';
 import { WishlistPage } from './WishlistPage';
 
 export function WishlistRoutePage() {
   const { slug } = useParams<{ slug: string }>();
+  const { t } = useLanguage();
 
   if (!slug) {
     return <Navigate to="/explore" replace />;
@@ -12,8 +14,8 @@ export function WishlistRoutePage() {
     <WishlistPage
       slug={slug}
       breadcrumbItems={[
-        { label: 'Explore', href: '/explore' },
-        { label: 'Wishlist' },
+        { label: t('nav.explore'), href: '/explore' },
+        { label: t('wishlist.title') },
       ]}
     />
   );

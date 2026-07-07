@@ -19,24 +19,9 @@ const howItWorksSteps = [
 ];
 
 const pillars = [
-  {
-    icon: Zap,
-    title: 'Instant settlement',
-    desc: 'Funds arrive over Bitcoin Lightning in seconds. No payment processor holding your money for weeks.',
-    compare: { old: '7–14 days', next: 'Instant' },
-  },
-  {
-    icon: Globe,
-    title: 'Truly global',
-    desc: 'Creators in 195+ countries. No bank account, no geographic gatekeeping, no Stripe exclusions.',
-    compare: { old: '~10 countries', next: '195+ countries' },
-  },
-  {
-    icon: Shield,
-    title: 'Privacy by design',
-    desc: 'Nostr-native identity, minimal data collection, and a roadmap toward stronger payment privacy.',
-    compare: { old: 'Platform-owned', next: 'You own your keys' },
-  },
+  { icon: Zap, titleKey: 'home.pillar1.title', descKey: 'home.pillar1.desc', oldKey: 'home.pillar1.old', nextKey: 'home.pillar1.next' },
+  { icon: Globe, titleKey: 'home.pillar2.title', descKey: 'home.pillar2.desc', oldKey: 'home.pillar2.old', nextKey: 'home.pillar2.next' },
+  { icon: Shield, titleKey: 'home.pillar3.title', descKey: 'home.pillar3.desc', oldKey: 'home.pillar3.old', nextKey: 'home.pillar3.next' },
 ];
 
 export function HomePage() {
@@ -102,7 +87,7 @@ export function HomePage() {
         <div className="lp-container">
           <SectionHeader
             variant="landing"
-            eyebrow="How it works"
+            eyebrow={t('home.howItWorks.eyebrow')}
             title={t('home.howItWorks.title')}
             subtitle={t('home.howItWorks.subtitle')}
             align="left"
@@ -135,21 +120,21 @@ export function HomePage() {
           />
 
           <div className="lp-bento">
-            {pillars.map(({ icon: Icon, title, desc, compare }) => (
-              <article key={title} className="lp-bento-card">
+            {pillars.map(({ icon: Icon, titleKey, descKey, oldKey, nextKey }) => (
+              <article key={titleKey} className="lp-bento-card">
                 <div className="lp-bento-icon">
                   <Icon size={22} strokeWidth={1.75} />
                 </div>
-                <h3>{title}</h3>
-                <p>{desc}</p>
+                <h3>{t(titleKey)}</h3>
+                <p>{t(descKey)}</p>
                 <div className="lp-bento-compare">
                   <div>
-                    <span>Traditional</span>
-                    <strong>{compare.old}</strong>
+                    <span>{t('home.bento.traditional')}</span>
+                    <strong>{t(oldKey)}</strong>
                   </div>
                   <div>
-                    <span>KATOA</span>
-                    <strong>{compare.next}</strong>
+                    <span>{t('home.bento.katoa')}</span>
+                    <strong>{t(nextKey)}</strong>
                   </div>
                 </div>
               </article>
@@ -186,13 +171,11 @@ export function HomePage() {
                 {t('home.join.browse')}
               </Link>
             </div>
-            <p className="lp-cta-note">
-              0% platform fees. Lightning costs are minimal and usually paid by supporters. KATOA never custodies your balance.
-            </p>
+            <p className="lp-cta-note">{t('home.cta.note')}</p>
             <div className="lp-cta-stats">
-              <div><strong>2024</strong><span>Launch</span></div>
-              <div><strong>{stats.volume}</strong><span>Processed</span></div>
-              <div><strong>0%</strong><span>Fees</span></div>
+              <div><strong>2024</strong><span>{t('home.cta.launch')}</span></div>
+              <div><strong>{stats.volume}</strong><span>{t('home.cta.processed')}</span></div>
+              <div><strong>0%</strong><span>{t('home.cta.fees')}</span></div>
             </div>
           </div>
         </div>

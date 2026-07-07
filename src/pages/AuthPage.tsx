@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
-import { Input } from '../components/Input';
 import { Link } from '../components/Link';
 import { Gift, Mail, Lock, User, Zap, ArrowLeft } from 'lucide-react';
 import { PageMeta } from '../components/PageMeta';
@@ -22,6 +23,8 @@ function getPasswordStrength(password: string): 'weak' | 'medium' | 'strong' | n
 }
 
 export function AuthPage() {
+  const navigate = useNavigate();
+  const { t } = useLanguage();
   const { signUp, signIn, signInWithGoogle, signInWithNostr, signInAsDemo, canUseDemoAuth, session } = useAuth();
   const [isSignUp, setIsSignUp] = useState(() => {
     const saved = sessionStorage.getItem(STORAGE_KEYS.authTab);
@@ -51,14 +54,12 @@ export function AuthPage() {
         setError(errorDescription || 'Authentication failed. Please try again.');
         window.history.replaceState({}, document.title, '/auth');
       } else if (session && !loading) {
-        setTimeout(() => {
-          window.location.href = '/dashboard';
-        }, 100);
+        setTimeout(() => navigate('/dashboard', { replace: true }), 100);
       }
     };
 
     handleAuthCallback();
-  }, [session, loading]);
+  }, [session, loading, navigate]);
 
   async function handleEmailAuth(e: React.FormEvent) {
     e.preventDefault();
@@ -80,13 +81,11 @@ export function AuthPage() {
         setError(result.error.message);
         setLoading(false);
       } else if (!isSignUp) {
-        setTimeout(() => {
-          window.location.href = '/dashboard';
-        }, 500);
+        setTimeout(() => navigate('/dashboard', { replace: true }), 500);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Auth error:', err);
-      setError(err.message || 'An error occurred');
+      setError(err instanceof Error ? err.message : 'An error occurred');
       setLoading(false);
     }
   }
@@ -101,9 +100,9 @@ export function AuthPage() {
         setError(result.error.message || 'Google sign-in failed');
         setLoading(false);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Google sign-in error:', err);
-      setError(err.message || 'An error occurred with Google sign-in');
+      setError(err instanceof Error ? err.message : 'An error occurred with Google sign-in');
       setLoading(false);
     }
   }
@@ -117,8 +116,8 @@ export function AuthPage() {
       if (result.error) {
         setError(result.error.message);
       }
-    } catch (err: any) {
-      setError(err.message || 'An error occurred');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
     }
@@ -141,7 +140,7 @@ export function AuthPage() {
         {/* Back to Home */}
         <Link href="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition-colors">
           <ArrowLeft size={20} />
-          <span>Back to Home</span>
+          <span>{t('common.backHome')}</span>
         </Link>
 
         <Card variant="glass" className="p-6 sm:p-8">
@@ -159,7 +158,7 @@ export function AuthPage() {
           </div>
 
           {error && (
-            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg" role="alert" aria-live="assertive">
               <p className="text-red-400 text-sm">{error}</p>
             </div>
           )}
@@ -178,7 +177,7 @@ export function AuthPage() {
                   setLoading(true);
                   const { error: demoError } = await signInAsDemo();
                   if (demoError) setError(demoError.message);
-                  else window.location.href = '/dashboard';
+                  else navigate('/dashboard', { replace: true });
                   setLoading(false);
                 }}
               >
@@ -253,6 +252,7 @@ export function AuthPage() {
                     onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                     className="w-full pl-10 pr-4 py-3 min-h-[44px] bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-neon-cyan-500/50 text-base"
                     placeholder="johndoe"
+                    autoComplete="username"
                     required
                   />
                 </div>
@@ -271,6 +271,7 @@ export function AuthPage() {
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-neon-cyan-500/50 min-h-[44px] text-base"
                   placeholder="you@example.com"
+                  autoComplete="email"
                   required
                 />
               </div>
@@ -288,12 +289,13 @@ export function AuthPage() {
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-neon-cyan-500/50 min-h-[44px] text-base"
                   placeholder="••••••••"
+                  autoComplete={isSignUp ? 'new-password' : 'current-password'}
                   required
                   minLength={6}
                 />
               </div>
               {isSignUp && passwordStrength && (
-                <div className="mt-2">
+                <div className="mt-2" aria-live="polite">
                   <div className="flex gap-1 mb-1">
                     {(['weak', 'medium', 'strong'] as const).map((level) => (
                       <div

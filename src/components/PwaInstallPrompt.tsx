@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Download, X } from 'lucide-react';
 import { Button } from './Button';
+import { useLanguage } from '../contexts/LanguageContext';
 import { getStorage, setStorage } from '../lib/storage';
 
 interface BeforeInstallPromptEvent extends Event {
@@ -11,6 +12,7 @@ interface BeforeInstallPromptEvent extends Event {
 const DISMISS_KEY = 'katoa_pwa_install_dismissed';
 
 export function PwaInstallPrompt() {
+  const { t } = useLanguage();
   const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(null);
   const [visible, setVisible] = useState(false);
 
@@ -45,15 +47,15 @@ export function PwaInstallPrompt() {
       <div className="bg-charcoal-900 border border-neon-cyan-500/30 rounded-2xl p-4 shadow-2xl backdrop-blur-xl">
         <div className="flex items-start justify-between gap-3 mb-3">
           <div>
-            <p className="font-semibold text-white text-sm">Add KATOA to Home Screen</p>
-            <p className="text-xs text-gray-400 mt-1">Quick access, app-like experience.</p>
+            <p className="font-semibold text-white text-sm">{t('pwa.installTitle')}</p>
+            <p className="text-xs text-gray-400 mt-1">{t('pwa.installSubtitle')}</p>
           </div>
-          <button type="button" onClick={dismiss} className="p-1 text-gray-500 hover:text-white touch-manipulation" aria-label="Dismiss">
+          <button type="button" onClick={dismiss} className="p-1 text-gray-500 hover:text-white touch-manipulation" aria-label={t('pwa.dismiss')}>
             <X size={18} />
           </button>
         </div>
         <Button variant="primary" size="sm" className="w-full" onClick={install}>
-          <Download size={16} className="mr-2" /> Install
+          <Download size={16} className="mr-2" /> {t('pwa.install')}
         </Button>
       </div>
     </div>

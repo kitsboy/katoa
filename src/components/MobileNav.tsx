@@ -6,15 +6,15 @@ import { Home, Compass, LayoutDashboard, User, Settings, HelpCircle, MoreHorizon
 import { useLocation } from 'react-router-dom';
 
 const mainItems = [
-  { href: '/', icon: Home, label: 'Home', match: (p: string) => p === '/' },
+  { href: '/', icon: Home, labelKey: 'nav.home', match: (p: string) => p === '/' },
   { href: '/explore', icon: Compass, labelKey: 'nav.explore', match: (p: string) => p.startsWith('/explore') || p.startsWith('/wishlist') },
   { href: '/dashboard', icon: LayoutDashboard, labelKey: 'nav.dashboard', match: (p: string) => p.startsWith('/dashboard') || p.startsWith('/project') },
   { href: '/settings', icon: Settings, labelKey: 'nav.settings', match: (p: string) => p.startsWith('/settings') },
 ];
 
 const moreItems = [
-  { href: '/faq', icon: HelpCircle, label: 'FAQ', match: (p: string) => p.startsWith('/faq') },
-  { href: '/comparison', icon: Zap, label: 'Why KATOA?', match: (p: string) => p.startsWith('/comparison') },
+  { href: '/faq', icon: HelpCircle, labelKey: 'nav.faq', match: (p: string) => p.startsWith('/faq') },
+  { href: '/comparison', icon: Zap, labelKey: 'nav.comparison', match: (p: string) => p.startsWith('/comparison') },
 ];
 
 export function MobileNav() {
@@ -45,7 +45,7 @@ export function MobileNav() {
           <div className="absolute bottom-[calc(56px+env(safe-area-inset-bottom))] inset-x-3 animate-sheet-up">
             <div className="bg-charcoal-900/98 backdrop-blur-xl border border-white/10 rounded-2xl p-3 shadow-2xl">
               <div className="flex items-center justify-between px-2 pb-2 mb-1 border-b border-white/10">
-                <span id="more-nav-title" className="text-sm font-bold text-white">More</span>
+                <span id="more-nav-title" className="text-sm font-bold text-white">{t('nav.more')}</span>
                 <button
                   type="button"
                   onClick={() => setShowMore(false)}
@@ -71,7 +71,7 @@ export function MobileNav() {
                       }`}
                     >
                       <Icon size={20} />
-                      <span className="text-sm font-semibold">{item.label}</span>
+                      <span className="text-sm font-semibold">{t(item.labelKey)}</span>
                     </Link>
                   );
                 })}
@@ -117,10 +117,10 @@ export function MobileNav() {
             }`}
             aria-expanded={showMore}
             aria-haspopup="dialog"
-            aria-label="More navigation options"
+            aria-label={t('nav.more')}
           >
             <MoreHorizontal size={22} strokeWidth={moreActive ? 2.5 : 2} />
-            <span className="text-[10px] font-semibold tracking-wide">More</span>
+            <span className="text-[10px] font-semibold tracking-wide">{t('nav.more')}</span>
             {moreActive && (
               <span className="absolute bottom-1 w-8 h-0.5 rounded-full bg-neon-cyan-500" aria-hidden />
             )}

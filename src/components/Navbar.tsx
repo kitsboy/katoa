@@ -18,6 +18,7 @@ export function Navbar() {
   const [btcPrice, setBtcPrice] = useState<number | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const langMenuRef = useRef<HTMLDivElement>(null);
 
   const isActive = (path: string) => location.pathname === path;
   const isHomeHero = location.pathname === '/' && !scrolled;
@@ -66,6 +67,25 @@ export function Navbar() {
     };
   }, [showMenu]);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (langMenuRef.current && !langMenuRef.current.contains(event.target as Node)) {
+        setShowLangMenu(false);
+      }
+    };
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setShowLangMenu(false);
+    };
+    if (showLangMenu) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('keydown', handleEscape);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [showLangMenu]);
+
   return (
     <>
       <header className="fixed top-0 inset-x-0 z-50 px-3 sm:px-4 pt-3 sm:pt-4 pointer-events-none">
@@ -108,7 +128,13 @@ export function Navbar() {
                   href="/comparison"
                   className={`nav-link-pill ${isActive('/comparison') ? 'nav-link-pill-active' : ''}`}
                 >
-                  Why KATOA?
+                  {t('nav.comparison')}
+                </Link>
+                <Link
+                  href="/faq"
+                  className={`nav-link-pill ${isActive('/faq') ? 'nav-link-pill-active' : ''}`}
+                >
+                  {t('nav.faq')}
                 </Link>
               </div>
 
@@ -125,7 +151,7 @@ export function Navbar() {
                 </div>
               )}
 
-              <div className="relative">
+              <div className="relative" ref={langMenuRef}>
                 <button
                   onClick={() => setShowLangMenu(!showLangMenu)}
                   className={`flex items-center justify-center w-9 h-9 rounded-full border transition-colors text-lg ${
@@ -133,13 +159,15 @@ export function Navbar() {
                       ? 'bg-black/[0.04] border-black/[0.08] hover:bg-black/[0.08]'
                       : 'bg-white/[0.04] border-white/[0.08] hover:bg-white/[0.08]'
                   }`}
-                  aria-label="Change language"
+                  aria-label={t('nav.changeLanguage')}
                   aria-expanded={showLangMenu}
+                  aria-haspopup="listbox"
+                  aria-controls="lang-menu-list"
                 >
                   {languageFlags[language]}
                 </button>
                 {showLangMenu && (
-                  <div className="absolute right-0 mt-2 w-48 nav-island nav-island-scrolled rounded-xl py-2 z-50">
+                  <div id="lang-menu-list" role="listbox" className="absolute right-0 mt-2 w-48 nav-island nav-island-scrolled rounded-xl py-2 z-50">
                     {Object.entries(languageFlags).map(([lang, flag]) => (
                       <button
                         key={lang}
@@ -188,6 +216,7 @@ export function Navbar() {
                       size="sm"
                       onClick={() => signOut()}
                       className="text-gray-300 hover:text-white hover:bg-white/5"
+                      aria-label={t('nav.signOut')}
                     >
                       <LogOut size={18} />
                     </Button>
@@ -267,7 +296,7 @@ export function Navbar() {
               <div className="flex items-center justify-between pb-4 border-b border-white/10">
                 <div className="flex items-center gap-3">
                   <img src="/sats.png" alt="" className="w-10 h-10 rounded-full" aria-hidden />
-                  <span id="mobile-nav-title" className="text-xl font-black text-white">KATOA Menu</span>
+                  <span id="mobile-nav-title" className="text-xl font-black text-white">{t('nav.menu')}</span>
                 </div>
                 <button
                   onClick={() => setShowMenu(false)}
@@ -279,7 +308,7 @@ export function Navbar() {
               </div>
 
               <div className="px-1">
-                <p className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-2">Currency</p>
+                <p className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-2">{t('nav.currency')}</p>
                 <CurrencySelector />
               </div>
 
@@ -303,7 +332,7 @@ export function Navbar() {
                   <div className="p-2 bg-neon-cyan/15 rounded-lg group-hover:bg-neon-cyan/25 transition-colors">
                     <Zap size={20} className="text-neon-cyan" />
                   </div>
-                  <span className="font-bold text-lg">Why KATOA?</span>
+                  <span className="font-bold text-lg">{t('nav.comparison')}</span>
                 </Link>
 
                 <Link
@@ -314,7 +343,7 @@ export function Navbar() {
                   <div className="p-2 bg-neon-cyan/15 rounded-lg group-hover:bg-neon-cyan/25 transition-colors">
                     <HelpCircle size={20} className="text-neon-cyan" />
                   </div>
-                  <span className="font-bold text-lg">FAQ</span>
+                  <span className="font-bold text-lg">{t('nav.faq')}</span>
                 </Link>
               </div>
 
@@ -322,7 +351,7 @@ export function Navbar() {
                 <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-bitcoin-orange-500/10 border border-bitcoin-orange-500/30">
                   <Bitcoin size={20} className="text-bitcoin-orange-500" />
                   <div>
-                    <p className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">BTC Price</p>
+                    <p className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">{t('nav.btcPrice')}</p>
                     <p className="text-white font-bold font-mono">{formatUsd(btcPrice)}</p>
                   </div>
                 </div>
@@ -330,7 +359,7 @@ export function Navbar() {
 
               <div className="border-t border-white/10 pt-6">
                 <p className="text-sm text-gray-400 font-bold mb-4 px-2 uppercase tracking-wider">
-                  Choose Language
+                  {t('nav.chooseLanguage')}
                 </p>
                 <div className="grid grid-cols-4 gap-3">
                   {Object.entries(languageFlags).map(([lang, flag]) => (
@@ -346,6 +375,7 @@ export function Navbar() {
                           : 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/30'
                       }`}
                       title={languageNames[lang as keyof typeof languageNames]}
+                      aria-label={languageNames[lang as keyof typeof languageNames]}
                     >
                       {flag}
                     </button>
@@ -364,7 +394,7 @@ export function Navbar() {
                       <div className="p-2 bg-neon-cyan/15 rounded-lg group-hover:bg-neon-cyan/25 transition-colors">
                         <LayoutDashboard size={20} className="text-neon-cyan" />
                       </div>
-                      <span className="font-bold text-lg">Dashboard</span>
+                      <span className="font-bold text-lg">{t('nav.dashboard')}</span>
                     </Link>
                     <Link
                       href="/settings"
@@ -374,7 +404,7 @@ export function Navbar() {
                       <div className="p-2 bg-neon-cyan/15 rounded-lg group-hover:bg-neon-cyan/25 transition-colors">
                         <Settings size={20} className="text-neon-cyan" />
                       </div>
-                      <span className="font-bold text-lg">Settings</span>
+                      <span className="font-bold text-lg">{t('nav.settings')}</span>
                     </Link>
                   </div>
 
@@ -395,7 +425,7 @@ export function Navbar() {
                           )}
                           <div className="flex-1">
                             <p className="text-white font-black text-lg">{profile?.username}</p>
-                            <p className="text-gray-400 text-sm">Tap to view profile</p>
+                            <p className="text-gray-400 text-sm">{t('nav.tapProfile')}</p>
                           </div>
                         </div>
                       </div>
@@ -408,7 +438,7 @@ export function Navbar() {
                       className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 font-bold text-lg py-4 border-2 border-red-400/30 hover:border-red-400/50"
                     >
                       <LogOut size={20} className="mr-2" />
-                      Sign Out
+                      {t('nav.signOut')}
                     </Button>
                   </div>
                 </>
@@ -419,12 +449,12 @@ export function Navbar() {
                       variant="outline"
                       className="w-full border-2 border-white/15 bg-white/5 text-white hover:bg-white/10 hover:border-white/40 font-bold text-lg py-4"
                     >
-                      Sign In
+                      {t('nav.login')}
                     </Button>
                   </Link>
                   <Link href="/auth" onClick={() => setShowMenu(false)}>
                     <Button className="w-full bg-gradient-to-r from-neon-cyan to-bitcoin-orange hover:from-neon-cyan/90 hover:to-bitcoin-orange/90 text-charcoal-950 font-black text-lg py-5 shadow-lg shadow-neon-cyan/40">
-                      Get Started Free
+                      {t('nav.getStarted')}
                     </Button>
                   </Link>
                 </div>
