@@ -1,0 +1,1 @@
+2026-07-06 — Next 100 frontend improvements (batches 3A–3E) pushed to main @ 1373ea1
