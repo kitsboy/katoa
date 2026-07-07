@@ -65,3 +65,32 @@
 ---
 
 *Safe Harbour · Part of the [Give A Bit](https://giveabit.io) family.*
+
+## Latest Session Summary (from 2026-07-06 goodbye)
+
+**Chat topic:** Multi-batch KATOA frontend modernization (200 improvements, hero/nav refresh, full docs sync) — all frontend-only, live on katoa.org.
+
+**Finished in this session:**
+- Charcoal/glass UI across 17 pages / 57 components
+- Batches 3A–3E: ConfirmDialog, toast, i18n pageStrings, lazy routes, PWA v2, sitemap, dynamic OG
+- Hero motion + floating island navbar (`c65d1ed`)
+- Removed BitcoinPulse, ProtocolUpdates, LightningField
+- All project docs synced (`b23dcd8`); `SESSION-SUMMARY-2026-07-06.md` created
+
+**Still to do:**
+- ExplorePage Lucide chunk (~698KB)
+- About/Comparison remaining i18n
+- Prerender/SSR for SEO
+- BTCPay + Supabase live wiring (backend/Kimi ops)
+
+**Next for Kimi:** Integrate into MASTER-BRAIN / Kanban / Obsidian vault. Read `SESSION-SUMMARY-2026-07-06.md` + `docs/EXECUTIVE-SUMMARY.md`. No raw chat logs needed.
+
+### Git State (final)
+- Last commit SHA: 65afe72
+- Branch: main
+- Unpushed: none
+- Live: https://katoa.org
+
+---
+
+*Safe Harbour · Part of the [Give A Bit](https://giveabit.io) family.*
