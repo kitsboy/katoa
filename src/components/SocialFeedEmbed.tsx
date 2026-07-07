@@ -31,13 +31,13 @@ export function SocialFeedEmbed({
         </button>
       )}
 
-      <div className="p-4 border-b border-night-blue-500">
+      <div className="p-4 border-b border-white/10">
         <h3 className="text-lg font-semibold text-white">{title}</h3>
       </div>
 
       <div className="relative" style={{ height }}>
         {loading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-night-blue-500">
+          <div className="absolute inset-0 flex items-center justify-center bg-charcoal-900">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
           </div>
         )}

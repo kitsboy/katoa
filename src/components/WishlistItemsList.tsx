@@ -38,7 +38,7 @@ export function WishlistItemsList({ items, onItemClick }: WishlistItemsListProps
     <div className="space-y-3">
       <h3 className="text-lg font-bold text-white mb-3 flex items-center gap-2">
         Wishlist Items
-        <span className="text-xs text-sand-tan-500 font-normal">(Click to fund)</span>
+        <span className="text-xs text-bitcoin-orange-400 font-normal">(Tap to fund)</span>
       </h3>
 
       {items.map((item) => {
@@ -47,8 +47,8 @@ export function WishlistItemsList({ items, onItemClick }: WishlistItemsListProps
         return (
           <Card
             key={item.id}
-            className={`p-3 hover:border-sand-tan-500 hover:shadow-lg hover:shadow-sand-tan-500/20 transition-all cursor-pointer transform hover:scale-[1.02] ${
-              item.is_funded ? 'border-green-500 bg-green-500/5' : 'hover:bg-night-blue-500/30'
+            className={`p-3 sm:p-4 hover:border-bitcoin-orange-500/50 transition-all cursor-pointer touch-manipulation active:scale-[0.99] ${
+              item.is_funded ? 'border-emerald-500/50 bg-emerald-500/5' : 'hover:bg-white/[0.04]'
             }`}
             onClick={() => onItemClick?.(item)}
           >
@@ -109,9 +109,9 @@ export function WishlistItemsList({ items, onItemClick }: WishlistItemsListProps
                         {progress.toFixed(0)}%
                       </span>
                     </div>
-                    <div className="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                    <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-gradient-to-r from-orange-500 to-amber-500 transition-all duration-500"
+                        className="h-full bg-gradient-to-r from-bitcoin-orange-500 to-amber-500 transition-all duration-500"
                         style={{ width: `${Math.min(progress, 100)}%` }}
                       />
                     </div>

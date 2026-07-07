@@ -71,7 +71,7 @@ export function Tooltip({ content, children, icon = false, position = 'bottom' }
       onMouseEnter={() => setIsVisible(true)}
       onMouseLeave={() => setIsVisible(false)}
     >
-      <div className="bg-gradient-to-br from-night-blue-shadow-900 to-night-blue-shadow-800 border-2 border-emerald-400 rounded-xl px-6 py-5 shadow-2xl">
+      <div className="bg-charcoal-900 border border-neon-cyan-500/40 rounded-xl px-4 sm:px-6 py-4 sm:py-5 shadow-2xl max-w-[min(360px,calc(100vw-2rem))]">
         <p className="text-white text-sm leading-relaxed font-medium">
           {content}
         </p>

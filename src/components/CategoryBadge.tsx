@@ -34,8 +34,8 @@ export function CategoryBadge({
       onClick={onClick}
       className={`
         inline-flex items-center gap-1.5 rounded-full font-medium
-        bg-night-blue-500/80 border border-night-blue-500
-        hover:border-night-blue-400 hover:bg-night-blue-500/80
+        bg-white/5 border border-white/10
+        hover:border-neon-cyan-500/40 hover:bg-white/10
         transition-all-smooth hover-lift
         ${sizeClasses[size]}
         ${onClick ? 'cursor-pointer' : 'cursor-default'}

@@ -446,18 +446,18 @@ export function ExplorePage() {
                 {featured.description}
               </p>
 
-              <div className="grid grid-cols-3 gap-4 mb-6 p-4 bg-black/30 rounded-xl border border-white/10">
-                <div className="text-center">
-                  <p className="text-2xl font-black text-bitcoin-orange-500">500+</p>
-                  <p className="text-xs text-gray-400 font-medium">Youth Served</p>
+              <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-6 p-3 sm:p-4 bg-black/30 rounded-xl border border-white/10">
+                <div className="text-center min-w-0">
+                  <p className="text-lg sm:text-2xl font-black text-bitcoin-orange-500">500+</p>
+                  <p className="text-[10px] sm:text-xs text-gray-400 font-medium leading-tight">Youth Served</p>
                 </div>
-                <div className="text-center border-x border-white/10">
-                  <p className="text-2xl font-black text-emerald-500">65%</p>
-                  <p className="text-xs text-gray-400 font-medium">Funded</p>
+                <div className="text-center border-x border-white/10 min-w-0">
+                  <p className="text-lg sm:text-2xl font-black text-emerald-500">65%</p>
+                  <p className="text-[10px] sm:text-xs text-gray-400 font-medium leading-tight">Funded</p>
                 </div>
-                <div className="text-center">
-                  <p className="text-2xl font-black text-neon-cyan-500">234</p>
-                  <p className="text-xs text-gray-400 font-medium">Supporters</p>
+                <div className="text-center min-w-0">
+                  <p className="text-lg sm:text-2xl font-black text-neon-cyan-500">234</p>
+                  <p className="text-[10px] sm:text-xs text-gray-400 font-medium leading-tight">Supporters</p>
                 </div>
               </div>
 

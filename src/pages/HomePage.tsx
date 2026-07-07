@@ -129,6 +129,10 @@ export function HomePage() {
             subtitle={t('home.howItWorks.subtitle')}
           />
 
+          <p className="text-xs text-gray-500 mb-3 sm:hidden flex items-center gap-1">
+            <span>Swipe to see all steps</span>
+            <span className="text-neon-cyan-400">→</span>
+          </p>
           <div className="flex gap-4 sm:gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
             {howItWorksSteps.map((item) => (
               <GlassSection
