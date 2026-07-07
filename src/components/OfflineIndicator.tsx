@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { WifiOff } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export function OfflineIndicator() {
+  const { t } = useLanguage();
   const [offline, setOffline] = useState(!navigator.onLine);
 
   useEffect(() => {
@@ -24,7 +26,7 @@ export function OfflineIndicator() {
       aria-live="polite"
     >
       <WifiOff size={12} aria-hidden />
-      <span className="hidden sm:inline">Offline</span>
+      <span className="hidden sm:inline">{t('common.offline')}</span>
     </div>
   );
 }

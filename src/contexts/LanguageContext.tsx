@@ -732,6 +732,7 @@ const pageStrings = {
 const commonStrings = {
   en: {
     'common.loading': 'Loading...',
+    'common.offline': 'Offline',
     'a11y.skipToContent': 'Skip to content',
     'common.save': 'Save',
     'common.cancel': 'Cancel',
@@ -778,6 +779,7 @@ const commonStrings = {
   },
   es: {
     'common.loading': 'Cargando...',
+    'common.offline': 'Sin conexión',
     'a11y.skipToContent': 'Saltar al contenido',
     'common.save': 'Guardar',
     'common.cancel': 'Cancelar',
@@ -824,6 +826,7 @@ const commonStrings = {
   },
   pt: {
     'common.loading': 'Carregando...',
+    'common.offline': 'Offline',
     'a11y.skipToContent': 'Ir para o conteúdo',
     'common.save': 'Salvar',
     'common.cancel': 'Cancelar',
@@ -870,6 +873,7 @@ const commonStrings = {
   },
   fr: {
     'common.loading': 'Chargement...',
+    'common.offline': 'Hors ligne',
     'a11y.skipToContent': 'Aller au contenu',
     'common.save': 'Enregistrer',
     'common.cancel': 'Annuler',
@@ -916,6 +920,7 @@ const commonStrings = {
   },
   de: {
     'common.loading': 'Laden...',
+    'common.offline': 'Offline',
     'a11y.skipToContent': 'Zum Inhalt springen',
     'common.save': 'Speichern',
     'common.cancel': 'Abbrechen',
@@ -962,6 +967,7 @@ const commonStrings = {
   },
   ja: {
     'common.loading': '読み込み中...',
+    'common.offline': 'オフライン',
     'a11y.skipToContent': 'コンテンツへスキップ',
     'common.save': '保存',
     'common.cancel': 'キャンセル',
@@ -1008,6 +1014,7 @@ const commonStrings = {
   },
   zh: {
     'common.loading': '加载中...',
+    'common.offline': '离线',
     'a11y.skipToContent': '跳转到内容',
     'common.save': '保存',
     'common.cancel': '取消',

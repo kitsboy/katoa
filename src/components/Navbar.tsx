@@ -202,6 +202,8 @@ export function Navbar() {
                         <img
                           src={profile.avatar_url}
                           alt={profile.username}
+                          width={32}
+                          height={32}
                           className="w-8 h-8 rounded-full object-cover border-2 border-neon-cyan/40"
                         />
                       ) : (
@@ -416,6 +418,8 @@ export function Navbar() {
                             <img
                               src={profile.avatar_url}
                               alt={profile.username}
+                              width={56}
+                              height={56}
                               className="w-14 h-14 rounded-full object-cover border-2 border-neon-cyan/60 shadow-lg"
                             />
                           ) : (
