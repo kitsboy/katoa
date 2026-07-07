@@ -94,7 +94,7 @@ export function ComparisonPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-night-blue-500 via-night-blue-500 to-black pt-16">
+    <div className="min-h-screen bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 pt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
         <div className="text-center mb-16 animate-slide-up">
           <div className="inline-flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-emerald-500/10 to-cyan-500/10 border border-emerald-500/30 rounded-full mb-6">
@@ -111,7 +111,7 @@ export function ComparisonPage() {
             </span>
           </h1>
 
-          <p className="text-xl md:text-2xl text-night-blue-200 max-w-4xl mx-auto mb-8 leading-relaxed">
+          <p className="text-xl md:text-2xl text-gray-400 max-w-4xl mx-auto mb-8 leading-relaxed">
             We're not just another creator platform. We're built on Bitcoin Lightning, designed for global creators,
             and committed to 0% fees forever. Here's how we stack up.
           </p>
@@ -127,7 +127,7 @@ export function ComparisonPage() {
           {features.map((category, idx) => (
             <Card
               key={category.category}
-              className="p-8 bg-gradient-to-br from-night-blue-500 to-night-blue-500 border-night-blue-500 animate-slide-up"
+              className="p-8 bg-white/[0.03] backdrop-blur-md border-white/10 animate-slide-up"
               style={{ animationDelay: `${idx * 100}ms` }}
             >
               <h3 className="text-2xl font-bold text-white mb-6 flex items-center gap-3">
@@ -144,7 +144,7 @@ export function ComparisonPage() {
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-night-blue-500">
+                    <tr className="border-b border-white/10">
                       <th className="text-left text-white font-semibold pb-4 pr-4">Feature</th>
                       <th className="text-center text-emerald-600 font-bold pb-4 px-2">
                         <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-600/20 rounded-lg">
@@ -162,7 +162,7 @@ export function ComparisonPage() {
                     {category.items.map((item, itemIdx) => (
                       <tr
                         key={itemIdx}
-                        className="border-b border-night-blue-500 hover:bg-night-blue-500/50 transition-colors"
+                        className="border-b border-white/10 hover:bg-white/[0.05] transition-colors"
                       >
                         <td className="text-white py-4 pr-4">{item.feature}</td>
                         <td className="text-center py-4 px-2">
@@ -231,7 +231,7 @@ export function ComparisonPage() {
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
               Ready to Keep 100%?
             </h2>
-            <p className="text-xl text-night-blue-200 max-w-2xl mx-auto mb-8">
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-8">
               Join thousands of creators who've stopped paying platform fees and started earning what they deserve.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -247,7 +247,7 @@ export function ComparisonPage() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-2 border-night-blue-400 hover:border-emerald-500 text-lg font-bold px-12"
+                  className="border-2 border-white/20 hover:border-neon-cyan-500/50 text-lg font-bold px-12"
                 >
                   See Pricing (Spoiler: $0)
                 </Button>

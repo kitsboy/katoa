@@ -40,7 +40,9 @@ KATOA is a **dark, glassy, Bitcoin-native** product UI. It should feel:
 — Home, Footer, Pricing, Navbar, MobileNav, DonateQRModal
 
 **Legacy (still in repo):** `night-blue-500` / `night-blue-shadow-*` + `sand-tan`  
-— About, Comparison, Terms, Privacy, some dashboard blocks, older `Modal`
+— FAQ, Contact, Auth, some dashboard blocks, older `Modal`
+
+**Migrated (2026-07-06):** About, Comparison, Terms, Privacy → charcoal/glass
 
 When building **new** UI, use the **modern** palette. When touching legacy pages, migrate toward charcoal/glass incrementally.
 

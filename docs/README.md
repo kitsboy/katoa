@@ -1,0 +1,44 @@
+# KATOA Documentation Index
+
+**Start here** when onboarding to the project, pitching KATOA, or building UI.
+
+---
+
+## Leadership & marketing
+
+| Doc | Use when |
+|-----|----------|
+| [**EXECUTIVE-SUMMARY.md**](./EXECUTIVE-SUMMARY.md) | 5-minute leadership / handoff overview |
+| [**MARKETING.md**](./MARKETING.md) | Pitch copy, social, CTAs, campaigns |
+| [**marketing/KATOA-Marketing-Presentation.pdf**](./marketing/KATOA-Marketing-Presentation.pdf) | Embellished slide deck (PDF) |
+| [**marketing/katoa-presentation.html**](./marketing/katoa-presentation.html) | Editable slide source |
+| [**MISSION.md**](./MISSION.md) | Purpose, values, safe harbour |
+
+## Design & product
+
+| Doc | Use when |
+|-----|----------|
+| [**DESIGN.md**](./DESIGN.md) | Colors, tokens, components, mobile rules |
+| [**ARCHITECTURE.md**](./ARCHITECTURE.md) | Technical stack & data model |
+| [**ROADMAP.md**](./ROADMAP.md) | Implementation phases & gaps |
+
+## Engineering & ops
+
+| Doc | Use when |
+|-----|----------|
+| [**GROK-HANDOFF.md**](./GROK-HANDOFF.md) | Grok / first-time developer quick-start |
+| [**KIMI-HERMES-OPS.md**](./KIMI-HERMES-OPS.md) | Supabase, Cloudflare, deploy runbook |
+| [**DIRECTORY-MAP.md**](./DIRECTORY-MAP.md) | Full repo tree reference |
+
+## SEO & i18n
+
+| Doc | Use when |
+|-----|----------|
+| [**SEO.md**](./SEO.md) | Primary SEO strategy |
+| [**katoa_SEO.md**](./katoa_SEO.md) | Extended SEO notes |
+| [**SEO-*.md**](./SEO-es.md) | Localized SEO (es, fr, de, pt, zh, sw) |
+| [**I18N.md**](./I18N.md) | Language system |
+
+---
+
+*Last updated: 2026-07-01*

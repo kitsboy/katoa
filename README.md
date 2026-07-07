@@ -53,6 +53,12 @@ A revolutionary creator platform enabling anyone, anywhere to receive support vi
 
 ## 📚 Documentation (Best Organized for Humans + Kimi Handoff)
 
+**Design & marketing (read before UI or pitch work)**:
+- [docs/DESIGN.md](./docs/DESIGN.md) — Colors, typography, tokens, components, z-index, mobile patterns (living doc)
+- [docs/EXECUTIVE-SUMMARY.md](./docs/EXECUTIVE-SUMMARY.md) — Leadership overview (~5 min read)
+- [docs/MARKETING.md](./docs/MARKETING.md) — Pitch, messaging, CTAs, campaigns
+- [docs/marketing/KATOA-Marketing-Presentation.pdf](./docs/marketing/KATOA-Marketing-Presentation.pdf) — Slide deck (PDF)
+
 **Start here for handoff / big picture**:
 - [SOURCE-OF-TRUTH.md](./SOURCE-OF-TRUTH.md) — Single source of truth (GitHub, live URL, deploy details, pitch, files, mission, gaps, how-to-run)
 - [KIMI-HANDOFF-katoa-2026-06-10.md](./KIMI-HANDOFF-katoa-2026-06-10.md) — Clean self-contained prompt for Kimi (M4/Obsidian/HERMES) — update MASTER-BRAIN, Kanban, vault, educate Hermes

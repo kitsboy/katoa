@@ -1,6 +1,10 @@
 # KATOA Implementation Roadmap
 ## Production-Ready MVP Enhancement Plan
 
+**Last reviewed:** 2026-07-01  
+**Status snapshot:** Live on katoa.org · UI modernization (Footer, Pricing, DonateQR, Design system) · Supabase/Cloudflare ops staged  
+**Pitch context:** [`EXECUTIVE-SUMMARY.md`](./EXECUTIVE-SUMMARY.md) · [`MARKETING.md`](./MARKETING.md)
+
 This document outlines concrete improvements to transform your existing KATOA app into a production-ready platform with advanced Bitcoin payment features.
 
 ---

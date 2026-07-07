@@ -12,6 +12,8 @@
 
 Zero-fee Bitcoin Lightning creator support platform. Wishlists, crowdfunding, Bitcoin Pulse widget, Nostr identity, 7 languages. Tagline: "Keep All That's Owed Always."
 
+**Pitch & leadership docs:** [`EXECUTIVE-SUMMARY.md`](./EXECUTIVE-SUMMARY.md) · [`MARKETING.md`](./MARKETING.md) · PDF deck [`marketing/KATOA-Marketing-Presentation.pdf`](./marketing/KATOA-Marketing-Presentation.pdf)
+
 ## 2. Quick Start
 
 ```bash
@@ -31,7 +33,7 @@ npm run preview    # → http://localhost:4173 (serves dist/)
 | State | React Context (Auth, Language) | No external state library |
 | Auth | Supabase | Lazy client — placeholder fallback if down |
 | i18n | Custom LanguageContext | 7 languages embedded in TS file |
-| Styling | Tailwind CSS v3 + custom theme | Custom colors: neon-cyan, night-blue, bitcoin-orange |
+| Styling | Tailwind CSS v3 + custom theme | **Read [`docs/DESIGN.md`](./DESIGN.md)** — tokens, components, mobile patterns |
 | Payments | Supabase (DB) + Nostr + Lightning | Nostr via nostr-tools |
 
 ## 4. File Tree
@@ -70,9 +72,13 @@ katoa/
 │   ├── _redirects           # SPA: /* /index.html 200
 │   └── content/updates.md   # Changelog content
 ├── docs/
+│   ├── EXECUTIVE-SUMMARY.md # Leadership / 5-min overview
+│   ├── MARKETING.md         # Pitch, messaging, CTAs
+│   ├── DESIGN.md            # Design tokens & UI rules
+│   ├── marketing/           # PDF deck + HTML slides + cover art
 │   ├── DIRECTORY-MAP.md     # Full tree + facts (generated)
 │   ├── MISSION.md, SEO*.md, I18N.md
-│   └── ARCHITECTURE.md, ROADMAP.md, MARKETING.md
+│   └── ARCHITECTURE.md, ROADMAP.md
 ├── archive/                 # Stale reference docs (not deleted)
 ├── vite.config.ts           # Code-split: vendor, supabase, nostr, ui chunks
 └── package.json             # v1.0.0 — deps include react-router-dom

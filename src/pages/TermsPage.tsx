@@ -6,7 +6,7 @@ export function TermsPage() {
   const lastUpdated = "October 27, 2025";
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-night-blue-500 via-night-blue-500 to-black text-white pt-24 pb-16">
+    <div className="min-h-screen bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 text-white pt-24 pb-16">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-orange-500 to-yellow-600 mb-4">
@@ -19,7 +19,7 @@ export function TermsPage() {
         </div>
 
         <div className="prose prose-invert prose-orange max-w-none">
-          <div className="bg-night-blue-500/50 backdrop-blur-sm border border-gray-800 rounded-2xl p-8 mb-8">
+          <div className="bg-white/[0.03] backdrop-blur-md border border-white/10 rounded-2xl p-8 mb-8">
             <div className="flex items-start gap-4 mb-6">
               <AlertCircle className="text-orange-500 mt-1 flex-shrink-0" size={24} />
               <div>
@@ -304,7 +304,7 @@ export function TermsPage() {
               <p>
                 If you have questions about these Terms, please contact us at:
               </p>
-              <div className="bg-night-blue-500/50 border border-gray-800 rounded-xl p-6 mt-4">
+              <div className="bg-white/[0.03] backdrop-blur-md border border-white/10 rounded-xl p-6 mt-4">
                 <p className="font-semibold text-white mb-2">Katoa Legal Team</p>
                 <p>Email: hello@giveabit.io</p>
                 <p>Website: https://katoa.org/contact</p>

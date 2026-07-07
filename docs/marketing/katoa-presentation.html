@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KATOA — Marketing Presentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --charcoal-950: #050509;
+      --charcoal-900: #070711;
+      --cyan: #14E6FF;
+      --orange: #F7931A;
+      --emerald: #34d399;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    @page {
+      size: 16in 9in;
+      margin: 0;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--charcoal-950);
+      color: var(--text);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .slide {
+      width: 16in;
+      height: 9in;
+      page-break-after: always;
+      position: relative;
+      overflow: hidden;
+      padding: 0.85in 1.1in;
+      background: linear-gradient(160deg, var(--charcoal-900) 0%, var(--charcoal-950) 55%, #030308 100%);
+    }
+
+    .slide:last-child { page-break-after: auto; }
+
+    .glow-orange {
+      position: absolute;
+      width: 28rem;
+      height: 28rem;
+      border-radius: 50%;
+      background: rgba(247, 147, 26, 0.12);
+      filter: blur(80px);
+      pointer-events: none;
+    }
+    .glow-cyan {
+      position: absolute;
+      width: 24rem;
+      height: 24rem;
+      border-radius: 50%;
+      background: rgba(20, 230, 255, 0.1);
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    .top-line {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--orange), var(--cyan), transparent);
+    }
+
+    .eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; line-height: 1.15; }
+
+    h1 {
+      font-size: 3.4rem;
+      font-weight: 800;
+      margin-bottom: 0.6rem;
+    }
+
+    h2 {
+      font-size: 2.35rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .gradient-title {
+      background: linear-gradient(90deg, var(--orange), #fbbf24, var(--cyan));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      font-size: 1.25rem;
+      color: var(--muted);
+      max-width: 38rem;
+      line-height: 1.55;
+    }
+
+    .footer-bar {
+      position: absolute;
+      bottom: 0.55in;
+      left: 1.1in;
+      right: 1.1in;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.7rem;
+      color: #6b7280;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 0.45rem;
+    }
+
+    .footer-bar strong { color: var(--orange); font-weight: 600; }
+
+    /* Cover */
+    .cover {
+      padding: 0;
+      display: flex;
+      align-items: stretch;
+    }
+    .cover-bg {
+      position: absolute;
+      inset: 0;
+      background: url('katoa-cover.jpg') center/cover no-repeat;
+      opacity: 0.55;
+    }
+    .cover-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(105deg, rgba(5,5,9,0.92) 0%, rgba(5,5,9,0.55) 50%, rgba(5,5,9,0.88) 100%);
+    }
+    .cover-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 1.1in;
+      height: 100%;
+      width: 100%;
+    }
+    .cover-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.45rem 1rem;
+      border-radius: 999px;
+      border: 1px solid rgba(247,147,26,0.35);
+      background: rgba(247,147,26,0.12);
+      color: #fdba74;
+      font-size: 0.8rem;
+      font-weight: 600;
+      width: fit-content;
+      margin-bottom: 1.5rem;
+    }
+    .cover h1 { font-size: 4rem; }
+    .cover .tagline { font-size: 1.45rem; color: #d1d5db; max-width: 36rem; margin-top: 0.5rem; }
+    .cover-stats {
+      display: flex;
+      gap: 2.5rem;
+      margin-top: 2.2rem;
+    }
+    .stat .label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: #6b7280; }
+    .stat .value { font-family: 'Space Grotesk', sans-serif; font-size: 2.8rem; font-weight: 800; line-height: 1; margin-top: 0.2rem; }
+    .stat .value.orange { color: var(--orange); }
+    .stat .value.cyan { color: var(--cyan); }
+    .stat .value.green { color: var(--emerald); }
+
+    /* Grids */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: 1.25rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.25rem; }
+    .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.65rem; margin-top: 1rem; }
+
+    .card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 1rem 1.1rem;
+      backdrop-filter: blur(12px);
+    }
+    .card h3 { font-size: 1rem; margin-bottom: 0.35rem; color: #fff; }
+    .card p { font-size: 0.78rem; color: var(--muted); line-height: 1.45; }
+    .card .big { font-size: 2rem; font-weight: 800; font-family: 'Space Grotesk', sans-serif; margin-bottom: 0.25rem; }
+    .card.danger { border-color: rgba(239,68,68,0.35); background: rgba(239,68,68,0.08); }
+    .card.danger .big { color: #f87171; }
+    .card.win { border-color: rgba(52,211,153,0.4); background: rgba(52,211,153,0.08); }
+    .card.win .big { color: var(--emerald); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.82rem;
+    }
+    th, td {
+      padding: 0.55rem 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    th { color: var(--muted); font-weight: 600; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; }
+    td strong { color: #fff; }
+    tr.highlight td { background: rgba(247,147,26,0.1); color: #fff; font-weight: 600; }
+    tr.highlight td:first-child { color: var(--orange); }
+
+    .feature-mini {
+      padding: 0.65rem 0.7rem;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .feature-mini .num { font-size: 0.65rem; color: var(--cyan); font-weight: 700; margin-bottom: 0.2rem; }
+    .feature-mini .title { font-size: 0.72rem; font-weight: 700; color: #fff; line-height: 1.3; }
+
+    .quote {
+      margin-top: 1.5rem;
+      padding: 1.25rem 1.5rem;
+      border-left: 4px solid var(--orange);
+      background: rgba(255,255,255,0.03);
+      border-radius: 0 16px 16px 0;
+      font-size: 1.15rem;
+      font-style: italic;
+      color: #e5e7eb;
+      max-width: 42rem;
+    }
+
+    .cta-row { display: flex; gap: 1rem; margin-top: 1.5rem; }
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+    }
+    .btn-primary { background: linear-gradient(90deg, var(--orange), #d97706); color: #fff; }
+    .btn-outline { border: 2px solid rgba(20,230,255,0.5); color: var(--cyan); }
+
+    ul.bullets { margin-top: 1rem; list-style: none; }
+    ul.bullets li {
+      padding: 0.45rem 0;
+      font-size: 0.95rem;
+      color: #d1d5db;
+      display: flex;
+      gap: 0.6rem;
+      align-items: flex-start;
+    }
+    ul.bullets li::before {
+      content: '✓';
+      color: var(--emerald);
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--cyan); }
+  </style>
+</head>
+<body>
+
+  <!-- SLIDE 1: Cover -->
+  <section class="slide cover">
+    <div class="cover-bg"></div>
+    <div class="cover-overlay"></div>
+    <div class="top-line"></div>
+    <div class="cover-content">
+      <div class="cover-badge">Give A Bit · Bitcoin Sovereignty · FOSS</div>
+      <h1><span class="gradient-title">KATOA</span></h1>
+      <p class="mono">Keep All That's Owed Always</p>
+      <p class="tagline">Zero-fee creator support on Bitcoin Lightning. Instant. Borderless. Private. Open source.</p>
+      <div class="cover-stats">
+        <div class="stat"><div class="label">Platform fee</div><div class="value orange">0%</div></div>
+        <div class="stat"><div class="label">Monthly cost</div><div class="value cyan">$0</div></div>
+        <div class="stat"><div class="label">You keep</div><div class="value green">100%</div></div>
+      </div>
+    </div>
+    <div class="footer-bar"><span><strong>katoa.org</strong></span><span>Marketing Presentation · July 2026</span></div>
+  </section>
+
+  <!-- SLIDE 2: Problem -->
+  <section class="slide">
+    <div class="top-line"></div>
+    <div class="glow-orange" style="top:-4rem;left:-2rem;"></div>
+    <p class="eyebrow">The broken creator economy</p>
+    <h2>Platforms take <span class="gradient-title">5–20%</span> — and your freedom</h2>
+    <p class="subtitle">Creators do the work. Gatekeepers own the relationship, delay payouts, and skim forever.</p>
+    <div class="grid-3">
+      <div class="card danger"><div class="big">20%</div><h3>OnlyFans</h3><p>~$24k/year lost on $10k/mo earnings. Bank + KYC required.</p></div>
+      <div class="card danger"><div class="big">10%</div><h3>Throne</h3><p>Limited countries for low fees. Currency conversion adds up.</p></div>
+      <div class="card danger"><div class="big">9–10%</div><h3>Linktree</h3><p>Or pay $480/year for 0% fees. Either way — rent.</p></div>
+    </div>
+    <div class="quote">"How much of your support actually reached them?"</div>
+    <div class="footer-bar"><span><strong>KATOA</strong></span><span>Slide 2 — The Problem</span></div>
+  </section>
+
+  <!-- SLIDE 3: Solution -->
+  <section class="slide">
+    <div class="top-line"></div>
+    <div class="glow-cyan" style="top:2rem;right:-3rem;"></div>
+    <p class="eyebrow">The KATOA answer</p>
+    <h2>Infrastructure, not <span class="gradient-title">rent extraction</span></h2>
+    <ul class="bullets">
+      <li><strong>0% platform fees — forever.</strong> Architectural invariant. No take-rate tables.</li>
+      <li><strong>Instant Lightning settlement.</strong> Seconds, not 7–30 day payout cycles.</li>
+      <li><strong>195+ countries.</strong> No bank account. No KYC to start receiving.</li>
+      <li><strong>Nostr-native identity.</strong> Your keys. Your audience. Your data.</li>
+      <li><strong>MIT open source.</strong> Auditable. Forkable. FOSS forever.</li>
+    </ul>
+    <div class="footer-bar"><span><strong>katoa.org</strong></span><span>Slide 3 — Solution</span></div>
+  </section>
+
+  <!-- SLIDE 4: Comparison -->
+  <section class="slide">
+    <div class="top-line"></div>
+    <p class="eyebrow">Radical transparency</p>
+    <h2>Let the <span class="gradient-title">math</span> close the deal</h2>
+    <table>
+      <thead>
+        <tr><th>Platform</th><th>Fees</th><th>Countries</th><th>Payout</th><th>Bank / KYC</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>OnlyFans</td><td>~20%</td><td>Limited</td><td>7 days</td><td>Required</td></tr>
+        <tr><td>Throne</td><td>~10%</td><td>~10 for 0%</td><td>Slow</td><td>Required</td></tr>
+        <tr><td>Linktree</td><td>9–10% or $40/mo</td><td>~50</td><td>Varies</td><td>Required</td></tr>
+        <tr class="highlight"><td>KATOA</td><td>0%</td><td>195+</td><td>Seconds</td><td>Not required</td></tr>
+      </tbody>
+    </table>
+    <p class="subtitle" style="margin-top:1.25rem;">Live fee calculator on katoa.org — supporters see exactly where sats go.</p>
+    <div class="footer-bar"><span><strong>/comparison</strong></span><span>Slide 4 — Comparison</span></div>
+  </section>
+
+  <!-- SLIDE 5: 10 Features -->
+  <section class="slide">
+    <div class="top-line"></div>
+    <p class="eyebrow">Everything included</p>
+    <h2>Ten features. <span class="gradient-title">Zero</span> extra cost.</h2>
+    <div class="grid-5">
+      <div class="feature-mini"><div class="num">01</div><div class="title">0% Platform Fees</div></div>
+      <div class="feature-mini"><div class="num">02</div><div class="title">Instant Lightning</div></div>
+      <div class="feature-mini"><div class="num">03</div><div class="title">Global by Default</div></div>
+      <div class="feature-mini"><div class="num">04</div><div class="title">No Banking Required</div></div>
+      <div class="feature-mini"><div class="num">05</div><div class="title">On-Chain & Lightning</div></div>
+      <div class="feature-mini"><div class="num">06</div><div class="title">Unlimited Wishlists</div></div>
+      <div class="feature-mini"><div class="num">07</div><div class="title">Live Analytics</div></div>
+      <div class="feature-mini"><div class="num">08</div><div class="title">Shareable Pages</div></div>
+      <div class="feature-mini"><div class="num">09</div><div class="title">Privacy First</div></div>
+      <div class="feature-mini"><div class="num">10</div><div class="title">BOLT 12 Recurring</div></div>
+    </div>
+    <div class="grid-2" style="margin-top:1.25rem;">
+      <div class="card"><h3>Wishlist engine</h3><p>URL parsing, progress tracking, QR codes, themes, geo tags, public or private lists.</p></div>
+      <div class="card"><h3>Live Bitcoin surface</h3><p>Price strip, mempool height, protocol updates, BTC Map — the network feels alive.</p></div>
+    </div>
+    <div class="footer-bar"><span><strong>/pricing</strong></span><span>Slide 5 — Features</span></div>
+  </section>
+
+  <!-- SLIDE 6: Who -->
+  <section class="slide">
+    <div class="top-line"></div>
+    <p class="eyebrow">Audience</p>
+    <h2>Built for <span class="gradient-title">creators who refuse</span> to pay rent</h2>
+    <div class="grid-2">
+      <div>
+        <h3 style="font-size:1.1rem;margin-bottom:0.75rem;color:var(--cyan);">Primary</h3>
+        <ul class="bullets">
+          <li>Independent creators & educators</li>
+          <li>Mutual aid & community projects</li>
+          <li>Unbanked / censored builders worldwide</li>
+          <li>Bitcoin & Nostr natives</li>
+        </ul>
+      </div>
+      <div>
+        <h3 style="font-size:1.1rem;margin-bottom:0.75rem;color:var(--orange);">Supporters & givers</h3>
+        <ul class="bullets">
+          <li>Private, low-fee giving without surveillance</li>
+          <li>QR + share links — no app lock-in</li>
+          <li>Confidence that sats reach the cause</li>
+          <li>Future: agent-driven campaigns on Nostr</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bar"><span><strong>/explore</strong></span><span>Slide 6 — Audience</span></div>
+  </section>
+
+  <!-- SLIDE 7: Tech -->
+  <section class="slide">
+    <div class="top-line"></div>
+    <p class="eyebrow">Under the hood</p>
+    <h2>Real product. <span class="gradient-title">Real stack.</span></h2>
+    <div class="grid-3">
+      <div class="card"><h3>Frontend</h3><p>React 18 · TypeScript · Vite · Tailwind · React Router v6 · Mobile-first glass UI</p></div>
+      <div class="card"><h3>Backend</h3><p>Supabase Postgres · Auth · Storage · Row Level Security on every table</p></div>
+      <div class="card"><h3>Bitcoin layer</h3><p>Lightning · Nostr (NIP-07) · QR · BTC Map · BTCPay foundation · BOLT12 path</p></div>
+    </div>
+    <p class="subtitle" style="margin-top:1.25rem;">Live at <span class="mono">katoa.org</span> on Cloudflare Pages · MIT license · github.com/kitsboy/katoa</p>
+    <div class="footer-bar"><span><strong>docs/DESIGN.md</strong></span><span>Slide 7 — Technology</span></div>
+  </section>
+
+  <!-- SLIDE 8: Ecosystem -->
+  <section class="slide">
+    <div class="top-line"></div>
+    <div class="glow-orange" style="bottom:-2rem;right:2rem;"></div>
+    <p class="eyebrow">Give A Bit ecosystem</p>
+    <h2>Private money. <span class="gradient-title">Feel-good giving.</span></h2>
+    <p class="subtitle">KATOA is the wishlist & creator-support arm of Give A Bit — Bitcoin education, services, and hope for normal people.</p>
+    <div class="grid-2" style="margin-top:1.5rem;">
+      <div class="card win"><h3>Mission alignment</h3><p>Financial sovereignty · privacy by design · open source · safe harbour education</p></div>
+      <div class="card"><h3>Cross-promotion</h3><p>giveabit.io footer · shared i18n · Hermes/Kimi ops · Obsidian handoffs</p></div>
+    </div>
+    <div class="quote" style="font-style:normal;font-size:1rem;">We will never charge platform fees. Creators keep what they're owed — always.</div>
+    <div class="footer-bar"><span><strong>giveabit.io</strong></span><span>Slide 8 — Ecosystem</span></div>
+  </section>
+
+  <!-- SLIDE 9: CTA -->
+  <section class="slide">
+    <div class="top-line"></div>
+    <div class="glow-cyan" style="top:1rem;left:30%;"></div>
+    <p class="eyebrow">Next step</p>
+    <h2>Ready to keep <span class="gradient-title">100%</span>?</h2>
+    <p class="subtitle">Join creators who stopped paying platform taxes and started building on Bitcoin.</p>
+    <div class="cta-row">
+      <span class="btn btn-primary">Start Earning 100% → katoa.org/auth</span>
+      <span class="btn btn-outline">Compare Platforms → katoa.org/comparison</span>
+    </div>
+    <div class="cover-stats" style="margin-top:2.5rem;">
+      <div class="stat"><div class="label">Contact</div><div class="value" style="font-size:1.1rem;color:#fff;">hello@giveabit.io</div></div>
+      <div class="stat"><div class="label">Docs</div><div class="value" style="font-size:1.1rem;color:#fff;">docs/MARKETING.md</div></div>
+      <div class="stat"><div class="label">Design</div><div class="value" style="font-size:1.1rem;color:#fff;">docs/DESIGN.md</div></div>
+    </div>
+    <div class="footer-bar"><span><strong>KATOA</strong> — Keep All That's Owed Always</span><span>Slide 9 — Call to Action</span></div>
+  </section>
+
+</body>
+</html>

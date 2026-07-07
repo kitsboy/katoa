@@ -40,8 +40,17 @@ katoa/archive/deployment/DEPLOYMENT.md
 katoa/dist
 katoa/node_modules
 katoa/docs
+katoa/docs/README.md
 katoa/docs/I18N.md
 katoa/docs/MISSION.md
+katoa/docs/DESIGN.md
+katoa/docs/EXECUTIVE-SUMMARY.md
+katoa/docs/MARKETING.md
+katoa/docs/marketing
+katoa/docs/marketing/KATOA-Marketing-Presentation.pdf
+katoa/docs/marketing/katoa-presentation.html
+katoa/docs/marketing/katoa-cover.jpg
+katoa/docs/marketing/README.md
 katoa/docs/ARCHITECTURE.md
 katoa/docs/SEO-pt.md
 katoa/docs/SEO-zh.md

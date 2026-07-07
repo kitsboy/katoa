@@ -4,6 +4,8 @@
 
 This doc is the single runbook for keeping Katoa running after Cam provisions Supabase.
 
+**Pitch materials:** [`EXECUTIVE-SUMMARY.md`](./EXECUTIVE-SUMMARY.md) · [`MARKETING.md`](./MARKETING.md) · [`marketing/KATOA-Marketing-Presentation.pdf`](./marketing/KATOA-Marketing-Presentation.pdf) · [`docs/README.md`](./README.md)
+
 ---
 
 ## Daily commands (Kimi)

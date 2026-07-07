@@ -1,7 +1,8 @@
 # ARCHITECTURE — KATOA
 
-**Date**: 2026-06-10 (captured during full review + handoff prep)  
-**Audience**: Kimi, future developers, Give A Bit architects. Keep it simple + accurate.
+**Date**: 2026-07-01 (updated with Router v6 + design system)  
+**Audience**: Kimi, future developers, Give A Bit architects. Keep it simple + accurate.  
+**Related**: [`DESIGN.md`](./DESIGN.md) · [`EXECUTIVE-SUMMARY.md`](./EXECUTIVE-SUMMARY.md)
 
 ---
 
@@ -29,7 +30,7 @@ The product lets creators publish rich "support surfaces" (wishlists / projects)
 - Tailwind CSS + custom design tokens (bitcoin-orange, neon-cyan, glass effects, glows)
 - Lucide icons, react-markdown, html-react-parser
 - No heavy global state lib — React Context for Auth + Language only
-- Custom tiny router: `src/hooks/useRouter.tsx` (hash or path based, simple for SPA)
+- React Router DOM v6 (`BrowserRouter` in `App.tsx`) — `src/hooks/useRouter.tsx` is deprecated
 
 **Structure**:
 ```

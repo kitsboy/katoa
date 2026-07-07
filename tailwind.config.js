@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+// Design tokens & usage: docs/DESIGN.md
 export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
