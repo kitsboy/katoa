@@ -180,4 +180,29 @@
 
 ---
 
+## Handoff to Kimi — 2026-07-07 (40 upgrades post-BTC map)
+
+**Machine:** M3 (Grok)
+**Project:** katoa
+
+### Done
+- [x] Batch 4A (`b687143`, upgrades 1–20): map layer persistence, UnifiedBTCMap polish (locate/fit-all/escape popups), contact+faq i18n (7 langs), logo2 branding across Footer/Navbar/FeeComparison/PageMeta, PWA sw v9, manifest screenshots, offline logo2, dark Leaflet zoom, Explore aria-live
+- [x] Batch 4B (`a828d3f`, upgrades 21–40): index.html OG/Twitter logo2-512, PaymentMethod/WalletAddress double-submit guards, type-safe selectors, comparison sticky table header, ContributorsWall aria-label
+- [x] `npm run build` passes
+
+### Decisions
+- Contact/FAQ strings split into `contactPageStrings` / `faqPageStrings` blocks in LanguageContext for maintainability
+- Chip click on map still uses preventDefault (flies map, blocks nav) — intentional for now
+
+### What's Next
+- Consider letting map chips navigate on second tap or add explicit "open" button
+- Pre-existing typecheck errors (MediaUpload, DashboardPage) unchanged
+
+### Git State
+- Last commit SHA: a828d3f
+- Branch: main
+- Unpushed: none
+
+---
+
 *Safe Harbour · Part of the [Give A Bit](https://giveabit.io) family.*

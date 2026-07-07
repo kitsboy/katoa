@@ -1,4 +1,4 @@
 # katoa — Last Updated 2026-07-07 by Grok
 
-Brief: Light creator-forward landing hero with product screenshot mock.
-Commit: 25eb6e8
+Brief: 40 polish upgrades — map i18n, logo2 branding, PWA.
+Commit: a828d3f
