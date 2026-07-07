@@ -34,7 +34,7 @@ const PitchPage = lazy(() => import('./pages/PitchPage').then((m) => ({ default:
 function PageLoader() {
   const { t } = useLanguage();
   return (
-    <div className="min-h-[60vh] flex items-center justify-center" role="status" aria-label={t('common.loading')}>
+    <div className="min-h-[60vh] flex items-center justify-center" role="status" aria-busy="true" aria-label={t('common.loading')}>
       <div className="text-center">
         <div className="animate-spin rounded-full h-12 w-12 border-2 border-neon-cyan-500 border-t-transparent mx-auto mb-4" />
         <p className="text-gray-400 text-sm font-medium">{t('common.loading')}</p>
@@ -53,10 +53,11 @@ function ScrollToTop() {
 
 function AppShell() {
   const { isDemoUser } = useAuth();
+  const { t } = useLanguage();
   return (
     <>
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[300] focus:px-4 focus:py-2 focus:bg-neon-cyan-500 focus:text-charcoal-950 focus:rounded-lg">
-        Skip to content
+        {t('a11y.skipToContent')}
       </a>
       <Navbar />
       {isDemoUser && <DemoBanner />}

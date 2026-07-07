@@ -115,7 +115,7 @@ export function DonateQRModal({ isOpen, onClose, address }: DonateQRModalProps) 
                   />
                 ) : (
                   <img
-                    src="/donations-qr copy.png"
+                    src="/donations-qr.png"
                     alt="Bitcoin donation QR code"
                     className="w-full aspect-square object-contain"
                     style={{ imageRendering: 'crisp-edges' }}

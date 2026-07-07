@@ -16,6 +16,7 @@ import { mockWishlists } from '../data/mockWishlists';
 import { mergeKatoaPinsWithMap } from '../lib/btcmap';
 import { getStorage, setStorage, STORAGE_KEYS } from '../lib/storage';
 import { useLanguage } from '../contexts/LanguageContext';
+import { PageMeta } from '../components/PageMeta';
 import { Gift, Search, MapPin, Globe, SlidersHorizontal, Star, Heart, X } from 'lucide-react';
 
 const BTCMapSection = lazy(() =>
@@ -441,6 +442,7 @@ export function ExplorePage() {
 
   return (
     <div className="min-h-screen bg-charcoal-950 pt-16 pb-20 md:pb-8">
+      <PageMeta title="Explore" description="Browse Bitcoin creator wishlists worldwide." path="/explore" />
       {usingMockData && (
         <DemoBanner message="Showing sample projects — live database unavailable. Explore freely with demo data." />
       )}

@@ -27,7 +27,7 @@ import packageJson from '../../package.json';
 const bitcoinAddress = 'bc1qhm5ndfjhqxdk3cx0pngyps4f5nnwdckulmge6c8keyf2pk0neqtshjn8ad';
 
 const apiLinks = [
-  { label: 'Supabase REST', href: 'https://pglqjtipbocjnqmiwmwf.supabase.co/rest/v1/', icon: DatabaseIcon },
+  { label: 'Supabase API', href: 'https://supabase.com/docs/guides/api', icon: DatabaseIcon },
   { label: 'BTC Map API', href: 'https://api.btcmap.org/v2/areas', icon: Globe },
   { label: 'Mempool.space', href: 'https://mempool.space/api', icon: BlocksIcon },
   { label: 'Nostr NIPs', href: 'https://github.com/nostr-protocol/nips', icon: BookOpen },
@@ -298,7 +298,7 @@ export function Footer() {
                   aria-label="Expand donation QR code"
                 >
                   <img
-                    src="/donations-qr copy.png"
+                    src="/donations-qr.png"
                     alt="Donation QR"
                     className="w-full h-full object-contain"
                     style={{ imageRendering: 'crisp-edges' }}

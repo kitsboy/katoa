@@ -10,6 +10,7 @@ import { PaymentMethodManager } from '../components/PaymentMethodManager';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { useToast } from '../components/Toast';
 import { useLanguage } from '../contexts/LanguageContext';
+import { PageMeta } from '../components/PageMeta';
 import { supabase } from '../lib/supabase';
 import { parseProductUrl } from '../lib/productParser';
 import {
@@ -381,6 +382,12 @@ export function ProjectPage() {
 
   return (
     <div className="min-h-screen bg-charcoal-950">
+      <PageMeta
+        title={project.title}
+        description={project.description || 'Manage your KATOA creator project.'}
+        path="/project"
+        noindex
+      />
       <div className="relative">
         <input
           type="file"

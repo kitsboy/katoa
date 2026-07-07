@@ -11,6 +11,7 @@ import { Breadcrumbs } from '../components/Breadcrumbs';
 import { ReferralLinkGenerator } from '../components/ReferralLinkGenerator';
 import { useToast } from '../components/Toast';
 import { useLanguage } from '../contexts/LanguageContext';
+import { PageMeta } from '../components/PageMeta';
 import {
   User, Wallet, MapPin,
   Settings as SettingsIcon, Save, Upload, Camera, Zap, Check, AlertCircle, LayoutDashboard,
@@ -210,6 +211,7 @@ export function SettingsPage() {
 
   return (
     <div className="min-h-screen bg-charcoal-950 pt-16">
+      <PageMeta title="Settings" description="Manage your KATOA profile, wallet, and preferences." path="/settings" noindex />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
         <Breadcrumbs items={[{ label: 'Dashboard', href: '/dashboard' }, { label: 'Settings' }]} className="mb-6" />
 

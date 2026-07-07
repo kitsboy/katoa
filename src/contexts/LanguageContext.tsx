@@ -472,6 +472,7 @@ const pageStrings = {
 const commonStrings = {
   en: {
     'common.loading': 'Loading...',
+    'a11y.skipToContent': 'Skip to content',
     'common.save': 'Save',
     'common.cancel': 'Cancel',
     'common.create': 'Create',
@@ -517,6 +518,7 @@ const commonStrings = {
   },
   es: {
     'common.loading': 'Cargando...',
+    'a11y.skipToContent': 'Saltar al contenido',
     'common.save': 'Guardar',
     'common.cancel': 'Cancelar',
     'common.create': 'Crear',
@@ -562,6 +564,7 @@ const commonStrings = {
   },
   pt: {
     'common.loading': 'Carregando...',
+    'a11y.skipToContent': 'Ir para o conteúdo',
     'common.save': 'Salvar',
     'common.cancel': 'Cancelar',
     'common.create': 'Criar',
@@ -607,6 +610,7 @@ const commonStrings = {
   },
   fr: {
     'common.loading': 'Chargement...',
+    'a11y.skipToContent': 'Aller au contenu',
     'common.save': 'Enregistrer',
     'common.cancel': 'Annuler',
     'common.create': 'Créer',
@@ -652,6 +656,7 @@ const commonStrings = {
   },
   de: {
     'common.loading': 'Laden...',
+    'a11y.skipToContent': 'Zum Inhalt springen',
     'common.save': 'Speichern',
     'common.cancel': 'Abbrechen',
     'common.create': 'Erstellen',
@@ -697,6 +702,7 @@ const commonStrings = {
   },
   ja: {
     'common.loading': '読み込み中...',
+    'a11y.skipToContent': 'コンテンツへスキップ',
     'common.save': '保存',
     'common.cancel': 'キャンセル',
     'common.create': '作成',
@@ -742,6 +748,7 @@ const commonStrings = {
   },
   zh: {
     'common.loading': '加载中...',
+    'a11y.skipToContent': '跳转到内容',
     'common.save': '保存',
     'common.cancel': '取消',
     'common.create': '创建',
