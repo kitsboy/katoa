@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Check, Zap, Crown, Rocket, Star } from 'lucide-react';
+import { Check, Zap, Crown, Rocket, Star, type LucideIcon } from 'lucide-react';
 import { Card } from './Card';
 import { Button } from './Button';
 
@@ -10,7 +10,7 @@ interface Tier {
   price_usd: number;
   description: string;
   features: string[];
-  icon: any;
+  icon: LucideIcon;
   color: string;
   popular?: boolean;
 }

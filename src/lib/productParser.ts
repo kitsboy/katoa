@@ -31,7 +31,7 @@ export async function parseProductUrl(url: string): Promise<ParsedProduct | null
     let description = '';
     let price_usd: number | undefined;
     let image_url = '';
-    let merchant = hostname.replace('www.', '').split('.')[0];
+    const merchant = hostname.replace('www.', '').split('.')[0];
 
     title =
       doc.querySelector('meta[property="og:title"]')?.getAttribute('content') ||

@@ -34,7 +34,7 @@ function parseAmazonUrl(url: string, urlObj: URL): ParsedProduct {
   const asin = dpIndex >= 0 ? pathParts[dpIndex + 1] : '';
 
   let title = 'Amazon Product';
-  const titleMatch = urlObj.pathname.match(/\/([^\/]+)\/dp\//);
+  const titleMatch = urlObj.pathname.match(/\/([^/]+)\/dp\//);
   if (titleMatch) {
     title = decodeURIComponent(titleMatch[1].replace(/-/g, ' '));
   }
@@ -52,7 +52,7 @@ function parseAmazonUrl(url: string, urlObj: URL): ParsedProduct {
 }
 
 function parseEbayUrl(url: string, urlObj: URL): ParsedProduct {
-  const itemMatch = urlObj.pathname.match(/\/itm\/([^\/]+)/);
+  const itemMatch = urlObj.pathname.match(/\/itm\/([^/]+)/);
   const title = itemMatch ? decodeURIComponent(itemMatch[1].replace(/-/g, ' ')) : 'eBay Item';
 
   return {

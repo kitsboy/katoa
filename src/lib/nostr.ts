@@ -59,7 +59,8 @@ export class NostrService {
       }
 
       const pubkey = await window.nostr.getPublicKey();
-      const { pubkey: _, ...profileData } = profile;
+      const { pubkey: profilePubkey, ...profileData } = profile;
+      void profilePubkey;
 
       const event: UnsignedEvent = {
         kind: 0,
