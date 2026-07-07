@@ -16,12 +16,22 @@ export function Navbar() {
   const [showMenu, setShowMenu] = useState(false);
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [btcPrice, setBtcPrice] = useState<number | null>(null);
+  const [scrolled, setScrolled] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const isActive = (path: string) => location.pathname === path;
 
   useEffect(() => {
     setShowMenu(false);
     setShowLangMenu(false);
   }, [location.pathname]);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   useEffect(() => {
     getBitcoinPrice().then((price) => {
@@ -57,50 +67,68 @@ export function Navbar() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-charcoal-950/70 backdrop-blur-xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+      <header className="fixed top-0 inset-x-0 z-50 px-3 sm:px-4 pt-3 sm:pt-4 pointer-events-none">
+        <nav
+          className={`nav-island pointer-events-auto max-w-7xl mx-auto rounded-2xl transition-all duration-300 ${
+            scrolled ? 'nav-island-scrolled' : ''
+          }`}
+        >
+          <div className="px-3 sm:px-5 lg:px-6">
+            <div className="flex items-center justify-between h-14 sm:h-[3.75rem]">
             <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-              <Link href="/" className="flex items-center gap-2 sm:gap-3 text-white hover:text-neon-cyan transition-colors group min-w-0">
-                <img src="/sats.png" alt="KATOA" width={40} height={40} className="w-8 h-8 sm:w-10 sm:h-10 rounded-full group-hover:scale-105 transition-transform shrink-0" />
-                <span className="hidden sm:inline text-lg sm:text-xl font-display font-bold tracking-tight truncate">KATOA</span>
-                <span className="hidden sm:inline text-xs font-mono text-neon-cyan/80 bg-neon-cyan/15 px-2 py-0.5 rounded-full border border-neon-cyan/40 shrink-0">
-                  BETA
+              <Link href="/" className="flex items-center gap-2.5 text-white hover:opacity-90 transition-opacity group min-w-0">
+                <div className="relative shrink-0">
+                  <img src="/sats.png" alt="KATOA" width={36} height={36} className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl group-hover:scale-105 transition-transform" />
+                  <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-br from-neon-cyan-500/30 to-bitcoin-orange-500/20 blur-sm opacity-0 group-hover:opacity-100 transition-opacity -z-10" aria-hidden />
+                </div>
+                <span className="hidden sm:inline text-base font-display font-semibold tracking-tight truncate">KATOA</span>
+                <span className="hidden md:inline text-[10px] font-medium text-neon-cyan-400/90 bg-neon-cyan-500/10 px-2 py-0.5 rounded-md border border-neon-cyan-500/20 shrink-0 uppercase tracking-wider">
+                  Beta
                 </span>
               </Link>
               <OfflineIndicator />
             </div>
 
-            <div className="hidden md:flex items-center gap-6">
-              <Link href="/explore" className="text-gray-200 hover:text-neon-cyan transition-colors font-medium">
-                {t('nav.explore')}
-              </Link>
-              <Link href="/comparison" className="text-gray-200 hover:text-neon-cyan transition-colors font-medium">
-                Why KATOA?
-              </Link>
+            <div className="hidden md:flex items-center gap-1 lg:gap-2">
+              <div className="flex items-center gap-0.5 mr-2 lg:mr-4 px-1 py-1 rounded-full bg-white/[0.03] border border-white/[0.06]">
+                <Link
+                  href="/explore"
+                  className={`nav-link-pill ${isActive('/explore') ? 'nav-link-pill-active' : ''}`}
+                >
+                  {t('nav.explore')}
+                </Link>
+                <Link
+                  href="/comparison"
+                  className={`nav-link-pill ${isActive('/comparison') ? 'nav-link-pill-active' : ''}`}
+                >
+                  Why KATOA?
+                </Link>
+              </div>
 
               <CurrencySelector compact />
 
               {btcPrice !== null && (
                 <div
-                  className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-mono text-gray-300"
+                  className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-bitcoin-orange-500/8 border border-bitcoin-orange-500/15 text-xs font-mono"
                   title="Bitcoin USD price"
                   aria-label={`Bitcoin price ${formatUsd(btcPrice)}`}
                 >
-                  <Bitcoin size={14} className="text-bitcoin-orange-500" aria-hidden />
-                  <span className="text-bitcoin-orange-400 font-semibold">{formatUsd(btcPrice)}</span>
+                  <Bitcoin size={13} className="text-bitcoin-orange-500" aria-hidden />
+                  <span className="text-bitcoin-orange-400/90 font-medium">{formatUsd(btcPrice)}</span>
                 </div>
               )}
 
               <div className="relative">
                 <button
                   onClick={() => setShowLangMenu(!showLangMenu)}
-                  className="flex items-center gap-1 text-gray-200 hover:text-neon-cyan transition-colors text-2xl"
+                  className="flex items-center justify-center w-9 h-9 rounded-full bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08] transition-colors text-lg"
+                  aria-label="Change language"
+                  aria-expanded={showLangMenu}
                 >
                   {languageFlags[language]}
                 </button>
                 {showLangMenu && (
-                  <div className="absolute right-0 mt-2 w-48 bg-charcoal-900/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl py-2 z-50">
+                  <div className="absolute right-0 mt-2 w-48 nav-island nav-island-scrolled rounded-xl py-2 z-50">
                     {Object.entries(languageFlags).map(([lang, flag]) => (
                       <button
                         key={lang}
@@ -120,12 +148,12 @@ export function Navbar() {
 
               {user ? (
                 <>
-                  <Link href="/dashboard" className="flex items-center gap-2 text-neon-cyan hover:text-white transition-colors font-semibold">
-                    <LayoutDashboard size={18} />
+                  <Link href="/dashboard" className={`nav-link-pill flex items-center gap-1.5 ${isActive('/dashboard') ? 'nav-link-pill-active' : ''}`}>
+                    <LayoutDashboard size={16} />
                     {t('nav.dashboard')}
                   </Link>
-                  <Link href="/settings" className="flex items-center gap-2 text-gray-200 hover:text-neon-cyan transition-colors font-semibold">
-                    <Settings size={18} />
+                  <Link href="/settings" className={`nav-link-pill flex items-center gap-1.5 ${isActive('/settings') ? 'nav-link-pill-active' : ''}`}>
+                    <Settings size={16} />
                     {t('nav.settings')}
                   </Link>
 
@@ -160,7 +188,7 @@ export function Navbar() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="text-gray-200 hover:text-white hover:bg-white/5"
+                      className="text-gray-300 hover:text-white hover:bg-white/[0.06] rounded-full"
                     >
                       {t('nav.login')}
                     </Button>
@@ -168,7 +196,7 @@ export function Navbar() {
                   <Link href="/auth">
                     <Button
                       size="sm"
-                      className="bg-neon-cyan text-charcoal-950 hover:bg-neon-cyan/90 font-semibold shadow-[0_0_18px_rgba(20,230,255,0.45)]"
+                      className="bg-white text-charcoal-950 hover:bg-gray-100 font-semibold rounded-full px-5"
                     >
                       {t('nav.signup')}
                     </Button>
@@ -179,22 +207,23 @@ export function Navbar() {
 
             <div className="md:hidden flex items-center gap-2">
               {btcPrice !== null && (
-                <span className="text-[10px] font-mono text-bitcoin-orange-400 px-2 py-1 rounded-lg bg-white/5 border border-white/10" aria-label={`BTC ${formatUsd(btcPrice)}`}>
+                <span className="text-[10px] font-mono text-bitcoin-orange-400 px-2 py-1 rounded-full bg-bitcoin-orange-500/10 border border-bitcoin-orange-500/15" aria-label={`BTC ${formatUsd(btcPrice)}`}>
                   ₿ {btcPrice >= 1000 ? `${(btcPrice / 1000).toFixed(1)}k` : btcPrice}
                 </span>
               )}
               <button
-                className="text-neon-cyan p-2 hover:bg-white/5 rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+                className="text-white p-2 hover:bg-white/[0.06] rounded-xl transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center border border-white/[0.08]"
                 onClick={() => setShowMenu(!showMenu)}
                 aria-label="Toggle menu"
                 aria-expanded={showMenu}
               >
-                {showMenu ? <X size={28} /> : <Menu size={28} />}
+                {showMenu ? <X size={22} /> : <Menu size={22} />}
               </button>
             </div>
           </div>
         </div>
-      </nav>
+        </nav>
+      </header>
 
       {showMenu && (
         <>

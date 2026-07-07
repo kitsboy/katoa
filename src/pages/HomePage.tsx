@@ -3,6 +3,7 @@ import { Link } from '../components/Link';
 import { GlassSection } from '../components/GlassSection';
 import { GlassCallout } from '../components/GlassCallout';
 import { HeroMotionBackground } from '../components/HeroMotionBackground';
+import { HeroOverlayCard } from '../components/HeroOverlayCard';
 import { PageMeta } from '../components/PageMeta';
 import { SectionHeader } from '../components/SectionHeader';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -50,69 +51,80 @@ export function HomePage() {
         path="/"
       />
 
-      {/* Hero — motion background header only */}
-      <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden px-4 sm:px-6 pt-24">
+      {/* Hero */}
+      <section className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden px-3 sm:px-6 pt-28 sm:pt-32 pb-16">
         <HeroMotionBackground />
-        <div className="relative z-10 max-w-6xl mx-auto text-center w-full">
-          <GlassSection className="max-w-4xl mx-auto" glow="cyan">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-neon-cyan/10 border border-neon-cyan/30 rounded-full mb-6 sm:mb-8 backdrop-blur-sm">
-              <div className="w-2 h-2 bg-neon-cyan rounded-full animate-pulse" />
-              <span className="text-xs sm:text-sm font-medium text-neon-cyan">{t('home.badge')}</span>
+        <div className="relative z-10 max-w-5xl mx-auto text-center w-full">
+          <HeroOverlayCard>
+            <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-white/10 bg-white/[0.04] mb-6 sm:mb-8">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full rounded-full bg-neon-cyan-400 opacity-60 motion-safe:animate-ping" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-neon-cyan-500" />
+              </span>
+              <span className="text-[11px] sm:text-xs font-medium tracking-wide text-gray-300 uppercase">
+                {t('home.badge')}
+              </span>
             </div>
 
-            <h1 className="font-display text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-4 sm:mb-6 leading-tight tracking-tighter">
-              <span className="block text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-400 mb-1">{t('home.keep')}</span>
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan-400 via-blue-400 to-neon-cyan-500 text-5xl sm:text-7xl md:text-8xl lg:text-9xl py-1 sm:py-2 drop-shadow-[0_0_30px_rgba(20,230,255,0.4)]">
+            <h1 className="font-display font-bold tracking-tight mb-5 sm:mb-6">
+              <span className="block text-3xl sm:text-4xl md:text-5xl text-white/90 mb-2 sm:mb-3">
+                {t('home.keep')}
+              </span>
+              <span className="block text-6xl sm:text-7xl md:text-8xl lg:text-[7.5rem] font-black leading-[0.9] hero-headline-accent">
                 {t('home.percent')}
               </span>
-              <span className="block text-transparent bg-clip-text bg-gradient-to-b from-gray-100 to-gray-500 mt-1 text-3xl sm:text-5xl md:text-6xl">
+              <span className="block mt-3 sm:mt-4 text-xl sm:text-2xl md:text-3xl text-gray-400 font-medium">
                 {t('home.earnings')}
               </span>
             </h1>
 
-            <p className="text-base sm:text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-8 sm:mb-10 leading-relaxed px-2">
-              <span className="text-white font-semibold">{t('home.subtitle')}</span>
-              <br className="hidden sm:block" />
-              <span className="sm:ml-0">{t('home.subtitle2')}</span>
+            <p className="text-sm sm:text-base md:text-lg text-gray-400 max-w-xl mx-auto mb-8 sm:mb-10 leading-relaxed">
+              {t('home.subtitle')}
+              <span className="hidden sm:inline"> · </span>
+              <span className="block sm:inline mt-1 sm:mt-0 text-gray-500">{t('home.subtitle2')}</span>
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-8 sm:mb-12">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center mb-8 sm:mb-10 max-w-md sm:max-w-none mx-auto">
               <Link
                 href="/dashboard"
-                className="inline-flex items-center justify-center w-full sm:min-w-[260px] min-h-[52px] text-base sm:text-lg font-bold bg-neon-cyan-500 text-charcoal-950 hover:bg-neon-cyan-400 shadow-[0_0_40px_rgba(20,230,255,0.3)] transition-all duration-200 rounded-xl touch-manipulation active:scale-[0.98]"
+                className="inline-flex items-center justify-center min-h-[48px] sm:min-h-[52px] px-8 text-sm sm:text-base font-semibold bg-white text-charcoal-950 hover:bg-gray-100 rounded-full transition-all duration-200 touch-manipulation active:scale-[0.98] shadow-[0_0_32px_rgba(255,255,255,0.15)]"
               >
                 {t('home.cta.start')}
-                <ArrowRight className="ml-2" size={20} />
+                <ArrowRight className="ml-2" size={18} strokeWidth={2.5} />
               </Link>
               <Link
                 href="/comparison"
-                className="inline-flex items-center justify-center w-full sm:min-w-[260px] min-h-[52px] text-base sm:text-lg font-bold border-2 border-neon-cyan-500 text-neon-cyan-500 hover:bg-neon-cyan-500/10 transition-all duration-200 backdrop-blur-sm rounded-xl touch-manipulation active:scale-[0.98]"
+                className="inline-flex items-center justify-center min-h-[48px] sm:min-h-[52px] px-8 text-sm sm:text-base font-semibold text-white/90 border border-white/15 hover:border-white/30 hover:bg-white/[0.06] rounded-full transition-all duration-200 touch-manipulation active:scale-[0.98]"
               >
                 {t('home.cta.compare')}
               </Link>
             </div>
 
-            <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm font-mono">
-              <div className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-white/5 backdrop-blur-sm rounded-full border border-white/10">
-                <span className="text-bitcoin-orange font-bold">{stats.volume}</span>
-                <span className="text-gray-400">{t('home.stats.processed')}</span>
-              </div>
-              <div className="hidden sm:block w-1 h-1 bg-gray-600 rounded-full" />
-              <div className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-white/5 backdrop-blur-sm rounded-full border border-white/10">
-                <span className="text-neon-cyan font-bold">{stats.countries}</span>
-                <span className="text-gray-400">{t('home.stats.countries')}</span>
-              </div>
-              <div className="hidden sm:block w-1 h-1 bg-gray-600 rounded-full" />
-              <div className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-white/5 backdrop-blur-sm rounded-full border border-white/10">
-                <span className="text-neon-cyan font-bold">0%</span>
-                <span className="text-gray-400">{t('home.stats.fees')}</span>
-              </div>
+            <div className="inline-flex flex-wrap items-center justify-center gap-px p-1 rounded-2xl border border-white/[0.08] bg-black/20">
+              {[
+                { value: stats.volume, label: t('home.stats.processed'), accent: 'text-bitcoin-orange-400' },
+                { value: stats.countries, label: t('home.stats.countries'), accent: 'text-neon-cyan-400' },
+                { value: '0%', label: t('home.stats.fees'), accent: 'text-emerald-400' },
+              ].map((stat, i) => (
+                <div
+                  key={stat.label}
+                  className={`hero-stat-pill flex flex-col sm:flex-row sm:items-center gap-0.5 sm:gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl text-left sm:text-center ${
+                    i > 0 ? 'border-l border-white/[0.06] sm:border-l-0' : ''
+                  }`}
+                >
+                  <span className={`text-sm sm:text-base font-bold font-mono tabular-nums ${stat.accent}`}>
+                    {stat.value}
+                  </span>
+                  <span className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">{stat.label}</span>
+                </div>
+              ))}
             </div>
-          </GlassSection>
+          </HeroOverlayCard>
         </div>
 
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 motion-safe:animate-bounce" aria-hidden="true">
-          <ChevronDown size={28} className="text-gray-500" />
+        <div className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 motion-safe:animate-bounce" aria-hidden="true">
+          <span className="text-[10px] uppercase tracking-widest text-gray-600">Scroll</span>
+          <ChevronDown size={20} className="text-gray-500" strokeWidth={1.5} />
         </div>
       </section>
 
