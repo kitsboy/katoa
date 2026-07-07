@@ -14,6 +14,55 @@ export interface MockWishlistItem {
 }
 
 export const mockWishlistItems: Record<string, MockWishlistItem[]> = {
+  'mock-video-001': [
+    {
+      id: 'luna-vid-1',
+      title: 'Studio Session — Vol. 3',
+      description: '4K behind-the-scenes studio video drop',
+      price_sats: 50000,
+      sats_raised: 32000,
+      product_url: '',
+      merchant: 'Creator',
+      image_url:
+        'https://images.pexels.com/photos/28351941/pexels-photo-28351941.jpeg?auto=compress&cs=tinysrgb&w=400',
+      currency: 'USD',
+      original_price: 0,
+      is_funded: false,
+      sort_order: 0,
+    },
+    {
+      id: 'luna-vid-2',
+      title: 'Travel Diary — Bali',
+      description: 'Exclusive travel video series episode 1',
+      price_sats: 75000,
+      sats_raised: 75000,
+      product_url: '',
+      merchant: 'Creator',
+      image_url:
+        'https://images.pexels.com/photos/2681751/pexels-photo-2681751.jpeg?auto=compress&cs=tinysrgb&w=400',
+      currency: 'USD',
+      original_price: 0,
+      is_funded: true,
+      sort_order: 1,
+    },
+  ],
+  'mock-video-002': [
+    {
+      id: 'sasha-vid-1',
+      title: 'Choreography Reel — Midnight',
+      description: 'Premium movement video — members priority',
+      price_sats: 42000,
+      sats_raised: 28000,
+      product_url: '',
+      merchant: 'Creator',
+      image_url:
+        'https://images.pexels.com/photos/2681751/pexels-photo-2681751.jpeg?auto=compress&cs=tinysrgb&w=400',
+      currency: 'USD',
+      original_price: 0,
+      is_funded: false,
+      sort_order: 0,
+    },
+  ],
   'mock-featured': [
     {
       id: 'item-featured-1',
@@ -793,6 +842,72 @@ We're 65% funded and construction is ready to begin! Your support will directly 
       avatar_url: null,
       lightning_address: 'carlos@getalby.com',
       bio: 'Founder of Skate Colombia Foundation. Using skateboarding to empower youth in Medellín. Former pro skater, now full-time social entrepreneur.',
+    },
+  },
+  {
+    id: 'mock-video-001',
+    title: 'Luna — Exclusive Video Collection',
+    description:
+      'Premium behind-the-scenes video drops and VIP creator content. Tip in sats — 0% platform fees, Lightning instant.',
+    created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+    full_story: `Hey, I'm Luna — independent creator building a direct fan economy on Bitcoin Lightning.
+
+This wishlist funds exclusive video series: studio sessions, travel diaries, and members-only drops you won't find on ad-supported platforms. No payment processor holding your tips — sats land in my wallet instantly.
+
+Supporters unlock early access to new videos and vote on the next shoot themes. 100% of tips go to production gear, editing, and keeping the content uncensored by banks.`,
+    slug: 'luna-exclusive-videos',
+    card_style: 'creator',
+    category: 'creator',
+    cover_image:
+      'https://images.pexels.com/photos/28351941/pexels-photo-28351941.jpeg?auto=compress&cs=tinysrgb&w=800',
+    cover_video_url:
+      'https://videos.pexels.com/video-files/4058851/4058851-hd_720_1280_25fps.mp4',
+    total_sats_goal: 2500000,
+    total_sats_raised: 1840000,
+    subscriber_count: 1284,
+    country: 'United States',
+    country_code: 'US',
+    country_flag: '🇺🇸',
+    city: 'Los Angeles',
+    latitude: 34.0522,
+    longitude: -118.2437,
+    creator: {
+      username: 'luna_vip',
+      avatar_url: null,
+      bio: 'Video creator · VIP drops · Bitcoin-native monetization',
+    },
+  },
+  {
+    id: 'mock-video-002',
+    title: 'Sasha — VIP Video Wishlist',
+    description:
+      'Sensual movement & premium video content — subscribe with Lightning. Keep creators paid, not platforms.',
+    created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+    full_story: `Sasha here — dancer and visual storyteller going direct-to-fan on KATOA.
+
+Fund my next video series: choreography reels, golden-hour shoots, and intimate studio sessions. Every sat supports independent adult-friendly art without OnlyFans taking 20%.
+
+Lightning tips = instant access to drop notifications and custom thank-you clips. Your keys, your privacy, my creative freedom.`,
+    slug: 'sasha-vip-content',
+    card_style: 'creator',
+    category: 'creator',
+    cover_image:
+      'https://images.pexels.com/photos/2681751/pexels-photo-2681751.jpeg?auto=compress&cs=tinysrgb&w=800',
+    cover_video_url:
+      'https://videos.pexels.com/video-files/3195394/3195394-sd_640_360_30fps.mp4',
+    total_sats_goal: 1800000,
+    total_sats_raised: 920000,
+    subscriber_count: 876,
+    country: 'United Kingdom',
+    country_code: 'GB',
+    country_flag: '🇬🇧',
+    city: 'London',
+    latitude: 51.5074,
+    longitude: -0.1278,
+    creator: {
+      username: 'sasha_vip',
+      avatar_url: null,
+      bio: 'Movement artist · Premium video · 0% fee Lightning payouts',
     },
   },
 ];

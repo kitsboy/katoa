@@ -18,7 +18,8 @@ import type { Category } from '../types/database';
 import { getStorage, setStorage, STORAGE_KEYS } from '../lib/storage';
 import { useLanguage } from '../contexts/LanguageContext';
 import { PageMeta } from '../components/PageMeta';
-import { Gift, Search, MapPin, Globe, SlidersHorizontal, Star, Heart, X } from 'lucide-react';
+import { Gift, Search, MapPin, Globe, SlidersHorizontal, Star, Heart, X, Video } from 'lucide-react';
+import { CreatorVideoCard } from '../components/CreatorVideoCard';
 
 const BTCMapSection = lazy(() =>
   import('../components/BTCMapSection').then((m) => ({ default: m.BTCMapSection }))
@@ -40,10 +41,18 @@ interface Wishlist {
   latitude?: number;
   longitude?: number;
   created_at?: string;
+  card_style?: 'creator' | 'default';
+  category?: string;
+  subscriber_count?: number;
   creator: {
     username: string;
     avatar_url: string | null;
+    bio?: string;
   };
+}
+
+function isCreatorVideoCard(w: Wishlist): boolean {
+  return w.card_style === 'creator' && Boolean(w.cover_video_url);
 }
 
 interface ExploreFilters {
@@ -66,6 +75,7 @@ function readExploreFiltersFromUrl(): {
   filters: ExploreFilters;
   showMap: boolean;
   favoritesOnly: boolean;
+  videosOnly: boolean;
 } {
   const params = new URLSearchParams(window.location.search);
   const sort = params.get('sort');
@@ -78,12 +88,13 @@ function readExploreFiltersFromUrl(): {
     },
     showMap: params.get('map') === '1' || params.get('map') === 'true',
     favoritesOnly: params.get('favorites') === '1' || params.get('favorites') === 'true',
+    videosOnly: params.get('videos') === '1' || params.get('videos') === 'true',
   };
 }
 
 function hasUrlExploreFilters(): boolean {
   const params = new URLSearchParams(window.location.search);
-  return ['search', 'country', 'category', 'sort', 'map', 'favorites'].some((key) => params.has(key));
+  return ['search', 'country', 'category', 'sort', 'map', 'favorites', 'videos'].some((key) => params.has(key));
 }
 
 const PAGE_SIZE = 12;
@@ -305,11 +316,14 @@ export function ExplorePage() {
   const [favoritesOnly, setFavoritesOnly] = useState(() =>
     useUrlFilters ? urlState.favoritesOnly : getStorage<boolean>(STORAGE_KEYS.exploreFavoritesOnly, false)
   );
+  const [videosOnly, setVideosOnly] = useState(() =>
+    useUrlFilters ? urlState.videosOnly : getStorage<boolean>(STORAGE_KEYS.exploreVideosOnly, false)
+  );
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
-  }, [debouncedSearch, selectedCountry, selectedCategory, sortBy, favoritesOnly]);
+  }, [debouncedSearch, selectedCountry, selectedCategory, sortBy, favoritesOnly, videosOnly]);
 
   useEffect(() => {
     loadWishlists();
@@ -360,13 +374,16 @@ export function ExplorePage() {
     if (favoritesOnly) params.set('favorites', '1');
     else params.delete('favorites');
 
+    if (videosOnly) params.set('videos', '1');
+    else params.delete('videos');
+
     const nextSearch = params.toString();
     const nextUrl = `${url.pathname}${nextSearch ? `?${nextSearch}` : ''}`;
     const currentUrl = `${url.pathname}${url.search}`;
     if (currentUrl !== nextUrl) {
       window.history.replaceState({}, '', nextUrl);
     }
-  }, [searchTerm, selectedCountry, selectedCategory, sortBy, showMap, favoritesOnly]);
+  }, [searchTerm, selectedCountry, selectedCategory, sortBy, showMap, favoritesOnly, videosOnly]);
 
   async function loadCategories() {
     try {
@@ -407,6 +424,10 @@ export function ExplorePage() {
       filtered = filtered.filter((w) => favorites.includes(w.id));
     }
 
+    if (videosOnly) {
+      filtered = filtered.filter((w) => isCreatorVideoCard(w) || Boolean(w.cover_video_url));
+    }
+
     switch (sortBy) {
       case 'trending':
         filtered.sort((a, b) => (b.total_sats_raised || 0) - (a.total_sats_raised || 0));
@@ -422,11 +443,16 @@ export function ExplorePage() {
         filtered.sort((a, b) => (b.total_sats_goal || 0) - (a.total_sats_goal || 0));
         break;
       default:
+        filtered.sort((a, b) => {
+          const aVid = isCreatorVideoCard(a) ? 1 : 0;
+          const bVid = isCreatorVideoCard(b) ? 1 : 0;
+          return bVid - aVid;
+        });
         break;
     }
 
     setFilteredWishlists(filtered);
-  }, [debouncedSearch, selectedCountry, selectedCategory, sortBy, wishlists, favoritesOnly, favorites]);
+  }, [debouncedSearch, selectedCountry, selectedCategory, sortBy, wishlists, favoritesOnly, favorites, videosOnly]);
 
   async function loadWishlists() {
     try {
@@ -438,6 +464,7 @@ export function ExplorePage() {
           description,
           slug,
           cover_image,
+          cover_video_url,
           total_sats_goal,
           total_sats_raised,
           country,
@@ -455,15 +482,16 @@ export function ExplorePage() {
       if (error) throw error;
 
       const dbWishlists = ((data || []) as unknown as Wishlist[]).filter((w) => w.creator && w.creator.username);
-      const allWishlists = [...mockWishlists, ...dbWishlists];
+      const mocks = mockWishlists as Wishlist[];
+      const allWishlists = [...mocks, ...dbWishlists];
       setUsingMockData(dbWishlists.length === 0);
       setWishlists(allWishlists);
       setFilteredWishlists(allWishlists);
     } catch (error) {
       console.error('Error loading wishlists:', error);
       setUsingMockData(true);
-      setWishlists(mockWishlists);
-      setFilteredWishlists(mockWishlists);
+      setWishlists(mockWishlists as Wishlist[]);
+      setFilteredWishlists(mockWishlists as Wishlist[]);
     } finally {
       setLoading(false);
     }
@@ -485,16 +513,32 @@ export function ExplorePage() {
     });
   }, []);
 
+  const toggleVideosOnly = useCallback(() => {
+    setVideosOnly((prev) => {
+      const next = !prev;
+      setStorage(STORAGE_KEYS.exploreVideosOnly, next);
+      return next;
+    });
+  }, []);
+
   const clearFilters = useCallback(() => {
     setSelectedCategory('');
     setSelectedCountry('');
     setSortBy('recent');
     setSearchTerm('');
     setFavoritesOnly(false);
+    setVideosOnly(false);
     setStorage(STORAGE_KEYS.exploreFavoritesOnly, false);
+    setStorage(STORAGE_KEYS.exploreVideosOnly, false);
   }, []);
 
-  const hasActiveFilters = selectedCategory || selectedCountry || sortBy !== 'recent' || searchTerm || favoritesOnly;
+  const hasActiveFilters =
+    selectedCategory || selectedCountry || sortBy !== 'recent' || searchTerm || favoritesOnly || videosOnly;
+
+  const videoCreators = useMemo(
+    () => wishlists.filter((w) => isCreatorVideoCard(w)),
+    [wishlists]
+  );
 
   const countries = Array.from(new Set(wishlists.map((w) => w.country).filter(Boolean) as string[])).sort();
 
@@ -631,6 +675,34 @@ export function ExplorePage() {
           </div>
         </Card>
 
+        {videoCreators.length > 0 && (
+          <section className="mb-10" aria-labelledby="video-creators-heading">
+            <div className="flex items-end justify-between gap-4 mb-4">
+              <div>
+                <h2 id="video-creators-heading" className="text-xl sm:text-2xl font-display font-bold text-white">
+                  {t('explore.videoCreators')}
+                </h2>
+                <p className="text-gray-400 text-sm mt-1">{t('explore.videoCreatorsDesc')}</p>
+              </div>
+              <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#00aff0]/15 border border-[#00aff0]/30 text-[#00aff0] text-xs font-bold">
+                <Video size={14} />
+                {t('explore.hoverPreview')}
+              </span>
+            </div>
+            <div className="grid grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 max-w-3xl mx-auto lg:max-w-4xl">
+              {videoCreators.slice(0, 2).map((wishlist) => (
+                <CreatorVideoCard
+                  key={wishlist.id}
+                  wishlist={wishlist}
+                  isFavorite={favorites.includes(wishlist.id)}
+                  onToggleFavorite={toggleFavorite}
+                  t={t}
+                />
+              ))}
+            </div>
+          </section>
+        )}
+
         {recentlyViewed.length > 0 && (
           <div className="mb-8">
             <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">{t('explore.recentlyViewed')}</h2>
@@ -701,6 +773,16 @@ export function ExplorePage() {
                 >
                   <Heart size={20} className={`mr-2 ${favoritesOnly ? 'fill-current' : ''}`} />
                   {t('explore.favoritesOnly')}
+                </Button>
+
+                <Button
+                  variant={videosOnly ? 'primary' : 'outline'}
+                  onClick={toggleVideosOnly}
+                  className="flex-1 sm:flex-none border-[#00aff0]/30 hover:border-[#00aff0]/60"
+                  aria-pressed={videosOnly}
+                >
+                  <Video size={20} className={`mr-2 ${videosOnly ? 'text-[#00aff0]' : ''}`} />
+                  {t('explore.videosOnly')}
                 </Button>
               </div>
             </div>
@@ -848,15 +930,25 @@ export function ExplorePage() {
         ) : filteredWishlists.length > 0 ? (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {filteredWishlists.slice(0, visibleCount).map((wishlist) => (
-                <WishlistCard
-                  key={wishlist.id}
-                  wishlist={wishlist}
-                  isFavorite={favorites.includes(wishlist.id)}
-                  onToggleFavorite={toggleFavorite}
-                  t={t}
-                />
-              ))}
+              {filteredWishlists.slice(0, visibleCount).map((wishlist) =>
+                isCreatorVideoCard(wishlist) ? (
+                  <CreatorVideoCard
+                    key={wishlist.id}
+                    wishlist={wishlist}
+                    isFavorite={favorites.includes(wishlist.id)}
+                    onToggleFavorite={toggleFavorite}
+                    t={t}
+                  />
+                ) : (
+                  <WishlistCard
+                    key={wishlist.id}
+                    wishlist={wishlist}
+                    isFavorite={favorites.includes(wishlist.id)}
+                    onToggleFavorite={toggleFavorite}
+                    t={t}
+                  />
+                )
+              )}
             </div>
             {visibleCount < filteredWishlists.length && (
               <div className="mt-8 text-center">

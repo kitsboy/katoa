@@ -70,6 +70,7 @@ interface Wishlist {
   theme_color?: string;
   cover_image: string | null;
   cover_video_url?: string | null;
+  card_style?: 'creator' | 'default';
   total_sats_goal: number;
   total_sats_raised: number;
   country?: string;
@@ -163,6 +164,8 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
         setWishlist({
           ...mockWishlist,
           theme_color: '#f97316',
+          card_style: (mockWishlist as { card_style?: 'creator' }).card_style,
+          cover_video_url: (mockWishlist as { cover_video_url?: string }).cover_video_url,
         } as Wishlist);
 
         const mockItems = mockWishlistItems[mockWishlist.id] || [];
@@ -388,16 +391,21 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
           Demo wishlist — payments auto-complete after 3 seconds for preview.
         </div>
       )}
-      <div className="relative">
+      <div className={`relative ${wishlist.card_style === 'creator' || wishlist.cover_video_url ? 'bg-charcoal-950' : ''}`}>
         <MediaCard
-          className="!aspect-auto h-56 sm:h-72 md:h-96"
+          className={
+            wishlist.card_style === 'creator'
+              ? '!aspect-[3/4] max-w-md mx-auto !max-h-[min(70vh,640px)] sm:!max-h-[min(75vh,720px)]'
+              : '!aspect-auto h-56 sm:h-72 md:h-96'
+          }
           media={{
             imageUrl: wishlist.cover_image,
             videoUrl: wishlist.cover_video_url,
             alt: wishlist.title,
           }}
-          aspect="wide"
-          autoplayOnHover={false}
+          aspect={wishlist.card_style === 'creator' ? 'tall' : 'wide'}
+          variant={wishlist.card_style === 'creator' ? 'creator' : 'default'}
+          autoplayOnHover={Boolean(wishlist.cover_video_url)}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-charcoal-950 pointer-events-none" />
 

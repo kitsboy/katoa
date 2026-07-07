@@ -118,6 +118,20 @@ export const PRERENDER_ROUTES = [
     paragraphs: ['Privacy-first design: your data stays yours on the KATOA platform.'],
   },
   {
+    path: '/wishlist/luna-exclusive-videos',
+    title: 'Luna — Exclusive Video Collection | KATOA',
+    description: 'Premium video creator wishlist on Bitcoin Lightning — 0% platform fees.',
+    h1: 'Luna — Exclusive Video Collection',
+    paragraphs: ['Support independent video creators with instant Lightning tips on KATOA.'],
+  },
+  {
+    path: '/wishlist/sasha-vip-content',
+    title: 'Sasha — VIP Video Wishlist | KATOA',
+    description: 'VIP video content funded via Bitcoin Lightning — creators keep 100%.',
+    h1: 'Sasha — VIP Video Wishlist',
+    paragraphs: ['Direct-to-fan video monetization without platform cuts.'],
+  },
+  {
     path: '/pitch',
     title: 'KATOA Pitch Deck',
     description: 'Overview of KATOA — zero-fee Bitcoin creator commerce on Lightning and Nostr.',

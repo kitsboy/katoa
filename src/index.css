@@ -1738,6 +1738,72 @@
   line-height: 1.4;
 }
 
+/* ── Creator video cards (subscription-style previews) ── */
+.creator-video-card {
+  border: 1px solid rgba(0, 175, 240, 0.2);
+  transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+}
+
+.creator-video-card:hover {
+  border-color: rgba(0, 175, 240, 0.55);
+  box-shadow: 0 0 32px rgba(0, 175, 240, 0.2);
+}
+
+.creator-video-card__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, rgba(0, 175, 240, 0.9), rgba(236, 72, 153, 0.75));
+  color: #fff;
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.creator-video-card__video-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 9999px;
+  background: rgba(0, 175, 240, 0.85);
+  color: #fff;
+  font-size: 0.625rem;
+  font-weight: 700;
+}
+
+.creator-video-card__online {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 50%;
+  background: #22c55e;
+  border: 2px solid #0a0a12;
+  box-shadow: 0 0 6px rgba(34, 197, 94, 0.8);
+}
+
+.media-card--creator {
+  ring: none;
+}
+
+.cover-video-upload {
+  transition: border-color 0.2s;
+}
+
+.cover-video-upload:hover {
+  border-color: rgba(0, 175, 240, 0.45);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .creator-video-card:hover {
+    transform: none;
+  }
+}
+
 .btcmap-popup__link {
   font-size: 0.7rem;
   font-weight: 600;

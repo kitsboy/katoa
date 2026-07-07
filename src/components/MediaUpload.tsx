@@ -4,6 +4,13 @@ import { Button } from './Button';
 import { Card } from './Card';
 import { supabase, asRow } from '../lib/supabase';
 import type { WishlistMedia } from '../types/database';
+import {
+  VIDEO_ACCEPT_ATTR,
+  DEFAULT_VIDEO_MAX_MB,
+  DEFAULT_IMAGE_MAX_MB,
+  isVideoFile,
+  normalizeVideoMime,
+} from '../lib/videoFormats';
 
 export interface UploadedMedia {
   id: string;
@@ -48,11 +55,18 @@ export function MediaUpload(props: MediaUploadProps) {
 
   const maxFiles = props.maxFiles || 5;
   const acceptedTypes = isSimpleMode
-    ? (props.accept || '*/*')
-    : ((props as MediaUploadPropsWishlist).acceptedTypes || ['image/*', 'video/*', 'application/pdf', '.doc', '.docx']).join(',');
-  const maxSizeMB = isSimpleMode ? (props.maxSizeMB || 50) : 50;
+    ? (props.accept || VIDEO_ACCEPT_ATTR)
+    : ((props as MediaUploadPropsWishlist).acceptedTypes || [
+        'image/*',
+        ...VIDEO_ACCEPT_ATTR.split(','),
+        'application/pdf',
+        '.doc',
+        '.docx',
+      ]).join(',');
+  const maxSizeMB = isSimpleMode ? (props.maxSizeMB || DEFAULT_VIDEO_MAX_MB) : DEFAULT_VIDEO_MAX_MB;
 
-  const getMediaType = (mimeType: string): 'image' | 'video' | 'document' => {
+  const getMediaType = (mimeType: string, file?: File): 'image' | 'video' | 'document' => {
+    if (file && isVideoFile(file)) return 'video';
     if (mimeType.startsWith('image/')) return 'image';
     if (mimeType.startsWith('video/')) return 'video';
     return 'document';
@@ -96,18 +110,22 @@ export function MediaUpload(props: MediaUploadProps) {
       if (!user) throw new Error('Not authenticated');
 
       for (const file of files) {
-        const maxSize = maxSizeMB * 1024 * 1024;
+        const isVideo = isVideoFile(file);
+        const fileMaxMb = isVideo ? DEFAULT_VIDEO_MAX_MB : DEFAULT_IMAGE_MAX_MB;
+        const maxSize = fileMaxMb * 1024 * 1024;
         if (file.size > maxSize) {
-          setError(`${file.name} is too large. Maximum size is ${maxSizeMB}MB`);
+          setError(`${file.name} is too large (${formatFileSize(file.size)}). Max ${fileMaxMb}MB`);
           continue;
         }
 
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${user.id}/${wishlistProps.wishlistId}/${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+        const fileExt = file.name.split('.').pop()?.toLowerCase() || 'bin';
+        const fileName = `${user.id}/${wishlistProps.wishlistId}/${isVideo ? 'video' : 'media'}/${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
 
         const { error: uploadError } = await supabase.storage
           .from('wishlist-media')
-          .upload(fileName, file);
+          .upload(fileName, file, {
+            contentType: isVideo ? normalizeVideoMime(file) : file.type || undefined,
+          });
 
         if (uploadError) throw uploadError;
 
@@ -115,7 +133,7 @@ export function MediaUpload(props: MediaUploadProps) {
           .from('wishlist-media')
           .getPublicUrl(fileName);
 
-        const mediaType = getMediaType(file.type);
+        const mediaType = getMediaType(file.type, file);
 
         const { data: mediaRecord, error: insertError } = await supabase
           .from('wishlist_media')

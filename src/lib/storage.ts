@@ -28,6 +28,7 @@ export const STORAGE_KEYS = {
   exploreFilters: 'katoa_explore_filters',
   exploreFavorites: 'katoa_explore_favorites',
   exploreFavoritesOnly: 'katoa_explore_favorites_only',
+  exploreVideosOnly: 'katoa_explore_videos_only',
   recentlyViewedWishlists: 'katoa_recent_wishlists',
   giftDraft: 'katoa_gift_draft',
   authTab: 'katoa_auth_tab',

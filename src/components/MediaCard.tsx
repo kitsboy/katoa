@@ -10,6 +10,7 @@ export interface MediaCardSource {
 interface MediaCardProps {
   media: MediaCardSource;
   aspect?: 'wide' | 'square' | 'tall';
+  variant?: 'default' | 'creator';
   className?: string;
   overlay?: ReactNode;
   topLeft?: ReactNode;
@@ -29,6 +30,7 @@ const aspectClasses = {
 export function MediaCard({
   media,
   aspect = 'wide',
+  variant = 'default',
   className = '',
   overlay,
   topLeft,
@@ -41,26 +43,45 @@ export function MediaCard({
   const videoRef = useRef<HTMLVideoElement>(null);
   const [muted, setMuted] = useState(true);
   const [videoFailed, setVideoFailed] = useState(false);
+  const prefersReducedMotion =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const shouldAutoplay = autoplayOnHover && !prefersReducedMotion;
 
   const hasVideo = Boolean(media.videoUrl) && !videoFailed;
   const hasImage = Boolean(media.imageUrl);
 
-  const handleMouseEnter = () => {
-    if (!autoplayOnHover || !hasVideo || !videoRef.current) return;
+  const playPreview = () => {
+    if (!hasVideo || !videoRef.current) return;
     videoRef.current.play().catch(() => undefined);
   };
 
-  const handleMouseLeave = () => {
+  const stopPreview = () => {
     if (!hasVideo || !videoRef.current) return;
     videoRef.current.pause();
     videoRef.current.currentTime = 0;
   };
 
+  const handleMouseEnter = () => {
+    if (!shouldAutoplay || !hasVideo) return;
+    playPreview();
+  };
+
+  const handleMouseLeave = () => {
+    stopPreview();
+  };
+
+  const isCreator = variant === 'creator';
+
   return (
     <div
-      className={`relative overflow-hidden bg-charcoal-900 ${aspectClasses[aspect]} ${className}`}
+      className={`relative overflow-hidden bg-charcoal-900 ${aspectClasses[aspect]} ${className} ${
+        isCreator ? 'media-card--creator' : ''
+      }`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onTouchStart={shouldAutoplay ? playPreview : undefined}
+      onTouchEnd={shouldAutoplay ? stopPreview : undefined}
     >
       {!hasVideo && !hasImage && (
         <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-charcoal-800 to-charcoal-950">
@@ -97,7 +118,13 @@ export function MediaCard({
         />
       )}
 
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/10 pointer-events-none" />
+      <div
+        className={`absolute inset-0 pointer-events-none ${
+          isCreator
+            ? 'bg-gradient-to-t from-black/90 via-black/30 to-transparent'
+            : 'bg-gradient-to-t from-black/80 via-black/20 to-black/10'
+        }`}
+      />
 
       {overlay}
 
@@ -120,7 +147,11 @@ export function MediaCard({
           >
             {muted ? <VolumeX size={14} /> : <Volume2 size={14} />}
           </button>
-          <span className="px-2 py-1 rounded-full bg-black/50 backdrop-blur-sm text-[10px] font-bold text-white/90 flex items-center gap-1">
+          <span
+            className={`px-2 py-1 rounded-full backdrop-blur-sm text-[10px] font-bold text-white/90 flex items-center gap-1 ${
+              isCreator ? 'bg-[#00aff0]/80' : 'bg-black/50'
+            }`}
+          >
             <Play size={10} className="fill-white" />
             VIDEO
           </span>
