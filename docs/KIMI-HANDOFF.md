@@ -261,4 +261,29 @@
 
 ---
 
+## Latest Session Summary (from 2026-07-07 goodbye)
+
+**Chat topic:** Creator video cards on explore, MOV uploads, 50 upgrades, then live bug fixes for clipped progress bars and missing video previews.
+
+**Finished in this session:**
+- Creator video showcase (Luna + Sasha) with OnlyFans-style UI on `/explore`
+- MOV/MP4/WebM/M4V upload support (200MB)
+- ~50 polish upgrades (i18n, SEO, PWA, validateAddress, CoverVideoUpload, etc.)
+- Fixed progress bar clipping on all explore cards (flex layout + `overflow: visible` on card footer)
+- Fixed video previews: added CSP `media-src`, lazy-mount video on hover so posters always show
+
+**Still to do:**
+- Verify live deploy: cover images visible, hover plays video on Luna/Sasha cards
+- Test `/explore?videos=1` on production
+- Optional: avatar images for mock creators, navbar video hint
+
+**Next for Kimi:** Integrate into MASTER-BRAIN / Obsidian. See `SESSION-SUMMARY-2026-07-07.md` for full notes. Do not sync to M4 until Cam says so.
+
+### Git State
+- Last commit SHA: fdef859
+- Branch: main
+- Unpushed: none
+
+---
+
 *Safe Harbour · Part of the [Give A Bit](https://giveabit.io) family.*
