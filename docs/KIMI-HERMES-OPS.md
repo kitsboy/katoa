@@ -18,16 +18,21 @@ npm run dev          # local check → http://localhost:5173
 npm run build        # must pass before deploy
 ```
 
-Deploy (from HERMES or after M3 push):
+Deploy (from HERMES or M3 — **Cloudflare Pages only**, never Netlify):
 
 ```bash
+# Token: CLOUDFLARE_API_TOKEN with Cloudflare Pages:Edit
+# (Grok/M3 often sources from motopass/.env.local — do not commit tokens)
+export CLOUDFLARE_API_TOKEN=…   # or: set -a && source ~/projects/motopass/.env.local && set +a
+
+cd ~/projects/katoa
 npm run build
 # Strip crossorigin for CF Pages (required):
 sed -i '' 's/ crossorigin//g' dist/index.html
-npx wrangler pages deploy dist/ --project-name katoa --branch main
+npx wrangler pages deploy dist/ --project-name katoa --branch main --commit-dirty=true
 ```
 
-Or: `git push origin main` if CF Pages GitHub integration is on.
+GitHub push alone does **not** always rebuild Pages — prefer explicit `wrangler pages deploy` after merge.
 
 ---
 

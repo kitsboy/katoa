@@ -306,12 +306,42 @@
 - Funding totals only after server marks `confirmed` (never client `completed`)
 - Nostr sign-in UI remains but returns clear security error until Edge Function exists
 
-**Git State:**
-- Uncommitted fixes on main (see working tree)
-- Apply migration: `npm run db:push` / Supabase dashboard after review
+**Git State (mid-session notes — superseded below):**
+- Migration and deploy completed later same session
 
-**Ops required:**
-- Run new migration on live Supabase before deploy
-- Ensure no VITE_BTCPAY_API_KEY in Cloudflare Pages env
-- Existing weak Nostr accounts (pubkey-as-password) should be forced to reset if any exist in prod
+---
+
+## Latest Session Summary (from 2026-07-09 goodbye)
+
+**Chat topic:** Adversarial security/reliability/a11y audit → remediations → Cloudflare Pages + Supabase production ship.
+
+**Finished in this session:**
+- Full audit report (Critical–Informational) then code fixes without leaving critical gaps open
+- Migration `20260709000000_security_hardening_audit.sql` **applied** to Supabase `pglqjtipbocjnqmiwmwf`
+- Client: pending-only gifts, Nostr weak-auth disabled, BTCPay no client secrets, ProtectedRoute, storage paths, a11y/CSP
+- **Deploy:** Cloudflare Pages project `katoa` via `wrangler pages deploy` (token: Pages:Edit in `motopass/.env.local`)
+- Live: https://katoa.org + https://katoa.pages.dev — bundle `index-5mqaIOJd.js`, hardened CSP from `public/_headers`
+- Removed mistaken Netlify path (`netlify.toml` deleted); CF-only forever
+
+**Still to do:**
+- Edge Functions: BTCPay webhook → `confirmed`; Nostr signed challenge auth
+- Real payment idempotency / rate limits / CI secret scan
+- Audit CF Pages env: no `VITE_BTCPAY_*` secrets
+- Optional cleanup of any legacy Nostr pubkey-password accounts
+
+**Next for Kimi:** Integrate into MASTER-BRAIN / Obsidian / Kanban. See `SESSION-SUMMARY-2026-07-09.md`. Do not sync to M4 until Cam says so. Deploy recipe: build → strip crossorigin → `wrangler pages deploy dist/ --project-name katoa --branch main`.
+
+### Git State
+- Last commit SHA: `65ea16ca8a2dbc86d6f985408194ddc17f46c7cf` (+ docs goodbye commits if any)
+- Branch: main
+- Unpushed: none after goodbye push
+
+### Deploy
+- Platform: **Cloudflare Pages only** (project `katoa`)
+- Preview deploy: https://eae0eb32.katoa.pages.dev
+- Production: https://katoa.org
+
+---
+
+*Safe Harbour · Part of the [Give A Bit](https://giveabit.io) family.*
 

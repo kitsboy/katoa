@@ -1,6 +1,6 @@
 # ARCHITECTURE — KATOA
 
-**Date**: 2026-07-06 (Router v6, charcoal/glass UI, PWA, frontend polish batches)
+**Date**: 2026-07-09 (security audit remediations + CF Pages; prior: Router v6, charcoal/glass UI, PWA)
 **Audience**: Kimi, future developers, Give A Bit architects. Keep it simple + accurate.  
 **Related**: [`DESIGN.md`](./DESIGN.md) · [`EXECUTIVE-SUMMARY.md`](./EXECUTIVE-SUMMARY.md)
 
@@ -155,20 +155,25 @@ src/
 
 ---
 
-## Security Considerations (Already Strong)
+## Security Considerations (2026-07-09 hardening)
 
-- RLS everywhere (multiple dedicated migrations "fix_security...")
-- Owner-only policies
-- No API keys in bundle
-- HTTPS + security headers
-- Input via forms → DB with RLS (no raw SQL from client)
-- Nostr keys never leave the user's extension
-- Future: webhook signature verification (BTCPay guide already specifies HMAC check)
+- RLS everywhere; audit migration `20260709000000_security_hardening_audit.sql` on prod
+- **Transactions:** clients may only insert `pending` gifts — never `completed`/`confirmed` from browser
+- **Funding triggers:** run only when status becomes `confirmed` (server/webhook path)
+- **Contributions / supporters / leaderboard / notifications:** no open client write policies
+- **Private visibility:** not enumerable; single-slug access via `get_wishlist_by_slug` RPC
+- **Profiles:** public SELECT of profile rows (needed for guest wishlist creator joins)
+- **Storage `media`:** INSERT restricted to owner folder `auth.uid()`
+- **Nostr login:** pubkey-as-password **disabled** until Edge Function challenge auth
+- **BTCPay:** no API keys or webhook secrets in `VITE_*` — proxy via `VITE_API_BASE_URL` only
+- **Protected routes:** `/dashboard`, `/settings`, `/project/*`
+- HTTPS + CSP (`public/_headers` on Cloudflare Pages)
+- Nostr signing keys stay in the user’s extension
 
-**Known soft spots to harden**:
-- The fallback Supabase URL/key in supabase.ts (fine for OSS demo, use proper .env in real deploys)
-- Lack of rate limiting visible on client-created invoices (add when BTCPay is live)
-- No automated secret scanning in CI yet (MCP tool exists for this if using GitHub integration)
+**Still open (architectural):**
+- Edge Function: BTCPay invoices + HMAC webhook → `confirmed`
+- Edge Function: Nostr NIP-07 challenge → Supabase session
+- Rate limiting, CI secret scanning, payment idempotency
 
 ---
 
