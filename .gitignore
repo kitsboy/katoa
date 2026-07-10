@@ -38,3 +38,7 @@ docs/archive/
 # Misc
 *.pem
 *.key
+
+# Netlify CLI local state (not used — deploy via Cloudflare Pages)
+.netlify/
+supabase/.temp/
