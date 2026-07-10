@@ -115,6 +115,25 @@
   animation: hero-orb-drift-reverse 22s ease-in-out infinite;
 }
 
+/* WCAG 2.2 — respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .motion-hero-image,
+  .hero-orb-drift,
+  .hero-orb-drift-reverse {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
 .hero-overlay-card {
   background:
     linear-gradient(135deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.02) 40%, rgba(255,255,255,0.04) 100%);

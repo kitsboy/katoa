@@ -32,6 +32,7 @@ export function AuthPage() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [signUpSuccess, setSignUpSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -45,6 +46,13 @@ export function AuthPage() {
 
   const passwordStrength = isSignUp ? getPasswordStrength(formData.password) : null;
 
+  function postAuthPath(): string {
+    const params = new URLSearchParams(window.location.search);
+    const next = params.get('next');
+    if (next && next.startsWith('/') && !next.startsWith('//')) return next;
+    return '/dashboard';
+  }
+
   useEffect(() => {
     const handleAuthCallback = async () => {
       const params = new URLSearchParams(window.location.search);
@@ -55,7 +63,7 @@ export function AuthPage() {
         setError(errorDescription || 'Authentication failed. Please try again.');
         window.history.replaceState({}, document.title, '/auth');
       } else if (session && !loading) {
-        setTimeout(() => navigate('/dashboard', { replace: true }), 100);
+        setTimeout(() => navigate(postAuthPath(), { replace: true }), 100);
       }
     };
 
@@ -65,12 +73,17 @@ export function AuthPage() {
   async function handleEmailAuth(e: React.FormEvent) {
     e.preventDefault();
     setError('');
+    setSignUpSuccess(false);
     setLoading(true);
 
     try {
       if (isSignUp && !formData.username.trim()) {
         setError('Username is required');
-        setLoading(false);
+        return;
+      }
+
+      if (isSignUp && formData.password.length < 8) {
+        setError('Password must be at least 8 characters');
         return;
       }
 
@@ -80,13 +93,15 @@ export function AuthPage() {
 
       if (result.error) {
         setError(result.error.message);
-        setLoading(false);
-      } else if (!isSignUp) {
-        setTimeout(() => navigate('/dashboard', { replace: true }), 500);
+      } else if (isSignUp) {
+        setSignUpSuccess(true);
+      } else {
+        setTimeout(() => navigate(postAuthPath(), { replace: true }), 300);
       }
     } catch (err: unknown) {
       console.error('Auth error:', err);
       setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
       setLoading(false);
     }
   }
@@ -101,6 +116,7 @@ export function AuthPage() {
         setError(result.error.message || 'Google sign-in failed');
         setLoading(false);
       }
+      // OAuth redirect — leave loading true until navigation
     } catch (err: unknown) {
       console.error('Google sign-in error:', err);
       setError(err instanceof Error ? err.message : 'An error occurred with Google sign-in');
@@ -161,6 +177,14 @@ export function AuthPage() {
           {error && (
             <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg" role="alert" aria-live="assertive">
               <p className="text-red-400 text-sm">{error}</p>
+            </div>
+          )}
+
+          {signUpSuccess && (
+            <div className="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-lg" role="status" aria-live="polite">
+              <p className="text-emerald-300 text-sm">
+                Account created. Check your email to confirm if required, then sign in.
+              </p>
             </div>
           )}
 
@@ -292,7 +316,7 @@ export function AuthPage() {
                   placeholder={t('auth.placeholder.password')}
                   autoComplete={isSignUp ? 'new-password' : 'current-password'}
                   required
-                  minLength={6}
+                  minLength={isSignUp ? 8 : 6}
                 />
                 <button
                   type="button"

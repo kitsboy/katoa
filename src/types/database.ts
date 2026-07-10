@@ -163,6 +163,13 @@ export interface Database {
         user_id: string;
         wishlist_id: string;
       }>;
+      follows: TableDef<{
+        id: string;
+        follower_id: string;
+        following_id: string;
+        created_at?: string;
+      }>;
+      /** Alias view (if present) — prefer `follows` */
       user_follows: TableDef<{
         id: string;
         follower_id: string;
@@ -176,7 +183,12 @@ export interface Database {
       }>;
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: {
+      get_wishlist_by_slug: {
+        Args: { p_slug: string };
+        Returns: Database['public']['Tables']['wishlists']['Row'][];
+      };
+    };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;
   };

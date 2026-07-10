@@ -16,6 +16,7 @@ import { mockWishlists } from '../data/mockWishlists';
 import { mergeKatoaPinsWithMap } from '../lib/btcmap';
 import type { Category } from '../types/database';
 import { getStorage, setStorage, STORAGE_KEYS } from '../lib/storage';
+import { toJsonLdScript } from '../lib/jsonLd';
 import { useLanguage } from '../contexts/LanguageContext';
 import { PageMeta } from '../components/PageMeta';
 import { Gift, Search, MapPin, Globe, SlidersHorizontal, Star, Heart, X, Video } from 'lucide-react';
@@ -609,7 +610,7 @@ export function ExplorePage() {
   return (
     <div className="min-h-screen bg-charcoal-950 pt-16 pb-20 md:pb-8">
       <PageMeta title={t('explore.metaTitle')} description={t('explore.metaDesc')} path="/explore" />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: toJsonLdScript(itemListSchema) }} />
       {usingMockData && (
         <DemoBanner message={t('explore.demoBanner')} />
       )}

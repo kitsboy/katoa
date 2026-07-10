@@ -264,8 +264,10 @@ export function MediaUpload(props: MediaUploadProps) {
                   <p className="text-xs text-gray-500">{formatFileSize(media.size)}</p>
                 </div>
                 <button
+                  type="button"
                   onClick={() => removeFile(media)}
-                  className="flex-shrink-0 text-gray-400 hover:text-red-500 transition-colors"
+                  className="flex-shrink-0 p-2 min-h-[44px] min-w-[44px] flex items-center justify-center text-gray-400 hover:text-red-500 transition-colors touch-manipulation"
+                  aria-label={`Remove ${media.name}`}
                 >
                   <X size={18} />
                 </button>

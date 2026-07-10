@@ -171,13 +171,15 @@ export function Navbar() {
                     {Object.entries(languageFlags).map(([lang, flag]) => (
                       <button
                         key={lang}
+                        role="option"
+                        aria-selected={language === lang}
                         onClick={() => {
                           setLanguage(lang as Language);
                           setShowLangMenu(false);
                         }}
-                        className="w-full px-4 py-2 text-left hover:bg-white/5 text-gray-100 flex items-center gap-3 transition-colors"
+                        className="w-full px-4 py-2.5 min-h-[44px] text-left hover:bg-white/5 text-gray-100 flex items-center gap-3 transition-colors"
                       >
-                        <span className="text-xl">{flag}</span>
+                        <span className="text-xl" aria-hidden>{flag}</span>
                         <span className="text-sm font-semibold">{languageNames[lang as keyof typeof languageNames]}</span>
                       </button>
                     ))}

@@ -14,6 +14,7 @@ import { mockWishlists, mockWishlistItems } from '../data/mockWishlists';
 import { getStorage, setStorage, STORAGE_KEYS } from '../lib/storage';
 import { copyToClipboard } from '../lib/clipboard';
 import { getQrImageUrl, lightningQrData } from '../lib/qr';
+import { toJsonLdScript } from '../lib/jsonLd';
 import { Breadcrumbs, BreadcrumbItem } from '../components/Breadcrumbs';
 import { PageMeta } from '../components/PageMeta';
 import { useToast } from '../components/Toast';
@@ -156,10 +157,12 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
     setStorage(STORAGE_KEYS.recentlyViewedWishlists, updated);
   }, [wishlist?.slug, wishlist?.title]);
 
-  const loadWishlist = useCallback(async () => {
+  const loadWishlist = useCallback(async (signal?: { cancelled: boolean }) => {
+    const isCancelled = () => signal?.cancelled === true;
     try {
       const mockWishlist = mockWishlists.find(w => w.slug === slug);
       if (mockWishlist) {
+        if (isCancelled()) return;
         setIsDemoWishlist(true);
         setWishlist({
           ...mockWishlist,
@@ -187,59 +190,103 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             slug
           )
         );
-
         setLoading(false);
         return;
       }
       setIsDemoWishlist(false);
 
-      const { data: wishlistData, error: wishlistError } = await supabase
-        .from('wishlists')
-        .select(`
-          id,
-          title,
-          description,
-          slug,
-          theme_color,
-          cover_image,
-          total_sats_goal,
-          total_sats_raised,
-          country,
-          country_code,
-          city,
-          creator:profiles!wishlists_creator_id_fkey(username, avatar_url, lightning_address, nostr_pubkey, bio)
-        `)
-        .eq('slug', slug)
-        .maybeSingle();
+      // Prefer RPC so unlisted (private) wishlists resolve by slug without full-table enumeration
+      const { data: rpcRows, error: rpcError } = await supabase.rpc('get_wishlist_by_slug', {
+        p_slug: slug,
+      });
 
-      if (wishlistError) throw wishlistError;
-      if (!wishlistData) {
+      let wishlistRow: Record<string, unknown> | null = null;
+
+      if (!rpcError && rpcRows && Array.isArray(rpcRows) && rpcRows.length > 0) {
+        wishlistRow = rpcRows[0] as Record<string, unknown>;
+      } else {
+        const { data: wishlistData, error: wishlistError } = await supabase
+          .from('wishlists')
+          .select(`
+            id,
+            title,
+            description,
+            slug,
+            theme_color,
+            cover_image,
+            total_sats_goal,
+            total_sats_raised,
+            country,
+            country_code,
+            city,
+            creator:profiles!wishlists_creator_id_fkey(username, avatar_url, lightning_address, nostr_pubkey, bio)
+          `)
+          .eq('slug', slug)
+          .maybeSingle();
+
+        if (wishlistError) throw wishlistError;
+        wishlistRow = wishlistData as Record<string, unknown> | null;
+      }
+
+      if (isCancelled()) return;
+
+      if (!wishlistRow) {
         toast(t('wishlist.notFound'), 'error');
         navigate('/explore', { replace: true });
         return;
       }
 
-      setWishlist(wishlistData as unknown as Wishlist);
+      if (!wishlistRow.creator && wishlistRow.creator_id) {
+        const { data: creator } = await supabase
+          .from('profiles')
+          .select('username, avatar_url, lightning_address, nostr_pubkey, bio')
+          .eq('id', wishlistRow.creator_id as string)
+          .maybeSingle();
+        if (creator) wishlistRow = { ...wishlistRow, creator };
+      } else if (!wishlistRow.creator && wishlistRow.id) {
+        const { data: full } = await supabase
+          .from('wishlists')
+          .select(`
+            id, title, description, slug, theme_color, cover_image,
+            total_sats_goal, total_sats_raised, country, country_code, city,
+            creator:profiles!wishlists_creator_id_fkey(username, avatar_url, lightning_address, nostr_pubkey, bio)
+          `)
+          .eq('id', wishlistRow.id as string)
+          .maybeSingle();
+        if (full) wishlistRow = full as Record<string, unknown>;
+      }
+
+      if (isCancelled()) return;
+      setWishlist(wishlistRow as unknown as Wishlist);
 
       const { data: itemsData, error: itemsError } = await supabase
         .from('wishlist_items')
         .select('*')
-        .eq('wishlist_id', wishlistData.id)
+        .eq('wishlist_id', wishlistRow.id as string)
         .order('sort_order');
 
       if (itemsError) throw itemsError;
-      setItems(applyItemOrder((itemsData || []) as WishlistItem[], slug));
+      if (!isCancelled()) {
+        setItems(applyItemOrder((itemsData || []) as WishlistItem[], slug));
+      }
     } catch (error) {
       console.error('Error loading wishlist:', error);
-      toast(t('wishlist.notFound'), 'error');
-      navigate('/explore', { replace: true });
+      if (!isCancelled()) {
+        toast(t('wishlist.notFound'), 'error');
+        navigate('/explore', { replace: true });
+      }
     } finally {
-      setLoading(false);
+      if (!isCancelled()) setLoading(false);
     }
   }, [slug, navigate, t, toast]);
 
   useEffect(() => {
-    loadWishlist();
+    const signal = { cancelled: false };
+    setLoading(true);
+    void loadWishlist(signal);
+    return () => {
+      signal.cancelled = true;
+    };
   }, [loadWishlist]);
 
   function applyItemOrder(loaded: WishlistItem[], listSlug: string): WishlistItem[] {
@@ -292,43 +339,77 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
 
   async function handleGiftSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (processing || !wishlist) return;
+
+    const amountSats = Number.parseInt(giftForm.amount, 10);
+    if (!Number.isFinite(amountSats) || amountSats <= 0) {
+      toast('Enter a valid amount in sats (greater than 0)', 'error');
+      return;
+    }
+    if (amountSats > 21_000_000 * 100_000_000) {
+      toast('Amount exceeds maximum allowed', 'error');
+      return;
+    }
+
     setProcessing(true);
 
-    const invoice = `lnbc${giftForm.amount}n1p0xyz...mock_invoice_${Date.now()}`;
-    setMockInvoice(invoice);
-    setPaymentQrUrl(getQrImageUrl(lightningQrData(invoice), 280));
-    persistGiftDraft(giftForm);
-    setShowGiftModal(false);
-    setShowPaymentModal(true);
+    try {
+      const lightningAddr = wishlist.creator?.lightning_address?.trim();
+      const invoicePayload = lightningAddr
+        ? lightningQrData(lightningAddr.includes('@') ? lightningAddr : lightningAddr)
+        : `Demo invoice — pay ${amountSats} sats to support ${wishlist.title}`;
 
-    setTimeout(async () => {
-      try {
+      setMockInvoice(
+        lightningAddr || `demo:pending:${wishlist.id}:${amountSats}:${Date.now()}`
+      );
+      setPaymentQrUrl(getQrImageUrl(invoicePayload, 280));
+      setPaymentCountdown(180);
+      persistGiftDraft(giftForm);
+      setShowGiftModal(false);
+      setShowPaymentModal(true);
+
+      // Record intent only — never mark completed from the client (payment webhooks confirm)
+      if (!isDemoWishlist) {
         const { error } = await supabase.from('transactions').insert({
-          wishlist_id: wishlist!.id,
+          wishlist_id: wishlist.id,
           item_id: selectedItem?.id || null,
-          contributor_name: giftForm.name || 'Anonymous',
-          amount_sats: parseInt(giftForm.amount),
-          message: giftForm.message,
+          contributor_name: (giftForm.name || 'Anonymous').slice(0, 120),
+          amount_sats: amountSats,
+          message: (giftForm.message || '').slice(0, 2000),
           payment_method: 'lightning',
-          payment_hash: invoice,
-          status: 'completed',
+          payment_hash: null,
+          status: 'pending',
         });
 
-        if (error) throw error;
-
-        await loadWishlist();
-        setShowPaymentModal(false);
-        setGiftForm({ amount: '', name: '', message: '' });
-      } catch (error) {
-        console.error('Error processing gift:', error);
-      } finally {
-        setProcessing(false);
+        if (error) {
+          // Anonymous users / RLS may reject; still show pay UI for LN address
+          console.warn('Could not record pending gift:', error.message);
+          const msg = error.message?.toLowerCase() ?? '';
+          if (msg.includes('row-level security') || msg.includes('permission') || msg.includes('policy')) {
+            toast('Sign in to log your gift, or pay the Lightning address directly.', 'info');
+          } else {
+            toast(error.message || 'Could not record gift intent', 'error');
+          }
+        } else {
+          toast('Gift intent recorded — complete payment in your wallet', 'info');
+        }
       }
-    }, 3000);
+    } catch (error) {
+      console.error('Error processing gift:', error);
+      toast(error instanceof Error ? error.message : 'Could not start gift', 'error');
+    } finally {
+      setProcessing(false);
+    }
+  }
+
+  function closePaymentModal() {
+    setShowPaymentModal(false);
+    setProcessing(false);
   }
 
   async function handleCopyInvoice(text: string) {
     await copyToClipboard(text);
+    toast('Copied', 'success');
   }
 
   if (loading) {
@@ -414,7 +495,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
       {videoObjectSchema && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(videoObjectSchema) }}
+          dangerouslySetInnerHTML={{ __html: toJsonLdScript(videoObjectSchema) }}
         />
       )}
       {isDemoWishlist && (
@@ -785,6 +866,9 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             </div>
             <Input
               type="number"
+              inputMode="numeric"
+              min={1}
+              step={1}
               value={giftForm.amount}
               onChange={(e) => {
                 setAmountPreset('custom');
@@ -801,6 +885,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             label="Your Name (optional)"
             type="text"
             value={giftForm.name}
+            autoComplete="name"
             onChange={(e) => {
               const next = { ...giftForm, name: e.target.value };
               setGiftForm(next);
@@ -822,6 +907,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
               }}
               className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-neon-cyan-500/50 focus:border-neon-cyan-500/30 resize-none"
               rows={3}
+              maxLength={2000}
               placeholder={t('wishlist.placeholder.message')}
             />
           </div>
@@ -829,16 +915,17 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             type="submit"
             className="w-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 font-bold text-lg py-4 shadow-[0_0_20px_rgba(255,135,0,0.3)]"
             loading={processing}
+            disabled={processing}
           >
             <Bitcoin size={20} className="mr-2" />
-            Generate Invoice
+            Continue to Pay
           </Button>
         </form>
       </Modal>
 
       <Modal
         isOpen={showPaymentModal}
-        onClose={() => {}}
+        onClose={closePaymentModal}
         title="Pay with Lightning"
       >
         <div className="space-y-6">
@@ -851,18 +938,20 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
           </div>
 
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-300">Lightning Invoice</label>
+            <label className="block text-sm font-medium text-gray-300">
+              {wishlist?.creator?.lightning_address ? 'Lightning address' : 'Payment reference'}
+            </label>
             <div className="flex gap-2">
               <input
                 value={mockInvoice}
                 readOnly
-                className="flex-1 px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white text-sm font-mono"
-                aria-label="Lightning invoice"
+                className="flex-1 min-w-0 px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white text-sm font-mono"
+                aria-label="Lightning payment address or reference"
               />
               <Button
                 variant="outline"
                 onClick={() => handleCopyInvoice(mockInvoice)}
-                aria-label="Copy invoice"
+                aria-label="Copy payment details"
               >
                 <Copy size={18} />
               </Button>
@@ -870,19 +959,23 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
           </div>
 
           <div className="flex items-center justify-center gap-3 text-bitcoin-orange-500" role="status" aria-live="polite">
-            <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-bitcoin-orange-500" aria-hidden />
-            <span>Waiting for payment…</span>
             <span className="font-mono text-sm text-gray-400 tabular-nums">
-              {formatCountdown(paymentCountdown)}
+              Session {formatCountdown(paymentCountdown)}
             </span>
           </div>
           {paymentCountdown === 0 && (
-            <p className="text-center text-amber-400 text-sm">Invoice expired — close and generate a new one.</p>
+            <p className="text-center text-amber-400 text-sm" role="alert">
+              Session expired — close and generate a new payment.
+            </p>
           )}
 
           <p className="text-xs text-gray-500 text-center">
-            Demo mode — payment auto-completes in ~3 seconds.
+            Pay from your Lightning wallet. Funding totals update only after payment is confirmed on the server — never from this browser alone.
           </p>
+
+          <Button type="button" variant="secondary" className="w-full" onClick={closePaymentModal}>
+            Done / Close
+          </Button>
         </div>
       </Modal>
 

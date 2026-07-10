@@ -176,12 +176,12 @@ export function ProjectPage() {
     setProcessing(true);
     try {
       const file = files[0];
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${project.id}-${Date.now()}.${fileExt}`;
+      const fileExt = (file.name.split('.').pop() || 'bin').toLowerCase().replace(/[^a-z0-9]/g, '');
+      const fileName = `${user!.id}/project-${project.id}-${Date.now()}.${fileExt || 'bin'}`;
 
       const { error: uploadError } = await supabase.storage
         .from('media')
-        .upload(fileName, file);
+        .upload(fileName, file, { contentType: file.type || undefined });
 
       if (uploadError) {
         console.error('Upload error:', uploadError);

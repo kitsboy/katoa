@@ -71,7 +71,7 @@ export function SettingsPage() {
     try {
       const [wishlistsRes, followingRes, contributionsRes, followersRes] = await Promise.all([
         supabase.from('wishlists').select('id', { count: 'exact', head: true }).eq('creator_id', user.id),
-        supabase.from('user_follows').select('id', { count: 'exact', head: true }).eq('follower_id', user.id),
+        supabase.from('follows').select('id', { count: 'exact', head: true }).eq('follower_id', user.id),
         supabase.from('contributions').select('id', { count: 'exact', head: true }).eq('contributor_id', user.id),
         supabase.from('project_follows').select('id', { count: 'exact', head: true }).eq('project_creator_id', user.id),
       ]);
@@ -90,11 +90,17 @@ export function SettingsPage() {
 
   async function handleSaveProfile(e: React.FormEvent) {
     e.preventDefault();
+    if (processing) return;
     setProcessing(true);
 
     try {
-      await updateProfile(profileForm);
+      const { error } = await updateProfile(profileForm);
+      if (error) {
+        toast(error.message || t('error.updateProfile'), 'error');
+        return;
+      }
       setShowSuccess(true);
+      toast(t('success.saved'), 'success');
       setTimeout(() => setShowSuccess(false), 3000);
     } catch (error) {
       console.error('Error updating profile:', error);
@@ -115,12 +121,12 @@ export function SettingsPage() {
 
     setProcessing(true);
     try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${user!.id}-avatar-${Date.now()}.${fileExt}`;
+      const fileExt = (file.name.split('.').pop() || 'bin').toLowerCase().replace(/[^a-z0-9]/g, '');
+      const fileName = `${user!.id}/avatar-${Date.now()}.${fileExt || 'bin'}`;
 
       const { error: uploadError } = await supabase.storage
         .from('media')
-        .upload(fileName, file);
+        .upload(fileName, file, { contentType: file.type || undefined });
 
       if (uploadError) {
         console.error('Upload error:', uploadError);
@@ -158,12 +164,12 @@ export function SettingsPage() {
     setProcessing(true);
     try {
       const file = files[0];
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${user!.id}-banner-${Date.now()}.${fileExt}`;
+      const fileExt = (file.name.split('.').pop() || 'bin').toLowerCase().replace(/[^a-z0-9]/g, '');
+      const fileName = `${user!.id}/banner-${Date.now()}.${fileExt || 'bin'}`;
 
       const { error: uploadError } = await supabase.storage
         .from('media')
-        .upload(fileName, file);
+        .upload(fileName, file, { contentType: file.type || undefined });
 
       if (uploadError) {
         console.error('Upload error:', uploadError);
@@ -223,21 +229,26 @@ export function SettingsPage() {
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="lg:w-80 flex-shrink-0">
             <Card className=" sticky top-24 p-3">
-              <nav className="space-y-2">
+              <nav className="space-y-2" role="tablist" aria-label="Settings sections">
                 {tabs.map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeTab === tab.id;
                   return (
                     <button
                       key={tab.id}
+                      type="button"
+                      role="tab"
+                      id={`settings-tab-${tab.id}`}
+                      aria-selected={isActive}
+                      aria-controls={`settings-panel-${tab.id}`}
                       onClick={() => setActiveTab(tab.id)}
-                      className={`w-full flex items-center gap-4 px-5 py-4 rounded-xl text-left transition-all duration-300 group ${
+                      className={`w-full flex items-center gap-4 px-5 py-4 rounded-xl text-left transition-all duration-300 group min-h-[44px] ${
                         isActive
                           ? `bg-gradient-to-r ${tab.color} shadow-lg text-white font-bold`
                           : 'text-gray-400 hover:text-white hover:bg-white/5'
                       }`}
                     >
-                      <div className={`p-2 rounded-lg ${isActive ? 'bg-white/20' : 'bg-white/5 group-hover:bg-white/10'}`}>
+                      <div className={`p-2 rounded-lg ${isActive ? 'bg-white/20' : 'bg-white/5 group-hover:bg-white/10'}`} aria-hidden>
                         <Icon size={22} />
                       </div>
                       <span className="text-lg">{tab.label}</span>
@@ -250,7 +261,7 @@ export function SettingsPage() {
 
           <div className="flex-1">
             {activeTab === 'profile' && (
-              <Card className=" p-8">
+              <Card className=" p-8" role="tabpanel" id="settings-panel-profile" aria-labelledby="settings-tab-profile">
                 <div className="flex items-center gap-3 mb-8">
                   <div className="p-3 bg-orange-500/20 rounded-xl">
                     <User size={28} className="text-orange-500" />

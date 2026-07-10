@@ -12,6 +12,7 @@ import { MobileNav } from './components/MobileNav';
 import { PwaInstallPrompt } from './components/PwaInstallPrompt';
 import { ChangelogModal } from './components/ChangelogModal';
 import { RouteTransition } from './components/RouteTransition';
+import { ProtectedRoute } from './components/ProtectedRoute';
 import { useAuth } from './contexts/AuthContext';
 
 const HomePage = lazy(() => import('./pages/HomePage').then((m) => ({ default: m.HomePage })));
@@ -125,10 +126,10 @@ function AppShell() {
               <Route path="/pitch" element={<RouteTransition><PitchPage /></RouteTransition>} />
               <Route path="/terms" element={<RouteTransition><TermsPage /></RouteTransition>} />
               <Route path="/privacy" element={<RouteTransition><PrivacyPage /></RouteTransition>} />
-              <Route path="/dashboard" element={<RouteTransition><DashboardPage /></RouteTransition>} />
-              <Route path="/project/:slug" element={<RouteTransition><ProjectPage /></RouteTransition>} />
-              <Route path="/project" element={<RouteTransition><ProjectPage /></RouteTransition>} />
-              <Route path="/settings" element={<RouteTransition><SettingsPage /></RouteTransition>} />
+              <Route path="/dashboard" element={<RouteTransition><ProtectedRoute><DashboardPage /></ProtectedRoute></RouteTransition>} />
+              <Route path="/project/:slug" element={<RouteTransition><ProtectedRoute><ProjectPage /></ProtectedRoute></RouteTransition>} />
+              <Route path="/project" element={<RouteTransition><ProtectedRoute><ProjectPage /></ProtectedRoute></RouteTransition>} />
+              <Route path="/settings" element={<RouteTransition><ProtectedRoute><SettingsPage /></ProtectedRoute></RouteTransition>} />
               <Route path="/404" element={<RouteTransition><NotFoundPage /></RouteTransition>} />
               <Route path="*" element={<RouteTransition><NotFoundPage /></RouteTransition>} />
             </Routes>

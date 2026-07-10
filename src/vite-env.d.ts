@@ -5,8 +5,7 @@ interface ImportMetaEnv {
   readonly VITE_SUPABASE_ANON_KEY: string;
   readonly VITE_BTCPAY_SERVER_URL?: string;
   readonly VITE_BTCPAY_STORE_ID?: string;
-  readonly VITE_BTCPAY_API_KEY?: string;
-  readonly VITE_BTCPAY_WEBHOOK_SECRET?: string;
+  /** @deprecated Never use client-side API keys — server proxy only */
   readonly VITE_BTCMAP_API_URL?: string;
   readonly VITE_BTCMAP_APP_URL?: string;
   readonly VITE_BTCMAP_ENABLED?: string;

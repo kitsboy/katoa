@@ -6,6 +6,7 @@ import { PageHero } from '../components/PageHero';
 import { Input } from '../components/Input';
 import { Button } from '../components/Button';
 import { useLanguage } from '../contexts/LanguageContext';
+import { toJsonLdScript } from '../lib/jsonLd';
 
 interface FAQItem {
   question: string;
@@ -16,7 +17,7 @@ interface FAQItem {
 
 const faqs: FAQItem[] = [
   { category: 'Getting Started', question: 'What is KATOA?', answer: 'KATOA is a privacy-centric, zero-fee creator platform powered by Bitcoin Lightning and Nostr. Create wishlists, receive gifts, and keep 100% of what supporters send.', link: '/about' },
-  { category: 'Getting Started', question: 'How do I create an account?', answer: 'Sign up with email, Google, Nostr, or try demo mode instantly — no bank account required.', link: '/auth' },
+  { category: 'Getting Started', question: 'How do I create an account?', answer: 'Sign up with email or Google, or try demo mode when Supabase is not configured. Secure Nostr sign-in is coming (challenge-based); you can still link a Nostr key in Settings after email/Google login.', link: '/auth' },
   { category: 'Payments', question: 'What is the Lightning Network?', answer: 'Lightning is Bitcoin\'s instant payment layer. KATOA uses it for near-zero-fee settlements in seconds.', link: '/pricing' },
   { category: 'Payments', question: 'Are there really zero fees?', answer: 'Yes. KATOA charges 0% platform fees forever. You only pay tiny Lightning network fees.', link: '/pricing' },
   { category: 'Payments', question: 'What is BOLT 12?', answer: 'BOLT 12 enables reusable payment offers and better privacy on Lightning. KATOA is building toward full BOLT 12 support.' },
@@ -30,7 +31,7 @@ const faqs: FAQItem[] = [
   { category: 'Technical', question: 'How do I set up a Lightning wallet?', answer: 'Use Phoenix, Wallet of Satoshi, Muun, or self-hosted LND/CLN. Add your Lightning address in Settings.' },
   { category: 'Technical', question: 'Is KATOA open source?', answer: 'Yes — MIT licensed. Audit, fork, or self-host the frontend.', link: 'https://github.com/kitsboy/katoa' },
   { category: 'Security', question: 'How secure is KATOA?', answer: 'We never hold your keys or funds. Industry-standard encryption for account data.' },
-  { category: 'Security', question: 'What if I lose access?', answer: 'Backup Nostr keys if using Nostr auth. Email accounts can use password recovery.' },
+  { category: 'Security', question: 'What if I lose access?', answer: 'Email accounts can use password recovery. If you linked Nostr in Settings, your extension keys still control Nostr identity — app login uses email/Google until secure Nostr auth ships.' },
 ];
 
 const categories = Array.from(new Set(faqs.map((f) => f.category)));
@@ -63,7 +64,7 @@ export function FAQPage() {
   return (
     <div className="min-h-[100dvh] bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 pt-16 pb-20 md:pb-16">
       <PageMeta title="FAQ" description="Frequently asked questions about KATOA — zero fees, Lightning, privacy, and wishlists." path="/faq" />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: toJsonLdScript(faqSchema) }} />
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 pt-24">
         <PageHero title={t('faq.title')} subtitle={t('faq.subtitle')} />

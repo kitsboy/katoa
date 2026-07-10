@@ -48,13 +48,13 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       {children}
       <div
         className="fixed top-20 inset-x-4 sm:inset-x-auto sm:right-4 z-[200] flex flex-col gap-2 pointer-events-none"
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
+        aria-atomic="false"
       >
         {toasts.map((t) => (
           <div
             key={t.id}
+            role={t.type === 'error' ? 'alert' : 'status'}
+            aria-live={t.type === 'error' ? 'assertive' : 'polite'}
             className={`pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-xl border backdrop-blur-xl shadow-lg animate-slide-up min-h-[44px] ${
               t.type === 'success'
                 ? 'bg-emerald-500/15 border-emerald-500/30 text-emerald-200'
@@ -68,7 +68,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
             <button
               type="button"
               onClick={() => dismiss(t.id)}
-              className="p-1 rounded-lg hover:bg-white/10 touch-manipulation"
+              className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg hover:bg-white/10 touch-manipulation"
               aria-label="Dismiss"
             >
               <X size={16} />

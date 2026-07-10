@@ -215,56 +215,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await supabase.auth.signOut();
   }
 
+  /**
+   * Secure Nostr login requires a server-side challenge (NIP-07 signed event → Edge Function → session).
+   * Using the public key as a password is an account-takeover risk and is intentionally disabled.
+   * Logged-in users can still link Nostr via syncNostrProfile / settings.
+   */
   async function signInWithNostr() {
     try {
       if (!window.nostr) {
         throw new Error('Nostr extension not found. Please install a Nostr browser extension like nos2x or Alby.');
       }
 
-      const pubkey = await window.nostr.getPublicKey();
-      const nostrProfile = await nostrService.getProfile(pubkey);
+      // Prove extension works without creating a weak auth session
+      await window.nostr.getPublicKey();
 
-      const { data: existingProfile } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('nostr_pubkey', pubkey)
-        .maybeSingle();
-
-      if (existingProfile) {
-        const { error } = await supabase.auth.signInWithPassword({
-          email: `${pubkey}@nostr.local`,
-          password: pubkey,
-        });
-
-        if (error) throw error;
-        return { error: null };
-      } else {
-        const username = nostrProfile?.name || nostrProfile?.display_name || `nostr_${pubkey.slice(0, 8)}`;
-
-        const { data, error } = await supabase.auth.signUp({
-          email: `${pubkey}@nostr.local`,
-          password: pubkey,
-        });
-
-        if (error) throw error;
-
-        if (data.user) {
-          const { error: profileError } = await supabase
-            .from('profiles')
-            .insert({
-              id: data.user.id,
-              username,
-              nostr_pubkey: pubkey,
-              avatar_url: nostrProfile?.picture || null,
-              bio: nostrProfile?.about || '',
-              lightning_address: nostrProfile?.lud16 || nostrProfile?.lud06 || null,
-            });
-
-          if (profileError) throw profileError;
-        }
-
-        return { error: null };
-      }
+      return {
+        error: new Error(
+          'Secure Nostr sign-in is not available yet. Use email, Google, or sign in first and link your Nostr key in Settings. (Public-key-as-password auth was removed for security.)'
+        ),
+      };
     } catch (error) {
       return { error: error as Error };
     }

@@ -83,7 +83,7 @@ export function DashboardPage() {
         .eq('user_id', user.id);
 
       const { data: creatorFollows } = await supabase
-        .from('user_follows')
+        .from('follows')
         .select('following_id')
         .eq('follower_id', user.id);
 
@@ -219,6 +219,7 @@ export function DashboardPage() {
       await loadStats();
       setShowCreateModal(false);
       setFormData({ title: '', description: '', slug: '' });
+      toast(t('success.saved'), 'success');
     } catch (error: unknown) {
       console.error('Error creating project:', error);
       const message = error instanceof Error ? error.message : t('error.createProject');
@@ -257,12 +258,12 @@ export function DashboardPage() {
     setProcessing(true);
     try {
       const file = files[0];
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${user!.id}-project-${projectId}-${Date.now()}.${fileExt}`;
+      const fileExt = (file.name.split('.').pop() || 'bin').toLowerCase().replace(/[^a-z0-9]/g, '');
+      const fileName = `${user!.id}/project-${projectId}-${Date.now()}.${fileExt || 'bin'}`;
 
       const { error: uploadError } = await supabase.storage
         .from('media')
-        .upload(fileName, file);
+        .upload(fileName, file, { contentType: file.type || undefined });
 
       if (uploadError) {
         console.error('Upload error:', uploadError);

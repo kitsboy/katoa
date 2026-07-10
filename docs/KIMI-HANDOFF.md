@@ -287,3 +287,31 @@
 ---
 
 *Safe Harbour · Part of the [Give A Bit](https://giveabit.io) family.*
+## Session — 2026-07-09
+
+**Done:**
+- Comprehensive security audit fixes (no code change during audit; remediations applied after)
+- Migration `20260709000000_security_hardening_audit.sql`: pending-only transaction inserts, lock contributions, drop open supporter/leaderboard/notification writes, private not enumerable + `get_wishlist_by_slug` RPC, public profile read, storage INSERT owner-folder, SECURITY DEFINER search_path, funding triggers only on `confirmed`
+- Gift flow: no client `completed` status; amount validation; dismissible payment modal; pending intent only
+- Nostr password=pubkey auth **disabled** (secure challenge auth needed via Edge Function)
+- BTCPay: no client API keys/webhook secrets; proxy-only invoice create
+- ProtectedRoute for dashboard/settings/project
+- Storage uploads under `{userId}/...`
+- follows table name alignment; auth/signup loading + profile save error handling
+- A11y: reduced-motion, toast assertive errors, settings tabs, lang option roles, JSON-LD escape
+- CSP tightened (base-uri, frame-ancestors, connect allowlist + https fallback)
+
+**Decisions:**
+- Private wishlists: not listable via SELECT; single-slug access via SECURITY DEFINER RPC
+- Funding totals only after server marks `confirmed` (never client `completed`)
+- Nostr sign-in UI remains but returns clear security error until Edge Function exists
+
+**Git State:**
+- Uncommitted fixes on main (see working tree)
+- Apply migration: `npm run db:push` / Supabase dashboard after review
+
+**Ops required:**
+- Run new migration on live Supabase before deploy
+- Ensure no VITE_BTCPAY_API_KEY in Cloudflare Pages env
+- Existing weak Nostr accounts (pubkey-as-password) should be forced to reset if any exist in prod
+
