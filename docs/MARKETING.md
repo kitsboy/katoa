@@ -326,3 +326,6 @@ Edit `katoa-presentation.html` first, then re-run. See `docs/marketing/README.md
 **Use this document as the narrative layer on top of the product. The app already sells itself with hero copy, live Bitcoin data, and fee math — this is how we tell the story everywhere else.**
 
 *Done — marketing foundation updated for July 2026.*
+
+---
+**Diligence pack:** [docs/diligence/](../diligence/) (investor + architecture + ask)

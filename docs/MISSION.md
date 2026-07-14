@@ -59,3 +59,6 @@ Always consult qualified professionals for legal and financial decisions.
 ```
 
 **See also:** [`EXECUTIVE-SUMMARY.md`](./EXECUTIVE-SUMMARY.md) · [`MARKETING.md`](./MARKETING.md) · [`DESIGN.md`](./DESIGN.md)
+
+---
+**Diligence pack:** [docs/diligence/](../diligence/) (investor + architecture + ask)

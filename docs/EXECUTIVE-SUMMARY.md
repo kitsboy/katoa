@@ -195,3 +195,6 @@ This project is provided for educational and informational purposes. Nothing her
 ---
 
 *KATOA — Keep All That's Owed Always. The platform that actually serves creators.*
+
+---
+**Diligence pack:** [docs/diligence/](../diligence/) (investor + architecture + ask)

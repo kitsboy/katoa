@@ -374,3 +374,9 @@ The product is already a credible, usable, beautiful 0% fee Bitcoin creator plat
 Bitcoin sovereignty tools for private, feel-good giving. Privacy (Lightning + Nostr + PYNYM), education, Safe Harbour, open source.
 
 **For Kimi / future hand-offs**: See `docs/KIMI-HANDOFF.md` + `LATEST-UPDATE.md`. Documentation is the most important deliverable for seamless M3↔M4 continuity.
+
+
+## Diligence / partner pack
+Full disclosure for technical & financial partners: **[docs/diligence/](./docs/diligence/)**  
+Portfolio map: [Family of 8](https://github.com/kitsboy/giveabit/blob/main/docs/diligence/PORTFOLIO-FAMILY-OF-8.md)
+
