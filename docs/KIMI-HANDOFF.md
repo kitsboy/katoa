@@ -345,3 +345,20 @@
 
 *Safe Harbour · Part of the [Give A Bit](https://giveabit.io) family.*
 
+## Session — 2026-07-15
+
+**Done:**
+- 100 autonomous upgrades in 4 batches (7A–7D): infra/SEO, a11y/i18n, UX/workflow, tests
+- Sitemap wired into build; SearchAction fix; 4 wishlist prerenders; auth/pitch noindex
+- CI workflow (npm run check + build); removed unused deps; SW v13; security.txt
+- PageMeta og:locale + hreflang cleanup; full share/auth/error i18n; Explore infinite scroll
+- Dashboard error toasts; 40 tests passing (was 22); Modal component tests added
+
+**Decisions:**
+- Sitemap excludes /auth and /pitch (noindex pages); prerender still covers pitch for direct links
+- Explore uses IntersectionObserver infinite scroll with button fallback
+
+**Git State:**
+- SHA: `e22f4e6`
+- Unpushed: none
+
