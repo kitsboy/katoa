@@ -122,7 +122,7 @@ export function MediaCard({
           muted={muted}
           loop
           playsInline
-          preload="auto"
+          preload="metadata"
           poster={media.imageUrl || undefined}
           onError={() => {
             setVideoFailed(true);

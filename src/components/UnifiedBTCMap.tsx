@@ -409,7 +409,13 @@ export function UnifiedBTCMap({
           </div>
         )}
 
-        <div ref={containerRef} className="unified-btcmap__canvas" />
+        <div
+          ref={containerRef}
+          className="unified-btcmap__canvas"
+          role="region"
+          aria-label={t('map.title')}
+          tabIndex={0}
+        />
 
         <div className="unified-btcmap__legend">
           <span><span className="unified-btcmap__legend-swatch unified-btcmap__legend-swatch--merchant" /> ₿ {t('map.legendMerchant')}</span>

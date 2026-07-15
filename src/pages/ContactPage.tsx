@@ -33,7 +33,11 @@ export function ContactPage() {
     if (!validate()) return;
     const emailSubject = `From Katoa - ${formData.subject}`;
     const emailBody = `From Katoa Contact Form\n\nName: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`;
-    window.location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+    const mailto = `mailto:${EMAIL}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+    void copyToClipboard(`${emailSubject}\n\n${emailBody}`).then((result) => {
+      if (result === 'success') toast(t('contact.messageCopied'), 'success');
+    });
+    window.location.href = mailto;
     toast(t('contact.openingMail'));
     setFormData({ name: '', email: '', subject: '', message: '', website: '' });
   };

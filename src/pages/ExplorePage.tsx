@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useCallback, lazy, Suspense, memo } from 'react';
+import { useEffect, useState, useMemo, useCallback, lazy, Suspense, memo, useRef } from 'react';
 import { Card } from '../components/Card';
 import { Link } from '../components/Link';
 import { Input } from '../components/Input';
@@ -323,6 +323,7 @@ export function ExplorePage() {
     useUrlFilters ? urlState.videosOnly : getStorage<boolean>(STORAGE_KEYS.exploreVideosOnly, false)
   );
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const loadMoreRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
@@ -555,6 +556,22 @@ export function ExplorePage() {
         : filteredWishlists,
     [filteredWishlists, showcaseVideoIds, videoCreators.length]
   );
+
+  useEffect(() => {
+    if (visibleCount >= gridWishlists.length) return;
+    const sentinel = loadMoreRef.current;
+    if (!sentinel) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setVisibleCount((c) => Math.min(c + PAGE_SIZE, gridWishlists.length));
+        }
+      },
+      { rootMargin: '200px' }
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [gridWishlists.length, visibleCount]);
 
   const countries = Array.from(new Set(wishlists.map((w) => w.country).filter(Boolean) as string[])).sort();
 
@@ -974,12 +991,13 @@ export function ExplorePage() {
               )}
             </div>
             {visibleCount < gridWishlists.length && (
-              <div className="mt-8 text-center">
+              <div ref={loadMoreRef} className="mt-8 text-center" aria-live="polite">
                 <Button
                   variant="outline"
                   size="lg"
                   onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
                   className="min-h-[48px] px-8"
+                  aria-label={t('explore.loadingMore')}
                 >
                   {t('explore.loadMore')} ({gridWishlists.length - visibleCount} {t('explore.remaining')})
                 </Button>

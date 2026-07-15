@@ -58,7 +58,7 @@ export function HomePage() {
 
       {statsUnavailable && (
         <p className="text-center text-xs text-gray-500 py-2" role="status">
-          Live stats unavailable — showing estimates
+          {t('home.statsUnavailable')}
         </p>
       )}
 

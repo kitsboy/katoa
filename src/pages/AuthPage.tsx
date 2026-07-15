@@ -143,9 +143,10 @@ export function AuthPage() {
   return (
     <div className="min-h-[100dvh] bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 flex items-center justify-center px-4 py-12 pt-24 pb-20 md:pb-12">
       <PageMeta
-        title="Sign In"
-        description="Sign in or create your free KATOA account. Email, Google, or Nostr — start receiving Bitcoin in minutes."
+        title={t('auth.metaTitle')}
+        description={t('auth.metaDesc')}
         path="/auth"
+        noindex
       />
       {/* Background effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">

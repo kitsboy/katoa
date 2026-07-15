@@ -343,7 +343,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
 
     const amountSats = Number.parseInt(giftForm.amount, 10);
     if (!Number.isFinite(amountSats) || amountSats <= 0) {
-      toast('Enter a valid amount in sats (greater than 0)', 'error');
+      toast(t('gift.invalidAmount'), 'error');
       return;
     }
     if (amountSats > 21_000_000 * 100_000_000) {
@@ -833,6 +833,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
       >
         <form onSubmit={handleGiftSubmit} className="space-y-4">
           <PaymentMethodTabs value={paymentTab} onChange={setPaymentTab} />
+          <div id="payment-method-panel" role="tabpanel" aria-labelledby={`payment-tab-${paymentTab}`}>
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">Amount (sats)</label>
             <div className="flex flex-wrap gap-2 mb-3">
@@ -910,6 +911,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
               maxLength={2000}
               placeholder={t('wishlist.placeholder.message')}
             />
+          </div>
           </div>
           <Button
             type="submit"

@@ -11,8 +11,8 @@ interface SatsDisplayProps {
   className?: string;
 }
 
-function formatSats(sats: number): string {
-  return new Intl.NumberFormat().format(sats);
+function formatSats(sats: number, locale?: string): string {
+  return new Intl.NumberFormat(locale).format(sats);
 }
 
 function satsToBtc(sats: number): string {
@@ -65,8 +65,8 @@ export const SatsDisplay = memo(function SatsDisplay({
   }, [sats]);
 
   const ariaLabel = showFiat && fiatAmount !== undefined
-    ? `${formatSats(displaySats)} sats, approximately ${new Intl.NumberFormat(language, { style: 'currency', currency: fiatCurrency }).format(fiatAmount)}`
-    : `${formatSats(displaySats)} sats${showBtc ? `, ${satsToBtc(sats)} BTC` : ''}`;
+    ? `${formatSats(displaySats, language)} sats, approximately ${new Intl.NumberFormat(language, { style: 'currency', currency: fiatCurrency }).format(fiatAmount)}`
+    : `${formatSats(displaySats, language)} sats${showBtc ? `, ${satsToBtc(sats)} BTC` : ''}`;
 
   return (
     <div className={`flex flex-col ${className}`} aria-label={ariaLabel}>

@@ -118,8 +118,9 @@ export function DashboardPage() {
       });
     } catch (error) {
       console.error('Error loading following:', error);
+      toast(t('error.loadDashboard'), 'error');
     }
-  }, [user]);
+  }, [user, toast, t]);
 
   const loadProjects = useCallback(async () => {
     try {
@@ -156,10 +157,11 @@ export function DashboardPage() {
       );
     } catch (error) {
       console.error('Error loading projects:', error);
+      toast(t('error.loadDashboard'), 'error');
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, [user, toast, t]);
 
   const loadStats = useCallback(async () => {
     try {
@@ -184,8 +186,9 @@ export function DashboardPage() {
       });
     } catch (error) {
       console.error('Error loading stats:', error);
+      toast(t('error.loadDashboard'), 'error');
     }
-  }, [user]);
+  }, [user, toast, t]);
 
   useEffect(() => {
     if (user) {
