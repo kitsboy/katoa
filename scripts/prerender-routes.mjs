@@ -1,5 +1,30 @@
 /** English SEO content injected into static HTML for crawlers. */
 
+import { SITE_URL } from './site-config.mjs';
+
+/** Indexable static routes for sitemap (excludes noindex pages like /auth, /pitch). */
+export const SITEMAP_STATIC_ROUTES = [
+  { path: '/', priority: '1.0', changefreq: 'daily' },
+  { path: '/explore', priority: '0.9', changefreq: 'daily' },
+  { path: '/about', priority: '0.8', changefreq: 'weekly' },
+  { path: '/comparison', priority: '0.8', changefreq: 'weekly' },
+  { path: '/pricing', priority: '0.7', changefreq: 'monthly' },
+  { path: '/faq', priority: '0.6', changefreq: 'monthly' },
+  { path: '/contact', priority: '0.6', changefreq: 'monthly' },
+  { path: '/terms', priority: '0.5', changefreq: 'monthly' },
+  { path: '/privacy', priority: '0.5', changefreq: 'monthly' },
+];
+
+const FAQ_SCHEMA = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    { '@type': 'Question', name: 'What is KATOA?', acceptedAnswer: { '@type': 'Answer', text: 'KATOA is a privacy-centric, zero-fee creator platform powered by Bitcoin Lightning and Nostr.' } },
+    { '@type': 'Question', name: 'Are there really zero fees?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. KATOA charges 0% platform fees forever. You only pay tiny Lightning network fees.' } },
+    { '@type': 'Question', name: 'Do I need KYC?', acceptedAnswer: { '@type': 'Answer', text: 'No. Start with a username or Nostr key. Bitcoin does the settlement.' } },
+  ],
+};
+
 export const PRERENDER_ROUTES = [
   {
     path: '/',
@@ -15,11 +40,11 @@ export const PRERENDER_ROUTES = [
       '@context': 'https://schema.org',
       '@type': 'WebSite',
       name: 'KATOA',
-      url: 'https://katoa.org',
+      url: SITE_URL,
       description: 'Zero-fee Bitcoin creator platform with Lightning Network and Nostr',
       potentialAction: {
         '@type': 'SearchAction',
-        target: 'https://katoa.org/explore?q={search_term_string}',
+        target: `${SITE_URL}/explore?search={search_term_string}`,
         'query-input': 'required name=search_term_string',
       },
     },
@@ -88,9 +113,10 @@ export const PRERENDER_ROUTES = [
       'Answers about Bitcoin wishlists, Lightning payments, Nostr identity, and keeping 100% of creator earnings.',
     ],
     breadcrumbs: [
-      { name: 'Home', item: 'https://katoa.org/' },
-      { name: 'FAQ', item: 'https://katoa.org/faq' },
+      { name: 'Home', item: `${SITE_URL}/` },
+      { name: 'FAQ', item: `${SITE_URL}/faq` },
     ],
+    schema: FAQ_SCHEMA,
   },
   {
     path: '/contact',
@@ -149,6 +175,35 @@ export const PRERENDER_ROUTES = [
     description: 'Overview of KATOA — zero-fee Bitcoin creator commerce on Lightning and Nostr.',
     h1: 'KATOA Pitch',
     paragraphs: ['The zero-fee Bitcoin creator economy — pitch overview.'],
+    noindex: true,
+  },
+  {
+    path: '/wishlist/paul-artist-guitar',
+    title: 'Paul — Artist Guitar Fund | KATOA Wishlist',
+    description: 'Support Paul\'s custom guitar fund with Bitcoin Lightning — zero platform fees.',
+    h1: 'Paul — Artist Guitar Fund',
+    paragraphs: ['Help fund a professional instrument for an independent artist.'],
+  },
+  {
+    path: '/wishlist/maria-developer-laptop',
+    title: 'Maria — Developer Laptop | KATOA Wishlist',
+    description: 'Fund Maria\'s developer laptop via Bitcoin Lightning on KATOA.',
+    h1: 'Maria — Developer Laptop',
+    paragraphs: ['Support open-source developers with direct Lightning gifts.'],
+  },
+  {
+    path: '/wishlist/tokyo-startup-design',
+    title: 'Tokyo Startup Design Kit | KATOA Wishlist',
+    description: 'Fund design tools for a Tokyo startup — 0% fees on KATOA.',
+    h1: 'Tokyo Startup Design Kit',
+    paragraphs: ['Bitcoin-native crowdfunding for creative startup gear.'],
+  },
+  {
+    path: '/wishlist/australia-wildlife-conservation',
+    title: 'Australia Wildlife Conservation | KATOA Wishlist',
+    description: 'Support wildlife conservation in Australia with Bitcoin Lightning.',
+    h1: 'Australia Wildlife Conservation',
+    paragraphs: ['Global supporters fund conservation without payment processor cuts.'],
   },
   {
     path: '/wishlist/medellin-skate-park',

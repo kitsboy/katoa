@@ -2,6 +2,7 @@ import { readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { PRERENDER_ROUTES, PRERENDER_ROUTE_COUNT, breadcrumbSchema } from './prerender-routes.mjs';
+import { SITE_URL } from './site-config.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
@@ -40,7 +41,7 @@ function buildSchemas(route) {
 }
 
 function injectRoute(baseHtml, route) {
-  const canonical = `https://katoa.org${route.path === '/' ? '/' : route.path}`;
+  const canonical = `${SITE_URL}${route.path === '/' ? '/' : route.path}`;
   let html = baseHtml;
 
   html = html.replace(/<title>[^<]*<\/title>/, `<title>${escapeHtml(route.title)}</title>`);
@@ -72,6 +73,16 @@ function injectRoute(baseHtml, route) {
     /<link rel="canonical" href="[^"]*"\s*\/?>/,
     `<link rel="canonical" href="${canonical}" />`
   );
+
+  const robotsContent = route.noindex ? 'noindex, nofollow' : 'index, follow';
+  if (html.includes('<meta name="robots"')) {
+    html = html.replace(
+      /<meta name="robots" content="[^"]*"\s*\/?>/,
+      `<meta name="robots" content="${robotsContent}" />`
+    );
+  } else {
+    html = html.replace('</head>', `    <meta name="robots" content="${robotsContent}" />\n  </head>`);
+  }
 
   const extraSchema = buildSchemas(route);
   if (extraSchema) {

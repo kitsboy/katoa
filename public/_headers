@@ -1,5 +1,12 @@
 # katoa.org — Cloudflare Pages _headers
 
+# HTML shell — always revalidate
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/*
+  Cache-Control: public, max-age=0, must-revalidate
+
 # Security headers — all pages
 /*
   X-Frame-Options: DENY
@@ -13,6 +20,12 @@
 
 /sw.js
   Cache-Control: no-cache, no-store, must-revalidate
+
+/offline.html
+  Cache-Control: public, max-age=86400
+
+/manifest.json
+  Cache-Control: public, max-age=86400
 
 # Content-Type for CSS
 /assets/*.css

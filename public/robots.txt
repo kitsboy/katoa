@@ -3,20 +3,8 @@ Disallow: /api/
 Disallow: /dashboard/
 Disallow: /settings/
 Disallow: /project
+Disallow: /auth
+Disallow: /pitch
 Allow: /
 
 Sitemap: https://katoa.org/sitemap.xml
-
-User-agent: Googlebot
-Disallow: /api/
-Disallow: /dashboard/
-Disallow: /settings/
-Disallow: /project
-Allow: /
-
-User-agent: Bingbot
-Disallow: /api/
-Disallow: /dashboard/
-Disallow: /settings/
-Disallow: /project
-Allow: /

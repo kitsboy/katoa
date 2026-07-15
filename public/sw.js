@@ -1,7 +1,14 @@
-const CACHE_NAME = 'katoa-static-v12';
+const CACHE_NAME = 'katoa-static-v13';
 const OFFLINE_URL = '/offline.html';
 
-const PRECACHE = [OFFLINE_URL, '/logo2.png', '/favicon.ico', '/manifest.json'];
+const PRECACHE = [
+  OFFLINE_URL,
+  '/logo2.png',
+  '/logo2-192.png',
+  '/apple-touch-icon.png',
+  '/favicon.ico',
+  '/manifest.json',
+];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
