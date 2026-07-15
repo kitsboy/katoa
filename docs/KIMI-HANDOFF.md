@@ -359,6 +359,34 @@
 - Explore uses IntersectionObserver infinite scroll with button fallback
 
 **Git State:**
-- SHA: `e22f4e6`
+- SHA: `fcd371c`
 - Unpushed: none
+
+---
+
+## Latest Session Summary (from 2026-07-15 goodbye)
+
+**Chat topic:** `/whatsup` recovery → 100 autonomous upgrades (7A–7D) → push to main.
+
+**Finished in this session:**
+- 100 upgrades: SEO/sitemap pipeline, a11y/i18n, UX (Explore infinite scroll, Dashboard toasts), tests 22→40
+- CI workflow; removed unused deps; SW v13; security.txt; SearchAction fix; 4 wishlist prerenders
+- All commits pushed; `SESSION-SUMMARY-2026-07-15.md` created
+
+**Still to do:**
+- Edge Functions: BTCPay webhook + Nostr challenge auth
+- Real payment idempotency; CF env audit (no `VITE_BTCPAY_*`)
+- Verify CF Pages deploy picked up `fcd371c`
+
+**Next for Kimi:** Integrate into MASTER-BRAIN / Obsidian / Kanban. See `SESSION-SUMMARY-2026-07-15.md`. Do not sync to M4 until Cam says so.
+
+### Git State (final)
+- Last commit SHA: `fcd371c`
+- Branch: main
+- Unpushed: none
+- Live: https://katoa.org (CF deploy may lag latest push)
+
+---
+
+*Safe Harbour · Part of the [Give A Bit](https://giveabit.io) family.*
 
