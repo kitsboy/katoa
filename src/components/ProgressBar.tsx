@@ -61,7 +61,7 @@ export const ProgressBar = memo(function ProgressBar({
         aria-valuenow={Math.round(percentage)}
         aria-valuemin={0}
         aria-valuemax={100}
-        aria-label={`${percentage.toFixed(0)}% of goal reached`}
+        aria-label={`${percentage.toFixed(0)}% ${t('progress.ofGoal')}`}
       >
         <div
           className={`

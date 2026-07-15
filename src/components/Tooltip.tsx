@@ -106,6 +106,7 @@ export function Tooltip({ content, children, icon = false, position = 'bottom' }
         className="inline-flex items-center cursor-help z-50 relative touch-manipulation"
         aria-expanded={isVisible}
         aria-describedby={isVisible ? tooltipId : undefined}
+        aria-label={icon && !children ? content : undefined}
       >
         {children}
         {icon && (

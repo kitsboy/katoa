@@ -1,10 +1,20 @@
 import { useEffect } from 'react';
-import { useLanguage } from '../contexts/LanguageContext';
+import { useLanguage, type Language } from '../contexts/LanguageContext';
 
 const SITE_URL = import.meta.env.VITE_SITE_URL ?? 'https://katoa.org';
 const DEFAULT_TITLE = 'Katoa: Zero-Fee Bitcoin Creator Platform | Lightning & Nostr';
 const DEFAULT_DESCRIPTION =
   'Create Bitcoin wishlists, receive Lightning gifts instantly, and keep 100% of earnings. Zero platform fees, no KYC, works in 195+ countries.';
+
+const OG_LOCALE: Record<Language, string> = {
+  en: 'en_US',
+  es: 'es_ES',
+  pt: 'pt_BR',
+  fr: 'fr_FR',
+  de: 'de_DE',
+  ja: 'ja_JP',
+  zh: 'zh_CN',
+};
 
 interface PageMetaProps {
   title: string;
@@ -18,8 +28,8 @@ interface PageMetaProps {
 
 function toAbsoluteUrl(image: string): string {
   if (image.startsWith('http://') || image.startsWith('https://')) return image;
-  const path = image.startsWith('/') ? image : `/${image}`;
-  return `${SITE_URL}${path}`;
+  const imgPath = image.startsWith('/') ? image : `/${image}`;
+  return `${SITE_URL}${imgPath}`;
 }
 
 export function PageMeta({
@@ -32,6 +42,7 @@ export function PageMeta({
 }: PageMetaProps) {
   const { language } = useLanguage();
   const absoluteImage = toAbsoluteUrl(image);
+  const canonicalPath = path || '/';
 
   useEffect(() => {
     const fullTitle = title.includes('KATOA') ? title : `${title} | KATOA`;
@@ -55,9 +66,10 @@ export function PageMeta({
     }
     setMeta('og:title', fullTitle, 'property');
     setMeta('twitter:title', fullTitle);
-    setMeta('og:url', `${SITE_URL}${path}`, 'property');
+    setMeta('og:url', `${SITE_URL}${canonicalPath}`, 'property');
     setMeta('og:image', absoluteImage, 'property');
     setMeta('og:type', ogVideo ? 'video.other' : 'website', 'property');
+    setMeta('og:locale', OG_LOCALE[language], 'property');
     if (ogVideo) {
       const absoluteVideo = toAbsoluteUrl(ogVideo);
       setMeta('og:video', absoluteVideo, 'property');
@@ -77,7 +89,7 @@ export function PageMeta({
       canonical.rel = 'canonical';
       document.head.appendChild(canonical);
     }
-    canonical.href = `${SITE_URL}${path || '/'}`;
+    canonical.href = `${SITE_URL}${canonicalPath}`;
 
     const hreflangs = ['en', 'es', 'pt', 'fr', 'de', 'ja', 'zh'] as const;
     hreflangs.forEach((lang) => {
@@ -88,7 +100,7 @@ export function PageMeta({
         document.head.appendChild(link);
       }
       link.hreflang = lang;
-      link.href = `${SITE_URL}${path || '/'}?lang=${lang}`;
+      link.href = `${SITE_URL}${canonicalPath === '/' ? '/' : canonicalPath}?lang=${lang}`;
     });
 
     let xDefault = document.querySelector('link[rel="alternate"][hreflang="x-default"]') as HTMLLinkElement | null;
@@ -98,7 +110,7 @@ export function PageMeta({
       document.head.appendChild(xDefault);
     }
     xDefault.hreflang = 'x-default';
-    xDefault.href = `${SITE_URL}${path || '/'}`;
+    xDefault.href = `${SITE_URL}${canonicalPath}`;
 
     return () => {
       document.title = DEFAULT_TITLE;
@@ -108,10 +120,16 @@ export function PageMeta({
       setMeta('og:title', DEFAULT_TITLE, 'property');
       setMeta('twitter:title', DEFAULT_TITLE);
       setMeta('og:url', `${SITE_URL}/`, 'property');
+      setMeta('og:locale', 'en_US', 'property');
       setMeta('robots', 'index, follow');
       if (canonical) canonical.href = `${SITE_URL}/`;
+      hreflangs.forEach((lang) => {
+        const link = document.querySelector(`link[rel="alternate"][hreflang="${lang}"]`) as HTMLLinkElement | null;
+        if (link) link.href = `${SITE_URL}/?lang=${lang}`;
+      });
+      if (xDefault) xDefault.href = `${SITE_URL}/`;
     };
-  }, [title, description, path, absoluteImage, ogVideo, noindex, language]);
+  }, [title, description, canonicalPath, absoluteImage, ogVideo, noindex, language]);
 
   return null;
 }

@@ -107,8 +107,8 @@ export function Navbar() {
                   isHomeHero
                     ? 'text-orange-800 bg-orange-500/12 border border-orange-500/25'
                     : 'text-neon-cyan-400/90 bg-neon-cyan-500/10 border border-neon-cyan-500/20'
-                }`}>
-                  Beta
+                }`} title={t('nav.betaTitle')}>
+                  {t('nav.beta')}
                 </span>
               </Link>
               <OfflineIndicator />

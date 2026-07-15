@@ -59,29 +59,29 @@ function RouteAnnouncer() {
   const pageName = (() => {
     const segment = pathname.split('/').filter(Boolean)[0] ?? 'home';
     const labels: Record<string, string> = {
-      '': 'Home',
-      home: 'Home',
-      explore: 'Explore',
-      wishlist: 'Wishlist',
+      '': t('nav.route.home'),
+      home: t('nav.route.home'),
+      explore: t('nav.route.explore'),
+      wishlist: t('nav.route.wishlist'),
       dashboard: t('dashboard.title'),
-      settings: 'Settings',
+      settings: t('nav.route.settings'),
       auth: t('common.signIn'),
-      about: 'About',
-      contact: 'Contact',
-      faq: 'FAQ',
-      pricing: 'Pricing',
-      comparison: 'Comparison',
-      pitch: 'Pitch',
-      terms: 'Terms',
-      privacy: 'Privacy',
-      project: 'Project',
+      about: t('nav.route.about'),
+      contact: t('nav.route.contact'),
+      faq: t('nav.route.faq'),
+      pricing: t('nav.route.pricing'),
+      comparison: t('nav.route.comparison'),
+      pitch: t('nav.route.pitch'),
+      terms: t('nav.route.terms'),
+      privacy: t('nav.route.privacy'),
+      project: t('nav.route.project'),
     };
     return labels[segment] ?? segment;
   })();
 
   return (
     <p className="sr-only" aria-live="polite" aria-atomic="true">
-      Navigated to {pageName}
+      {t('a11y.navigatedTo')} {pageName}
     </p>
   );
 }
@@ -90,8 +90,17 @@ function ExplorePreload() {
   useEffect(() => {
     const links = document.querySelectorAll('a[href="/explore"], a[href^="/explore"]');
     const preload = () => { void import('./pages/ExplorePage'); };
-    links.forEach((el) => el.addEventListener('mouseenter', preload, { once: true }));
-    return () => links.forEach((el) => el.removeEventListener('mouseenter', preload));
+    const bind = (el: Element) => {
+      el.addEventListener('mouseenter', preload, { once: true });
+      el.addEventListener('focusin', preload, { once: true });
+    };
+    links.forEach(bind);
+    return () => {
+      links.forEach((el) => {
+        el.removeEventListener('mouseenter', preload);
+        el.removeEventListener('focusin', preload);
+      });
+    };
   }, []);
   return null;
 }

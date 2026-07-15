@@ -1,5 +1,6 @@
 import { ReactNode, useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface ModalProps {
   isOpen: boolean;
@@ -10,6 +11,7 @@ interface ModalProps {
 }
 
 export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalProps) {
+  const { t } = useLanguage();
   const closeRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
@@ -83,14 +85,14 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
           {title ? (
             <h2 id="modal-title" className="text-lg sm:text-2xl font-display font-bold text-white">{title}</h2>
           ) : (
-            <span className="sr-only">Dialog</span>
+            <span className="sr-only">{t('a11y.dialog')}</span>
           )}
           <button
             ref={closeRef}
             onClick={(e) => { e.stopPropagation(); onClose(); }}
             className="text-gray-400 hover:text-white transition-colors p-2 min-h-[44px] min-w-[44px] flex items-center justify-center hover:bg-white/10 rounded-xl touch-manipulation ml-auto"
             type="button"
-            aria-label="Close dialog"
+            aria-label={t('a11y.closeDialog')}
           >
             <X size={22} />
           </button>

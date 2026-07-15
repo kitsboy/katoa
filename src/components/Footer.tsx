@@ -57,7 +57,7 @@ export function Footer() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } else {
-      toast('Could not copy address', 'error');
+      toast(t('footer.copyFailed'), 'error');
     }
   };
 
