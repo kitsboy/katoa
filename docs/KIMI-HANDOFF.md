@@ -24,7 +24,7 @@
 - Wire family key server-side (proxy) if paywall blocks public stamps without L402
 
 ### Git State
-- SHA: (see latest commit after push)
+- SHA: `6b76d0e3eac1dbfb3f4ac4f5baa4da3c6d9b99e8`
 - Branch: main
 
 ---
