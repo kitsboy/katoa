@@ -15,8 +15,16 @@ import { PageMeta } from '../components/PageMeta';
 import {
   User, Wallet, MapPin,
   Settings as SettingsIcon, Save, Upload, Camera, Zap, Check, AlertCircle, LayoutDashboard,
-  Heart, TrendingUp, Users, FolderOpen
+  Heart, TrendingUp, Users, FolderOpen, Stamp, ExternalLink
 } from 'lucide-react';
+import {
+  getApiHealth,
+  sha256Hex,
+  stampGuideUrl,
+  stampHash,
+  verifyUrl,
+  type StampResult,
+} from '../lib/satohash';
 
 type Tab = 'profile' | 'wallet' | 'projects' | 'shipping' | 'advanced';
 
@@ -35,6 +43,9 @@ export function SettingsPage() {
   });
 
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [satohashBusy, setSatohashBusy] = useState(false);
+  const [satohashHealth, setSatohashHealth] = useState<'unknown' | 'ok' | 'down'>('unknown');
+  const [lastStamp, setLastStamp] = useState<StampResult | null>(null);
   const [profileForm, setProfileForm] = useState({
     username: '',
     bio: '',
@@ -107,6 +118,44 @@ export function SettingsPage() {
       toast(t('error.updateProfile'), 'error');
     } finally {
       setProcessing(false);
+    }
+  }
+
+  async function checkSatohashHealth() {
+    const health = await getApiHealth();
+    setSatohashHealth(health.ok ? 'ok' : 'down');
+    return health.ok;
+  }
+
+  /** Timestamp a canonical snapshot of the profile with Satohash (OTS on Bitcoin). */
+  async function handleTimestampProfile() {
+    if (!user || satohashBusy) return;
+    setSatohashBusy(true);
+    try {
+      const snapshot = JSON.stringify({
+        app: 'katoa',
+        kind: 'profile-snapshot',
+        user_id: user.id,
+        email: user.email ?? null,
+        username: profileForm.username,
+        bio: profileForm.bio,
+        lightning_address: profileForm.lightning_address,
+        nostr_pubkey: profileForm.nostr_pubkey,
+        stamped_at: new Date().toISOString(),
+      });
+      const hash = await sha256Hex(snapshot);
+      const filename = `katoa-profile-${profileForm.username || user.id.slice(0, 8)}.json`;
+      const result = await stampHash(hash, { filename });
+      setLastStamp(result);
+      toast('Profile snapshot timestamped with Satohash', 'success');
+    } catch (err) {
+      console.error('Satohash stamp error:', err);
+      toast(
+        err instanceof Error ? err.message : 'Satohash timestamp failed',
+        'error'
+      );
+    } finally {
+      setSatohashBusy(false);
     }
   }
 
@@ -669,6 +718,86 @@ export function SettingsPage() {
                         </div>
                       </div>
                     </div>
+                  </div>
+
+                  <div className="p-6 bg-black rounded-xl border border-bitcoin-orange-500/30">
+                    <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                      <Stamp size={20} className="text-bitcoin-orange-500" />
+                      Timestamp with Satohash
+                    </h3>
+                    <p className="text-gray-400 text-sm mb-4 leading-relaxed">
+                      Anchor a SHA-256 snapshot of your profile to Bitcoin via OpenTimestamps.
+                      Your data stays local until you stamp — only the hash is sent to Satohash.
+                    </p>
+                    <div className="flex flex-wrap items-center gap-3 mb-4">
+                      <Button
+                        type="button"
+                        onClick={handleTimestampProfile}
+                        loading={satohashBusy}
+                        className="bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white font-bold"
+                      >
+                        <Stamp size={18} className="mr-2" />
+                        Timestamp profile snapshot
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={async () => {
+                          const ok = await checkSatohashHealth();
+                          toast(
+                            ok ? 'Satohash API is reachable' : 'Satohash API unreachable',
+                            ok ? 'success' : 'error'
+                          );
+                        }}
+                        className="border-white/15 text-white"
+                      >
+                        Check API
+                      </Button>
+                      <a
+                        href={stampGuideUrl()}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-sm text-bitcoin-orange-400 hover:text-bitcoin-orange-300 font-medium"
+                      >
+                        Open Satohash
+                        <ExternalLink size={14} />
+                      </a>
+                      {satohashHealth !== 'unknown' && (
+                        <span
+                          className={`text-xs font-semibold uppercase tracking-wider ${
+                            satohashHealth === 'ok' ? 'text-emerald-400' : 'text-red-400'
+                          }`}
+                        >
+                          API {satohashHealth}
+                        </span>
+                      )}
+                    </div>
+                    {lastStamp && (
+                      <div className="p-4 bg-white/[0.03] rounded-lg border border-white/10 space-y-2">
+                        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                          Last stamp
+                        </p>
+                        <p className="text-white font-mono text-xs break-all">
+                          {lastStamp.hash}
+                        </p>
+                        <p className="text-gray-400 text-sm">
+                          Status: <span className="text-white font-medium">{lastStamp.status}</span>
+                          {lastStamp.id ? (
+                            <>
+                              {' · '}
+                              <a
+                                href={verifyUrl(lastStamp.id)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-bitcoin-orange-400 hover:underline"
+                              >
+                                Verify on Satohash
+                              </a>
+                            </>
+                          ) : null}
+                        </p>
+                      </div>
+                    )}
                   </div>
 
                   <div className="p-6 bg-red-500/10 rounded-xl border border-red-500/30">

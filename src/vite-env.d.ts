@@ -14,6 +14,12 @@ interface ImportMetaEnv {
   readonly VITE_APP_URL?: string;
   readonly VITE_SITE_URL?: string;
   readonly VITE_DEMO_MODE?: string;
+  /** Satohash API base (stamp + health). Default https://api.satohash.io */
+  readonly VITE_SATOHASH_API_URL?: string;
+  /** Satohash frontend (verify + stamp guide links). Default https://satohash.io */
+  readonly VITE_SATOHASH_URL?: string;
+  /** Optional family free-tier key for X-Satohash-Key — avoid shipping secrets in public builds */
+  readonly VITE_SATOHASH_KEY?: string;
 }
 
 interface ImportMeta {

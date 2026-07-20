@@ -1,3 +1,36 @@
+## Session — 2026-07-19
+
+**Machine:** M3 (Grok)
+**Project:** katoa
+
+### Done
+- [x] Thin Satohash timestamp client: `src/lib/satohash.ts`
+  - `sha256Hex`, `stampHash`, `getApiHealth`, `verifyUrl`, `stampGuideUrl`
+  - API base: `VITE_SATOHASH_API_URL` || `https://api.satohash.io`
+  - Frontend links: `VITE_SATOHASH_URL` || `https://satohash.io`
+  - POST `/api/stamp` with `X-Satohash-Client: katoa`, optional `X-Satohash-Key`
+  - GET `/health`
+- [x] Vitest: `src/lib/__tests__/satohash.test.ts` (12 tests)
+- [x] Minimal UI: Settings → Advanced → “Timestamp with Satohash” (profile snapshot stamp + API check + verify link)
+- [x] Env: `vite-env.d.ts` + `.env.example` for Satohash vars (no secrets committed)
+
+### Decisions
+- Client only calls Satohash HTTP API; public OTS calendars stay server-side
+- Optional family key via `VITE_SATOHASH_KEY` or `stampHash({ apiKey })` — do not commit real keys
+- Wired on Settings Advanced (non-breaking); lib is reusable for explore/export later
+
+### What's Next
+- Optional: stamp wishlist export / share payload from ShareButton or map export
+- Wire family key server-side (proxy) if paywall blocks public stamps without L402
+
+### Git State
+- SHA: (see latest commit after push)
+- Branch: main
+
+---
+
+*Safe Harbour · Part of the [Give A Bit](https://giveabit.io) family.*
+
 ## Handoff to Kimi — 2026-07-06
 
 **Machine:** M3 (Grok)
