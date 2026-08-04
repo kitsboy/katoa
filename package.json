@@ -19,7 +19,7 @@
     "sitemap": "node scripts/generate-sitemap.mjs",
     "test:coverage": "vitest run --coverage",
     "generate-metrics": "npx tsx scripts/generate-metrics.ts",
-    "prebuild": " && npm run generate-metrics"
+    "prebuild": "npm run generate-metrics"
   },
   "engines": {
     "node": ">=20"
