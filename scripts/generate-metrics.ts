@@ -10,7 +10,6 @@
 import fs from 'fs';
 import path from 'path';
 import { mockWishlistItems } from '../src/data/mockWishlists';
-import type { MockWishlistItem } from '../src/data/mockWishlists';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const OUT = path.join(ROOT, 'public', 'metrics.json');
@@ -34,7 +33,7 @@ function main() {
   const funded = allItems.filter(i => i.is_funded);
   const satsRaised = allItems.reduce((s, i) => s + (i.sats_raised || 0), 0);
   const totalTarget = allItems.reduce((s, i) => s + (i.price_sats || 0), 0);
-  const envelope = {
+  const envelope: Envelope = {
     schema: 'gab.product-metrics.v1', productId: 'katoa', name: 'Katoa',
     updatedAt: now.toISOString(),
     window: { label: '30d', from: new Date(now.getTime() - 30*86400000).toISOString(), to: now.toISOString() },
