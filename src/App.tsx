@@ -15,7 +15,7 @@ import { RouteTransition } from './components/RouteTransition';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { useAuth } from './contexts/AuthContext';
 
-const HomePage = lazy(() => import('./pages/HomePage').then((m) => ({ default: m.HomePage })));
+import { HomePage } from './pages/HomePage';
 const ExplorePage = lazy(() => import('./pages/ExplorePage').then((m) => ({ default: m.ExplorePage })));
 const WishlistRoutePage = lazy(() => import('./pages/WishlistRoutePage').then((m) => ({ default: m.WishlistRoutePage })));
 const DashboardPage = lazy(() => import('./pages/DashboardPage').then((m) => ({ default: m.DashboardPage })));

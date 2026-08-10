@@ -97,7 +97,7 @@ function ProductScreenshot() {
             <div className="lp-shot-items">
               {items.map((item) => (
                 <div key={item.id} className="lp-shot-item">
-                  <img src={item.image_url} alt={item.title} />
+                  <img src={item.image_url} alt={item.title} width={36} height={36} />
                   <div>
                     <p>{item.title}</p>
                     <span>{formatSats(item.sats_raised)} / {formatSats(item.price_sats)} sats</span>

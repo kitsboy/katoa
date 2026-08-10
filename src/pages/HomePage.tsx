@@ -1,4 +1,4 @@
-import { useEffect, useState, lazy, Suspense } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from '../components/Link';
 import { LandingHero } from '../components/LandingHero';
 import { LandingTrustBar } from '../components/LandingTrustBar';
@@ -8,8 +8,8 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { ArrowRight, Zap, Shield, Globe } from 'lucide-react';
 
-const FeeComparison = lazy(() => import('../components/FeeComparison').then((m) => ({ default: m.FeeComparison })));
-const OnboardingChecklist = lazy(() => import('../components/OnboardingChecklist').then((m) => ({ default: m.OnboardingChecklist })));
+import { FeeComparison } from '../components/FeeComparison';
+import { OnboardingChecklist } from '../components/OnboardingChecklist';
 
 const howItWorksSteps = [
   { titleKey: 'home.step1.title', descKey: 'home.step1.desc', step: '01' },
@@ -89,9 +89,7 @@ export function HomePage() {
 
       <section className="lp-section">
         <div className="lp-container">
-          <Suspense fallback={<div className="h-32 lp-skeleton rounded-2xl" />}>
-            <OnboardingChecklist />
-          </Suspense>
+          <OnboardingChecklist />
         </div>
       </section>
 
@@ -163,9 +161,7 @@ export function HomePage() {
             subtitle={t('home.fees.subtitle')}
             align="left"
           />
-          <Suspense fallback={<div className="h-64 lp-skeleton rounded-2xl" />}>
-            <FeeComparison variant="landing" />
-          </Suspense>
+          <FeeComparison variant="landing" />
         </div>
       </section>
 
