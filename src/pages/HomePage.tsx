@@ -5,7 +5,7 @@ import { LandingTrustBar } from '../components/LandingTrustBar';
 import { PageMeta } from '../components/PageMeta';
 import { SectionHeader } from '../components/SectionHeader';
 import { useLanguage } from '../contexts/LanguageContext';
-import { supabase } from '../lib/supabase';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { ArrowRight, Zap, Shield, Globe } from 'lucide-react';
 
 const FeeComparison = lazy(() => import('../components/FeeComparison').then((m) => ({ default: m.FeeComparison })));
@@ -34,6 +34,10 @@ export function HomePage() {
   }, []);
 
   async function loadStats() {
+    if (!isSupabaseConfigured()) {
+      setStatsUnavailable(true);
+      return;
+    }
     try {
       const { count } = await supabase
         .from('profiles')
