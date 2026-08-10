@@ -658,7 +658,7 @@
   display: flex;
   justify-content: space-between;
   font-size: 0.625rem;
-  color: #9ca3af;
+  color: #d4d4d8;
   margin-bottom: 0.35rem;
 }
 
@@ -735,7 +735,7 @@
 
 .lp-shot-item span {
   font-size: 0.5rem;
-  color: #6b7280;
+  color: #a1a1aa;
 }
 
 .lp-metrics {
@@ -1019,7 +1019,7 @@
 
 .lp-bento-compare span {
   display: block;
-  color: #78716c;
+  color: #57534e;
   margin-bottom: 2px;
   font-weight: 500;
 }

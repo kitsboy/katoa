@@ -283,7 +283,7 @@ export function FeeComparison({ variant = 'default' }: { variant?: 'default' | '
             </div>
           </div>
 
-          <p className="text-xs text-gray-500 text-center mt-3">Amounts converted to USD for comparison</p>
+          <p className="text-xs text-gray-400 text-center mt-3">Amounts converted to USD for comparison</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
