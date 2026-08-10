@@ -48,9 +48,9 @@ export function OnboardingChecklist() {
       <div className="flex items-start justify-between gap-4 mb-6">
         <div>
           <p className="lp-eyebrow mb-2">{t('onboarding.badge')}</p>
-          <h3 className="lp-onboarding-title">
+          <h2 className="lp-onboarding-title">
             {t('onboarding.title')}
-          </h3>
+          </h2>
           <p className="lp-onboarding-subtitle">{t('onboarding.subtitle')}</p>
         </div>
         <div className="text-right shrink-0 tabular-nums">

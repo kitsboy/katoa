@@ -78,7 +78,7 @@ export function Footer() {
             <div className="lg:col-span-3">
               <Link href="/" className="inline-flex items-center gap-3 mb-5 group">
                 <img
-                  src="/logo2.png"
+                  src="/logo2.png" style={{ objectFit: "cover" }}
                   alt="KATOA"
                   className="w-11 h-11 rounded-full ring-2 ring-bitcoin-orange-500/30 group-hover:ring-neon-cyan-500/50 transition-all"
                 />

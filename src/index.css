@@ -1066,7 +1066,7 @@
 
 .lp-onboarding-count-total {
   font-size: 0.875rem;
-  color: #a8a29e;
+  color: #57534e;
 }
 
 .lp-onboarding-item {
@@ -1086,7 +1086,7 @@
 }
 
 .lp-onboarding-label--done {
-  color: #a8a29e;
+  color: #78716c;
   text-decoration: line-through;
 }
 
