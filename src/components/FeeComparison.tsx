@@ -283,7 +283,7 @@ export function FeeComparison({ variant = 'default' }: { variant?: 'default' | '
             </div>
           </div>
 
-          <p className="text-xs text-gray-400 text-center mt-3">Amounts converted to USD for comparison</p>
+          <p className="text-xs text-gray-600 text-center mt-3">Amounts converted to USD for comparison</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -323,7 +323,7 @@ export function FeeComparison({ variant = 'default' }: { variant?: 'default' | '
               <DollarSign size={24} className="text-white" />
             </div>
             <div className="flex-1">
-              <h4 className="text-xl sm:text-2xl font-bold text-white mb-2">
+              <h4 className="text-xl sm:text-2xl font-bold text-[#111827] mb-2">
                 Save {formatCurrency(maxSavings)} per month
               </h4>
               <p className="text-emerald-300 text-base sm:text-lg">

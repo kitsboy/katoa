@@ -30,9 +30,12 @@ export function asRows<T>(data: unknown): T[] {
 
 /** True when a real Supabase project is configured (not placeholder). */
 export function isSupabaseConfigured(): boolean {
+  // Real Supabase anon keys are JWTs (eyJ…). A stale project URL with a bogus
+  // key would still fire DNS-failing queries — require a genuine key too.
   return (
     !supabaseUrl.includes('placeholder') &&
-    supabaseAnonKey !== 'placeholder-key' &&
+    supabaseAnonKey.startsWith('eyJ') &&
+    supabaseAnonKey.length > 20 &&
     Boolean(import.meta.env.VITE_SUPABASE_URL)
   );
 }
