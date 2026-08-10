@@ -1,5 +1,12 @@
-const CACHE_NAME = 'katoa-static-v13';
+const CACHE_NAME = 'katoa-static-v14';
 const OFFLINE_URL = '/offline.html';
+
+// caches.put() rejects on 206 Partial Content (range requests) — guard every put.
+function cacheable(request, response) {
+  if (!response || response.status !== 200) return false;
+  if (request.headers.get('range')) return false;
+  return true;
+}
 
 const PRECACHE = [
   OFFLINE_URL,
@@ -54,7 +61,7 @@ self.addEventListener('fetch', (event) => {
         const cached = await cache.match(request);
         const fetchPromise = fetch(request)
           .then((response) => {
-            if (response.ok) cache.put(request, response.clone());
+            if (cacheable(request, response)) cache.put(request, response.clone());
             return response;
           })
           .catch(() => cached);
@@ -67,7 +74,7 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     fetch(request)
       .then((response) => {
-        if (response.ok) {
+        if (cacheable(request, response)) {
           const clone = response.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
         }

@@ -529,7 +529,7 @@
 .lp-shot-url {
   margin-left: auto;
   font-size: 10px;
-  color: #6b7280;
+  color: #9ca3af;
   font-family: 'JetBrains Mono', monospace;
 }
 
@@ -571,7 +571,7 @@
   margin-bottom: 0.25rem;
 }
 
-.lp-shot-title-row h3 {
+.lp-shot-title-row .lp-shot-title {
   font-size: 0.8125rem;
   font-weight: 700;
   color: #fff;
@@ -684,7 +684,7 @@
   display: block;
   margin-top: 0.25rem;
   font-size: 0.5625rem;
-  color: #6b7280;
+  color: #9ca3af;
 }
 
 .lp-shot-cta {
@@ -1066,7 +1066,7 @@
 
 .lp-onboarding-count-total {
   font-size: 0.875rem;
-  color: #78716c;
+  color: #a8a29e;
 }
 
 .lp-onboarding-item {

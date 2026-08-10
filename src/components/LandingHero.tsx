@@ -5,7 +5,7 @@ import { mockWishlistItems } from '../data/mockWishlists';
 const FEATURED = {
   title: 'Skateboard Park for Medellín Youth',
   description: 'Transform lives through skateboarding. Building a safe community space where 500+ youth can skate, learn, and grow.',
-  cover: 'https://images.pexels.com/photos/5793678/pexels-photo-5793678.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750',
+  cover: '/images/mock/pexels-2a6bfc8ddf.jpeg',
   creator: 'skate_colombia',
   city: 'Medellín',
   country: 'Colombia',
@@ -53,11 +53,11 @@ function ProductScreenshot() {
 
         <div className="lp-shot-screen">
           <div className="lp-shot-cover">
-            <img src={FEATURED.cover} alt={`${FEATURED.title} cover`} loading="eager" fetchPriority="high" />
+            <img src={FEATURED.cover} alt={`${FEATURED.title} cover`} width={1260} height={750} loading="eager" fetchPriority="high" />
             <div className="lp-shot-cover-overlay" />
             <div className="lp-shot-cover-copy">
               <div className="lp-shot-title-row">
-                <h3>{FEATURED.title}</h3>
+                <p className="lp-shot-title">{FEATURED.title}</p>
                 <span aria-hidden>{FEATURED.flag}</span>
               </div>
               <p>{FEATURED.description}</p>

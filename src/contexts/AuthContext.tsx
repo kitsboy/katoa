@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
-import { supabase, asRow } from '../lib/supabase';
+import { supabase, asRow, isSupabaseConfigured } from '../lib/supabase';
 import { nostrService } from '../lib/nostr';
 import {
   canUseDemoAuth,
@@ -75,6 +75,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (isDemoSessionActive()) {
       activateDemoSession();
+      return;
+    }
+
+    // Without real Supabase env vars the placeholder client fires DNS-failing
+    // requests on every load (console errors). Skip auth bootstrap entirely.
+    if (!isSupabaseConfigured()) {
+      setLoading(false);
       return;
     }
 

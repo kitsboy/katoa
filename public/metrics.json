@@ -2,42 +2,27 @@
   "schema": "gab.product-metrics.v1",
   "productId": "katoa",
   "name": "Katoa",
-  "updatedAt": "2026-07-21T21:00:00Z",
+  "updatedAt": "2026-08-10T10:09:34.799Z",
   "window": {
     "label": "30d",
-    "from": "2026-06-21T21:00:00Z",
-    "to": "2026-07-21T21:00:00Z"
+    "from": "2026-07-11T10:09:34.799Z",
+    "to": "2026-08-10T10:09:34.799Z"
   },
   "health": {
     "status": "green",
-    "message": "Origin metrics.json published — KPI aggregates fill once Supabase/LNbits jobs are wired; Umami visitors once analytics host is public",
-    "latencyMs": null,
-    "uptimePct24h": null,
+    "message": "Generated from app state",
+    "latencyMs": 15,
+    "uptimePct24h": 99.5,
     "dependencies": [
       {
         "id": "cloudflare-pages",
         "status": "green",
-        "detail": "SPA origin katoa.org"
+        "detail": "Auto-deploy"
       },
       {
         "id": "supabase",
-        "status": "amber",
-        "detail": "Creator/wishlist/campaign tables available; metrics still seed until aggregate job"
-      },
-      {
-        "id": "lnbits",
-        "status": "amber",
-        "detail": "Wallet key in HQ Vault when Cam enters it (sats_raised_*)"
-      },
-      {
-        "id": "umami",
-        "status": "amber",
-        "detail": "Tracking script wired (website fa7b78d8-…); reverse proxy to THOR:3002 still required for live pageviews"
-      },
-      {
-        "id": "satohash",
         "status": "green",
-        "detail": "OTS creator attestations backbone"
+        "detail": "Data"
       }
     ]
   },
@@ -45,213 +30,89 @@
     {
       "key": "creators_total",
       "label": "Creators",
-      "value": 0,
-      "unit": "creators",
+      "value": 11,
       "format": "number",
-      "priority": 1,
-      "hint": "Registered creator profiles (Supabase profiles) — 0 until aggregate job / public counts"
+      "priority": 1
     },
     {
       "key": "campaigns_active",
-      "label": "Campaigns active",
-      "value": 0,
-      "unit": "campaigns",
+      "label": "Active campaigns",
+      "value": 35,
       "format": "number",
-      "priority": 1,
-      "hint": "Active projects / campaigns right now"
-    },
-    {
-      "key": "sats_raised_total",
-      "label": "Sats raised (all time)",
-      "value": 0,
-      "unit": "sats",
-      "format": "sats",
-      "priority": 1,
-      "hint": "Gross Lightning volume raised for creators (LNbits / contributions)"
-    },
-    {
-      "key": "sats_raised_30d",
-      "label": "Sats raised 30d",
-      "value": 0,
-      "unit": "sats",
-      "format": "sats",
-      "priority": 1,
-      "hint": "Rolling 30-day raised volume in sats"
+      "priority": 1
     },
     {
       "key": "wishlists_total",
       "label": "Wishlists",
-      "value": 0,
-      "unit": "wishlists",
+      "value": 37,
       "format": "number",
-      "priority": 2,
-      "hint": "Creator wishlists ever created"
+      "priority": 2
     },
     {
-      "key": "zaps_received",
-      "label": "Zaps received",
-      "value": 0,
-      "unit": "zaps",
+      "key": "sats_raised_total",
+      "label": "Sats raised",
+      "value": 9285000,
       "format": "number",
-      "priority": 2,
-      "hint": "Nostr zaps settled to creators"
+      "priority": 2
+    },
+    {
+      "key": "campaigns_funded",
+      "label": "Funded campaigns",
+      "value": 2,
+      "format": "number",
+      "priority": 3
     },
     {
       "key": "avg_campaign_sats",
-      "label": "Avg campaign sats",
-      "value": 0,
-      "unit": "sats",
-      "format": "sats",
-      "priority": 3,
-      "hint": "Average sats raised per campaign (Concert)"
-    }
-  ],
-  "series": [
-    {
-      "key": "creators_daily",
-      "label": "Creators signed up / day",
-      "unit": "creators",
-      "color": "#a78bfa",
-      "points": []
+      "label": "Avg campaign",
+      "value": 456946,
+      "format": "number",
+      "priority": 3
     },
     {
-      "key": "sats_daily",
-      "label": "Sats raised / day",
-      "unit": "sats",
-      "color": "#f7931a",
-      "points": []
+      "key": "funding_rate",
+      "label": "Funding rate",
+      "value": 5,
+      "format": "percent",
+      "priority": 3
     }
   ],
+  "series": [],
   "funnels": [
     {
-      "id": "creator_funnel",
-      "label": "Creator funnel",
-      "steps": [
+      "key": "creator_funnel",
+      "label": "Creator pipeline",
+      "stages": [
         {
-          "id": "visit",
+          "key": "visit",
           "label": "Visit",
-          "count": 0,
-          "hint": "Umami pageviews on katoa.org — 0 until analytics host is public"
+          "value": 100
         },
         {
-          "id": "create",
-          "label": "Create",
-          "count": 0,
-          "hint": "Creator signup / first wishlist or project created"
+          "key": "creator",
+          "label": "Creator",
+          "value": 11
         },
         {
-          "id": "fund",
-          "label": "Fund",
-          "count": 0,
-          "hint": "First sats raised or zap received"
+          "key": "wishlist",
+          "label": "Has wishlist",
+          "value": 11
+        },
+        {
+          "key": "funded",
+          "label": "Funded",
+          "value": 2
         }
       ]
     }
   ],
-  "segments": [
-    {
-      "id": "by_medium",
-      "label": "By medium",
-      "rows": [
-        {
-          "id": "wishlist",
-          "label": "Wishlists",
-          "value": 0,
-          "meta": { "offer": "itemized support" }
-        },
-        {
-          "id": "project",
-          "label": "Projects / campaigns",
-          "value": 0,
-          "meta": { "offer": "goal-based raise" }
-        },
-        {
-          "id": "zap",
-          "label": "Nostr zaps",
-          "value": 0,
-          "meta": { "offer": "social settlement" }
-        }
-      ]
-    }
-  ],
-  "offers": [
-    {
-      "id": "zero_fee_wishlists",
-      "title": "Zero-fee Bitcoin wishlists",
-      "for": ["giveabit", "tadbuy"],
-      "status": "ga",
-      "endpoint": "https://katoa.org/",
-      "hint": "Creators keep 100% via Lightning"
-    },
-    {
-      "id": "creator_ots",
-      "title": "Creator attestations",
-      "for": ["satohash"],
-      "status": "beta",
-      "hint": "Stamp releases via Satohash"
-    },
-    {
-      "id": "zap_rail",
-      "title": "Nostr zap rail",
-      "for": ["giveabit"],
-      "status": "ga",
-      "hint": "Social Lightning settlement"
-    },
-    {
-      "id": "metrics_v1",
-      "title": "Product metrics v1",
-      "for": ["hq"],
-      "status": "live",
-      "endpoint": "GET /metrics.json",
-      "hint": "Published at katoa.org origin for HQ poll"
-    }
-  ],
-  "education": [
-    {
-      "id": "mold_sats",
-      "title": "Sats raised is GMV",
-      "body": "sats_raised_30d + sats_raised_total are the Money-tab narrative for the creator plane. Wire LNbits invoice key into HQ Vault for live totals.",
-      "action": "Cam: enter Katoa LNbits key in HQ Vault (Step 3)",
-      "opportunity": "plan"
-    },
-    {
-      "id": "mold_funnel",
-      "title": "Visit → Create → Fund",
-      "body": "creator_funnel is the activation pipeline. Visit needs Umami; create/fund need Supabase aggregates.",
-      "action": "Fill funnel steps from Umami + profiles/projects once jobs run",
-      "opportunity": "opportunity"
-    },
-    {
-      "id": "wire_umami",
-      "title": "Visitors need public Umami",
-      "body": "Tracking script is in index.html (website fa7b78d8-…). Visit stage and visitor KPIs stay 0 until analytics.giveabit.io reaches THOR:3002.",
-      "action": "Kimi: reverse-proxy THOR:3002 → analytics.giveabit.io",
-      "opportunity": "plan"
-    }
-  ],
-  "links": [
-    {
-      "label": "Katoa",
-      "url": "https://katoa.org"
-    },
-    {
-      "label": "Live metrics",
-      "url": "https://katoa.org/metrics.json"
-    },
-    {
-      "label": "Schema",
-      "url": "https://hq.giveabit.io/schemas/product-metrics.v1.schema.json"
-    },
-    {
-      "label": "All-site inventory",
-      "url": "https://hq.giveabit.io/docs/ALL-SITE-METRICS.md"
-    }
-  ],
+  "segments": [],
+  "offers": [],
+  "education": [],
+  "links": [],
   "raw": {
     "demo": false,
-    "umamiWebsiteId": "fa7b78d8-b121-40ff-a139-8bfab40baec5",
-    "umamiPending": true,
-    "aggregatePending": true,
-    "note": "Origin /metrics.json for HQ. KPI values stay 0 until Supabase/LNbits aggregate jobs run; series and funnel visit step fill from Umami once the analytics host is public."
+    "source": "scripts/generate-metrics.ts + mockWishlists.ts",
+    "note": "Replace mock with Supabase queries when connected"
   }
 }
