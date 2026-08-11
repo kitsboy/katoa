@@ -27,15 +27,9 @@
 /manifest.json
   Cache-Control: public, max-age=86400
 
-# Content-Type for CSS
-/assets/*.css
-  Content-Type: text/css
-
-# Content-Type for JS
-/assets/*.js
-  Content-Type: application/javascript
-
-# Cache static assets 1 year
+# Hashed Vite assets — long cache. Do NOT force Content-Type here:
+# overriding text/css|application/javascript on SPA/404 fallbacks
+# caused CF to cache index.html as "CSS" (Origin-keyed), breaking the site.
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
 

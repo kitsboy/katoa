@@ -1,1 +1,5 @@
 /compare /comparison 301
+
+# Missing /assets/* must hard-404 — never fall through to the SPA shell.
+# (SPA HTML cached as text/css under /assets/*.css poisons the site for a year.)
+/assets/*  /404.html  404
