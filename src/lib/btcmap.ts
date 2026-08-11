@@ -6,7 +6,22 @@
  */
 
 export const BTCMAP_ATTRIBUTION =
-  'Map data © BTC Map · OpenStreetMap contributors · OpenFreeMap';
+  'Map data © BTC Map · © OpenStreetMap · © CARTO';
+
+/**
+ * Free dark raster basemap for Leaflet (no API key).
+ * Note: OpenFreeMap is vector-only (MapLibre styles) — do NOT use
+ * tiles.openfreemap.org/osm/{z}/{x}/{y}.png (403 / broken tiles).
+ */
+export const LEAFLET_BASEMAP_URL =
+  'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+
+export const LEAFLET_BASEMAP_OPTIONS = {
+  attribution:
+    '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>',
+  subdomains: 'abcd',
+  maxZoom: 20,
+} as const;
 
 const PRODUCTION_API = 'https://api.btcmap.org';
 const PRODUCTION_APP = 'https://btcmap.org';

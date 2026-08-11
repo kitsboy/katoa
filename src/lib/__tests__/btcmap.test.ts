@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { escapeMapPopupText, zoomToRadiusKm } from '../btcmap';
+import {
+  escapeMapPopupText,
+  LEAFLET_BASEMAP_URL,
+  zoomToRadiusKm,
+} from '../btcmap';
 
 describe('escapeMapPopupText', () => {
   it('escapes HTML special characters', () => {
@@ -37,5 +41,12 @@ describe('zoomToRadiusKm', () => {
   it('returns 500 km below zoom 10', () => {
     expect(zoomToRadiusKm(9)).toBe(500);
     expect(zoomToRadiusKm(2)).toBe(500);
+  });
+});
+
+describe('LEAFLET_BASEMAP_URL', () => {
+  it('uses a working raster provider (not broken openfreemap /osm/*.png)', () => {
+    expect(LEAFLET_BASEMAP_URL).not.toMatch(/tiles\.openfreemap\.org\/osm/);
+    expect(LEAFLET_BASEMAP_URL).toMatch(/\{z\}.*\{x\}.*\{y\}/);
   });
 });

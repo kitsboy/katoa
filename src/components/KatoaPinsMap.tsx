@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Link } from './Link';
 import type { KatoaMapPin } from '../lib/btcmap';
 import type { BTCMapCoordinates } from '../lib/btcmap';
+import { LEAFLET_BASEMAP_OPTIONS, LEAFLET_BASEMAP_URL } from '../lib/btcmap';
 import 'leaflet/dist/leaflet.css';
 
 interface KatoaPinsMapProps {
@@ -44,24 +45,14 @@ export function KatoaPinsMap({
         scrollWheelZoom: true,
       });
 
-      L.tileLayer('https://tiles.openfreemap.org/osm/{z}/{x}/{y}.png', {
-        attribution: '© OpenFreeMap · © OpenStreetMap',
-        maxZoom: 19,
-      }).addTo(map);
+      L.tileLayer(LEAFLET_BASEMAP_URL, { ...LEAFLET_BASEMAP_OPTIONS }).addTo(map);
 
       const icon = L.divIcon({
-        className: 'katoa-pin-marker',
-        html: `<div style="
-          width:28px;height:28px;
-          background:linear-gradient(135deg,#F7931A,#f59e0b);
-          border:2px solid #fff;
-          border-radius:50% 50% 50% 0;
-          transform:rotate(-45deg);
-          box-shadow:0 0 12px rgba(247,147,26,0.6);
-        "></div>`,
-        iconSize: [28, 28],
-        iconAnchor: [14, 28],
-        popupAnchor: [0, -28],
+        className: 'katoa-pin-marker leaflet-div-icon',
+        html: `<div class="katoa-map-pin" aria-hidden="true"><span class="katoa-map-pin__dot">K</span></div>`,
+        iconSize: [28, 36],
+        iconAnchor: [14, 34],
+        popupAnchor: [0, -30],
       });
 
       const bounds = L.latLngBounds([]);

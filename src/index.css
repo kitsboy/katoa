@@ -1387,11 +1387,24 @@ html[data-katoa-build="2026-08-11-cssfix"] {
   font-family: inherit;
 }
 
+/* Leaflet divIcon: strip default white square so only our pin shows */
 .katoa-pin-marker,
 .katoa-logo-marker,
-.btc-merchant-marker {
+.btc-merchant-marker,
+.leaflet-div-icon.katoa-pin-marker,
+.leaflet-div-icon.btc-merchant-marker {
   background: transparent !important;
   border: none !important;
+  box-shadow: none !important;
+}
+
+/* Prevent any marker img (legacy logo pins) from exploding to full asset size */
+.leaflet-marker-icon img,
+.katoa-logo-pin img {
+  width: 16px !important;
+  height: 16px !important;
+  max-width: 16px !important;
+  object-fit: contain;
 }
 
 .leaflet-popup-content-wrapper {
@@ -1561,6 +1574,11 @@ html[data-katoa-build="2026-08-11-cssfix"] {
   box-shadow: 0 0 8px rgba(20, 230, 255, 0.7);
 }
 
+.unified-btcmap__layer-dot--katoa {
+  background: #f7931a;
+  box-shadow: 0 0 8px rgba(247, 147, 26, 0.7);
+}
+
 .unified-btcmap__layer-count {
   font-size: 0.65rem;
   font-weight: 700;
@@ -1610,6 +1628,12 @@ html[data-katoa-build="2026-08-11-cssfix"] {
 
 .unified-btcmap__legend-swatch--merchant {
   background: #14e6ff;
+}
+
+.unified-btcmap__legend-swatch--katoa {
+  background: #f7931a;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg) scale(0.85);
 }
 
 .unified-btcmap__empty-overlay {
@@ -1688,45 +1712,69 @@ html[data-katoa-build="2026-08-11-cssfix"] {
   text-align: center;
 }
 
-/* Map pin markers */
-.katoa-logo-pin {
-  width: 36px;
-  height: 36px;
+/* Map pin markers — compact teardrops (no full-size brand assets) */
+.katoa-map-pin {
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(145deg, #1a1a24, #0a0a0f);
-  border: 2px solid #f7931a;
+  background: linear-gradient(145deg, #ff9a1a, #f7931a 45%, #c2410c);
+  border: 2px solid #fff;
   border-radius: 50% 50% 50% 0;
   transform: rotate(-45deg);
-  box-shadow: 0 0 16px rgba(247, 147, 26, 0.55), 0 4px 8px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 12px rgba(247, 147, 26, 0.55), 0 3px 8px rgba(0, 0, 0, 0.45);
 }
 
-.katoa-logo-pin img {
+.katoa-map-pin__dot {
   transform: rotate(45deg);
-  border-radius: 4px;
-  object-fit: contain;
+  font-size: 11px;
+  font-weight: 900;
+  color: #0a0a0f;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  user-select: none;
+}
+
+/* Legacy class kept if any old markup remains — no <img> */
+.katoa-logo-pin {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, #ff9a1a, #f7931a);
+  border: 2px solid #fff;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  box-shadow: 0 0 12px rgba(247, 147, 26, 0.5);
 }
 
 .btc-merchant-pin {
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 800;
   color: #050509;
   background: linear-gradient(135deg, #14e6ff, #06b6d4);
   border: 2px solid #fff;
   border-radius: 50% 50% 50% 0;
   transform: rotate(-45deg);
-  box-shadow: 0 0 12px rgba(20, 230, 255, 0.5);
+  box-shadow: 0 0 10px rgba(20, 230, 255, 0.5);
+  line-height: 1;
 }
 
 .btc-merchant-pin--boosted {
   background: linear-gradient(135deg, #fbbf24, #f7931a);
-  box-shadow: 0 0 14px rgba(251, 191, 36, 0.65);
+  box-shadow: 0 0 12px rgba(251, 191, 36, 0.65);
+}
+
+/* Keep tile images from stretching if a request ever returns non-tile content */
+.leaflet-tile {
+  max-width: none !important;
 }
 
 /* Leaflet popups — dark theme */

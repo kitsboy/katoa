@@ -6,6 +6,8 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { getStorage, setStorage, STORAGE_KEYS } from '../lib/storage';
 import {
   BTCMAP_ATTRIBUTION,
+  LEAFLET_BASEMAP_OPTIONS,
+  LEAFLET_BASEMAP_URL,
   type BTCMapCoordinates,
   type KatoaMapPin,
   buildBTCMapPlaceUrl,
@@ -28,25 +30,24 @@ function formatSats(n: number): string {
   return new Intl.NumberFormat().format(n);
 }
 
+/** Clean orange teardrop — no brand logo image (avoids logo smear on basemap). */
 function createKatoaIcon(L: typeof import('leaflet')) {
   return L.divIcon({
-    className: 'katoa-logo-marker',
-    html: `<div class="katoa-logo-pin" aria-hidden="true">
-      <img src="/logo2.png" alt="" width="22" height="22" />
-    </div>`,
-    iconSize: [36, 36],
-    iconAnchor: [18, 36],
-    popupAnchor: [0, -32],
+    className: 'katoa-pin-marker leaflet-div-icon',
+    html: `<div class="katoa-map-pin" aria-hidden="true"><span class="katoa-map-pin__dot">K</span></div>`,
+    iconSize: [28, 36],
+    iconAnchor: [14, 34],
+    popupAnchor: [0, -30],
   });
 }
 
 function createMerchantIcon(L: typeof import('leaflet'), boosted = false) {
   return L.divIcon({
-    className: 'btc-merchant-marker',
+    className: 'btc-merchant-marker leaflet-div-icon',
     html: `<div class="btc-merchant-pin${boosted ? ' btc-merchant-pin--boosted' : ''}" aria-hidden="true">₿</div>`,
-    iconSize: [26, 26],
-    iconAnchor: [13, 26],
-    popupAnchor: [0, -22],
+    iconSize: [26, 32],
+    iconAnchor: [13, 30],
+    popupAnchor: [0, -26],
   });
 }
 
@@ -190,10 +191,7 @@ export function UnifiedBTCMap({
         scrollWheelZoom: true,
       });
 
-      L.tileLayer('https://tiles.openfreemap.org/osm/{z}/{x}/{y}.png', {
-        attribution: '© OpenFreeMap · © OpenStreetMap',
-        maxZoom: 19,
-      }).addTo(map);
+      L.tileLayer(LEAFLET_BASEMAP_URL, { ...LEAFLET_BASEMAP_OPTIONS }).addTo(map);
 
       L.control.zoom({ position: 'bottomright' }).addTo(map);
 
@@ -349,7 +347,7 @@ export function UnifiedBTCMap({
             onClick={() => setShowKatoa((v) => !v)}
             aria-pressed={showKatoa}
           >
-            <img src="/logo2.png" alt="" width={16} height={16} className="rounded-sm" aria-hidden />
+            <span className="unified-btcmap__layer-dot unified-btcmap__layer-dot--katoa" aria-hidden />
             <span>{t('map.katoa')}</span>
             <span className="unified-btcmap__layer-count">{katoaPins.length}</span>
           </button>
@@ -418,8 +416,14 @@ export function UnifiedBTCMap({
         />
 
         <div className="unified-btcmap__legend">
-          <span><span className="unified-btcmap__legend-swatch unified-btcmap__legend-swatch--merchant" /> ₿ {t('map.legendMerchant')}</span>
-          <span><img src="/logo2.png" alt="" width={14} height={14} className="rounded-sm" aria-hidden /> {t('map.legendKatoa')}</span>
+          <span>
+            <span className="unified-btcmap__legend-swatch unified-btcmap__legend-swatch--merchant" aria-hidden />
+            ₿ {t('map.legendMerchant')}
+          </span>
+          <span>
+            <span className="unified-btcmap__legend-swatch unified-btcmap__legend-swatch--katoa" aria-hidden />
+            {t('map.legendKatoa')}
+          </span>
         </div>
       </div>
 
