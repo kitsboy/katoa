@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { useLocation } from 'react-router-dom';
 import { Link } from './Link';
 import { Button } from './Button';
@@ -9,19 +10,45 @@ import { CurrencySelector } from './CurrencySelector';
 import { OfflineIndicator } from './OfflineIndicator';
 import { getBitcoinPrice, formatUsd } from '../lib/bitcoinPrice';
 
+type LangMenuPos = { top: number; left: number; maxHeight: number };
+
 export function Navbar() {
   const { user, profile, signOut } = useAuth();
   const { language, setLanguage, t } = useLanguage();
   const location = useLocation();
   const [showMenu, setShowMenu] = useState(false);
   const [showLangMenu, setShowLangMenu] = useState(false);
+  const [langMenuPos, setLangMenuPos] = useState<LangMenuPos | null>(null);
   const [btcPrice, setBtcPrice] = useState<number | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const langMenuRef = useRef<HTMLDivElement>(null);
+  const langTriggerRef = useRef<HTMLDivElement>(null);
+  const langListRef = useRef<HTMLDivElement>(null);
 
   const isActive = (path: string) => location.pathname === path;
   const isHomeHero = location.pathname === '/' && !scrolled;
+
+  const updateLangMenuPos = useCallback(() => {
+    const trigger = langTriggerRef.current;
+    if (!trigger) return;
+    const rect = trigger.getBoundingClientRect();
+    const menuWidth = 192; // w-48
+    const gap = 8;
+    const viewportPad = 8;
+    const spaceBelow = window.innerHeight - rect.bottom - gap - viewportPad;
+    const spaceAbove = rect.top - gap - viewportPad;
+    // Prefer opening below; flip up only when below is too tight and above has more room
+    const openAbove = spaceBelow < 220 && spaceAbove > spaceBelow;
+    const maxHeight = Math.max(160, Math.min(openAbove ? spaceAbove : spaceBelow, 360));
+    const top = openAbove
+      ? Math.max(viewportPad, rect.top - gap - maxHeight)
+      : rect.bottom + gap;
+    const left = Math.min(
+      Math.max(viewportPad, rect.right - menuWidth),
+      window.innerWidth - menuWidth - viewportPad,
+    );
+    setLangMenuPos({ top, left, maxHeight });
+  }, []);
 
   useEffect(() => {
     setShowMenu(false);
@@ -67,24 +94,42 @@ export function Navbar() {
     };
   }, [showMenu]);
 
+  useLayoutEffect(() => {
+    if (!showLangMenu) {
+      setLangMenuPos(null);
+      return;
+    }
+    updateLangMenuPos();
+  }, [showLangMenu, updateLangMenuPos]);
+
   useEffect(() => {
+    if (!showLangMenu) return;
+
     const handleClickOutside = (event: MouseEvent) => {
-      if (langMenuRef.current && !langMenuRef.current.contains(event.target as Node)) {
-        setShowLangMenu(false);
-      }
+      const target = event.target as Node;
+      if (langTriggerRef.current?.contains(target)) return;
+      if (langListRef.current?.contains(target)) return;
+      setShowLangMenu(false);
     };
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setShowLangMenu(false);
     };
-    if (showLangMenu) {
-      document.addEventListener('mousedown', handleClickOutside);
-      document.addEventListener('keydown', handleEscape);
-    }
+    const handleReposition = () => updateLangMenuPos();
+    const handleScrollClose = () => setShowLangMenu(false);
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleEscape);
+    window.addEventListener('resize', handleReposition);
+    // Close on page scroll so fixed coords don't drift (menu's own overflow scroll is fine)
+    window.addEventListener('scroll', handleScrollClose, { passive: true });
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('keydown', handleEscape);
+      window.removeEventListener('resize', handleReposition);
+      window.removeEventListener('scroll', handleScrollClose);
     };
-  }, [showLangMenu]);
+  }, [showLangMenu, updateLangMenuPos]);
 
   return (
     <>
@@ -151,7 +196,7 @@ export function Navbar() {
                 </div>
               )}
 
-              <div className="relative" ref={langMenuRef}>
+              <div className="relative" ref={langTriggerRef}>
                 <button
                   onClick={() => setShowLangMenu(!showLangMenu)}
                   className={`flex items-center justify-center w-9 h-9 rounded-full border transition-colors text-lg ${
@@ -166,25 +211,6 @@ export function Navbar() {
                 >
                   {languageFlags[language]}
                 </button>
-                {showLangMenu && (
-                  <div id="lang-menu-list" role="listbox" className="absolute right-0 mt-2 w-48 nav-island nav-island-scrolled rounded-xl py-2 z-50">
-                    {Object.entries(languageFlags).map(([lang, flag]) => (
-                      <button
-                        key={lang}
-                        role="option"
-                        aria-selected={language === lang}
-                        onClick={() => {
-                          setLanguage(lang as Language);
-                          setShowLangMenu(false);
-                        }}
-                        className="w-full px-4 py-2.5 min-h-[44px] text-left hover:bg-white/5 text-gray-100 flex items-center gap-3 transition-colors"
-                      >
-                        <span className="text-xl" aria-hidden>{flag}</span>
-                        <span className="text-sm font-semibold">{languageNames[lang as keyof typeof languageNames]}</span>
-                      </button>
-                    ))}
-                  </div>
-                )}
               </div>
 
               {user ? (
@@ -280,6 +306,47 @@ export function Navbar() {
         </div>
         </nav>
       </header>
+
+      {showLangMenu &&
+        langMenuPos &&
+        createPortal(
+          <div
+            id="lang-menu-list"
+            ref={langListRef}
+            role="listbox"
+            className="fixed w-48 rounded-xl py-2 shadow-2xl border border-white/10 bg-charcoal-950/95 backdrop-blur-xl overflow-y-auto overscroll-contain"
+            style={{
+              top: langMenuPos.top,
+              left: langMenuPos.left,
+              maxHeight: langMenuPos.maxHeight,
+              zIndex: 100000,
+            }}
+          >
+            {Object.entries(languageFlags).map(([lang, flag]) => (
+              <button
+                key={lang}
+                type="button"
+                role="option"
+                aria-selected={language === lang}
+                onClick={() => {
+                  setLanguage(lang as Language);
+                  setShowLangMenu(false);
+                }}
+                className={`w-full px-4 py-2.5 min-h-[44px] text-left hover:bg-white/5 flex items-center gap-3 transition-colors ${
+                  language === lang ? 'text-neon-cyan-400 bg-neon-cyan/5' : 'text-gray-100'
+                }`}
+              >
+                <span className="text-xl" aria-hidden>
+                  {flag}
+                </span>
+                <span className="text-sm font-semibold">
+                  {languageNames[lang as keyof typeof languageNames]}
+                </span>
+              </button>
+            ))}
+          </div>,
+          document.body,
+        )}
 
       {showMenu && (
         <>
