@@ -1,3 +1,15 @@
+## REMINDER — 2026-08-11 — Nostr rollout + vault nsec
+
+**Safe rollout:** (1) NIP-05 live verify (2) relays+CSP (3) NIP-65+zaps (4) NIP-17 chat later.
+
+**Not this pass:** Edge NIP-07 login · dynamic creator@katoa.org · self-hosted relay · full NIP-17 UI · commit nsec.
+
+**Cam action:** Backup `.nostr-platform-secret.local.json` → THOR vault, then delete local. Without nsec cannot sign as katoa@katoa.org.
+
+See `docs/NOSTR-REMINDERS.md`.
+
+---
+
 ## 2026-08-10 — Kimi/THOR: Lighthouse sweep (DONE, deployed)
 Full site optimization sweep completed end-to-end (sw.js 206-crash fix, console-error elimination, a11y + SEO + security pass). See LATEST-UPDATE.md (top) for per-site summary + commit. Scores re-verified by Kimi. Before touching code, re-check the live Lighthouse state; do not regress: sw.js cache guards (status 200 only), CSP analytics allowlist, image width/height attrs, aria-labels on form controls.
 
