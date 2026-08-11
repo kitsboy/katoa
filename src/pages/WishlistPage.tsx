@@ -499,8 +499,11 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
         />
       )}
       {isDemoWishlist && (
-        <div className="bg-bitcoin-orange-500/10 border-b border-bitcoin-orange-500/30 px-4 py-2 text-center text-sm text-bitcoin-orange-200">
-          Demo wishlist — payments auto-complete after 3 seconds for preview.
+        <div className="bg-bitcoin-orange-500/10 border-b border-bitcoin-orange-500/30 px-4 py-2.5 text-center text-sm text-bitcoin-orange-200 flex flex-wrap items-center justify-center gap-2">
+          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-bitcoin-orange-500/20 border border-bitcoin-orange-500/40">
+            Demo
+          </span>
+          <span>Sample wishlist for preview — payments auto-complete after 3s. Not a live creator account.</span>
         </div>
       )}
       <div className={`relative ${wishlist.card_style === 'creator' || wishlist.cover_video_url ? 'bg-charcoal-950' : ''}`}>
@@ -660,8 +663,11 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             )}
 
             <Card className=" p-6 space-y-4">
+              <p className="text-[11px] text-center text-gray-500 leading-relaxed">
+                0% platform fees · non-custodial · sats go to the creator
+              </p>
               <Button
-                className="w-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 font-black text-lg py-4 shadow-[0_0_30px_rgba(255,135,0,0.3)]"
+                className="w-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 font-black text-lg py-4 min-h-[52px] shadow-[0_0_30px_rgba(255,135,0,0.3)]"
                 onClick={() => handleGiftClick()}
                 title="Support this wishlist with Bitcoin"
               >
@@ -671,7 +677,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
 
               <Button
                 variant="outline"
-                className="w-full border-white/10 text-gray-300 hover:bg-gray-800 hover:border-orange-500/50 font-bold py-4"
+                className="w-full border-white/10 text-gray-300 hover:bg-gray-800 hover:border-orange-500/50 font-bold py-4 min-h-[48px]"
                 onClick={() => {
                   setQrAddress('bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh');
                   setQrAmount(undefined);
@@ -989,14 +995,14 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
         title={wishlist ? `Send to ${wishlist.title}` : 'Send Bitcoin'}
       />
 
-      {/* Sticky mobile CTA */}
-      <div className="md:hidden fixed bottom-[calc(56px+env(safe-area-inset-bottom))] inset-x-0 z-40 px-4 pb-2 pointer-events-none">
-        <div className="pointer-events-auto max-w-lg mx-auto flex gap-2 p-2 rounded-2xl bg-charcoal-950/95 backdrop-blur-xl border border-white/10 shadow-[0_-8px_32px_rgba(0,0,0,0.5)]">
+      {/* Sticky mobile CTA — above bottom nav, safe-area aware */}
+      <div className="md:hidden fixed bottom-[calc(3.5rem+env(safe-area-inset-bottom))] inset-x-0 z-40 px-3 pb-2 pointer-events-none">
+        <div className="pointer-events-auto max-w-lg mx-auto flex gap-2 p-2 rounded-2xl bg-charcoal-950/95 backdrop-blur-xl border border-white/10 shadow-[0_-8px_32px_rgba(0,0,0,0.55)]">
           <Button
-            className="flex-1 bg-gradient-to-r from-bitcoin-orange-500 to-amber-600 font-bold min-h-[48px]"
+            className="flex-1 bg-gradient-to-r from-bitcoin-orange-500 to-amber-600 font-bold min-h-[48px] text-sm"
             onClick={() => handleGiftClick()}
           >
-            <Gift size={18} className="mr-2" />
+            <Gift size={18} className="mr-1.5 shrink-0" />
             {t('wishlist.sendGift')}
           </Button>
           <Button

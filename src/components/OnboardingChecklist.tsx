@@ -15,6 +15,7 @@ const items: ChecklistItem[] = [
   { id: 'wallet', labelKey: 'onboarding.item.wallet', href: '/settings' },
   { id: 'wishlist', labelKey: 'onboarding.item.wishlist', href: '/dashboard' },
   { id: 'share', labelKey: 'onboarding.item.share', href: '/explore' },
+  { id: 'firstsat', labelKey: 'onboarding.item.firstsat', href: '/explore' },
 ];
 
 function loadProgress(): Record<string, boolean> {

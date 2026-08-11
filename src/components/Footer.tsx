@@ -166,6 +166,7 @@ export function Footer() {
                   <FooterLink href="/pricing">{t('footer.pricing')}</FooterLink>
                   <FooterLink href="/contact">{t('footer.contact')}</FooterLink>
                   <FooterLink href="/comparison">Why Katoa</FooterLink>
+                  <FooterLink href="/pitch">Pitch</FooterLink>
                 </ul>
               </div>
               <div>
@@ -175,8 +176,10 @@ export function Footer() {
                 <ul className="space-y-2.5">
                   <FooterLink href="/explore">Explore</FooterLink>
                   <FooterLink href="/explore?videos=1">Video Creators</FooterLink>
+                  <FooterLink href="/templates">Templates</FooterLink>
                   <FooterLink href="/dashboard">Dashboard</FooterLink>
                   <FooterLink href="/faq">FAQ</FooterLink>
+                  <FooterLink href="/roadmap">Roadmap</FooterLink>
                   <FooterLink href="/auth">Sign In</FooterLink>
                 </ul>
               </div>
@@ -185,6 +188,7 @@ export function Footer() {
                   {t('footer.legal')}
                 </h3>
                 <ul className="space-y-2.5 sm:flex sm:flex-wrap sm:gap-x-6 sm:gap-y-2.5 sm:space-y-0">
+                  <FooterLink href="/security">Security</FooterLink>
                   <FooterLink href="/terms">{t('footer.terms')}</FooterLink>
                   <FooterLink href="/privacy">{t('footer.privacy')}</FooterLink>
                 </ul>

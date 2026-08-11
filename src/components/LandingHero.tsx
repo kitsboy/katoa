@@ -75,7 +75,7 @@ function ProductScreenshot() {
                 <p className="lp-shot-creator-name">@{FEATURED.creator}</p>
                 <p className="lp-shot-creator-meta">carlos@getalby.com</p>
               </div>
-              <span className="lp-shot-live">Live</span>
+              <span className="lp-shot-live" title="Sample product preview">Demo</span>
             </div>
 
             <div className="lp-shot-progress">

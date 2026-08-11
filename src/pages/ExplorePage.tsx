@@ -134,6 +134,11 @@ const WishlistCard = memo(function WishlistCard({
             className="!aspect-[16/11]"
           topLeft={
             <>
+              {(wishlist.id.startsWith('mock') || wishlist.slug?.includes('demo')) && (
+                <span className="px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-bitcoin-orange-500/90 text-white border border-white/20">
+                  Demo
+                </span>
+              )}
               {isTrending && <TrendingBadge type="trending" />}
               {isNew && !isTrending && <TrendingBadge type="new" />}
             </>

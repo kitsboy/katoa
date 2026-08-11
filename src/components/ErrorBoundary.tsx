@@ -11,19 +11,25 @@ interface State {
   errorId: string | null;
 }
 
-function ErrorFallback({ onRetry }: { onRetry: () => void }) {
+function ErrorFallback({ onRetry, errorId }: { onRetry: () => void; errorId: string | null }) {
   const { t } = useLanguage();
   return (
-    <div className="min-h-[50vh] flex items-center justify-center px-4" role="alert">
-      <div className="text-center max-w-md">
+    <div className="min-h-[50vh] flex items-center justify-center px-4 py-12" role="alert">
+      <div className="text-center max-w-md w-full">
         <h2 className="text-xl font-bold text-white mb-2">{t('errorBoundary.title')}</h2>
-        <p className="text-gray-400 mb-6">{t('errorBoundary.message')}</p>
-        <div className="flex flex-wrap items-center justify-center gap-3">
-          <Button variant="secondary" onClick={onRetry}>
+        <p className="text-gray-400 mb-4 leading-relaxed">{t('errorBoundary.message')}</p>
+        {errorId && (
+          <p className="text-[11px] font-mono text-gray-600 mb-6">Ref: {errorId}</p>
+        )}
+        <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-center gap-3">
+          <Button variant="secondary" onClick={onRetry} className="min-h-[48px] w-full sm:w-auto">
             {t('errorBoundary.tryAgain')}
           </Button>
-          <Button variant="primary" onClick={() => window.location.assign('/')}>
+          <Button variant="primary" onClick={() => window.location.assign('/')} className="min-h-[48px] w-full sm:w-auto">
             {t('errorBoundary.goHome')}
+          </Button>
+          <Button variant="outline" onClick={() => window.location.assign('/faq')} className="min-h-[48px] w-full sm:w-auto">
+            FAQ
           </Button>
         </div>
       </div>
@@ -44,7 +50,12 @@ export class ErrorBoundary extends Component<Props, State> {
 
   render() {
     if (this.state.hasError) {
-      return <ErrorFallback onRetry={() => this.setState({ hasError: false, errorId: null })} />;
+      return (
+        <ErrorFallback
+          errorId={this.state.errorId}
+          onRetry={() => this.setState({ hasError: false, errorId: null })}
+        />
+      );
     }
     return this.props.children;
   }

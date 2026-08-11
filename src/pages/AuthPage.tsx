@@ -173,6 +173,9 @@ export function AuthPage() {
             <p className="text-gray-400">
               {isSignUp ? 'Start creating your wishlists today' : 'Sign in to continue to your dashboard'}
             </p>
+            <p className="mt-3 text-[11px] text-gray-500 leading-relaxed">
+              0% platform fees · non-custodial · we never hold your sats
+            </p>
           </div>
 
           {error && (

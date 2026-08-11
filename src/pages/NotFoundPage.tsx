@@ -13,15 +13,16 @@ export function NotFoundPage() {
       <div className="text-center max-w-md animate-slide-up">
         <p className="text-8xl font-display font-black text-neon-cyan-500/30 mb-4">404</p>
         <h1 className="text-2xl sm:text-3xl font-display font-bold text-white mb-3">{t('notfound.title')}</h1>
-        <p className="text-gray-400 mb-8">{t('notfound.subtitle')}</p>
+        <p className="text-gray-400 mb-4">{t('notfound.subtitle')}</p>
+        <p className="text-xs text-gray-600 mb-8">0% fees · non-custodial · open source</p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link href="/">
-            <Button variant="primary" size="lg" className="w-full sm:w-auto min-w-[180px]">
+            <Button variant="primary" size="lg" className="w-full sm:w-auto min-w-[180px] min-h-[48px]">
               <Home size={18} className="mr-2" /> {t('notfound.backHome')}
             </Button>
           </Link>
           <Link href="/explore">
-            <Button variant="outline" size="lg" className="w-full sm:w-auto min-w-[180px]">
+            <Button variant="outline" size="lg" className="w-full sm:w-auto min-w-[180px] min-h-[48px]">
               <Compass size={18} className="mr-2" /> {t('nav.explore')}
             </Button>
           </Link>

@@ -499,6 +499,8 @@ export function DashboardPage() {
               description={t('dashboard.empty.description')}
               actionLabel={t('dashboard.empty.action')}
               onAction={() => setShowCreateModal(true)}
+              secondaryLabel="Browse templates"
+              secondaryHref="/templates"
             />
           </Card>
         ) : (

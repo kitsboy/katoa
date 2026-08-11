@@ -7,7 +7,19 @@
 
 /* CF cache-bust marker (kept in production CSS to mint a new hashed asset URL) */
 html[data-katoa-build="2026-08-11-cssfix"] {
-  --katoa-css-rev: 1;
+  --katoa-css-rev: 2;
+}
+
+/* Respect user motion preferences — keep glory accessible */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 :root {

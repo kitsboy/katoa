@@ -30,8 +30,12 @@ const faqs: FAQItem[] = [
   { category: 'Technical', question: 'What are zero-knowledge proofs?', answer: 'Cryptographic proofs that verify facts without revealing underlying data — part of our privacy roadmap.' },
   { category: 'Technical', question: 'How do I set up a Lightning wallet?', answer: 'Use Phoenix, Wallet of Satoshi, Muun, or self-hosted LND/CLN. Add your Lightning address in Settings.' },
   { category: 'Technical', question: 'Is KATOA open source?', answer: 'Yes — MIT licensed. Audit, fork, or self-host the frontend.', link: 'https://github.com/kitsboy/katoa' },
-  { category: 'Security', question: 'How secure is KATOA?', answer: 'We never hold your keys or funds. Industry-standard encryption for account data.' },
+  { category: 'Security', question: 'How secure is KATOA?', answer: 'We never hold your keys or funds. Industry-standard encryption for account data. Read the full model on the Security page.', link: '/security' },
   { category: 'Security', question: 'What if I lose access?', answer: 'Email accounts can use password recovery. If you linked Nostr in Settings, your extension keys still control Nostr identity — app login uses email/Google until secure Nostr auth ships.' },
+  { category: 'Trust & fees', question: 'Who holds the sats during a gift?', answer: 'Nobody intermediate. You pay the creator’s Lightning address or on-chain wallet. KATOA does not operate a hot wallet for user funds.', link: '/security' },
+  { category: 'Trust & fees', question: 'How do I verify 0% fees?', answer: 'There is no platform take rate in product design. Compare legacy fee math on Why KATOA, audit the open-source frontend, and watch sats land in the creator wallet you control.', link: '/comparison' },
+  { category: 'Trust & fees', question: 'Are explore projects real?', answer: 'Some catalog entries are labeled Demo for product preview. Live creator accounts use real payment destinations once wallets are configured. Demo badges appear on sample content.', link: '/explore' },
+  { category: 'Trust & fees', question: 'What is on the public roadmap?', answer: 'Shipped work and next priorities are listed on the in-app roadmap and in docs/ROADMAP.md on GitHub.', link: '/roadmap' },
 ];
 
 const categories = Array.from(new Set(faqs.map((f) => f.category)));

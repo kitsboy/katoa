@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { Link } from '../components/Link';
 import { LandingHero } from '../components/LandingHero';
 import { LandingTrustBar } from '../components/LandingTrustBar';
+import { TrustProofStrip } from '../components/TrustProofStrip';
 import { PageMeta } from '../components/PageMeta';
 import { SectionHeader } from '../components/SectionHeader';
 import { useLanguage } from '../contexts/LanguageContext';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { fetchProductMetrics, homeStatsFromMetrics, type HomeStats } from '../lib/productMetrics';
 import { ArrowRight, Zap, Shield, Globe } from 'lucide-react';
 
 import { FeeComparison } from '../components/FeeComparison';
@@ -26,29 +28,43 @@ const pillars = [
 
 export function HomePage() {
   const { t } = useLanguage();
-  const [stats, setStats] = useState({ creators: '2.5K', volume: '₿1.2M', countries: '195+' });
-  const [statsUnavailable, setStatsUnavailable] = useState(false);
+  const [stats, setStats] = useState<HomeStats>({
+    creators: '—',
+    volume: '—',
+    countries: '195+',
+    source: 'unavailable',
+    isDemoSample: false,
+  });
 
   useEffect(() => {
     loadStats();
   }, []);
 
   async function loadStats() {
+    // Prefer public metrics.json (honest, labeled sample until live counters exist)
+    const metrics = await fetchProductMetrics();
+    if (metrics) {
+      setStats(homeStatsFromMetrics(metrics));
+    }
+
     if (!isSupabaseConfigured()) {
-      setStatsUnavailable(true);
+      if (!metrics) {
+        setStats((prev) => ({ ...prev, source: 'unavailable' }));
+      }
       return;
     }
     try {
-      const { count } = await supabase
-        .from('profiles')
-        .select('*', { count: 'exact', head: true });
-
-      if (count) {
-        setStats((prev) => ({ ...prev, creators: `${(count / 1000).toFixed(1)}K` }));
-        setStatsUnavailable(false);
+      const { count } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
+      if (typeof count === 'number' && count > 0) {
+        setStats((prev) => ({
+          ...prev,
+          creators: count >= 1000 ? `${(count / 1000).toFixed(1)}K` : String(count),
+          source: 'supabase',
+          isDemoSample: false,
+        }));
       }
     } catch {
-      setStatsUnavailable(true);
+      /* keep metrics.json / unavailable */
     }
   }
 
@@ -60,9 +76,14 @@ export function HomePage() {
         path="/"
       />
 
-      {statsUnavailable && (
-        <p className="text-center text-xs text-gray-400 py-2" role="status">
+      {stats.source === 'unavailable' && (
+        <p className="text-center text-xs text-gray-500 py-2 px-4" role="status">
           {t('home.statsUnavailable')}
+        </p>
+      )}
+      {stats.isDemoSample && stats.source === 'metrics' && (
+        <p className="text-center text-xs text-bitcoin-orange-400/90 py-2 px-4" role="status">
+          {t('home.statsSample')}
         </p>
       )}
 
@@ -80,10 +101,14 @@ export function HomePage() {
           countries: stats.countries,
           creators: stats.creators,
           feesLabel: t('home.stats.fees'),
-          processedLabel: t('home.stats.processed'),
+          processedLabel: stats.isDemoSample ? t('home.stats.sampleRaised') : t('home.stats.processed'),
           countriesLabel: t('home.stats.countries'),
         }}
       />
+
+      <div className="lp-container -mt-2 mb-4 sm:mb-6">
+        <TrustProofStrip />
+      </div>
 
       <LandingTrustBar />
 

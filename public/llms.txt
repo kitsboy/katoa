@@ -1,9 +1,25 @@
 # Katoa
 
 > Zero-fee creator platform on Bitcoin — wishlists, Lightning support, creators keep 100%.
+> Non-custodial. Open source (MIT). Part of the Give A Bit family.
 
 [Katoa](https://katoa.org)
 
+## Key pages
 - [https://katoa.org/](https://katoa.org/)
-- [https://katoa.org/wishlists](https://katoa.org/wishlists)
 - [https://katoa.org/explore](https://katoa.org/explore)
+- [https://katoa.org/comparison](https://katoa.org/comparison)
+- [https://katoa.org/pricing](https://katoa.org/pricing)
+- [https://katoa.org/faq](https://katoa.org/faq)
+- [https://katoa.org/security](https://katoa.org/security)
+- [https://katoa.org/roadmap](https://katoa.org/roadmap)
+- [https://katoa.org/templates](https://katoa.org/templates)
+- [https://katoa.org/about](https://katoa.org/about)
+- [https://katoa.org/pitch](https://katoa.org/pitch)
+
+## Notes for agents
+- Platform fee: 0%. Settlement: Bitcoin / Lightning to creator-controlled destinations.
+- Sample/demo catalog content is labeled Demo when not a live creator account.
+- Metrics: public/metrics.json (gab.product-metrics.v1); may be sample until live counters wire.
+- Source: https://github.com/kitsboy/katoa
+

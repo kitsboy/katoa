@@ -31,6 +31,9 @@ const AuthPage = lazy(() => import('./pages/AuthPage').then((m) => ({ default: m
 const FAQPage = lazy(() => import('./pages/FAQPage').then((m) => ({ default: m.FAQPage })));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage').then((m) => ({ default: m.NotFoundPage })));
 const PitchPage = lazy(() => import('./pages/PitchPage').then((m) => ({ default: m.PitchPage })));
+const SecurityPage = lazy(() => import('./pages/SecurityPage').then((m) => ({ default: m.SecurityPage })));
+const RoadmapPage = lazy(() => import('./pages/RoadmapPage').then((m) => ({ default: m.RoadmapPage })));
+const TemplatesPage = lazy(() => import('./pages/TemplatesPage').then((m) => ({ default: m.TemplatesPage })));
 
 function PageLoader() {
   const { t } = useLanguage();
@@ -75,6 +78,8 @@ function RouteAnnouncer() {
       terms: t('nav.route.terms'),
       privacy: t('nav.route.privacy'),
       project: t('nav.route.project'),
+      security: t('security.title'),
+      roadmap: t('roadmap.inApp.title'),
     };
     return labels[segment] ?? segment;
   })();
@@ -133,6 +138,9 @@ function AppShell() {
               <Route path="/comparison" element={<RouteTransition><ComparisonPage /></RouteTransition>} />
               <Route path="/compare" element={<Navigate to="/comparison" replace />} />
               <Route path="/pitch" element={<RouteTransition><PitchPage /></RouteTransition>} />
+              <Route path="/security" element={<RouteTransition><SecurityPage /></RouteTransition>} />
+              <Route path="/roadmap" element={<RouteTransition><RoadmapPage /></RouteTransition>} />
+              <Route path="/templates" element={<RouteTransition><TemplatesPage /></RouteTransition>} />
               <Route path="/terms" element={<RouteTransition><TermsPage /></RouteTransition>} />
               <Route path="/privacy" element={<RouteTransition><PrivacyPage /></RouteTransition>} />
               <Route path="/dashboard" element={<RouteTransition><ProtectedRoute><DashboardPage /></ProtectedRoute></RouteTransition>} />

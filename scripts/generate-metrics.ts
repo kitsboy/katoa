@@ -53,7 +53,11 @@ function main() {
         { key: 'wishlist', label: 'Has wishlist', value: allItems.length ? creatorIds.length : 0 },
         { key: 'funded', label: 'Funded', value: funded.length ? Math.min(creatorIds.length, funded.length) : 0 }] }],
     segments: [], offers: [], education: [], links: [],
-    raw: { demo: false, source: 'scripts/generate-metrics.ts + mockWishlists.ts', note: 'Replace mock with Supabase queries when connected' },
+    raw: {
+      demo: true,
+      source: 'scripts/generate-metrics.ts + mockWishlists.ts',
+      note: 'Sample catalog metrics until Supabase product counters are wired. UI labels these as demo/sample.',
+    },
   };
   fs.writeFileSync(OUT, JSON.stringify(envelope, null, 2) + '\n', 'utf-8');
   console.log('public/metrics.json written');

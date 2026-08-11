@@ -1,4 +1,4 @@
-const CACHE_NAME = 'katoa-static-v16';
+const CACHE_NAME = 'katoa-static-v17';
 const OFFLINE_URL = '/offline.html';
 
 // caches.put() rejects on 206 Partial Content (range requests) — guard every put.
