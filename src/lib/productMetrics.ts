@@ -46,11 +46,25 @@ function formatSats(n: number): string {
 
 export async function fetchProductMetrics(): Promise<ProductMetricsEnvelope | null> {
   try {
+    // Prefer live metrics endpoint later; static file is always present from prebuild
     const res = await fetch('/metrics.json', { cache: 'no-cache' });
     if (!res.ok) return null;
     const data = (await res.json()) as ProductMetricsEnvelope;
     if (data?.schema !== 'gab.product-metrics.v1') return null;
     return data;
+  } catch {
+    return null;
+  }
+}
+
+/** When Supabase is configured, attempt live profile count for home stats. */
+export async function fetchLiveCreatorCount(): Promise<number | null> {
+  try {
+    const { isSupabaseConfigured, supabase } = await import('./supabase');
+    if (!isSupabaseConfigured()) return null;
+    const { count, error } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
+    if (error || count == null) return null;
+    return count;
   } catch {
     return null;
   }

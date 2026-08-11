@@ -289,6 +289,7 @@ const navUiStrings = {
     'nav.templates': 'Templates',
     'nav.security': 'Security',
     'nav.roadmap': 'Roadmap',
+    'nav.messages': 'Messages',
     'nav.currency': 'Currency',
     'nav.btcPrice': 'BTC Price',
     'nav.tapProfile': 'Tap to view profile',

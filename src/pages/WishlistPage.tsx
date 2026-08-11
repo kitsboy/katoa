@@ -21,7 +21,7 @@ import { useToast } from '../components/Toast';
 import { PaymentMethodTabs, PaymentTab } from '../components/PaymentMethodTabs';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
-import { Gift, ExternalLink, Zap, Bitcoin, Check, Copy, MapPin, QrCode, ArrowLeft, Heart, TrendingUp, Package, ChevronUp, ChevronDown, ShoppingBag, Loader2 } from 'lucide-react';
+import { Gift, ExternalLink, Zap, Bitcoin, Check, Copy, MapPin, QrCode, ArrowLeft, Heart, TrendingUp, Package, ChevronUp, ChevronDown, ShoppingBag, Loader2, MessageCircle } from 'lucide-react';
 import { MilestoneBanner } from '../components/MilestoneBanner';
 import { ActivityFeed } from '../components/ActivityFeed';
 import { TrustProofStrip } from '../components/TrustProofStrip';
@@ -800,8 +800,15 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
                     </p>
                   )}
                   {wishlist.creator.nostr_pubkey && (
-                    <div className="mt-2">
+                    <div className="mt-2 flex flex-col sm:flex-row sm:items-center gap-2">
                       <ZapTotals pubkey={wishlist.creator.nostr_pubkey} />
+                      <Link
+                        href={`/messages?to=${encodeURIComponent(wishlist.creator.nostr_pubkey)}`}
+                        className="inline-flex items-center justify-center gap-1.5 min-h-[40px] px-3 rounded-full border border-purple-500/30 bg-purple-500/10 text-xs font-semibold text-purple-200 hover:bg-purple-500/15"
+                      >
+                        <MessageCircle size={14} />
+                        Message (optional DM)
+                      </Link>
                     </div>
                   )}
                 </div>

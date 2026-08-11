@@ -40,6 +40,11 @@ const MeetupKitPage = lazy(() => import('./pages/MeetupKitPage').then((m) => ({ 
 const CaseStudiesPage = lazy(() => import('./pages/CaseStudiesPage').then((m) => ({ default: m.CaseStudiesPage })));
 const BugBountyPage = lazy(() => import('./pages/BugBountyPage').then((m) => ({ default: m.BugBountyPage })));
 const CreatorsPage = lazy(() => import('./pages/CreatorsPage').then((m) => ({ default: m.CreatorsPage })));
+const MessagesPage = lazy(() => import('./pages/MessagesPage').then((m) => ({ default: m.MessagesPage })));
+const Nip05ClaimPage = lazy(() => import('./pages/Nip05ClaimPage').then((m) => ({ default: m.Nip05ClaimPage })));
+const CreatorGuidelinesPage = lazy(() =>
+  import('./pages/CreatorGuidelinesPage').then((m) => ({ default: m.CreatorGuidelinesPage }))
+);
 
 function PageLoader() {
   const { t } = useLanguage();
@@ -153,6 +158,9 @@ function AppShell() {
               <Route path="/case-studies" element={<RouteTransition><CaseStudiesPage /></RouteTransition>} />
               <Route path="/security/bounty" element={<RouteTransition><BugBountyPage /></RouteTransition>} />
               <Route path="/creators" element={<RouteTransition><CreatorsPage /></RouteTransition>} />
+              <Route path="/messages" element={<RouteTransition><MessagesPage /></RouteTransition>} />
+              <Route path="/nip05" element={<RouteTransition><Nip05ClaimPage /></RouteTransition>} />
+              <Route path="/creators/guidelines" element={<RouteTransition><CreatorGuidelinesPage /></RouteTransition>} />
               <Route path="/terms" element={<RouteTransition><TermsPage /></RouteTransition>} />
               <Route path="/privacy" element={<RouteTransition><PrivacyPage /></RouteTransition>} />
               <Route path="/dashboard" element={<RouteTransition><ProtectedRoute><DashboardPage /></ProtectedRoute></RouteTransition>} />

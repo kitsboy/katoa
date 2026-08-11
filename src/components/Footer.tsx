@@ -170,7 +170,10 @@ export function Footer() {
                   <FooterLink href="/press">Press kit</FooterLink>
                   <FooterLink href="/meetup">Meetup kit</FooterLink>
                   <FooterLink href="/creators">For creators</FooterLink>
+                  <FooterLink href="/creators/guidelines">Guidelines</FooterLink>
                   <FooterLink href="/case-studies">Case studies</FooterLink>
+                  <FooterLink href="/messages">Messages</FooterLink>
+                  <FooterLink href="/nip05">NIP-05 claim</FooterLink>
                 </ul>
               </div>
               <div>

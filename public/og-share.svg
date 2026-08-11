@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#050509"/>
+      <stop offset="100%" style="stop-color:#0a0a14"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#F7931A"/>
+      <stop offset="100%" style="stop-color:#14E6FF"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="1000" cy="100" r="200" fill="#F7931A" opacity="0.08"/>
+  <circle cx="200" cy="500" r="180" fill="#14E6FF" opacity="0.06"/>
+  <text x="80" y="200" font-family="system-ui,sans-serif" font-size="72" font-weight="800" fill="#ffffff">KATOA</text>
+  <text x="80" y="280" font-family="system-ui,sans-serif" font-size="36" fill="#9ca3af">Keep 100% of creator earnings</text>
+  <text x="80" y="360" font-family="system-ui,sans-serif" font-size="28" fill="#F7931A">0% platform fees · Lightning · Nostr</text>
+  <rect x="80" y="420" width="280" height="8" rx="4" fill="url(#accent)"/>
+  <text x="80" y="520" font-family="system-ui,sans-serif" font-size="22" fill="#6b7280">katoa.org · Tips &amp; wishlists for every creator</text>
+</svg>

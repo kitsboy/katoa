@@ -1,37 +1,42 @@
-# Next list — needs Cam / THOR / external (not done in YOLO batch)
+# Next list — needs Cam / THOR (honest backlog)
 
-Updated after solo glory + Nostr + creator-economy batches (2026-08-11).
+Updated after **NIP-17 opt-in chat** + solo packs (2026-08-11).
 
-## Money loop (blocked without you)
+## Still needs you (cannot finish alone)
 
-1. **BTCPay or LNbits / LNURL** production setup + env secrets on CF Pages  
-2. **Webhook** → confirm `transactions` → update `sats_raised` (server truth)  
-3. **Staging + testnet Lightning** environment  
-4. **Funded zap e2e** with real lud16 + Alby on mainnet/testnet  
-5. **Live Supabase** project counters (replace sample `metrics.json` demo KPIs)
+### Money
+1. **BTCPay or LNbits / LNURL** production + CF secrets  
+2. **Webhook live** (code stub in `supabase/functions/btcpay-webhook/`) → confirm txs  
+3. **Staging + testnet Lightning**  
+4. **Real zap e2e** with your lud16 + Alby on funded network  
+5. **Authoritative Supabase** product counters in production env  
 
-## Nostr / identity (blocked or vault)
+### Secrets / ops
+6. **Backup platform nsec** → THOR vault (`.nostr-platform-secret.local.json`)  
+7. **Deploy Edge Function** for NIP-07 challenge login (stub README ready)  
+8. **Ops process for NIP-05 claims** (UI at `/nip05` copies request; you merge into `nostr.json` or automate)  
+9. **Sign platform kind-0 + NIP-65** once with vault nsec  
 
-6. **Backup platform nsec** from `.nostr-platform-secret.local.json` → **THOR vault** (critical)  
-7. **Edge Function: NIP-07 signed challenge → session** (real Nostr login)  
-8. **Dynamic `username@katoa.org`** NIP-05 automation from Supabase  
-9. **Sign platform kind-0 + NIP-65** with vault nsec (brand presence on relays)  
-10. **NIP-17 gift-wrap chat product** (full UI + UX language)
+### Human growth
+10. **Seed 10–20 real creators**  
+11. **Permissioned case studies**  
+12. **Bug bounty sats budget** (page exists; amounts TBD)  
+13. **Meetup / marketing execution**  
 
-## Growth / human
+### Optional infra
+14. Dynamic OG **edge worker** (static `og-share.svg` is a start)  
+15. Image CDN transforms  
+16. Server-side invoice rate limits  
 
-11. **10–20 seed creators** white-glove onboarding  
-12. **Real case studies** with permission (replace demo-based stories)  
-13. **Bug bounty sats fund** + public reward table numbers  
-14. **Meetup / content engine** execution (kit exists)
+---
 
-## Infra / polish (optional later)
+## Done alone this pass (incl. NIP-17)
 
-15. **Dynamic OG image edge worker** (canvas/SVG service — meta tags improved client-side only)  
-16. **Image CDN / transform pipeline** for uploads  
-17. **Lighthouse CI budget gates** (build smoke exists; threshold gates TBD)  
-18. **Rate limits on invoice mint** server-side  
+- **`/messages`** — opt-in private chat (NIP-17 gift-wrap when NIP-44; else NIP-04)  
+- Message CTA on wishlists with creator npub  
+- `/nip05` claim request UI  
+- `/creators/guidelines`  
+- Edge function stubs (auth + webhook)  
+- Creator verticals, playbook, templates, product links, Nostr publish, zaps client path, etc.
 
-## Already shipped without you (this sprint)
-
-See `docs/GLORY-PROGRESS.md`, `docs/NOSTR-AUDIT.md`, creator verticals, `/creators`, product URL import, NIP-05, zap path client, dashboard embed, etc.
+See also: `docs/NOSTR-REMINDERS.md`, `docs/NOSTR-AUDIT.md`.

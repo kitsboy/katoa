@@ -58,6 +58,8 @@ export interface NostrProfile {
   lud16?: string;
   lud06?: string;
   website?: string;
+  /** KATOA: creator opted in to private DMs */
+  katoa_accept_dms?: string | boolean;
 }
 
 export type RelayRole = { url: string; read: boolean; write: boolean };
@@ -271,6 +273,7 @@ export class NostrService {
         lud16: profileData.lud16 ?? existing?.lud16,
         lud06: profileData.lud06 ?? existing?.lud06,
         website: profileData.website ?? existing?.website,
+        katoa_accept_dms: profileData.katoa_accept_dms ?? existing?.katoa_accept_dms,
       };
 
       const event: UnsignedEvent = {
@@ -593,6 +596,10 @@ declare global {
       signEvent(event: UnsignedEvent): Promise<Event>;
       getRelays?(): Promise<Record<string, { read: boolean; write: boolean }>>;
       nip04?: {
+        encrypt(pubkey: string, plaintext: string): Promise<string>;
+        decrypt(pubkey: string, ciphertext: string): Promise<string>;
+      };
+      nip44?: {
         encrypt(pubkey: string, plaintext: string): Promise<string>;
         decrypt(pubkey: string, ciphertext: string): Promise<string>;
       };
