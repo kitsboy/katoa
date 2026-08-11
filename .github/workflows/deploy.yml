@@ -24,20 +24,40 @@ jobs:
       - name: Verify assets are not HTML (Origin-keyed poison check)
         run: |
           set -euo pipefail
-          sleep 8
-          HTML=$(curl -fsSL "https://katoa.org/")
-          CSS=$(echo "$HTML" | grep -oE '/assets/index-[A-Za-z0-9_-]+\.css' | head -1)
-          JS=$(echo "$HTML" | grep -oE '/assets/index-[A-Za-z0-9_-]+\.js' | head -1)
-          echo "CSS=$CSS JS=$JS"
-          test -n "$CSS" && test -n "$JS"
-          for path in "$CSS" "$JS"; do
-            body=$(curl -fsSL -H 'Origin: https://katoa.org' -H 'Referer: https://katoa.org/' "https://katoa.org$path" | head -c 32)
-            echo "$path -> ${body}"
-            case "$body" in
-              '<!'*|'<html'*|'<!doctype'*|'<!DOCTYPE'*)
-                echo "::error::Asset $path returned HTML under Origin (cache poison)"
-                exit 1
-                ;;
-            esac
+          # CF edge propagation can lag briefly after pages deploy
+          ok=0
+          for attempt in 1 2 3 4 5 6; do
+            sleep 10
+            HTML=$(curl -fsSL "https://katoa.org/" || true)
+            CSS=$(echo "$HTML" | grep -oE '/assets/index-[A-Za-z0-9_.-]+\.css' | head -1 || true)
+            JS=$(echo "$HTML" | grep -oE '/assets/index-[A-Za-z0-9_.-]+\.js' | head -1 || true)
+            echo "attempt=$attempt CSS=$CSS JS=$JS"
+            if [ -z "$CSS" ] || [ -z "$JS" ]; then
+              echo "missing asset refs; retry"
+              continue
+            fi
+            bad=0
+            for path in "$CSS" "$JS"; do
+              body=$(curl -fsSL -H 'Origin: https://katoa.org' -H 'Referer: https://katoa.org/' "https://katoa.org$path" | head -c 64 || true)
+              echo "$path -> ${body}"
+              case "$body" in
+                '<!'*|'<html'*|'<!doctype'*|'<!DOCTYPE'*)
+                  echo "still HTML; retry"
+                  bad=1
+                  ;;
+                '')
+                  echo "empty body; retry"
+                  bad=1
+                  ;;
+              esac
+            done
+            if [ "$bad" -eq 0 ]; then
+              ok=1
+              break
+            fi
           done
+          if [ "$ok" -ne 1 ]; then
+            echo "::error::Asset Origin check failed after retries (cache poison?)"
+            exit 1
+          fi
           echo "Asset Origin check OK"
