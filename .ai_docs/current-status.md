@@ -1,14 +1,15 @@
 # Status
 
-**Status:** 🟢 Live
+**Status:** 🟢 Live  
 **Last updated:** 2026-08-11
 
-## Recent (glory sprint)
-- Honest stats (metrics.json demo-labeled), trust strip, security/roadmap/templates/press pages
-- Donate UX: tips, wallet deep links, mobile sticky CTA, embed snippet
-- Demo badges, milestones, activity feed (demo), family links, reduced-motion
-- Deploy Origin asset poison checks; SW v17
+## Recent
+- Solo 10-pack: tip menu, favorites export, visibility badge, DM block/unread, explore vertical chips, PWA creator copy, a11y, Playwright `/messages`, i18n
+- Map fix: CARTO dark basemap (no logo smear); clean K pins
+- Map v2: richer BTC Map popups (`/v4/places/{id}`), category emoji icons, `/v4/search` box
+- `.ai_docs` aligned with family (ecosystem-links, project-summary) + `.ai_agent` index
 
 ## Blockers for full P0
-- Mainnet Lightning + BTCPay webhook → funding totals (needs secrets/ops)
+- Mainnet Lightning + BTCPay webhook → funding totals (needs Cam secrets/ops)
 - Live Supabase counters replacing sample catalog metrics
+- Platform nsec → THOR vault (see docs/NOSTR-REMINDERS.md)

@@ -1,5 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Crosshair, ExternalLink, Layers, Loader2, MapPin, Maximize2, Minimize2 } from 'lucide-react';
+import {
+  Crosshair,
+  ExternalLink,
+  Layers,
+  Loader2,
+  MapPin,
+  Maximize2,
+  Minimize2,
+  Search,
+  X,
+} from 'lucide-react';
 import { Link } from './Link';
 import { Button } from './Button';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -9,12 +19,18 @@ import {
   LEAFLET_BASEMAP_OPTIONS,
   LEAFLET_BASEMAP_URL,
   type BTCMapCoordinates,
+  type BTCMapPlace,
+  type BTCMapSearchResult,
   type KatoaMapPin,
-  buildBTCMapPlaceUrl,
+  buildMerchantPopupHtml,
   escapeMapPopupText,
+  fetchPlaceById,
   fetchPlacesNearby,
   getAppBaseUrl,
+  isPlaceBoosted,
   isBTCMapEnabled,
+  materialIconGlyph,
+  searchBTCMap,
   zoomToRadiusKm,
 } from '../lib/btcmap';
 import 'leaflet/dist/leaflet.css';
@@ -41,13 +57,38 @@ function createKatoaIcon(L: typeof import('leaflet')) {
   });
 }
 
-function createMerchantIcon(L: typeof import('leaflet'), boosted = false) {
+function createMerchantIcon(L: typeof import('leaflet'), place: BTCMapPlace) {
+  const boosted = isPlaceBoosted(place);
+  const glyph = materialIconGlyph(place.icon);
   return L.divIcon({
     className: 'btc-merchant-marker leaflet-div-icon',
-    html: `<div class="btc-merchant-pin${boosted ? ' btc-merchant-pin--boosted' : ''}" aria-hidden="true">₿</div>`,
-    iconSize: [26, 32],
-    iconAnchor: [13, 30],
-    popupAnchor: [0, -26],
+    html: `<div class="btc-merchant-pin${boosted ? ' btc-merchant-pin--boosted' : ''}" aria-hidden="true"><span class="btc-merchant-pin__glyph">${glyph}</span></div>`,
+    iconSize: [28, 34],
+    iconAnchor: [14, 32],
+    popupAnchor: [0, -28],
+  });
+}
+
+function bindMerchantPopup(
+  marker: import('leaflet').Marker,
+  place: BTCMapPlace
+) {
+  marker.bindPopup(buildMerchantPopupHtml(place), {
+    className: 'btcmap-leaflet-popup',
+    maxWidth: 280,
+  });
+
+  marker.on('popupopen', () => {
+    // Hydrate with GET /v4/places/{id} for phone/hours/comments
+    void (async () => {
+      try {
+        const detail = await fetchPlaceById(place.id);
+        if (!detail) return;
+        marker.setPopupContent(buildMerchantPopupHtml(detail));
+      } catch {
+        /* keep list-level popup */
+      }
+    })();
   });
 }
 
@@ -94,6 +135,14 @@ export function UnifiedBTCMap({
   const [loadingMerchants, setLoadingMerchants] = useState(false);
   const [merchantError, setMerchantError] = useState<string | null>(null);
   const [mapReady, setMapReady] = useState(false);
+  const [searchQ, setSearchQ] = useState('');
+  const [searchResults, setSearchResults] = useState<BTCMapSearchResult[]>([]);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
+  const searchAbortRef = useRef<AbortController | null>(null);
+  const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const merchantMarkersRef = useRef<Map<number, import('leaflet').Marker>>(new Map());
 
   const loadMerchants = useCallback(async (map: import('leaflet').Map, L: typeof import('leaflet')) => {
     if (!showMerchants || !isBTCMapEnabled()) return;
@@ -115,24 +164,14 @@ export function UnifiedBTCMap({
       if (controller.signal.aborted || !merchantLayerRef.current) return;
 
       merchantLayerRef.current.clearLayers();
+      merchantMarkersRef.current.clear();
       places.forEach((place) => {
-        const boosted = Boolean(place.boosted_until && new Date(place.boosted_until) > new Date());
         const marker = L.marker([place.lat, place.lon], {
-          icon: createMerchantIcon(L, boosted),
+          icon: createMerchantIcon(L, place),
         });
-
-        const popup = `
-          <div class="btcmap-popup">
-            <p class="btcmap-popup__eyebrow">BTC Map merchant${boosted ? ' · Boosted' : ''}</p>
-            <strong class="btcmap-popup__title">${escapeMapPopupText(place.name)}</strong>
-            ${place.address ? `<p class="btcmap-popup__meta">${escapeMapPopupText(place.address)}</p>` : ''}
-            <a href="${buildBTCMapPlaceUrl(place.id)}" target="_blank" rel="noopener noreferrer" class="btcmap-popup__link">
-              View on BTC Map →
-            </a>
-          </div>
-        `;
-        marker.bindPopup(popup, { className: 'btcmap-leaflet-popup', maxWidth: 260 });
+        bindMerchantPopup(marker, place);
         merchantLayerRef.current!.addLayer(marker);
+        merchantMarkersRef.current.set(place.id, marker);
       });
 
       setMerchantCount(places.length);
@@ -290,6 +329,100 @@ export function UnifiedBTCMap({
     );
   };
 
+  // Debounced BTC Map search (GET /v4/search/?q=)
+  useEffect(() => {
+    if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+    const q = searchQ.trim();
+    if (q.length < 3) {
+      setSearchResults([]);
+      setSearchError(null);
+      setSearchLoading(false);
+      return;
+    }
+    setSearchLoading(true);
+    searchTimerRef.current = setTimeout(() => {
+      searchAbortRef.current?.abort();
+      const controller = new AbortController();
+      searchAbortRef.current = controller;
+      const map = mapRef.current;
+      const center = map?.getCenter();
+      void searchBTCMap(q, {
+        lat: center?.lat,
+        lon: center?.lng,
+        limit: 12,
+        signal: controller.signal,
+      })
+        .then((rows) => {
+          if (controller.signal.aborted) return;
+          setSearchResults(rows);
+          setSearchError(null);
+          setSearchOpen(true);
+        })
+        .catch((err) => {
+          if (err instanceof Error && err.name === 'AbortError') return;
+          setSearchError(err instanceof Error ? err.message : 'Search failed');
+          setSearchResults([]);
+        })
+        .finally(() => {
+          if (!controller.signal.aborted) setSearchLoading(false);
+        });
+    }, 320);
+    return () => {
+      if (searchTimerRef.current) clearTimeout(searchTimerRef.current);
+    };
+  }, [searchQ]);
+
+  const focusSearchResult = async (row: BTCMapSearchResult) => {
+    const map = mapRef.current;
+    if (!map) return;
+    setSearchOpen(false);
+
+    if (row.type === 'area') {
+      if (row.bbox && row.bbox.length === 4) {
+        const [west, south, east, north] = row.bbox;
+        const L = await import('leaflet');
+        map.fitBounds(L.latLngBounds([south, west], [north, east]), {
+          padding: [40, 40],
+          maxZoom: 12,
+        });
+      }
+      return;
+    }
+
+    map.flyTo([row.lat, row.lon], 15, { duration: 0.7 });
+    // Ensure merchants layer is on so pin can appear after reload
+    if (!showMerchants) setShowMerchants(true);
+
+    const L = await import('leaflet');
+    // Prefer existing marker
+    let marker = merchantMarkersRef.current.get(row.id);
+    if (!marker && merchantLayerRef.current) {
+      const place: BTCMapPlace = {
+        id: row.id,
+        name: row.name,
+        lat: row.lat,
+        lon: row.lon,
+        icon: row.icon,
+        address: row.address,
+      };
+      marker = L.marker([row.lat, row.lon], { icon: createMerchantIcon(L, place) });
+      bindMerchantPopup(marker, place);
+      merchantLayerRef.current.addLayer(marker);
+      merchantMarkersRef.current.set(row.id, marker);
+    }
+    if (marker) {
+      setTimeout(() => marker?.openPopup(), 400);
+      // Hydrate detail immediately
+      void fetchPlaceById(row.id)
+        .then((detail) => {
+          if (detail && marker) {
+            marker.setPopupContent(buildMerchantPopupHtml(detail));
+          }
+        })
+        .catch(() => undefined);
+    }
+  };
+
   return (
     <div className={`unified-btcmap ${className}`}>
       <div className="unified-btcmap__header">
@@ -325,6 +458,68 @@ export function UnifiedBTCMap({
             <Minimize2 size={18} />
           </button>
         )}
+
+        <div className="unified-btcmap__search">
+          <label className="sr-only" htmlFor="btcmap-search">
+            {t('map.search')}
+          </label>
+          <Search size={16} className="unified-btcmap__search-icon" aria-hidden />
+          <input
+            id="btcmap-search"
+            type="search"
+            value={searchQ}
+            onChange={(e) => setSearchQ(e.target.value)}
+            onFocus={() => searchResults.length > 0 && setSearchOpen(true)}
+            placeholder={t('map.searchPlaceholder')}
+            className="unified-btcmap__search-input"
+            autoComplete="off"
+            enterKeyHint="search"
+          />
+          {searchLoading && <Loader2 size={14} className="unified-btcmap__search-spinner animate-spin" aria-hidden />}
+          {searchQ && (
+            <button
+              type="button"
+              className="unified-btcmap__search-clear"
+              onClick={() => {
+                setSearchQ('');
+                setSearchResults([]);
+                setSearchOpen(false);
+              }}
+              aria-label={t('map.searchClear')}
+            >
+              <X size={14} />
+            </button>
+          )}
+          {searchOpen && (searchResults.length > 0 || searchError) && (
+            <ul className="unified-btcmap__search-results" role="listbox" aria-label={t('map.search')}>
+              {searchError && (
+                <li className="unified-btcmap__search-empty">{searchError}</li>
+              )}
+              {!searchError &&
+                searchResults.map((row) => (
+                  <li key={`${row.type}-${row.id}`}>
+                    <button
+                      type="button"
+                      className="unified-btcmap__search-item"
+                      onClick={() => void focusSearchResult(row)}
+                    >
+                      <span className="unified-btcmap__search-item-icon" aria-hidden>
+                        {row.type === 'area' ? '🗺' : materialIconGlyph(row.icon)}
+                      </span>
+                      <span className="min-w-0">
+                        <span className="unified-btcmap__search-item-name">{row.name}</span>
+                        <span className="unified-btcmap__search-item-meta">
+                          {row.type === 'area'
+                            ? t('map.searchArea')
+                            : row.address || t('map.searchPlace')}
+                        </span>
+                      </span>
+                    </button>
+                  </li>
+                ))}
+            </ul>
+          )}
+        </div>
 
         <div className="unified-btcmap__toolbar" role="toolbar" aria-label="Map layers">
           <button

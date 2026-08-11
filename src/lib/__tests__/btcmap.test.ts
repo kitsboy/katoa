@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
+  buildMerchantPopupHtml,
   escapeMapPopupText,
   LEAFLET_BASEMAP_URL,
+  materialIconGlyph,
   zoomToRadiusKm,
 } from '../btcmap';
 
@@ -48,5 +50,37 @@ describe('LEAFLET_BASEMAP_URL', () => {
   it('uses a working raster provider (not broken openfreemap /osm/*.png)', () => {
     expect(LEAFLET_BASEMAP_URL).not.toMatch(/tiles\.openfreemap\.org\/osm/);
     expect(LEAFLET_BASEMAP_URL).toMatch(/\{z\}.*\{x\}.*\{y\}/);
+  });
+});
+
+describe('materialIconGlyph', () => {
+  it('maps known Material icon ids to emoji', () => {
+    expect(materialIconGlyph('local_cafe')).toBe('☕');
+    expect(materialIconGlyph('restaurant')).toBe('🍽');
+  });
+
+  it('defaults unknown icons to bitcoin symbol', () => {
+    expect(materialIconGlyph('not_a_real_icon')).toBe('₿');
+    expect(materialIconGlyph(undefined)).toBe('₿');
+  });
+});
+
+describe('buildMerchantPopupHtml', () => {
+  it('includes name, phone, hours and btcmap link', () => {
+    const html = buildMerchantPopupHtml({
+      id: 42,
+      name: 'Cafe & Co',
+      lat: 1,
+      lon: 2,
+      phone: '+123',
+      opening_hours: 'Mo-Fr 09:00',
+      comments: 3,
+      verified_at: '2025-01-02T00:00:00Z',
+    });
+    expect(html).toContain('Cafe &amp; Co');
+    expect(html).toContain('tel:+123');
+    expect(html).toContain('Hours:');
+    expect(html).toContain('3 comments');
+    expect(html).toContain('/place/42');
   });
 });

@@ -60,10 +60,99 @@ export interface BTCMapPlace {
   website?: string;
   verified_at?: string;
   boosted_until?: string;
+  phone?: string;
+  opening_hours?: string;
+  comments?: number;
+  osm_id?: string;
+  description?: string;
 }
 
-const PLACE_SEARCH_FIELDS = 'id,name,lat,lon,icon,address,website,verified_at,boosted_until';
+/** Result row from GET /v4/search/?q= */
+export type BTCMapSearchResult =
+  | {
+      type: 'place';
+      id: number;
+      name: string;
+      lat: number;
+      lon: number;
+      icon?: string;
+      address?: string;
+    }
+  | {
+      type: 'area';
+      id: number;
+      name: string;
+      alias?: string;
+      bbox?: [number, number, number, number];
+    };
+
+const PLACE_SEARCH_FIELDS = 'id,name,lat,lon,icon,address,website,verified_at,boosted_until,phone,opening_hours,comments';
+const PLACE_DETAIL_FIELDS =
+  'id,name,lat,lon,icon,address,website,verified_at,boosted_until,phone,opening_hours,comments,description,osm_id';
 const PLACES_CACHE_TTL_MS = 90_000;
+const PLACE_DETAIL_CACHE_TTL_MS = 120_000;
+
+/** Material Icons id → compact emoji for Leaflet pin (no external font needed). */
+const MATERIAL_ICON_GLYPH: Record<string, string> = {
+  local_cafe: '☕',
+  cafe: '☕',
+  coffee: '☕',
+  restaurant: '🍽',
+  lunch_dining: '🍽',
+  dinner_dining: '🍽',
+  fastfood: '🍔',
+  store: '🏪',
+  storefront: '🏪',
+  shopping_bag: '🛍',
+  shopping_cart: '🛒',
+  hotel: '🏨',
+  bed: '🛏',
+  local_bar: '🍸',
+  wine_bar: '🍷',
+  sports_bar: '🍺',
+  fitness_center: '💪',
+  sports: '⚽',
+  content_cut: '✂',
+  spa: '💆',
+  local_gas_station: '⛽',
+  ev_station: '🔌',
+  local_pharmacy: '💊',
+  medical_services: '🏥',
+  school: '📚',
+  menu_book: '📖',
+  museum: '🏛',
+  palette: '🎨',
+  music_note: '🎵',
+  theater_comedy: '🎭',
+  laptop: '💻',
+  devices: '📱',
+  atm: '🏧',
+  account_balance: '🏦',
+  apartment: '🏢',
+  home: '🏠',
+  directions_car: '🚗',
+  local_taxi: '🚕',
+  flight: '✈',
+  directions_bike: '🚲',
+  hiking: '🥾',
+  park: '🌳',
+  pets: '🐾',
+  smoking_rooms: '🚬',
+  bakery_dining: '🥐',
+  icecream: '🍦',
+  liquor: '🥃',
+  question_mark: '?',
+};
+
+export function materialIconGlyph(icon?: string | null): string {
+  if (!icon) return '₿';
+  const key = icon.toLowerCase().trim();
+  return MATERIAL_ICON_GLYPH[key] || '₿';
+}
+
+export function isPlaceBoosted(place: Pick<BTCMapPlace, 'boosted_until'>): boolean {
+  return Boolean(place.boosted_until && new Date(place.boosted_until) > new Date());
+}
 
 interface PlacesCacheEntry {
   key: string;
@@ -72,9 +161,36 @@ interface PlacesCacheEntry {
 }
 
 let placesCache: PlacesCacheEntry | null = null;
+const placeDetailCache = new Map<number, { place: BTCMapPlace; fetchedAt: number }>();
 
 function placesCacheKey(lat: number, lon: number, radiusKm: number): string {
   return `${lat.toFixed(3)}:${lon.toFixed(3)}:${radiusKm}`;
+}
+
+function parsePlace(raw: unknown): BTCMapPlace | null {
+  if (!raw || typeof raw !== 'object') return null;
+  const p = raw as Record<string, unknown>;
+  if (typeof p.id !== 'number' || typeof p.lat !== 'number' || typeof p.lon !== 'number') {
+    return null;
+  }
+  const name = typeof p.name === 'string' ? p.name : '';
+  if (!name) return null;
+  return {
+    id: p.id,
+    name,
+    lat: p.lat,
+    lon: p.lon,
+    icon: typeof p.icon === 'string' ? p.icon : undefined,
+    address: typeof p.address === 'string' ? p.address : undefined,
+    website: typeof p.website === 'string' ? p.website : undefined,
+    verified_at: typeof p.verified_at === 'string' ? p.verified_at : undefined,
+    boosted_until: typeof p.boosted_until === 'string' ? p.boosted_until : undefined,
+    phone: typeof p.phone === 'string' ? p.phone : undefined,
+    opening_hours: typeof p.opening_hours === 'string' ? p.opening_hours : undefined,
+    comments: typeof p.comments === 'number' ? p.comments : undefined,
+    osm_id: typeof p.osm_id === 'string' ? p.osm_id : undefined,
+    description: typeof p.description === 'string' ? p.description : undefined,
+  };
 }
 
 export function escapeMapPopupText(text: string): string {
@@ -197,16 +313,160 @@ export async function fetchPlacesNearby(
   const data = await response.json();
   if (!Array.isArray(data)) return [];
 
-  const places = data.filter(
-    (p: BTCMapPlace) =>
-      typeof p.id === 'number' &&
-      typeof p.lat === 'number' &&
-      typeof p.lon === 'number' &&
-      p.name
-  );
+  const places = data.map(parsePlace).filter((p): p is BTCMapPlace => p !== null);
 
   placesCache = { key: cacheKey, places, fetchedAt: Date.now() };
   return places;
+}
+
+/** Fetch full place detail (richer popup). GET /v4/places/{id} */
+export async function fetchPlaceById(
+  placeId: number,
+  signal?: AbortSignal
+): Promise<BTCMapPlace | null> {
+  const cached = placeDetailCache.get(placeId);
+  if (cached && Date.now() - cached.fetchedAt < PLACE_DETAIL_CACHE_TTL_MS) {
+    return cached.place;
+  }
+
+  const base = getApiBaseUrl();
+  const params = new URLSearchParams({ fields: PLACE_DETAIL_FIELDS });
+  const response = await fetch(`${base}/v4/places/${placeId}?${params}`, {
+    headers: { Accept: 'application/json' },
+    signal,
+  });
+
+  if (!response.ok) {
+    throw new Error(`BTC Map place API error: ${response.status}`);
+  }
+
+  const place = parsePlace(await response.json());
+  if (place) {
+    placeDetailCache.set(placeId, { place, fetchedAt: Date.now() });
+  }
+  return place;
+}
+
+/**
+ * Unified search — areas + places.
+ * @see https://github.com/teambtcmap/btcmap-api/blob/master/docs/rest/v4/search.md
+ */
+export async function searchBTCMap(
+  query: string,
+  opts?: { lat?: number; lon?: number; limit?: number; signal?: AbortSignal }
+): Promise<BTCMapSearchResult[]> {
+  const q = query.trim();
+  if (q.length < 3) return [];
+
+  const base = getApiBaseUrl();
+  const params = new URLSearchParams({
+    q,
+    limit: String(opts?.limit ?? 12),
+  });
+  if (opts?.lat !== undefined && opts?.lon !== undefined) {
+    params.set('lat', String(opts.lat));
+    params.set('lon', String(opts.lon));
+  }
+
+  const response = await fetch(`${base}/v4/search/?${params}`, {
+    headers: { Accept: 'application/json' },
+    signal: opts?.signal,
+  });
+
+  if (!response.ok) {
+    throw new Error(`BTC Map search API error: ${response.status}`);
+  }
+
+  const data = await response.json();
+  const rows: unknown[] = Array.isArray(data)
+    ? data
+    : Array.isArray(data?.results)
+      ? data.results
+      : [];
+
+  const out: BTCMapSearchResult[] = [];
+  for (const row of rows) {
+    if (!row || typeof row !== 'object') continue;
+    const r = row as Record<string, unknown>;
+    const type = r.type === 'area' || r.type === 'place' ? r.type : null;
+    if (type === 'area' && typeof r.id === 'number' && typeof r.name === 'string') {
+      out.push({
+        type: 'area',
+        id: r.id,
+        name: r.name,
+        alias: typeof r.alias === 'string' ? r.alias : undefined,
+        bbox: Array.isArray(r.bbox) && r.bbox.length === 4
+          ? (r.bbox as [number, number, number, number])
+          : undefined,
+      });
+      continue;
+    }
+    // place, or untyped place-like object
+    if (
+      (type === 'place' || type === null) &&
+      typeof r.id === 'number' &&
+      typeof r.lat === 'number' &&
+      typeof r.lon === 'number' &&
+      typeof r.name === 'string'
+    ) {
+      out.push({
+        type: 'place',
+        id: r.id,
+        name: r.name,
+        lat: r.lat,
+        lon: r.lon,
+        icon: typeof r.icon === 'string' ? r.icon : undefined,
+        address: typeof r.address === 'string' ? r.address : undefined,
+      });
+    }
+  }
+  return out;
+}
+
+/** HTML for merchant popup (initial or after detail hydrate). */
+export function buildMerchantPopupHtml(place: BTCMapPlace, opts?: { loading?: boolean }): string {
+  const boosted = isPlaceBoosted(place);
+  const glyph = materialIconGlyph(place.icon);
+  const lines: string[] = [
+    `<div class="btcmap-popup">`,
+    `<p class="btcmap-popup__eyebrow">${glyph} BTC Map merchant${boosted ? ' · Boosted' : ''}</p>`,
+    `<strong class="btcmap-popup__title">${escapeMapPopupText(place.name)}</strong>`,
+  ];
+  if (place.address) {
+    lines.push(`<p class="btcmap-popup__meta">${escapeMapPopupText(place.address)}</p>`);
+  }
+  if (place.phone) {
+    lines.push(
+      `<p class="btcmap-popup__meta"><a href="tel:${escapeMapPopupText(place.phone)}">${escapeMapPopupText(place.phone)}</a></p>`
+    );
+  }
+  if (place.opening_hours) {
+    lines.push(
+      `<p class="btcmap-popup__meta">Hours: ${escapeMapPopupText(place.opening_hours)}</p>`
+    );
+  }
+  if (place.verified_at) {
+    lines.push(
+      `<p class="btcmap-popup__meta">Verified ${escapeMapPopupText(place.verified_at.slice(0, 10))}</p>`
+    );
+  }
+  if (typeof place.comments === 'number' && place.comments > 0) {
+    lines.push(`<p class="btcmap-popup__meta">${place.comments} comment${place.comments === 1 ? '' : 's'}</p>`);
+  }
+  if (place.website) {
+    const href = escapeMapPopupText(place.website);
+    lines.push(
+      `<a href="${href}" target="_blank" rel="noopener noreferrer" class="btcmap-popup__link">Website →</a>`
+    );
+  }
+  lines.push(
+    `<a href="${buildBTCMapPlaceUrl(place.id)}" target="_blank" rel="noopener noreferrer" class="btcmap-popup__link">View on BTC Map →</a>`
+  );
+  if (opts?.loading) {
+    lines.push(`<p class="btcmap-popup__meta btcmap-popup__loading">Loading details…</p>`);
+  }
+  lines.push(`</div>`);
+  return lines.join('');
 }
 
 export function buildBTCMapPlaceUrl(placeId: number): string {
