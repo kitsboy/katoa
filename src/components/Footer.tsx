@@ -23,7 +23,7 @@ import {
   BookOpen,
   Shield,
 } from 'lucide-react';
-import packageJson from '../../package.json';
+import { APP_VERSION_FULL, APP_BUILT_AT } from '../generated/app-version';
 
 const bitcoinAddress = 'bc1qhm5ndfjhqxdk3cx0pngyps4f5nnwdckulmge6c8keyf2pk0neqtshjn8ad';
 
@@ -231,7 +231,12 @@ export function Footer() {
               <div className="flex flex-wrap items-center justify-center md:justify-start gap-x-3 gap-y-2 text-xs text-gray-500">
                 <span>&copy; {new Date().getFullYear()} KATOA (katoa.org)</span>
                 <span className="hidden sm:inline text-gray-700">·</span>
-                <span className="font-mono text-[10px] text-gray-600">v{packageJson.version}</span>
+                <span
+                  className="font-mono text-[10px] text-gray-500"
+                  title={`Built ${APP_BUILT_AT}`}
+                >
+                  {APP_VERSION_FULL}
+                </span>
                 <span className="hidden sm:inline text-gray-700">·</span>
                 <a
                   href="https://giveabit.io"

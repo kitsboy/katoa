@@ -1,7 +1,7 @@
 {
   "name": "katoa",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -19,7 +19,9 @@
     "sitemap": "node scripts/generate-sitemap.mjs",
     "test:coverage": "vitest run --coverage",
     "generate-metrics": "npx tsx scripts/generate-metrics.ts",
-    "prebuild": "npm run generate-metrics"
+    "version:write": "node scripts/write-version.mjs",
+    "version:bump": "node scripts/write-version.mjs --bump",
+    "prebuild": "npm run version:write && npm run generate-metrics"
   },
   "engines": {
     "node": ">=20"

@@ -139,13 +139,33 @@ const PlatformCard = memo(function PlatformCard({
   );
 });
 
-export function FeeComparison({ variant = 'default' }: { variant?: 'default' | 'landing' }) {
+export function FeeComparison({
+  variant = 'default',
+  /** Only /comparison should rewrite ?earnings= — never pollute home URL */
+  syncUrl = false,
+}: {
+  variant?: 'default' | 'landing';
+  syncUrl?: boolean;
+}) {
   const isLanding = variant === 'landing';
   const [monthlyEarnings, setMonthlyEarnings] = useState(10000);
   const [currency, setCurrency] = useState(currencies[0]);
   const [displayValue, setDisplayValue] = useState('10,000');
 
   useEffect(() => {
+    // Strip accidental ?earnings= from non-comparison pages (home used to get polluted)
+    if (!syncUrl && typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      if (url.searchParams.has('earnings') && url.pathname === '/') {
+        url.searchParams.delete('earnings');
+        const clean = `${url.pathname}${url.search}${url.hash}` || '/';
+        window.history.replaceState({}, '', clean);
+      }
+    }
+  }, [syncUrl]);
+
+  useEffect(() => {
+    if (!syncUrl) return;
     const params = new URLSearchParams(window.location.search);
     const earnings = params.get('earnings');
     if (earnings) {
@@ -155,15 +175,17 @@ export function FeeComparison({ variant = 'default' }: { variant?: 'default' | '
         setDisplayValue(num.toLocaleString());
       }
     }
-  }, []);
+  }, [syncUrl]);
 
   useEffect(() => {
-    if (monthlyEarnings <= 0) return;
+    if (!syncUrl || monthlyEarnings <= 0) return;
+    // Only rewrite query on the comparison page
+    if (!window.location.pathname.startsWith('/comparison')) return;
     const url = new URL(window.location.href);
     if (url.searchParams.get('earnings') === String(monthlyEarnings)) return;
     url.searchParams.set('earnings', String(monthlyEarnings));
     window.history.replaceState({}, '', `${url.pathname}${url.search}`);
-  }, [monthlyEarnings]);
+  }, [monthlyEarnings, syncUrl]);
 
   const formatNumber = (value: string): string => {
     const numbers = value.replace(/[^0-9]/g, '');
