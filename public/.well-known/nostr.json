@@ -1,0 +1,18 @@
+{
+  "names": {
+    "_": "8d4ae39ad6906e272e778772253b59b9ae8712871043807f4655960fec0e4420",
+    "katoa": "8d4ae39ad6906e272e778772253b59b9ae8712871043807f4655960fec0e4420"
+  },
+  "relays": {
+    "8d4ae39ad6906e272e778772253b59b9ae8712871043807f4655960fec0e4420": [
+      "wss://relay.damus.io",
+      "wss://relay.nostr.band",
+      "wss://nos.lol",
+      "wss://relay.snort.social",
+      "wss://nostr.wine",
+      "wss://relay.primal.net",
+      "wss://purplepag.es",
+      "wss://relay.nostr.bg"
+    ]
+  }
+}

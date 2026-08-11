@@ -25,6 +25,13 @@ import {
   verifyUrl,
   type StampResult,
 } from '../lib/satohash';
+import {
+  hasNip07,
+  nip07UserMessage,
+  nostrService,
+  PLATFORM_NIP05,
+  PLATFORM_NPUB,
+} from '../lib/nostr';
 
 type Tab = 'profile' | 'wallet' | 'projects' | 'shipping' | 'advanced';
 
@@ -46,6 +53,7 @@ export function SettingsPage() {
   const [satohashBusy, setSatohashBusy] = useState(false);
   const [satohashHealth, setSatohashHealth] = useState<'unknown' | 'ok' | 'down'>('unknown');
   const [lastStamp, setLastStamp] = useState<StampResult | null>(null);
+  const [nostrBusy, setNostrBusy] = useState(false);
   const [profileForm, setProfileForm] = useState({
     username: '',
     bio: '',
@@ -530,6 +538,72 @@ export function SettingsPage() {
                       className="bg-black border-white/10 text-white font-mono"
                     />
                     <p className="text-xs text-gray-500 -mt-2">{t('settings.nostrHint')}</p>
+                    <div className="flex flex-col sm:flex-row flex-wrap gap-2 -mt-1">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="min-h-[44px]"
+                        disabled={nostrBusy}
+                        onClick={async () => {
+                          setNostrBusy(true);
+                          try {
+                            if (!hasNip07()) {
+                              toast(nip07UserMessage(new Error('Nostr extension not found')), 'error');
+                              return;
+                            }
+                            const pk = await window.nostr!.getPublicKey();
+                            const npub = nostrService.encodeNpub(pk);
+                            setProfileForm((f) => ({ ...f, nostr_pubkey: npub }));
+                            await updateProfile({ nostr_pubkey: npub });
+                            toast('Linked NIP-07 public key (we never see your private key)', 'success');
+                          } catch (e) {
+                            toast(nip07UserMessage(e), 'error');
+                          } finally {
+                            setNostrBusy(false);
+                          }
+                        }}
+                      >
+                        Link NIP-07 extension
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="min-h-[44px]"
+                        disabled={nostrBusy || !profileForm.lightning_address}
+                        onClick={async () => {
+                          setNostrBusy(true);
+                          try {
+                            const lud16 = profileForm.lightning_address.trim();
+                            const result = await nostrService.publishProfile({
+                              lud16,
+                              name: profileForm.username || undefined,
+                              about: profileForm.bio || undefined,
+                              picture: profileForm.avatar_url || undefined,
+                              website: 'https://katoa.org',
+                            });
+                            if (!result.ok) {
+                              toast(result.message || 'Publish failed', 'error');
+                              return;
+                            }
+                            toast(`Published kind 0 with lud16 to ${result.accepted.length} relay(s)`, 'success');
+                            await nostrService.publishRelayList();
+                          } catch (e) {
+                            toast(nip07UserMessage(e), 'error');
+                          } finally {
+                            setNostrBusy(false);
+                          }
+                        }}
+                      >
+                        Publish lud16 + relays (NIP-65)
+                      </Button>
+                    </div>
+                    <p className="text-[11px] text-gray-600">
+                      Platform NIP-05: <span className="text-gray-400">{PLATFORM_NIP05}</span>
+                      {' · '}
+                      <span className="font-mono text-gray-500 break-all">{PLATFORM_NPUB.slice(0, 16)}…</span>
+                      {' · '}
+                      Creator handles (you@katoa.org) — see docs/NOSTR-NIP05.md
+                    </p>
 
                     <div className="p-6 bg-black rounded-xl border border-white/10">
                       <label className="block text-sm font-bold text-gray-200 mb-4 uppercase tracking-wider">

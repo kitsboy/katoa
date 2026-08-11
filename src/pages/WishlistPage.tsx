@@ -28,6 +28,7 @@ import { EmbedSnippet } from '../components/EmbedSnippet';
 import { GiftSuccess } from '../components/GiftSuccess';
 import { buyLabel } from '../lib/productParser';
 import { WalletDeepLinks } from '../components/WalletDeepLinks';
+import { hasNip07, nip07UserMessage, nostrService } from '../lib/nostr';
 
 const SAT_PRESETS = [
   { label: '1K', value: 1000 },
@@ -124,6 +125,9 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
   const [paymentCountdown, setPaymentCountdown] = useState(180);
   const [isDemoWishlist, setIsDemoWishlist] = useState(false);
   const [demoAutoProgress, setDemoAutoProgress] = useState(0);
+  const [zapBusy, setZapBusy] = useState(false);
+  const [zapInvoice, setZapInvoice] = useState<string | null>(null);
+  const [zapError, setZapError] = useState<string | null>(null);
 
   useEffect(() => {
     setThemeColor(getStorage<string>(STORAGE_KEYS.wishlistTheme(slug), '#f97316'));
@@ -397,8 +401,77 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
     }
 
     setProcessing(true);
+    setZapError(null);
+    setZapInvoice(null);
 
     try {
+      // Nostr Zap tab: NIP-57 request + LNURL-pay invoice when possible
+      if (paymentTab === 'nostr') {
+        const npubOrHex = wishlist.creator?.nostr_pubkey?.trim();
+        const lud16 =
+          wishlist.creator?.lightning_address?.trim() ||
+          (npubOrHex ? await (async () => {
+            try {
+              const hex = nostrService.normalizePubkey(npubOrHex);
+              return (await nostrService.getLightningAddress(hex)) || null;
+            } catch {
+              return null;
+            }
+          })() : null);
+
+        if (!lud16) {
+          toast('Creator has no Lightning address (lud16) for zaps. Use Lightning tab or buy product.', 'error');
+          setProcessing(false);
+          return;
+        }
+
+        setZapBusy(true);
+        try {
+          let zapRequestJson: string | undefined;
+          if (hasNip07() && npubOrHex) {
+            try {
+              const recipient = nostrService.normalizePubkey(npubOrHex);
+              zapRequestJson = await nostrService.createZapRequest({
+                recipientPubkey: recipient,
+                amountSats,
+                comment: giftForm.message || `KATOA gift for ${wishlist.title}`,
+              });
+            } catch (e) {
+              toast(nip07UserMessage(e), 'error');
+              // continue without signed zap request → still try LNURL invoice
+            }
+          } else if (!hasNip07()) {
+            toast('Optional: install Alby/nos2x for signed NIP-57 zaps. Fetching LN invoice…', 'info');
+          }
+
+          const inv = await nostrService.fetchZapInvoice({
+            lud16,
+            amountSats,
+            comment: giftForm.message || undefined,
+            zapRequestJson,
+          });
+          if (inv.error || !inv.bolt11) {
+            toast(inv.error || 'Could not fetch zap invoice', 'error');
+            setZapError(inv.error || 'No invoice');
+            setProcessing(false);
+            setZapBusy(false);
+            return;
+          }
+          setZapInvoice(inv.bolt11);
+          setMockInvoice(inv.bolt11);
+          setPaymentQrUrl(getQrImageUrl(inv.bolt11.startsWith('ln') ? inv.bolt11 : `lightning:${inv.bolt11}`, 280));
+          setPaymentCountdown(180);
+          persistGiftDraft(giftForm);
+          setShowGiftModal(false);
+          setShowPaymentModal(true);
+          toast(zapRequestJson ? 'Zap invoice ready (NIP-57)' : 'Lightning invoice ready', 'success');
+        } finally {
+          setZapBusy(false);
+        }
+        setProcessing(false);
+        return;
+      }
+
       const lightningAddr = wishlist.creator?.lightning_address?.trim();
       const invoicePayload = lightningAddr
         ? lightningQrData(lightningAddr.includes('@') ? lightningAddr : lightningAddr)
@@ -943,6 +1016,17 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             </a>
           )}
           <PaymentMethodTabs value={paymentTab} onChange={setPaymentTab} />
+          {paymentTab === 'nostr' && (
+            <p className="text-xs text-gray-400 leading-relaxed">
+              Nostr Zap (NIP-57): signs a zap request with your extension when available, then fetches a Lightning
+              invoice from the creator’s lud16. No private keys leave your browser.
+            </p>
+          )}
+          {zapError && (
+            <p className="text-sm text-amber-400" role="alert">
+              {zapError}
+            </p>
+          )}
           <div id="payment-method-panel" role="tabpanel" aria-labelledby={`payment-tab-${paymentTab}`}>
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">Amount (sats)</label>
@@ -1026,11 +1110,11 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
           <Button
             type="submit"
             className="w-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 font-bold text-lg py-4 shadow-[0_0_20px_rgba(255,135,0,0.3)]"
-            loading={processing}
-            disabled={processing}
+            loading={processing || zapBusy}
+            disabled={processing || zapBusy}
           >
             <Bitcoin size={20} className="mr-2" />
-            Continue to Pay
+            {paymentTab === 'nostr' ? 'Request Zap Invoice' : 'Continue to Pay'}
           </Button>
         </form>
       </Modal>
@@ -1089,8 +1173,16 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             </div>
           </div>
 
-          {mockInvoice && !isDemoWishlist && (
-            <WalletDeepLinks paymentUri={mockInvoice.includes('@') ? `lightning:${mockInvoice}` : mockInvoice} />
+          {(zapInvoice || mockInvoice) && !isDemoWishlist && (
+            <WalletDeepLinks
+              paymentUri={
+                (zapInvoice || mockInvoice)!.startsWith('ln')
+                  ? (zapInvoice || mockInvoice)!
+                  : mockInvoice.includes('@')
+                    ? `lightning:${mockInvoice}`
+                    : mockInvoice
+              }
+            />
           )}
 
           {selectedItem?.merchant_link && (

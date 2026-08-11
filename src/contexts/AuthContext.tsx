@@ -230,18 +230,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   async function signInWithNostr() {
     try {
       if (!window.nostr) {
-        throw new Error('Nostr extension not found. Please install a Nostr browser extension like nos2x or Alby.');
+        throw new Error(
+          'Install a Nostr extension (Alby or nos2x). We only use NIP-07 browser signing — we never ask for private keys.'
+        );
       }
 
       // Prove extension works without creating a weak auth session
-      await window.nostr.getPublicKey();
+      const pk = await window.nostr.getPublicKey();
+      void pk;
 
       return {
         error: new Error(
-          'Secure Nostr sign-in is not available yet. Use email, Google, or sign in first and link your Nostr key in Settings. (Public-key-as-password auth was removed for security.)'
+          'Secure Nostr sign-in needs a server challenge (coming soon). For now: sign in with email/Google, then Settings → Link NIP-07 extension to attach your npub and publish lud16 for zaps.'
         ),
       };
     } catch (error) {
+      const msg = error instanceof Error ? error.message : String(error);
+      if (/reject|denied|user/i.test(msg)) {
+        return { error: new Error('Nostr extension denied permission. Approve the prompt and try again.') };
+      }
       return { error: error as Error };
     }
   }
