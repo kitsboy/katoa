@@ -23,6 +23,8 @@
 - [ ] Then delete local copy if desired
 - [ ] Without that nsec you **cannot sign** as `katoa@katoa.org` for platform notes
 
+Also see **`docs/NEXT-NEEDS-CAM.md`** for the full “needs human” backlog after solo YOLO batches.
+
 **Pubkey (public):** `npub1349w8xkkjphzwtnhsaez2w6ehxhgwy58zppcql6x2ktqlmqwgssqqpyukn`  
 **NIP-05:** `katoa@katoa.org` / `_@katoa.org`  
 **File live:** `https://katoa.org/.well-known/nostr.json`

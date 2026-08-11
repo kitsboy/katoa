@@ -169,6 +169,8 @@ export function Footer() {
                   <FooterLink href="/pitch">Pitch</FooterLink>
                   <FooterLink href="/press">Press kit</FooterLink>
                   <FooterLink href="/meetup">Meetup kit</FooterLink>
+                  <FooterLink href="/creators">For creators</FooterLink>
+                  <FooterLink href="/case-studies">Case studies</FooterLink>
                 </ul>
               </div>
               <div>
@@ -191,6 +193,7 @@ export function Footer() {
                 </h3>
                 <ul className="space-y-2.5 sm:flex sm:flex-wrap sm:gap-x-6 sm:gap-y-2.5 sm:space-y-0">
                   <FooterLink href="/security">Security</FooterLink>
+                  <FooterLink href="/security/bounty">Bug bounty</FooterLink>
                   <FooterLink href="/terms">{t('footer.terms')}</FooterLink>
                   <FooterLink href="/privacy">{t('footer.privacy')}</FooterLink>
                 </ul>

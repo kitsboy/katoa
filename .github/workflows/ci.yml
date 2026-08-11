@@ -1,11 +1,9 @@
 name: CI
-
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
-
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -13,8 +11,19 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
           cache: npm
-      - run: npm ci
-      - run: npm run check
-      - run: npm run build
+      - name: Install
+        run: npm ci || npm install
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Unit tests
+        run: npm run test
+      - name: Build
+        run: npm run build
+      - name: Smoke — dist has NIP-05 + version
+        run: |
+          test -f dist/.well-known/nostr.json
+          test -f dist/version.json
+          grep -q '"names"' dist/.well-known/nostr.json
+          node -e "JSON.parse(require('fs').readFileSync('dist/.well-known/nostr.json','utf8'))"

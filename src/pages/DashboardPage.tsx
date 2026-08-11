@@ -15,6 +15,8 @@ import { useToast } from '../components/Toast';
 import { useLanguage } from '../contexts/LanguageContext';
 
 import { Breadcrumbs } from '../components/Breadcrumbs';
+import { EmbedSnippet } from '../components/EmbedSnippet';
+import { ReferralLinkGenerator } from '../components/ReferralLinkGenerator';
 
 type Project = DbProject & { wishlist_count?: number };
 
@@ -415,6 +417,29 @@ export function DashboardPage() {
               {t('dashboard.videoHintLink')} →
             </Link>
           </p>
+        </Card>
+
+        <div className="grid md:grid-cols-2 gap-4 mb-8">
+          <EmbedSnippet path={user ? `/explore` : '/creators'} title="Support me on KATOA — 0% fees" />
+          <ReferralLinkGenerator />
+        </div>
+
+        <Card className="mb-8 p-4 border-bitcoin-orange-500/20 bg-bitcoin-orange-500/5">
+          <p className="text-sm text-gray-300 mb-2 font-semibold text-white">Grow like a tip platform — without the cut</p>
+          <p className="text-xs text-gray-400 mb-3 leading-relaxed">
+            Add cover video, product links from Amazon/fashion shops, and share your page. Fans fund sats or buy items for you.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <Link href="/templates" className="text-xs font-bold text-bitcoin-orange-300 hover:underline min-h-[36px] inline-flex items-center">
+              Templates →
+            </Link>
+            <Link href="/creators" className="text-xs font-bold text-bitcoin-orange-300 hover:underline min-h-[36px] inline-flex items-center">
+              Creator playbook →
+            </Link>
+            <Link href="/security" className="text-xs font-bold text-gray-400 hover:underline min-h-[36px] inline-flex items-center">
+              Non-custodial model →
+            </Link>
+          </div>
         </Card>
 
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 mb-8 sm:mb-12">

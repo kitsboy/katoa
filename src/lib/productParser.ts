@@ -293,9 +293,26 @@ async function fetchPageHtml(url: string): Promise<string | null> {
  * Uses OG/meta scrape when possible; always falls back to URL heuristics
  * so Amazon/clothing/shoe links still become usable wishlist items.
  */
+/** Simple client-side rate limit for product URL parses (per browser tab). */
+const parseTimestamps: number[] = [];
+const PARSE_WINDOW_MS = 60_000;
+const PARSE_MAX_PER_WINDOW = 12;
+
+function assertParseRateLimit() {
+  const now = Date.now();
+  while (parseTimestamps.length && now - parseTimestamps[0] > PARSE_WINDOW_MS) {
+    parseTimestamps.shift();
+  }
+  if (parseTimestamps.length >= PARSE_MAX_PER_WINDOW) {
+    throw new Error('Too many product lookups — wait a minute and try again.');
+  }
+  parseTimestamps.push(now);
+}
+
 export async function parseProductUrl(url: string): Promise<ParsedProduct | null> {
   const product_url = normalizeProductUrl(url);
   if (!isValidUrl(product_url)) return null;
+  assertParseRateLimit();
 
   let hostname: string;
   try {

@@ -13,6 +13,7 @@ import { PwaInstallPrompt } from './components/PwaInstallPrompt';
 import { ChangelogModal } from './components/ChangelogModal';
 import { RouteTransition } from './components/RouteTransition';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { SupabaseStatusBanner } from './components/SupabaseStatusBanner';
 import { useAuth } from './contexts/AuthContext';
 
 import { HomePage } from './pages/HomePage';
@@ -36,6 +37,9 @@ const RoadmapPage = lazy(() => import('./pages/RoadmapPage').then((m) => ({ defa
 const TemplatesPage = lazy(() => import('./pages/TemplatesPage').then((m) => ({ default: m.TemplatesPage })));
 const PressKitPage = lazy(() => import('./pages/PressKitPage').then((m) => ({ default: m.PressKitPage })));
 const MeetupKitPage = lazy(() => import('./pages/MeetupKitPage').then((m) => ({ default: m.MeetupKitPage })));
+const CaseStudiesPage = lazy(() => import('./pages/CaseStudiesPage').then((m) => ({ default: m.CaseStudiesPage })));
+const BugBountyPage = lazy(() => import('./pages/BugBountyPage').then((m) => ({ default: m.BugBountyPage })));
+const CreatorsPage = lazy(() => import('./pages/CreatorsPage').then((m) => ({ default: m.CreatorsPage })));
 
 function PageLoader() {
   const { t } = useLanguage();
@@ -121,6 +125,7 @@ function AppShell() {
         {t('a11y.skipToContent')}
       </a>
       <Navbar />
+      <SupabaseStatusBanner />
       {isDemoUser && <DemoBanner />}
       <ExplorePreload />
       <RouteAnnouncer />
@@ -145,6 +150,9 @@ function AppShell() {
               <Route path="/templates" element={<RouteTransition><TemplatesPage /></RouteTransition>} />
               <Route path="/press" element={<RouteTransition><PressKitPage /></RouteTransition>} />
               <Route path="/meetup" element={<RouteTransition><MeetupKitPage /></RouteTransition>} />
+              <Route path="/case-studies" element={<RouteTransition><CaseStudiesPage /></RouteTransition>} />
+              <Route path="/security/bounty" element={<RouteTransition><BugBountyPage /></RouteTransition>} />
+              <Route path="/creators" element={<RouteTransition><CreatorsPage /></RouteTransition>} />
               <Route path="/terms" element={<RouteTransition><TermsPage /></RouteTransition>} />
               <Route path="/privacy" element={<RouteTransition><PrivacyPage /></RouteTransition>} />
               <Route path="/dashboard" element={<RouteTransition><ProtectedRoute><DashboardPage /></ProtectedRoute></RouteTransition>} />

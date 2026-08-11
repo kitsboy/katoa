@@ -13,6 +13,7 @@ import { ArrowRight, Zap, Shield, Globe } from 'lucide-react';
 import { FeeComparison } from '../components/FeeComparison';
 import { OnboardingChecklist } from '../components/OnboardingChecklist';
 import { FamilyLinks } from '../components/FamilyLinks';
+import { CreatorVerticalsGrid } from '../components/CreatorVerticalsGrid';
 
 const howItWorksSteps = [
   { titleKey: 'home.step1.title', descKey: 'home.step1.desc', step: '01' },
@@ -112,6 +113,12 @@ export function HomePage() {
       </div>
 
       <LandingTrustBar />
+
+      <section className="lp-section">
+        <div className="lp-container">
+          <CreatorVerticalsGrid />
+        </div>
+      </section>
 
       <section className="lp-section">
         <div className="lp-container">

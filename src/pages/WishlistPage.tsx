@@ -20,15 +20,20 @@ import { PageMeta } from '../components/PageMeta';
 import { useToast } from '../components/Toast';
 import { PaymentMethodTabs, PaymentTab } from '../components/PaymentMethodTabs';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useAuth } from '../contexts/AuthContext';
 import { Gift, ExternalLink, Zap, Bitcoin, Check, Copy, MapPin, QrCode, ArrowLeft, Heart, TrendingUp, Package, ChevronUp, ChevronDown, ShoppingBag, Loader2 } from 'lucide-react';
 import { MilestoneBanner } from '../components/MilestoneBanner';
 import { ActivityFeed } from '../components/ActivityFeed';
 import { TrustProofStrip } from '../components/TrustProofStrip';
 import { EmbedSnippet } from '../components/EmbedSnippet';
 import { GiftSuccess } from '../components/GiftSuccess';
-import { buyLabel } from '../lib/productParser';
+import { buyLabel, type ParsedProduct } from '../lib/productParser';
 import { WalletDeepLinks } from '../components/WalletDeepLinks';
 import { hasNip07, nip07UserMessage, nostrService } from '../lib/nostr';
+import { NostrPublishWishlist } from '../components/NostrPublishWishlist';
+import { ZapTotals } from '../components/ZapTotals';
+import { ProductUrlImport } from '../components/ProductUrlImport';
+import { SubscriptionTiers } from '../components/SubscriptionTiers';
 
 const SAT_PRESETS = [
   { label: '1K', value: 1000 },
@@ -86,6 +91,8 @@ interface Wishlist {
   country_code?: string;
   country_flag?: string;
   city?: string;
+  creator_id?: string;
+  visibility?: string;
   creator: {
     username: string;
     avatar_url: string | null;
@@ -99,6 +106,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
   const { t } = useLanguage();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user, profile } = useAuth();
   const [wishlist, setWishlist] = useState<Wishlist | null>(null);
   const [items, setItems] = useState<WishlistItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -215,8 +223,9 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
         setIsDemoWishlist(true);
         setWishlist({
           ...mockWishlist,
+          creator_id: (mockWishlist as { creator_id?: string }).creator_id || 'demo',
           theme_color: '#f97316',
-          card_style: (mockWishlist as { card_style?: 'creator' }).card_style,
+          card_style: (mockWishlist as { card_style?: 'creator' }).card_style || 'creator',
           cover_video_url: (mockWishlist as { cover_video_url?: string }).cover_video_url,
         } as Wishlist);
 
@@ -268,6 +277,8 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             country,
             country_code,
             city,
+            creator_id,
+            visibility,
             creator:profiles!wishlists_creator_id_fkey(username, avatar_url, lightning_address, nostr_pubkey, bio)
           `)
           .eq('slug', slug)
@@ -603,6 +614,67 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
     return `${m}:${s.toString().padStart(2, '0')}`;
   };
 
+  const isOwner =
+    Boolean(user && wishlist?.creator_id && user.id === wishlist.creator_id) ||
+    Boolean(user && profile?.username && wishlist?.creator?.username === profile.username);
+
+  async function handleOwnerImportProduct(product: ParsedProduct) {
+    if (!wishlist) return;
+    if (isDemoWishlist) {
+      const id = `local-${Date.now()}`;
+      setItems((prev) => [
+        ...prev,
+        {
+          id,
+          wishlist_id: wishlist.id,
+          title: product.title,
+          description: product.description,
+          price_sats: product.price_sats || 21000,
+          sats_raised: 0,
+          image_url: product.image_url || null,
+          video_url: null,
+          merchant_link: product.product_url,
+          is_funded: false,
+          sort_order: prev.length + 1,
+        },
+      ]);
+      toast('Demo item added locally (not saved to server)', 'success');
+      return;
+    }
+    if (!user) {
+      toast('Sign in to add products', 'error');
+      return;
+    }
+    const { data: existing } = await supabase
+      .from('wishlist_items')
+      .select('sort_order')
+      .eq('wishlist_id', wishlist.id)
+      .order('sort_order', { ascending: false })
+      .limit(1);
+    const nextOrder = (existing?.[0]?.sort_order ?? 0) + 1;
+    const { error } = await supabase.from('wishlist_items').insert({
+      wishlist_id: wishlist.id,
+      title: product.title.slice(0, 200),
+      description: (product.description || '').slice(0, 2000),
+      price_sats: product.price_sats || 21000,
+      sats_raised: 0,
+      image_url: product.image_url || null,
+      video_url: null,
+      merchant_link: product.product_url,
+      is_funded: false,
+      sort_order: nextOrder,
+    });
+    if (error) throw error;
+    toast('Product added — fans can fund sats or buy it for you', 'success');
+    // reload items
+    const { data: itemsData } = await supabase
+      .from('wishlist_items')
+      .select('*')
+      .eq('wishlist_id', wishlist.id)
+      .order('sort_order');
+    if (itemsData) setItems(applyItemOrder(itemsData as WishlistItem[], slug));
+  }
+
   return (
     <div className="min-h-screen bg-charcoal-950 pb-24 md:pb-0" style={{ '--wishlist-accent': themeColor } as React.CSSProperties}>
       <PageMeta
@@ -719,13 +791,18 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
                 <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-amber-600 rounded-full flex items-center justify-center text-white font-black text-2xl ring-4 ring-orange-500/20">
                   {wishlist.creator.username[0].toUpperCase()}
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   <p className="text-white font-black text-xl">{wishlist.creator.username}</p>
                   {wishlist.creator.lightning_address && (
                     <p className="text-sm text-gray-400 flex items-center gap-1.5 mt-1">
                       <Zap size={14} className="text-orange-500" />
                       {wishlist.creator.lightning_address}
                     </p>
+                  )}
+                  {wishlist.creator.nostr_pubkey && (
+                    <div className="mt-2">
+                      <ZapTotals pubkey={wishlist.creator.nostr_pubkey} />
+                    </div>
                   )}
                 </div>
               </div>
@@ -796,6 +873,31 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
                   : []
               }
             />
+
+            {(isOwner || isDemoWishlist) && (
+              <div className="mb-4 space-y-3">
+                <ProductUrlImport compact onImport={handleOwnerImportProduct} />
+                <NostrPublishWishlist
+                  title={wishlist.title}
+                  description={wishlist.description || ''}
+                  slug={wishlist.slug}
+                  items={items.map((i) => ({
+                    title: i.title,
+                    price_sats: i.price_sats,
+                    description: i.description || '',
+                  }))}
+                />
+              </div>
+            )}
+
+            {(wishlist.card_style === 'creator' || isDemoWishlist) && (
+              <div className="mb-4">
+                <SubscriptionTiers
+                  creatorName={wishlist.creator.username}
+                  onSubscribe={() => handleGiftClick()}
+                />
+              </div>
+            )}
 
             <Card className=" p-6 space-y-4">
               <TrustProofStrip compact />

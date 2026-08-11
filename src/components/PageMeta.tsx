@@ -68,8 +68,15 @@ export function PageMeta({
     setMeta('twitter:title', fullTitle);
     setMeta('og:url', `${SITE_URL}${canonicalPath}`, 'property');
     setMeta('og:image', absoluteImage, 'property');
+    setMeta('og:image:width', '1200', 'property');
+    setMeta('og:image:height', '630', 'property');
+    setMeta('og:image:alt', fullTitle, 'property');
+    setMeta('twitter:image', absoluteImage);
     setMeta('og:type', ogVideo ? 'video.other' : 'website', 'property');
+    setMeta('og:site_name', 'KATOA', 'property');
     setMeta('og:locale', OG_LOCALE[language], 'property');
+    // Creator-economy positioning for share previews
+    setMeta('twitter:site', '@give_bit');
     if (ogVideo) {
       const absoluteVideo = toAbsoluteUrl(ogVideo);
       setMeta('og:video', absoluteVideo, 'property');
