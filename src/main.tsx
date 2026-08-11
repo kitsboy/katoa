@@ -3,6 +3,13 @@ import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 
+// Build stamp — referenced so the entry chunk hash always changes on emergency redeploys
+// (CF has Origin-keyed cache that can poison /assets/*.js with SPA HTML)
+export const KATOA_BUILD_STAMP = '2026-08-11-js-poison-bust-2';
+if (typeof document !== 'undefined') {
+  document.documentElement.dataset.katoaBuild = KATOA_BUILD_STAMP;
+}
+
 const SW_STRINGS: Record<string, { update: string; refresh: string }> = {
   en: { update: 'Update available.', refresh: 'Refresh' },
   es: { update: 'Actualización disponible.', refresh: 'Actualizar' },
