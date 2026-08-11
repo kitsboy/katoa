@@ -14,11 +14,12 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { PageMeta } from '../components/PageMeta';
 import { supabase, asRow, asRows } from '../lib/supabase';
 import type { Project as DbProject, Visibility } from '../types/database';
-import { parseProductUrl } from '../lib/productParser';
+import { parseProductUrl, type ParsedProduct } from '../lib/productParser';
+import { ProductUrlImport } from '../components/ProductUrlImport';
 import {
   Plus, Edit, Trash2, Settings, Gift, ArrowLeft,
   Wallet, Globe, Lock, FileText,
-  ExternalLink, Save, X, Camera, Upload
+  ExternalLink, Save, X, Camera, Upload, Package
 } from 'lucide-react';
 
 type Project = DbProject & { settings?: Record<string, unknown> };
@@ -71,6 +72,7 @@ export function ProjectPage() {
 
   const [parsingUrl, setParsingUrl] = useState(false);
   const [deleteWishlistId, setDeleteWishlistId] = useState<string | null>(null);
+  const [addItemWishlistId, setAddItemWishlistId] = useState<string | null>(null);
 
   const slug = window.location.pathname.split('/').pop();
 
@@ -223,12 +225,63 @@ export function ProjectPage() {
           title: parsed.title || wishlistForm.title,
           description: parsed.description || wishlistForm.description,
         });
+        toast('Details filled from product page — create wishlist, then add items from links', 'success');
+      } else {
+        toast('Could not read that URL — fill details manually', 'error');
       }
     } catch (error) {
       console.error('Error parsing URL:', error);
+      toast('Could not parse URL', 'error');
     } finally {
       setParsingUrl(false);
     }
+  }
+
+  async function handleImportProductItem(product: ParsedProduct) {
+    if (!addItemWishlistId || !user) throw new Error('No wishlist selected');
+
+    const { data: existing } = await supabase
+      .from('wishlist_items')
+      .select('sort_order')
+      .eq('wishlist_id', addItemWishlistId)
+      .order('sort_order', { ascending: false })
+      .limit(1);
+
+    const nextOrder = (existing?.[0]?.sort_order ?? 0) + 1;
+
+    const { error } = await supabase.from('wishlist_items').insert({
+      wishlist_id: addItemWishlistId,
+      title: product.title.slice(0, 200),
+      description: (product.description || '').slice(0, 2000),
+      price_sats: product.price_sats || 21000,
+      sats_raised: 0,
+      image_url: product.image_url || null,
+      video_url: null,
+      merchant_link: product.product_url,
+      is_funded: false,
+      sort_order: nextOrder,
+    });
+
+    if (error) throw error;
+
+    // Bump wishlist goal so progress stays meaningful
+    const { data: wl } = await supabase
+      .from('wishlists')
+      .select('total_sats_goal')
+      .eq('id', addItemWishlistId)
+      .maybeSingle();
+    if (wl) {
+      await supabase
+        .from('wishlists')
+        .update({
+          total_sats_goal: (wl.total_sats_goal || 0) + (product.price_sats || 21000),
+        })
+        .eq('id', addItemWishlistId);
+    }
+
+    toast('Product added — supporters can fund sats or buy the item for you', 'success');
+    setAddItemWishlistId(null);
+    loadWishlists();
   }
 
   async function handleCreateWishlist(e: React.FormEvent) {
@@ -649,7 +702,7 @@ export function ProjectPage() {
               About Wishlists
             </p>
             <p className="text-gray-300 text-sm leading-relaxed">
-              Wishlists let you organize specific items, goals, or campaigns within your project. Each wishlist has its own page where supporters can see what you need and contribute directly.
+              Wishlists let you organize specific items, goals, or campaigns. Paste product links (Amazon, clothing, shoes, any store) so supporters can fund in sats or buy the item for you.
             </p>
           </div>
         </div>
@@ -773,28 +826,39 @@ export function ProjectPage() {
                       </div>
                     )}
 
-                    <div className="flex gap-3">
-                      <Link href={`/wishlist/${wishlist.slug}`} className="flex-1">
-                        <Button className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 font-bold text-lg py-4">
-                          <ExternalLink size={20} className="mr-2" />
-                          View Wishlist
+                    <div className="flex flex-col gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="w-full min-h-[48px] border-bitcoin-orange-500/30 text-bitcoin-orange-300 hover:bg-bitcoin-orange-500/10 font-bold"
+                        onClick={() => setAddItemWishlistId(wishlist.id)}
+                      >
+                        <Package size={18} className="mr-2" />
+                        Add product from link
+                      </Button>
+                      <div className="flex gap-3">
+                        <Link href={`/wishlist/${wishlist.slug}`} className="flex-1">
+                          <Button className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 font-bold text-lg py-4 min-h-[48px]">
+                            <ExternalLink size={20} className="mr-2" />
+                            View Wishlist
+                          </Button>
+                        </Link>
+                        <Button
+                          variant="outline"
+                          onClick={() => startEditingWishlist(wishlist)}
+                          className="border-white/10 text-gray-300 hover:bg-white/5 hover:text-purple-400 hover:border-purple-500/50 px-5 min-h-[48px] min-w-[48px]"
+                        >
+                          <Edit size={20} />
                         </Button>
-                      </Link>
-                      <Button
-                        variant="outline"
-                        onClick={() => startEditingWishlist(wishlist)}
-                        className="border-white/10 text-gray-300 hover:bg-white/5 hover:text-purple-400 hover:border-purple-500/50 px-5"
-                      >
-                        <Edit size={20} />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => setDeleteWishlistId(wishlist.id)}
-                        className="border-white/10 text-gray-300 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/50 px-5"
-                        aria-label={t('confirm.deleteWishlist.title')}
-                      >
-                        <Trash2 size={20} />
-                      </Button>
+                        <Button
+                          variant="outline"
+                          onClick={() => setDeleteWishlistId(wishlist.id)}
+                          className="border-white/10 text-gray-300 hover:bg-red-500/10 hover:text-red-400 hover:border-red-500/50 px-5 min-h-[48px] min-w-[48px]"
+                          aria-label={t('confirm.deleteWishlist.title')}
+                        >
+                          <Trash2 size={20} />
+                        </Button>
+                      </div>
                     </div>
                   </>
                 )}
@@ -803,6 +867,21 @@ export function ProjectPage() {
           </div>
         )}
       </div>
+
+      <Modal
+        isOpen={!!addItemWishlistId}
+        onClose={() => setAddItemWishlistId(null)}
+        title="Add product from URL"
+      >
+        <p className="text-sm text-gray-400 mb-4 leading-relaxed">
+          Paste a link from Amazon, Nike, Etsy, Shopify stores, or any shop. Supporters can send sats
+          <strong className="text-gray-300"> or open the link to buy the item for you</strong>.
+        </p>
+        <ProductUrlImport
+          compact
+          onImport={handleImportProductItem}
+        />
+      </Modal>
 
       <Modal
         isOpen={showCreateWishlist}

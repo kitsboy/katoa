@@ -86,15 +86,19 @@ export const WishlistItemsList = memo(function WishlistItemsList({ items, onItem
                   <h4 className="text-sm font-semibold text-white line-clamp-2 leading-tight">
                     {item.title}
                   </h4>
-                  <a
-                    href={item.product_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-shrink-0 text-orange-500 hover:text-orange-400 transition-colors"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <ExternalLink size={14} />
-                  </a>
+                  {item.product_url && (
+                    <a
+                      href={item.product_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-shrink-0 inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-neon-cyan-400 hover:text-neon-cyan-300 min-h-[32px] px-1.5"
+                      onClick={(e) => e.stopPropagation()}
+                      title="Buy this product for the creator"
+                    >
+                      Buy
+                      <ExternalLink size={12} />
+                    </a>
+                  )}
                 </div>
 
                 <p className="text-xs text-gray-400 line-clamp-1 mb-2">

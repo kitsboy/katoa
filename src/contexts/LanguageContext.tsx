@@ -372,6 +372,12 @@ const navUiStrings = {
     'donate.safeHarbour': 'Educational software. You send sats directly to the recipient — KATOA never holds your funds.',
     'donate.stickyFund': 'Send sats',
     'donate.stickyShare': 'Share',
+    'product.importTitle': 'Add from product link',
+    'product.importHelp':
+      'Paste Amazon, Nike, Etsy, Shopify, or any shop URL. Supporters can fund in sats or buy the item for you.',
+    'product.invalidUrl': 'Enter a valid product link (https://…)',
+    'product.parseFailed': 'Could not fully read that page — edit details, then add. The buy link still works.',
+
     'share.nostr': 'Share via Nostr note',
     'share.native': 'System share',
     'empty.defaultAction': 'Explore projects',

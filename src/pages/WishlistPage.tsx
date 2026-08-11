@@ -20,12 +20,14 @@ import { PageMeta } from '../components/PageMeta';
 import { useToast } from '../components/Toast';
 import { PaymentMethodTabs, PaymentTab } from '../components/PaymentMethodTabs';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Gift, ExternalLink, Zap, Bitcoin, Check, Copy, MapPin, QrCode, ArrowLeft, Heart, TrendingUp, Package, ChevronUp, ChevronDown } from 'lucide-react';
+import { Gift, ExternalLink, Zap, Bitcoin, Check, Copy, MapPin, QrCode, ArrowLeft, Heart, TrendingUp, Package, ChevronUp, ChevronDown, ShoppingBag, Loader2 } from 'lucide-react';
 import { MilestoneBanner } from '../components/MilestoneBanner';
 import { ActivityFeed } from '../components/ActivityFeed';
 import { TrustProofStrip } from '../components/TrustProofStrip';
 import { EmbedSnippet } from '../components/EmbedSnippet';
 import { GiftSuccess } from '../components/GiftSuccess';
+import { buyLabel } from '../lib/productParser';
+import { WalletDeepLinks } from '../components/WalletDeepLinks';
 
 const SAT_PRESETS = [
   { label: '1K', value: 1000 },
@@ -121,6 +123,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
   );
   const [paymentCountdown, setPaymentCountdown] = useState(180);
   const [isDemoWishlist, setIsDemoWishlist] = useState(false);
+  const [demoAutoProgress, setDemoAutoProgress] = useState(0);
 
   useEffect(() => {
     setThemeColor(getStorage<string>(STORAGE_KEYS.wishlistTheme(slug), '#f97316'));
@@ -129,11 +132,47 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
   useEffect(() => {
     if (!showPaymentModal) return;
     setPaymentCountdown(180);
+    setDemoAutoProgress(0);
     const interval = setInterval(() => {
       setPaymentCountdown((c) => (c <= 1 ? 0 : c - 1));
     }, 1000);
     return () => clearInterval(interval);
   }, [showPaymentModal]);
+
+  // Demo wishlist: auto-complete gift flow after ~3s (mobile-friendly preview)
+  useEffect(() => {
+    if (!showPaymentModal || !isDemoWishlist) return;
+    setDemoAutoProgress(0);
+    const started = Date.now();
+    const tick = window.setInterval(() => {
+      const p = Math.min(100, Math.round(((Date.now() - started) / 3000) * 100));
+      setDemoAutoProgress(p);
+    }, 100);
+    const done = window.setTimeout(() => {
+      setDemoAutoProgress(100);
+      // Local-only demo progress bump on selected item
+      if (selectedItem) {
+        setItems((prev) =>
+          prev.map((it) => {
+            if (it.id !== selectedItem.id) return it;
+            const add = Math.min(
+              selectedItem.price_sats - selectedItem.sats_raised,
+              Number.parseInt(giftForm.amount, 10) || 1000
+            );
+            const raised = Math.min(it.price_sats, it.sats_raised + Math.max(add, 0));
+            return { ...it, sats_raised: raised, is_funded: raised >= it.price_sats };
+          })
+        );
+      }
+      setShowPaymentModal(false);
+      setShowGiftSuccess(true);
+      toast('Demo gift complete — live sites confirm via wallet + server only', 'success');
+    }, 3000);
+    return () => {
+      window.clearInterval(tick);
+      window.clearTimeout(done);
+    };
+  }, [showPaymentModal, isDemoWishlist, selectedItem?.id, giftForm.amount, toast]);
 
   function handleThemeChange(color: string) {
     setThemeColor(color);
@@ -816,35 +855,62 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
                         </p>
                       </div>
 
-                      <div className="flex gap-3 pt-2">
-                        <Button
-                          className={`flex-1 font-bold text-lg py-4 ${item.is_funded ? 'bg-gradient-to-r from-emerald-500 to-cyan-600 cursor-not-allowed' : 'bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 shadow-[0_0_20px_rgba(255,135,0,0.3)]'}`}
-                          onClick={() => handleGiftClick(item)}
-                          disabled={item.is_funded}
-                          title={item.is_funded ? "This item is fully funded" : "Support this item"}
-                        >
-                          {item.is_funded ? (
-                            <>
-                              <Check size={20} className="mr-2" />
-                              Fully Funded
-                            </>
-                          ) : (
-                            <>
-                              <Zap size={20} className="mr-2" />
-                              Fund This Item
-                            </>
-                          )}
-                        </Button>
-                        {item.merchant_link && (
+                      <div className="flex flex-col gap-2 pt-2">
+                        <div className="flex gap-2 sm:gap-3">
                           <Button
-                            variant="outline"
-                            onClick={() => window.open(item.merchant_link!, '_blank')}
-                            className="border-white/10 text-gray-300 hover:bg-gray-800 hover:border-purple-500/50 px-5"
-                            title="View product page"
+                            className={`flex-1 font-bold text-base sm:text-lg py-4 min-h-[52px] ${item.is_funded ? 'bg-gradient-to-r from-emerald-500 to-cyan-600 cursor-not-allowed' : 'bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 shadow-[0_0_20px_rgba(255,135,0,0.3)]'}`}
+                            onClick={() => handleGiftClick(item)}
+                            disabled={item.is_funded}
+                            title={item.is_funded ? "This item is fully funded" : "Support this item with sats"}
                           >
-                            <ExternalLink size={20} />
+                            {item.is_funded ? (
+                              <>
+                                <Check size={20} className="mr-2 shrink-0" />
+                                Fully Funded
+                              </>
+                            ) : (
+                              <>
+                                <Zap size={20} className="mr-2 shrink-0" />
+                                Fund with sats
+                              </>
+                            )}
                           </Button>
+                        </div>
+                        {item.merchant_link && (
+                          <a
+                            href={item.merchant_link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center justify-center gap-2 w-full min-h-[48px] px-4 rounded-xl border border-neon-cyan-500/35 bg-neon-cyan-500/10 text-neon-cyan-300 font-bold text-sm hover:bg-neon-cyan-500/15 transition-colors touch-manipulation"
+                          >
+                            <ShoppingBag size={18} className="shrink-0" />
+                            {buyLabel(
+                              (() => {
+                                try {
+                                  const h = new URL(item.merchant_link!).hostname.replace(/^www\./, '');
+                                  if (h.includes('amazon')) return 'Amazon';
+                                  if (h.includes('etsy')) return 'Etsy';
+                                  if (h.includes('nike')) return 'Nike';
+                                  if (h.includes('adidas')) return 'Adidas';
+                                  if (h.includes('zappos')) return 'Zappos';
+                                  if (h.includes('walmart')) return 'Walmart';
+                                  if (h.includes('target')) return 'Target';
+                                  if (h.includes('ebay')) return 'eBay';
+                                  if (h.includes('shopify') || h.includes('myshopify')) return 'Store';
+                                  return h.split('.')[0];
+                                } catch {
+                                  return undefined;
+                                }
+                              })()
+                            )}
+                            <ExternalLink size={14} className="opacity-70" />
+                          </a>
                         )}
+                        <p className="text-[11px] text-center text-gray-500 leading-snug">
+                          {item.merchant_link
+                            ? 'Send sats here, or buy this product and ship it to the creator.'
+                            : 'Fund this goal in Bitcoin sats.'}
+                        </p>
                       </div>
                     </div>
                   </Card>
@@ -861,6 +927,21 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
         title={selectedItem ? `Fund ${selectedItem.title}` : 'Send a Gift'}
       >
         <form onSubmit={handleGiftSubmit} className="space-y-4">
+          {selectedItem?.merchant_link && (
+            <a
+              href={selectedItem.merchant_link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 p-3 rounded-xl border border-neon-cyan-500/30 bg-neon-cyan-500/10 min-h-[52px] touch-manipulation"
+            >
+              <ShoppingBag size={20} className="text-neon-cyan-400 shrink-0" />
+              <div className="min-w-0 flex-1 text-left">
+                <p className="text-sm font-bold text-white">Buy this product for them</p>
+                <p className="text-[11px] text-gray-400 truncate">{selectedItem.merchant_link}</p>
+              </div>
+              <ExternalLink size={16} className="text-neon-cyan-400 shrink-0" />
+            </a>
+          )}
           <PaymentMethodTabs value={paymentTab} onChange={setPaymentTab} />
           <div id="payment-method-panel" role="tabpanel" aria-labelledby={`payment-tab-${paymentTab}`}>
           <div>
@@ -959,8 +1040,26 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
         onClose={closePaymentModal}
         title="Pay with Lightning"
       >
-        <div className="space-y-6">
-          <div className="bg-white p-4 rounded-xl mx-auto max-w-[280px]">
+        <div className="space-y-5">
+          {isDemoWishlist && (
+            <div className="rounded-xl border border-bitcoin-orange-500/30 bg-bitcoin-orange-500/10 p-3" role="status">
+              <div className="flex items-center gap-2 text-bitcoin-orange-300 text-sm font-semibold mb-2">
+                <Loader2 size={16} className={demoAutoProgress < 100 ? 'animate-spin' : ''} />
+                Demo gift auto-completing…
+              </div>
+              <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-bitcoin-orange-500 to-amber-400 transition-all duration-100"
+                  style={{ width: `${demoAutoProgress}%` }}
+                />
+              </div>
+              <p className="text-[11px] text-gray-400 mt-2">
+                Preview only — no real payment. Live wishlists use your wallet.
+              </p>
+            </div>
+          )}
+
+          <div className="bg-white p-3 sm:p-4 rounded-xl mx-auto w-full max-w-[min(100%,280px)]">
             {paymentQrUrl ? (
               <img src={paymentQrUrl} alt="Lightning invoice QR code" className="w-full aspect-square" />
             ) : (
@@ -976,39 +1075,55 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
               <input
                 value={mockInvoice}
                 readOnly
-                className="flex-1 min-w-0 px-4 py-2.5 bg-white/5 border border-white/10 rounded-lg text-white text-sm font-mono"
+                className="flex-1 min-w-0 px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white text-sm font-mono min-h-[48px]"
                 aria-label="Lightning payment address or reference"
               />
               <Button
                 variant="outline"
                 onClick={() => handleCopyInvoice(mockInvoice)}
                 aria-label="Copy payment details"
+                className="min-h-[48px] min-w-[48px]"
               >
                 <Copy size={18} />
               </Button>
             </div>
           </div>
 
+          {mockInvoice && !isDemoWishlist && (
+            <WalletDeepLinks paymentUri={mockInvoice.includes('@') ? `lightning:${mockInvoice}` : mockInvoice} />
+          )}
+
+          {selectedItem?.merchant_link && (
+            <a
+              href={selectedItem.merchant_link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 w-full min-h-[48px] rounded-xl border border-neon-cyan-500/35 bg-neon-cyan-500/10 text-neon-cyan-300 font-bold text-sm touch-manipulation"
+            >
+              <ShoppingBag size={18} />
+              Prefer to buy the product instead?
+            </a>
+          )}
+
           <div className="flex items-center justify-center gap-3 text-bitcoin-orange-500" role="status" aria-live="polite">
             <span className="font-mono text-sm text-gray-400 tabular-nums">
               Session {formatCountdown(paymentCountdown)}
             </span>
           </div>
-          {paymentCountdown === 0 && (
+          {paymentCountdown === 0 && !isDemoWishlist && (
             <p className="text-center text-amber-400 text-sm" role="alert">
               Session expired — close and generate a new payment.
             </p>
           )}
 
           <p className="text-xs text-gray-500 text-center leading-relaxed">
-            Pay from your Lightning wallet. Funding totals update only after payment is confirmed on the server — never from this browser alone.
-          </p>
-          <p className="text-[10px] text-center text-gray-600">
-            0% platform fees · non-custodial · open in Phoenix / Zeus / your LN wallet
+            {isDemoWishlist
+              ? 'Demo mode simulates a gift. Real pages never mark funded from the browser alone.'
+              : 'Pay from your Lightning wallet. Funding totals update only after payment is confirmed on the server.'}
           </p>
 
           <Button type="button" variant="secondary" className="w-full min-h-[48px]" onClick={closePaymentModal}>
-            Done / Close
+            {isDemoWishlist ? 'Skip demo wait' : 'Done / Close'}
           </Button>
         </div>
       </Modal>
@@ -1020,9 +1135,15 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
       >
         <GiftSuccess
           onClose={() => setShowGiftSuccess(false)}
+          buyUrl={selectedItem?.merchant_link}
+          buyLabel={
+            selectedItem?.merchant_link?.includes('amazon')
+              ? 'Still want to buy on Amazon?'
+              : 'Buy this product for them'
+          }
           message={
             isDemoWishlist
-              ? 'Demo mode used a sample session. Live funding only confirms via server webhooks.'
+              ? 'Demo gift complete. Try “Buy product” on an item with an Amazon link — or Fund with sats again.'
               : 'If you completed payment in your wallet, the creator will see confirmed sats after the server records them.'
           }
         />

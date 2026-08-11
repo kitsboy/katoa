@@ -5,10 +5,14 @@ import { Button } from './Button';
 export function GiftSuccess({
   onClose,
   onShare,
+  buyUrl,
+  buyLabel = 'Buy the product',
   message = 'Intent recorded. Complete the payment in your wallet — funding updates after confirmation.',
 }: {
   onClose: () => void;
   onShare?: () => void;
+  buyUrl?: string | null;
+  buyLabel?: string;
   message?: string;
 }) {
   return (
@@ -18,7 +22,17 @@ export function GiftSuccess({
       </div>
       <h3 className="text-xl font-display font-bold text-white mb-2">Thank you</h3>
       <p className="text-sm text-gray-400 leading-relaxed mb-6 max-w-sm mx-auto">{message}</p>
-      <div className="flex flex-col sm:flex-row gap-2 justify-center">
+      <div className="flex flex-col gap-2 justify-center">
+        {buyUrl && (
+          <a
+            href={buyUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center min-h-[48px] rounded-xl border border-neon-cyan-500/35 bg-neon-cyan-500/10 text-neon-cyan-300 font-bold text-sm"
+          >
+            {buyLabel}
+          </a>
+        )}
         {onShare && (
           <Button variant="secondary" onClick={onShare} className="min-h-[48px]">
             <Share2 size={16} className="mr-2" />
