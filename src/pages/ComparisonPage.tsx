@@ -8,6 +8,7 @@ import { PageMeta } from '../components/PageMeta';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { useLanguage } from '../contexts/LanguageContext';
 import { formatNumber } from '../lib/i18nFormat';
+import { TrustProofStrip } from '../components/TrustProofStrip';
 
 function calculateSavings(amount: number) {
   const onlyfans = amount * 0.20;
@@ -192,9 +193,10 @@ export function ComparisonPage() {
             </span>
           </h1>
 
-          <p className="text-xl md:text-2xl text-gray-400 max-w-4xl mx-auto mb-8 leading-relaxed">
+          <p className="text-xl md:text-2xl text-gray-400 max-w-4xl mx-auto mb-6 leading-relaxed">
             {t('comparison.hero.subtitle')}
           </p>
+          <TrustProofStrip className="mb-8" />
         </div>
 
         <Card className="mb-8 p-6 sm:p-8 bg-white/[0.03] border border-white/10">

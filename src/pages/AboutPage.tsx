@@ -5,6 +5,8 @@ import { Link } from '../components/Link';
 import { Button } from '../components/Button';
 import { PageMeta } from '../components/PageMeta';
 import { useLanguage } from '../contexts/LanguageContext';
+import { TrustProofStrip } from '../components/TrustProofStrip';
+import { FamilyLinks } from '../components/FamilyLinks';
 
 const PROBLEM_PLATFORMS = [
   { id: 'onlyfans', fee: '20%', name: 'OnlyFans', cardClass: 'bg-red-900/20 border-red-500/30', feeClass: 'text-red-400', reqClass: 'text-red-300', borderClass: 'border-red-500/20', bodyKey: 'about.problem.onlyfans.body', requiresKey: 'about.problem.onlyfans.requires' },
@@ -63,10 +65,11 @@ export function AboutPage() {
 
           <p className="text-2xl text-gray-300 mb-8 leading-relaxed">{t('about.hero.subtitle')}</p>
 
-          <div className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-500/10 border border-emerald-500/20 rounded-full">
+          <div className="inline-flex items-center gap-2 px-6 py-3 bg-emerald-500/10 border border-emerald-500/20 rounded-full mb-8">
             <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
             <span className="text-emerald-300 font-semibold">{t('about.hero.badge')}</span>
           </div>
+          <TrustProofStrip />
         </div>
       </section>
 
@@ -311,6 +314,12 @@ export function AboutPage() {
               ))}
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="py-12 px-6">
+        <div className="max-w-4xl mx-auto">
+          <FamilyLinks />
         </div>
       </section>
 

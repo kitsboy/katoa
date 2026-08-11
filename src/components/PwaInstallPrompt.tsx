@@ -53,11 +53,11 @@ export function PwaInstallPrompt() {
             <p id="pwa-install-title" className="font-semibold text-white text-sm">{t('pwa.installTitle')}</p>
             <p id="pwa-install-desc" className="text-xs text-gray-400 mt-1">{t('pwa.installSubtitle')}</p>
           </div>
-          <button type="button" onClick={dismiss} className="p-1 text-gray-500 hover:text-white touch-manipulation" aria-label={t('pwa.dismiss')}>
+          <button type="button" onClick={dismiss} className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center text-gray-500 hover:text-white touch-manipulation" aria-label={t('pwa.dismiss')}>
             <X size={18} />
           </button>
         </div>
-        <Button variant="primary" size="sm" className="w-full" onClick={install}>
+        <Button variant="primary" size="sm" className="w-full min-h-[48px]" onClick={install}>
           <Download size={16} className="mr-2" /> {t('pwa.install')}
         </Button>
       </div>

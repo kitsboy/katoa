@@ -24,6 +24,7 @@ import { Gift, ExternalLink, Zap, Bitcoin, Check, Copy, MapPin, QrCode, ArrowLef
 import { MilestoneBanner } from '../components/MilestoneBanner';
 import { ActivityFeed } from '../components/ActivityFeed';
 import { TrustProofStrip } from '../components/TrustProofStrip';
+import { EmbedSnippet } from '../components/EmbedSnippet';
 
 const SAT_PRESETS = [
   { label: '1K', value: 1000 },
@@ -704,6 +705,8 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
                 <QrCode size={20} className="mr-2" />
                 Show QR Code
               </Button>
+
+              <EmbedSnippet path={`/wishlist/${wishlist.slug}`} title={`Support ${wishlist.title}`} />
             </Card>
           </div>
         </div>

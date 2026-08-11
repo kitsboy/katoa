@@ -6,5 +6,13 @@ Disallow: /project
 Disallow: /auth
 Disallow: /pitch
 Allow: /
+Allow: /security
+Allow: /roadmap
+Allow: /templates
+Allow: /press
+Allow: /explore
+Allow: /faq
+Allow: /comparison
 
 Sitemap: https://katoa.org/sitemap.xml
+
