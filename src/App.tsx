@@ -35,6 +35,7 @@ const SecurityPage = lazy(() => import('./pages/SecurityPage').then((m) => ({ de
 const RoadmapPage = lazy(() => import('./pages/RoadmapPage').then((m) => ({ default: m.RoadmapPage })));
 const TemplatesPage = lazy(() => import('./pages/TemplatesPage').then((m) => ({ default: m.TemplatesPage })));
 const PressKitPage = lazy(() => import('./pages/PressKitPage').then((m) => ({ default: m.PressKitPage })));
+const MeetupKitPage = lazy(() => import('./pages/MeetupKitPage').then((m) => ({ default: m.MeetupKitPage })));
 
 function PageLoader() {
   const { t } = useLanguage();
@@ -143,6 +144,7 @@ function AppShell() {
               <Route path="/roadmap" element={<RouteTransition><RoadmapPage /></RouteTransition>} />
               <Route path="/templates" element={<RouteTransition><TemplatesPage /></RouteTransition>} />
               <Route path="/press" element={<RouteTransition><PressKitPage /></RouteTransition>} />
+              <Route path="/meetup" element={<RouteTransition><MeetupKitPage /></RouteTransition>} />
               <Route path="/terms" element={<RouteTransition><TermsPage /></RouteTransition>} />
               <Route path="/privacy" element={<RouteTransition><PrivacyPage /></RouteTransition>} />
               <Route path="/dashboard" element={<RouteTransition><ProtectedRoute><DashboardPage /></ProtectedRoute></RouteTransition>} />

@@ -2,7 +2,11 @@
 
 **Last updated:** 2026-08-11 (Grok on M3)
 
-Shipped in code (batches) without requiring Cam for external accounts or mainnet keys.
+Shipped in code across 4 git batches without requiring Cam for external accounts or mainnet keys.
+
+**Commits:** `e123a04` · `a4525b2` · `c213934` · (+ gift/meetup batch)
+
+Approximate coverage of the 100-item list: **~55–65 implementable items fully or partially landed in UI/docs/infra**; **~15–25 need Cam/THOR/mainnet**; remainder are ongoing craft.
 
 ## Shipped (mapped to the 100-list)
 

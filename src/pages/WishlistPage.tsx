@@ -25,6 +25,7 @@ import { MilestoneBanner } from '../components/MilestoneBanner';
 import { ActivityFeed } from '../components/ActivityFeed';
 import { TrustProofStrip } from '../components/TrustProofStrip';
 import { EmbedSnippet } from '../components/EmbedSnippet';
+import { GiftSuccess } from '../components/GiftSuccess';
 
 const SAT_PRESETS = [
   { label: '1K', value: 1000 },
@@ -99,6 +100,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
   const [items, setItems] = useState<WishlistItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [showGiftModal, setShowGiftModal] = useState(false);
+  const [showGiftSuccess, setShowGiftSuccess] = useState(false);
   const [selectedItem, setSelectedItem] = useState<WishlistItem | null>(null);
   const [giftForm, setGiftForm] = useState({
     amount: '',
@@ -370,6 +372,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
       setPaymentCountdown(180);
       persistGiftDraft(giftForm);
       setShowGiftModal(false);
+      setShowGiftSuccess(false);
       setShowPaymentModal(true);
 
       // Record intent only — never mark completed from the client (payment webhooks confirm)
@@ -408,6 +411,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
 
   function closePaymentModal() {
     setShowPaymentModal(false);
+    setShowGiftSuccess(true);
     setProcessing(false);
   }
 
@@ -996,14 +1000,32 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             </p>
           )}
 
-          <p className="text-xs text-gray-500 text-center">
+          <p className="text-xs text-gray-500 text-center leading-relaxed">
             Pay from your Lightning wallet. Funding totals update only after payment is confirmed on the server — never from this browser alone.
           </p>
+          <p className="text-[10px] text-center text-gray-600">
+            0% platform fees · non-custodial · open in Phoenix / Zeus / your LN wallet
+          </p>
 
-          <Button type="button" variant="secondary" className="w-full" onClick={closePaymentModal}>
+          <Button type="button" variant="secondary" className="w-full min-h-[48px]" onClick={closePaymentModal}>
             Done / Close
           </Button>
         </div>
+      </Modal>
+
+      <Modal
+        isOpen={showGiftSuccess}
+        onClose={() => setShowGiftSuccess(false)}
+        title="Thank you"
+      >
+        <GiftSuccess
+          onClose={() => setShowGiftSuccess(false)}
+          message={
+            isDemoWishlist
+              ? 'Demo mode used a sample session. Live funding only confirms via server webhooks.'
+              : 'If you completed payment in your wallet, the creator will see confirmed sats after the server records them.'
+          }
+        />
       </Modal>
 
       <QRCodeModal

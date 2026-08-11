@@ -168,6 +168,7 @@ export function Footer() {
                   <FooterLink href="/comparison">Why Katoa</FooterLink>
                   <FooterLink href="/pitch">Pitch</FooterLink>
                   <FooterLink href="/press">Press kit</FooterLink>
+                  <FooterLink href="/meetup">Meetup kit</FooterLink>
                 </ul>
               </div>
               <div>
