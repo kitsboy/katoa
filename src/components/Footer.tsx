@@ -167,6 +167,7 @@ export function Footer() {
                   <FooterLink href="/contact">{t('footer.contact')}</FooterLink>
                   <FooterLink href="/comparison">Why Katoa</FooterLink>
                   <FooterLink href="/pitch">Pitch</FooterLink>
+                  <FooterLink href="/press">Press kit</FooterLink>
                 </ul>
               </div>
               <div>

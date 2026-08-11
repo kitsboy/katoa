@@ -15,6 +15,9 @@ const mainItems = [
 const moreItems = [
   { href: '/faq', icon: HelpCircle, labelKey: 'nav.faq', match: (p: string) => p.startsWith('/faq') },
   { href: '/comparison', icon: Zap, labelKey: 'nav.comparison', match: (p: string) => p.startsWith('/comparison') },
+  { href: '/templates', icon: LayoutDashboard, labelKey: 'nav.templates', match: (p: string) => p.startsWith('/templates') },
+  { href: '/security', icon: Settings, labelKey: 'nav.security', match: (p: string) => p.startsWith('/security') },
+  { href: '/roadmap', icon: MoreHorizontal, labelKey: 'nav.roadmap', match: (p: string) => p.startsWith('/roadmap') },
 ];
 
 export function MobileNav() {

@@ -8,6 +8,7 @@ import { Breadcrumbs } from '../components/Breadcrumbs';
 import { SectionHeader } from '../components/SectionHeader';
 import { GlassCallout } from '../components/GlassCallout';
 import { useLanguage } from '../contexts/LanguageContext';
+import { TrustProofStrip } from '../components/TrustProofStrip';
 import {
   Check,
   Zap,
@@ -253,6 +254,8 @@ export function PricingPage() {
             <span className="text-white font-semibold">nothing.</span> No monthly bills. No percentage skim. Just Bitcoin,
             direct to you.
           </p>
+
+          <TrustProofStrip className="mt-6" />
 
           <div className="mt-8 inline-flex flex-col sm:flex-row items-center gap-3 sm:gap-6 px-6 py-4 rounded-2xl bg-white/[0.04] border border-white/10">
             <div className="text-center sm:text-left">

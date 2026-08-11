@@ -21,6 +21,9 @@ import { useToast } from '../components/Toast';
 import { PaymentMethodTabs, PaymentTab } from '../components/PaymentMethodTabs';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Gift, ExternalLink, Zap, Bitcoin, Check, Copy, MapPin, QrCode, ArrowLeft, Heart, TrendingUp, Package, ChevronUp, ChevronDown } from 'lucide-react';
+import { MilestoneBanner } from '../components/MilestoneBanner';
+import { ActivityFeed } from '../components/ActivityFeed';
+import { TrustProofStrip } from '../components/TrustProofStrip';
 
 const SAT_PRESETS = [
   { label: '1K', value: 1000 },
@@ -662,10 +665,23 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
               </Card>
             )}
 
+            <MilestoneBanner percent={totalProgress} className="mb-4" />
+
+            <ActivityFeed
+              className="mb-4"
+              items={
+                isDemoWishlist
+                  ? [
+                      { id: 'a1', label: 'Anonymous gifter', amountSats: 21000, ago: '2h ago', isDemo: true },
+                      { id: 'a2', label: 'Nostr supporter', amountSats: 5000, ago: '1d ago', isDemo: true },
+                      { id: 'a3', label: 'Community member', amountSats: 10000, ago: '3d ago', isDemo: true },
+                    ]
+                  : []
+              }
+            />
+
             <Card className=" p-6 space-y-4">
-              <p className="text-[11px] text-center text-gray-500 leading-relaxed">
-                0% platform fees · non-custodial · sats go to the creator
-              </p>
+              <TrustProofStrip compact />
               <Button
                 className="w-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 font-black text-lg py-4 min-h-[52px] shadow-[0_0_30px_rgba(255,135,0,0.3)]"
                 onClick={() => handleGiftClick()}

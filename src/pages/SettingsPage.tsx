@@ -698,6 +698,19 @@ export function SettingsPage() {
                 </div>
 
                 <div className="space-y-6">
+                  <div className="p-5 rounded-xl border border-neon-cyan-500/20 bg-neon-cyan-500/5">
+                    <p className="text-sm text-gray-300 leading-relaxed mb-3">
+                      KATOA is non-custodial — we never hold your sats. Read how keys, data, and payments work.
+                    </p>
+                    <Link
+                      href="/security"
+                      className="inline-flex items-center gap-2 text-sm font-semibold text-neon-cyan-400 hover:underline min-h-[44px]"
+                    >
+                      <AlertCircle size={16} />
+                      Security & custody →
+                    </Link>
+                  </div>
+
                   <div className="p-6 bg-black rounded-xl border border-white/10">
                     <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
                       <User size={20} className="text-gray-400" />

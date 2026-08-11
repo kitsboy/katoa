@@ -14,6 +14,7 @@ export const SITEMAP_STATIC_ROUTES = [
   { path: '/security', priority: '0.7', changefreq: 'monthly' },
   { path: '/roadmap', priority: '0.6', changefreq: 'weekly' },
   { path: '/templates', priority: '0.6', changefreq: 'monthly' },
+  { path: '/press', priority: '0.5', changefreq: 'monthly' },
   { path: '/terms', priority: '0.5', changefreq: 'monthly' },
   { path: '/privacy', priority: '0.5', changefreq: 'monthly' },
 ];

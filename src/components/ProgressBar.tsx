@@ -22,6 +22,9 @@ export const ProgressBar = memo(function ProgressBar({
 }: ProgressBarProps) {
   const { t } = useLanguage();
   const percentage = goal > 0 ? Math.min((current / goal) * 100, 100) : 0;
+  const milestones = [25, 50, 75, 100] as const;
+  const reached = milestones.filter((m) => percentage >= m);
+  const nextMilestone = milestones.find((m) => percentage < m);
 
   const heightClasses = {
     sm: 'h-2',
@@ -81,13 +84,31 @@ export const ProgressBar = memo(function ProgressBar({
           )}
         </div>
       </div>
-      {percentage >= 100 && (
+      {goal > 0 && (
+        <div className="flex justify-between gap-1 pt-0.5" aria-hidden>
+          {milestones.map((m) => (
+            <span
+              key={m}
+              className={`text-[9px] font-semibold tabular-nums ${
+                percentage >= m ? 'text-emerald-400/90' : 'text-gray-600'
+              }`}
+            >
+              {m}%
+            </span>
+          ))}
+        </div>
+      )}
+      {percentage >= 100 ? (
         <div className="text-center">
           <span className="inline-flex items-center gap-1 px-3 py-1 bg-emerald-500/20 text-emerald-400 rounded-full text-xs font-bold animate-scale-in">
             🎉 {t('progress.goalReached')}
           </span>
         </div>
-      )}
+      ) : nextMilestone && reached.length > 0 ? (
+        <p className="text-[11px] text-gray-500 text-center">
+          Next milestone: {nextMilestone}%
+        </p>
+      ) : null}
     </div>
   );
 });

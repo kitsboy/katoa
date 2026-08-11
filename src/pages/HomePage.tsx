@@ -12,6 +12,7 @@ import { ArrowRight, Zap, Shield, Globe } from 'lucide-react';
 
 import { FeeComparison } from '../components/FeeComparison';
 import { OnboardingChecklist } from '../components/OnboardingChecklist';
+import { FamilyLinks } from '../components/FamilyLinks';
 
 const howItWorksSteps = [
   { titleKey: 'home.step1.title', descKey: 'home.step1.desc', step: '01' },
@@ -214,6 +215,12 @@ export function HomePage() {
               <div><strong>0%</strong><span>{t('home.cta.fees')}</span></div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="lp-section lp-section-muted">
+        <div className="lp-container">
+          <FamilyLinks />
         </div>
       </section>
     </div>
