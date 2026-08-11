@@ -1,3 +1,33 @@
+## Session — 2026-08-11 (Grok M3) — Solo 10-pack product UX
+
+**Done:**
+1. Creator tip menu presets (21k / 50k / custom) on wishlist + Settings tip presets (local)
+2. Fan favorites export / share / download pack (Explore)
+3. Wishlist visibility badge (draft / private / public)
+4. Blocked users list for DMs (localStorage)
+5. Message notifications badge (local unread) on Navbar + MobileNav
+6. Explore filter chips for creator vertical tags (`?vertical=`)
+7. PWA “Add creator” shortcut copy prompt
+8. Accessibility pass on Messages + Creators (+ guidelines i18n titles)
+9. Playwright smoke for `/messages` opt-in UI (`e2e/messages.spec.ts`, port 4177)
+10. i18n EN/ES/PT/FR/DE/JA/ZH for tip menu, favorites, visibility, messages, PWA, creators, a11y
+
+**Decisions:**
+- All DM prefs / tip presets / unread are local-only (no server)
+- NIP-17 still opt-in + NIP-07 only; no nsec in app
+- Playwright uses 4177 to avoid clashing with other local previews on 4173
+
+**Git State:**
+- SHA: `63f364f` (pushed main)
+- Version: `1.1.5`
+- Unpushed: none (if push OK)
+
+**Verify:** `npm run typecheck` · `npm test` (68) · `npx playwright test` (2)
+
+**Still needs Cam (ops, not code):** Lightning address, nsec → THOR vault, live NIP-05 verify, CF deploy if not auto.
+
+---
+
 ## REMINDER — 2026-08-11 — Nostr rollout + vault nsec
 
 **Safe rollout:** (1) NIP-05 live verify (2) relays+CSP (3) NIP-65+zaps (4) NIP-17 chat later.
