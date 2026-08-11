@@ -2,6 +2,8 @@
 
 Cross-site label for Give A Bit family agents (Grok, Kimi, Obsidian vault sync).
 
+**Last session:** 2026-08-11 · v1.1.7 · `9d38deb`
+
 ## Project id
 - **slug:** `katoa`
 - **domain:** https://katoa.org
@@ -14,6 +16,7 @@ Cross-site label for Give A Bit family agents (Grok, Kimi, Obsidian vault sync).
 3. `../.ai_docs/current-status.md`
 4. `../.ai_docs/ecosystem-links.md`
 5. `../.ai_docs/project-summary.md`
+6. `../docs/KIMI-HANDOFF.md` (top) · `../docs/NEXT-NEEDS-CAM.md`
 
 ## Shared data surfaces (for HQ / vault / multi-site chat later)
 | Surface | URL / path |
@@ -22,7 +25,8 @@ Cross-site label for Give A Bit family agents (Grok, Kimi, Obsidian vault sync).
 | App version | `https://katoa.org/version.json` |
 | Session handoff | `docs/KIMI-HANDOFF.md` |
 | Last update | `docs/LATEST-UPDATE.md` |
-| BTC Map API (external) | `https://api.btcmap.org` (v4 places/search) |
+| Needs Cam | `docs/NEXT-NEEDS-CAM.md` |
+| BTC Map API (external) | `https://api.btcmap.org` (v4 places/search, place detail, search) |
 
 ## Sibling sites (same `.ai_docs` pattern)
 giveabit · satohash · motopass · stranded · tadbuy · openstrata · sherpacarta · HQ · lindala · camtaylor · btcminiscript

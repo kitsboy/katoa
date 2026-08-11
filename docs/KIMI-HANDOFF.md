@@ -1,30 +1,63 @@
-## Session — 2026-08-11 (Grok M3) — Solo 10-pack product UX
+## Session — 2026-08-11 (Grok M3) — Solo 10-pack + map glory + agent docs
 
-**Done:**
-1. Creator tip menu presets (21k / 50k / custom) on wishlist + Settings tip presets (local)
-2. Fan favorites export / share / download pack (Explore)
+**Role:** M3 code only. Pushed `main`. Version **1.1.7**.
+
+### Done — product (10-pack)
+1. Tip menu presets (21k / 50k / custom) on wishlist + Settings tip presets (local)
+2. Favorites export / share / download pack (Explore)
 3. Wishlist visibility badge (draft / private / public)
-4. Blocked users list for DMs (localStorage)
-5. Message notifications badge (local unread) on Navbar + MobileNav
-6. Explore filter chips for creator vertical tags (`?vertical=`)
+4. DM blocked users list (localStorage)
+5. Unread messages badge (local) — Navbar + MobileNav
+6. Explore vertical filter chips (`?vertical=`)
 7. PWA “Add creator” shortcut copy prompt
-8. Accessibility pass on Messages + Creators (+ guidelines i18n titles)
-9. Playwright smoke for `/messages` opt-in UI (`e2e/messages.spec.ts`, port 4177)
-10. i18n EN/ES/PT/FR/DE/JA/ZH for tip menu, favorites, visibility, messages, PWA, creators, a11y
+8. a11y pass — Messages + Creators (+ guidelines titles)
+9. Playwright smoke `/messages` opt-in (`e2e/messages.spec.ts`, port **4177**)
+10. i18n EN/ES/PT/FR/DE/JA/ZH for tip/favorites/visibility/messages/PWA/creators/a11y/map search
 
-**Decisions:**
-- All DM prefs / tip presets / unread are local-only (no server)
-- NIP-17 still opt-in + NIP-07 only; no nsec in app
-- Playwright uses 4177 to avoid clashing with other local previews on 4173
+### Done — Explore map (BTC Map)
+- **Basemap fix:** dead OpenFreeMap raster URL → CARTO dark Leaflet tiles (`be044e6`)
+- Removed full `logo2.png` map markers (logo smear); orange **K** teardrops + cyan merchant pins
+- Kept BTC Map features: layer toggles, locate, fit, expand, `api.btcmap.org` merchants
+- **Richer popups:** hydrate via `GET /v4/places/{id}` (phone, hours, verified, comments, website)
+- **Category icons:** Material `icon` → emoji on pins (`materialIconGlyph`)
+- **Search box:** `GET /v4/search/?q=` with map-center bias; fly to place/area
 
-**Git State:**
-- SHA: `63f364f` (pushed main)
-- Version: `1.1.5`
-- Unpushed: none (if push OK)
+### Done — agent / Obsidian discovery
+- `.ai_docs/ecosystem-links.md`, `project-summary.md`, `context-map.md` alias, `current-status.md`
+- **`.ai_agent/README.md`** cross-site index (metrics, handoffs, sibling slugs)
+- Aligned with giveabit/satohash family pattern for future multi-site labels
 
-**Verify:** `npm run typecheck` · `npm test` (68) · `npx playwright test` (2)
+### Decisions
+- DM prefs / tip presets / unread = **local-only**
+- NIP-17 still **opt-in + NIP-07 only**; no nsec in repo
+- OpenFreeMap is **vector-only** (MapLibre); Leaflet uses CARTO raster (btcmap.org uses MapLibre + OFM styles)
+- Public btcmap-api needs **no API key** for places search/detail/search
+- Playwright base URL port **4177** (avoids other apps on 4173)
 
-**Still needs Cam (ops, not code):** Lightning address, nsec → THOR vault, live NIP-05 verify, CF deploy if not auto.
+### Git State
+- HEAD: `9d38deb` (map popups/icons/search + .ai_docs)
+- Prior: `be044e6` basemap fix · `63f364f` 10-pack · `a1590c1` handoff docs
+- Version: **1.1.7** · Unpushed: none
+- Verify: `npm run typecheck` · `npm test` (72)
+
+### Still needs Cam / THOR
+See **`docs/NEXT-NEEDS-CAM.md`** + **`docs/NOSTR-REMINDERS.md`**:
+- Lightning / BTCPay / webhook live
+- Platform nsec → THOR vault
+- NIP-05 live verify + claim merge process
+- CF Pages confirm deploy of `9d38deb`
+- Seed creators / growth (human)
+
+### Kimi (THOR)
+- Pull handoff into vault if desired
+- Optional: mirror `.ai_docs` + `.ai_agent` pattern on any sibling still missing ecosystem-links
+- Do **not** expect M3 to touch MASTER-BRAIN
+
+---
+
+## Session — 2026-08-11 (earlier) — Solo 10-pack product UX only
+
+**Git (superseded):** `63f364f` · v1.1.5 — see full session block above for complete day.
 
 ---
 

@@ -1,12 +1,17 @@
 # KATOA glory sprint — progress log
 
-**Last updated:** 2026-08-11 (Grok on M3)
+**Last updated:** 2026-08-11 (Grok on M3) · HEAD `9d38deb` · **v1.1.7**
 
-Shipped in code across 4 git batches without requiring Cam for external accounts or mainnet keys.
+Shipped in code without requiring Cam for external accounts or mainnet keys.
 
-**Commits:** `e123a04` · `a4525b2` · `c213934` · (+ gift/meetup batch)
+**Recent commits:** `9d38deb` · `be044e6` · `63f364f` · `646f1cd` · (+ earlier glory batches)
 
-Approximate coverage of the 100-item list: **~55–65 implementable items fully or partially landed in UI/docs/infra**; **~15–25 need Cam/THOR/mainnet**; remainder are ongoing craft.
+Approximate coverage of the 100-item list: **~70–80 implementable items fully or partially landed in UI/docs/infra**; **~15–25 need Cam/THOR/mainnet**; remainder are ongoing craft.
+
+## 2026-08-11 batch (this session)
+- Solo **10-pack**: tip menu, favorites pack, visibility badge, DM block/unread, vertical chips, PWA creator copy, a11y, Playwright messages, i18n
+- **Explore map:** fix basemap (CARTO; no logo smear); btcmap-api richer popups, category emoji, `/v4/search`
+- **Agent docs:** `.ai_docs` ecosystem-links/summary + `.ai_agent` for Obsidian/family discovery
 
 ## Shipped (mapped to the 100-list)
 
