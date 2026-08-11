@@ -32,4 +32,9 @@ describe('readExploreFiltersFromUrl', () => {
     expect(f.videosOnly).toBe(true);
     expect(f.favoritesOnly).toBe(true);
   });
+
+  it('reads vertical param', () => {
+    const params = new URLSearchParams('?vertical=model');
+    expect(params.get('vertical')).toBe('model');
+  });
 });

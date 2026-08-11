@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Home, Compass, LayoutDashboard, User, Settings, HelpCircle, MoreHorizontal, X, Zap, MessageCircle } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
+import { UnreadMessagesBadge } from './UnreadMessagesBadge';
 
 const mainItems = [
   { href: '/', icon: Home, labelKey: 'nav.home', match: (p: string) => p === '/' },
@@ -74,18 +75,24 @@ export function MobileNav() {
                 {moreItems.map((item) => {
                   const Icon = item.icon;
                   const active = item.match(location.pathname);
+                  const isMessages = item.href === '/messages';
                   return (
                     <Link
                       key={item.href}
                       href={item.href}
                       onClick={() => setShowMore(false)}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-colors touch-manipulation ${
+                      className={`relative flex items-center gap-3 px-4 py-3 rounded-xl border transition-colors touch-manipulation ${
                         active
                           ? 'bg-neon-cyan-500/10 border-neon-cyan-500/40 text-neon-cyan-400'
                           : 'bg-white/5 border-white/10 text-gray-300 hover:bg-white/10'
                       }`}
                     >
-                      <Icon size={20} />
+                      <span className="relative">
+                        <Icon size={20} />
+                        {isMessages && (
+                          <UnreadMessagesBadge className="absolute -top-1.5 -right-2" />
+                        )}
+                      </span>
                       <span className="text-sm font-semibold">{t(item.labelKey)}</span>
                     </Link>
                   );

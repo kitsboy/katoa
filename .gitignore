@@ -37,6 +37,12 @@ docs/archive/
 *.db
 *.sqlite
 
+# Playwright
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
 # Misc
 *.pem
 *.key

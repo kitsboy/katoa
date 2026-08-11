@@ -34,6 +34,8 @@ import { NostrPublishWishlist } from '../components/NostrPublishWishlist';
 import { ZapTotals } from '../components/ZapTotals';
 import { ProductUrlImport } from '../components/ProductUrlImport';
 import { SubscriptionTiers } from '../components/SubscriptionTiers';
+import { TipMenu } from '../components/TipMenu';
+import { VisibilityBadge } from '../components/VisibilityBadge';
 
 const SAT_PRESETS = [
   { label: '1K', value: 1000 },
@@ -724,6 +726,9 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
                   <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-white drop-shadow-lg leading-tight">
                     {wishlist.title}
                   </h1>
+                  <VisibilityBadge
+                    visibility={isDemoWishlist ? 'public' : wishlist.visibility || 'public'}
+                  />
                   {wishlist.country_flag && (
                     <span
                       className="text-3xl sm:text-4xl"
@@ -905,6 +910,17 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
                 />
               </div>
             )}
+
+            <TipMenu
+              className="mb-4"
+              onSelect={(sats) => {
+                setGiftForm((prev) => ({ ...prev, amount: String(sats) }));
+                setAmountPreset(
+                  SAT_PRESETS.some((p) => p.value === sats) ? sats : 'custom'
+                );
+                handleGiftClick();
+              }}
+            />
 
             <Card className=" p-6 space-y-4">
               <TrustProofStrip compact />

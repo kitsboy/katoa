@@ -10,6 +10,7 @@ import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { MobileNav } from './components/MobileNav';
 import { PwaInstallPrompt } from './components/PwaInstallPrompt';
+import { PwaCreatorPrompt } from './components/PwaCreatorPrompt';
 import { ChangelogModal } from './components/ChangelogModal';
 import { RouteTransition } from './components/RouteTransition';
 import { ProtectedRoute } from './components/ProtectedRoute';
@@ -176,6 +177,7 @@ function AppShell() {
       <Footer />
       <MobileNav />
       <PwaInstallPrompt />
+      <PwaCreatorPrompt />
       <ChangelogModal />
     </>
   );

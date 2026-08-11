@@ -1,10 +1,10 @@
 {
   "name": "katoa",
-  "version": "1.1.4",
-  "label": "v1.1.4",
-  "fullLabel": "v1.1.4+272.66f09f8",
-  "buildId": "272.66f09f8",
-  "gitSha": "66f09f8",
-  "commitCount": "272",
-  "builtAt": "2026-08-11T17:53:15.113Z"
+  "version": "1.1.5",
+  "label": "v1.1.5",
+  "fullLabel": "v1.1.5+273.646f1cd",
+  "buildId": "273.646f1cd",
+  "gitSha": "646f1cd",
+  "commitCount": "273",
+  "builtAt": "2026-08-11T18:09:35.560Z"
 }

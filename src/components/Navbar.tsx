@@ -5,9 +5,10 @@ import { Link } from './Link';
 import { Button } from './Button';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage, languageFlags, languageNames, type Language } from '../contexts/LanguageContext';
-import { Menu, X, User, LogOut, LayoutDashboard, Settings, Zap, Globe, HelpCircle, Bitcoin } from 'lucide-react';
+import { Menu, X, User, LogOut, LayoutDashboard, Settings, Zap, Globe, HelpCircle, Bitcoin, MessageCircle } from 'lucide-react';
 import { CurrencySelector } from './CurrencySelector';
 import { OfflineIndicator } from './OfflineIndicator';
+import { UnreadMessagesBadge } from './UnreadMessagesBadge';
 import { getBitcoinPrice, formatUsd } from '../lib/bitcoinPrice';
 
 type LangMenuPos = { top: number; left: number; maxHeight: number };
@@ -180,6 +181,16 @@ export function Navbar() {
                   className={`nav-link-pill ${isActive('/faq') ? 'nav-link-pill-active' : ''}`}
                 >
                   {t('nav.faq')}
+                </Link>
+                <Link
+                  href="/messages"
+                  className={`nav-link-pill relative inline-flex items-center gap-1.5 ${
+                    location.pathname.startsWith('/messages') ? 'nav-link-pill-active' : ''
+                  }`}
+                >
+                  <MessageCircle size={14} aria-hidden />
+                  {t('nav.messages')}
+                  <UnreadMessagesBadge className="ml-0.5" />
                 </Link>
               </div>
 
@@ -415,6 +426,18 @@ export function Navbar() {
                     <HelpCircle size={20} className="text-neon-cyan" />
                   </div>
                   <span className="font-bold text-lg">{t('nav.faq')}</span>
+                </Link>
+
+                <Link
+                  href="/messages"
+                  className="flex items-center gap-3 px-5 py-4 text-white bg-white/5 hover:bg-neon-cyan/10 rounded-xl transition-all duration-200 group border border-white/10 hover:border-neon-cyan/50"
+                  onClick={() => setShowMenu(false)}
+                >
+                  <div className="relative p-2 bg-neon-cyan/15 rounded-lg group-hover:bg-neon-cyan/25 transition-colors">
+                    <MessageCircle size={20} className="text-neon-cyan" />
+                    <UnreadMessagesBadge className="absolute -top-1 -right-1" />
+                  </div>
+                  <span className="font-bold text-lg">{t('nav.messages')}</span>
                 </Link>
               </div>
 

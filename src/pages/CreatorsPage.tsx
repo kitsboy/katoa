@@ -4,6 +4,7 @@ import { PageHero } from '../components/PageHero';
 import { Button } from '../components/Button';
 import { CreatorVerticalsGrid } from '../components/CreatorVerticalsGrid';
 import { TrustProofStrip } from '../components/TrustProofStrip';
+import { useLanguage } from '../contexts/LanguageContext';
 import { Zap, ShoppingBag, Video, Crown } from 'lucide-react';
 
 const STEPS = [
@@ -31,29 +32,35 @@ const STEPS = [
 
 /** Positioning page: OF-style creator economy without the fee cut or KYC theater. */
 export function CreatorsPage() {
+  const { t } = useLanguage();
+
   return (
     <div className="min-h-[100dvh] bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 pt-16 pb-24">
       <PageMeta
-        title="For creators — keep 100%"
-        description="KATOA is the zero-fee tip jar and wishlist for models, athletes, coaches, meal planners, and every creator. Bitcoin Lightning. No KYC to start."
+        title={t('creators.pageTitle')}
+        description={t('creators.pageSubtitle')}
         path="/creators"
       />
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 pt-24">
-        <PageHero
-          title="Your fans. Your money. Zero cut."
-          subtitle="The creator playbook without the platform tax — tips, wishlists, and product links for soccer moms, models, golfers, meal planners, and everyone in between."
-        />
+      <main
+        className="max-w-5xl mx-auto px-4 sm:px-6 py-8 pt-24"
+        aria-label={t('a11y.creatorsMain')}
+      >
+        <PageHero title={t('creators.pageTitle')} subtitle={t('creators.pageSubtitle')} />
         <TrustProofStrip className="mb-10" />
 
-        <div className="grid sm:grid-cols-2 gap-3 mb-12">
+        <div className="grid sm:grid-cols-2 gap-3 mb-12" role="list">
           {STEPS.map((s) => {
             const Icon = s.icon;
             return (
               <article
                 key={s.title}
+                role="listitem"
                 className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 flex gap-3"
               >
-                <div className="w-11 h-11 rounded-xl bg-bitcoin-orange-500/15 border border-bitcoin-orange-500/25 flex items-center justify-center shrink-0">
+                <div
+                  className="w-11 h-11 rounded-xl bg-bitcoin-orange-500/15 border border-bitcoin-orange-500/25 flex items-center justify-center shrink-0"
+                  aria-hidden
+                >
                   <Icon size={20} className="text-bitcoin-orange-400" />
                 </div>
                 <div>
@@ -76,6 +83,11 @@ export function CreatorsPage() {
           <Link href="/explore">
             <Button variant="outline" className="min-h-[52px] w-full sm:w-auto px-8">
               See creators
+            </Button>
+          </Link>
+          <Link href="/creators/guidelines">
+            <Button variant="ghost" className="min-h-[52px] w-full sm:w-auto px-8 text-gray-300">
+              {t('creators.guidelinesTitle')}
             </Button>
           </Link>
         </div>

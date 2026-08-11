@@ -21,6 +21,8 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { PageMeta } from '../components/PageMeta';
 import { Gift, Search, MapPin, Globe, SlidersHorizontal, Star, Heart, X, Video } from 'lucide-react';
 import { CreatorVideoCard } from '../components/CreatorVideoCard';
+import { FavoritesExport } from '../components/FavoritesExport';
+import { CREATOR_VERTICALS, verticalById } from '../data/creatorVerticals';
 
 const BTCMapSection = lazy(() =>
   import('../components/BTCMapSection').then((m) => ({ default: m.BTCMapSection }))
@@ -77,9 +79,11 @@ function readExploreFiltersFromUrl(): {
   showMap: boolean;
   favoritesOnly: boolean;
   videosOnly: boolean;
+  vertical: string;
 } {
   const params = new URLSearchParams(window.location.search);
   const sort = params.get('sort');
+  const vertical = params.get('vertical') ?? '';
   return {
     filters: {
       searchTerm: params.get('search') ?? '',
@@ -90,12 +94,32 @@ function readExploreFiltersFromUrl(): {
     showMap: params.get('map') === '1' || params.get('map') === 'true',
     favoritesOnly: params.get('favorites') === '1' || params.get('favorites') === 'true',
     videosOnly: params.get('videos') === '1' || params.get('videos') === 'true',
+    vertical: verticalById(vertical) ? vertical : '',
   };
 }
 
 function hasUrlExploreFilters(): boolean {
   const params = new URLSearchParams(window.location.search);
-  return ['search', 'country', 'category', 'sort', 'map', 'favorites', 'videos'].some((key) => params.has(key));
+  return ['search', 'country', 'category', 'sort', 'map', 'favorites', 'videos', 'vertical'].some((key) =>
+    params.has(key)
+  );
+}
+
+function matchesVertical(w: Wishlist, verticalId: string): boolean {
+  const v = verticalById(verticalId);
+  if (!v) return true;
+  const hay = [
+    w.title,
+    w.description,
+    w.category,
+    w.creator?.username,
+    w.creator?.bio,
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
+  if (w.category === v.id) return true;
+  return v.tags.some((tag) => hay.includes(tag.toLowerCase()));
 }
 
 const PAGE_SIZE = 12;
@@ -327,12 +351,13 @@ export function ExplorePage() {
   const [videosOnly, setVideosOnly] = useState(() =>
     useUrlFilters ? urlState.videosOnly : getStorage<boolean>(STORAGE_KEYS.exploreVideosOnly, false)
   );
+  const [selectedVertical, setSelectedVertical] = useState(() => (useUrlFilters ? urlState.vertical : ''));
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
-  }, [debouncedSearch, selectedCountry, selectedCategory, sortBy, favoritesOnly, videosOnly]);
+  }, [debouncedSearch, selectedCountry, selectedCategory, sortBy, favoritesOnly, videosOnly, selectedVertical]);
 
   useEffect(() => {
     loadWishlists();
@@ -386,13 +411,16 @@ export function ExplorePage() {
     if (videosOnly) params.set('videos', '1');
     else params.delete('videos');
 
+    if (selectedVertical) params.set('vertical', selectedVertical);
+    else params.delete('vertical');
+
     const nextSearch = params.toString();
     const nextUrl = `${url.pathname}${nextSearch ? `?${nextSearch}` : ''}`;
     const currentUrl = `${url.pathname}${url.search}`;
     if (currentUrl !== nextUrl) {
       window.history.replaceState({}, '', nextUrl);
     }
-  }, [searchTerm, selectedCountry, selectedCategory, sortBy, showMap, favoritesOnly, videosOnly]);
+  }, [searchTerm, selectedCountry, selectedCategory, sortBy, showMap, favoritesOnly, videosOnly, selectedVertical]);
 
   async function loadCategories() {
     try {
@@ -437,6 +465,10 @@ export function ExplorePage() {
       filtered = filtered.filter((w) => isCreatorVideoCard(w) || Boolean(w.cover_video_url));
     }
 
+    if (selectedVertical) {
+      filtered = filtered.filter((w) => matchesVertical(w, selectedVertical));
+    }
+
     switch (sortBy) {
       case 'trending':
         filtered.sort((a, b) => (b.total_sats_raised || 0) - (a.total_sats_raised || 0));
@@ -461,7 +493,17 @@ export function ExplorePage() {
     }
 
     setFilteredWishlists(filtered);
-  }, [debouncedSearch, selectedCountry, selectedCategory, sortBy, wishlists, favoritesOnly, favorites, videosOnly]);
+  }, [
+    debouncedSearch,
+    selectedCountry,
+    selectedCategory,
+    sortBy,
+    wishlists,
+    favoritesOnly,
+    favorites,
+    videosOnly,
+    selectedVertical,
+  ]);
 
   async function loadWishlists() {
     try {
@@ -537,12 +579,27 @@ export function ExplorePage() {
     setSearchTerm('');
     setFavoritesOnly(false);
     setVideosOnly(false);
+    setSelectedVertical('');
     setStorage(STORAGE_KEYS.exploreFavoritesOnly, false);
     setStorage(STORAGE_KEYS.exploreVideosOnly, false);
   }, []);
 
   const hasActiveFilters =
-    selectedCategory || selectedCountry || sortBy !== 'recent' || searchTerm || favoritesOnly || videosOnly;
+    selectedCategory ||
+    selectedCountry ||
+    sortBy !== 'recent' ||
+    searchTerm ||
+    favoritesOnly ||
+    videosOnly ||
+    selectedVertical;
+
+  const favoritesMeta = useMemo(
+    () =>
+      wishlists
+        .filter((w) => favorites.includes(w.id))
+        .map((w) => ({ id: w.id, slug: w.slug, title: w.title })),
+    [wishlists, favorites]
+  );
 
   const videoCreators = useMemo(
     () => wishlists.filter((w) => isCreatorVideoCard(w)),
@@ -824,6 +881,51 @@ export function ExplorePage() {
                 </Button>
               </div>
             </div>
+
+            {/* Creator vertical filter chips */}
+            <div className="space-y-2" role="group" aria-label={t('explore.verticals')}>
+              <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+                {t('explore.verticals')}
+              </p>
+              <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1 -mx-1 px-1">
+                <button
+                  type="button"
+                  onClick={() => setSelectedVertical('')}
+                  aria-pressed={!selectedVertical}
+                  className={`shrink-0 px-3 py-2 min-h-[40px] rounded-full text-xs font-semibold border transition-colors touch-manipulation ${
+                    !selectedVertical
+                      ? 'bg-neon-cyan-500/15 border-neon-cyan-500/40 text-neon-cyan-300'
+                      : 'bg-white/5 border-white/10 text-gray-400 hover:border-white/20'
+                  }`}
+                >
+                  {t('explore.allVerticals')}
+                </button>
+                {CREATOR_VERTICALS.map((v) => (
+                  <button
+                    key={v.id}
+                    type="button"
+                    onClick={() => setSelectedVertical((cur) => (cur === v.id ? '' : v.id))}
+                    aria-pressed={selectedVertical === v.id}
+                    className={`shrink-0 px-3 py-2 min-h-[40px] rounded-full text-xs font-semibold border transition-colors touch-manipulation ${
+                      selectedVertical === v.id
+                        ? 'bg-bitcoin-orange-500/15 border-bitcoin-orange-500/40 text-bitcoin-orange-200'
+                        : 'bg-white/5 border-white/10 text-gray-400 hover:border-white/20'
+                    }`}
+                  >
+                    <span aria-hidden className="mr-1">
+                      {v.emoji}
+                    </span>
+                    {v.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {favorites.length > 0 && (
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                <FavoritesExport wishlistMeta={favoritesMeta} />
+              </div>
+            )}
 
             {/* Desktop inline filters */}
             {showFilters && (

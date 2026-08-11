@@ -32,14 +32,18 @@ import {
   PLATFORM_NIP05,
   PLATFORM_NPUB,
 } from '../lib/nostr';
+import { getCreatorTipPresets, setCreatorTipPresets } from '../lib/dmPrefs';
 
 type Tab = 'profile' | 'wallet' | 'projects' | 'shipping' | 'advanced';
+
+const TIP_PRESET_OPTIONS = [21_000, 50_000, 100_000] as const;
 
 export function SettingsPage() {
   const { user, profile, updateProfile } = useAuth();
   const { toast } = useToast();
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<Tab>('profile');
+  const [tipPresets, setTipPresets] = useState<number[]>(() => getCreatorTipPresets());
   const [processing, setProcessing] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [stats, setStats] = useState({
@@ -604,6 +608,47 @@ export function SettingsPage() {
                       {' · '}
                       Creator handles (you@katoa.org) — see docs/NOSTR-NIP05.md
                     </p>
+
+                    <div className="p-6 bg-black rounded-xl border border-white/10">
+                      <label className="block text-sm font-bold text-gray-200 mb-2 uppercase tracking-wider">
+                        {t('tipMenu.presetsLabel')}
+                      </label>
+                      <p className="text-xs text-gray-500 mb-3">{t('tipMenu.help')}</p>
+                      <div className="flex flex-wrap gap-2" role="group" aria-label={t('tipMenu.presetsLabel')}>
+                        {TIP_PRESET_OPTIONS.map((sats) => {
+                          const active = tipPresets.includes(sats);
+                          return (
+                            <button
+                              key={sats}
+                              type="button"
+                              aria-pressed={active}
+                              className={`min-h-[44px] px-4 rounded-xl border font-bold text-sm transition-colors ${
+                                active
+                                  ? 'border-bitcoin-orange-500/50 bg-bitcoin-orange-500/20 text-bitcoin-orange-200'
+                                  : 'border-white/10 bg-white/5 text-gray-400 hover:border-white/20'
+                              }`}
+                              onClick={() => {
+                                const next = active
+                                  ? tipPresets.filter((n) => n !== sats)
+                                  : [...tipPresets, sats].sort((a, b) => a - b).slice(0, 6);
+                                const saved = next.length ? next : [21000, 50000, 100000];
+                                setCreatorTipPresets(saved);
+                                setTipPresets(saved);
+                                toast(
+                                  `Tip presets: ${saved.map((n) => `${n / 1000}k`).join(', ')}`,
+                                  'success'
+                                );
+                              }}
+                            >
+                              {(sats / 1000).toFixed(0)}k
+                            </button>
+                          );
+                        })}
+                      </div>
+                      <p className="text-[11px] text-gray-600 mt-2">
+                        Stored on this device. Used on wishlist tip menus.
+                      </p>
+                    </div>
 
                     <div className="p-6 bg-black rounded-xl border border-white/10">
                       <label className="block text-sm font-bold text-gray-200 mb-4 uppercase tracking-wider">

@@ -6,6 +6,7 @@ import { Button } from '../components/Button';
 import { Input } from '../components/Input';
 import { useToast } from '../components/Toast';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import {
   getDmOptInLocal,
   setDmOptInLocal,
@@ -16,14 +17,23 @@ import {
   type ChatMessage,
 } from '../lib/nostrChat';
 import { hasNip07, nip07UserMessage, nostrService } from '../lib/nostr';
-import { MessageCircle, Shield, Loader2, Send } from 'lucide-react';
+import {
+  blockPubkey,
+  getBlockedPubkeys,
+  isBlocked,
+  markMessagesRead,
+  unblockPubkey,
+} from '../lib/dmPrefs';
+import { MessageCircle, Shield, Loader2, Send, Ban, UserX } from 'lucide-react';
 
 /**
  * Optional private chat — creators/fans opt in.
  * Uses NIP-17 gift-wrap when extension supports NIP-44; else NIP-04.
+ * Local blocklist + unread tracking (this device only).
  */
 export function MessagesPage() {
   const { toast } = useToast();
+  const { t } = useLanguage();
   const { profile } = useAuth();
   const [optIn, setOptIn] = useState(getDmOptInLocal);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -33,6 +43,7 @@ export function MessagesPage() {
   const [sending, setSending] = useState(false);
   const [myPub, setMyPub] = useState<string | null>(null);
   const [activePeer, setActivePeer] = useState<string | null>(null);
+  const [blocked, setBlocked] = useState<string[]>(() => getBlockedPubkeys());
 
   const refresh = useCallback(async () => {
     if (!hasNip07() || !optIn) {
@@ -61,10 +72,10 @@ export function MessagesPage() {
     const set = new Set<string>();
     for (const m of messages) {
       const peerHex = m.from === myPub ? m.to : m.from;
-      if (peerHex) set.add(peerHex);
+      if (peerHex && !isBlocked(peerHex)) set.add(peerHex);
     }
     return [...set];
-  }, [messages, myPub]);
+  }, [messages, myPub, blocked]);
 
   const threadMessages = useMemo(() => {
     if (!activePeer || !myPub) return [];
@@ -73,12 +84,17 @@ export function MessagesPage() {
       .sort((a, b) => a.created_at - b.created_at);
   }, [messages, activePeer, myPub]);
 
+  // Mark open thread as read
+  useEffect(() => {
+    if (!activePeer || threadMessages.length === 0) return;
+    markMessagesRead(threadMessages.map((m) => m.id));
+  }, [activePeer, threadMessages]);
+
   async function toggleOptIn(next: boolean) {
     setOptIn(next);
     setDmOptInLocal(next);
     if (next && hasNip07()) {
       try {
-        // Advertise opt-in on kind 0 so fans know DMs are welcome
         const result = await nostrService.publishProfile({
           katoa_accept_dms: 'true',
           name: profile?.username,
@@ -100,6 +116,19 @@ export function MessagesPage() {
     }
   }
 
+  function handleBlock(hex: string) {
+    blockPubkey(hex);
+    setBlocked(getBlockedPubkeys());
+    if (activePeer === hex) setActivePeer(null);
+    toast(t('messages.blocked'), 'info');
+  }
+
+  function handleUnblock(hex: string) {
+    unblockPubkey(hex);
+    setBlocked(getBlockedPubkeys());
+    toast(t('messages.unblock'), 'success');
+  }
+
   async function handleSend(e: React.FormEvent) {
     e.preventDefault();
     if (!draft.trim()) return;
@@ -111,6 +140,10 @@ export function MessagesPage() {
         return;
       }
       recipient = nostrService.normalizePubkey(recipient);
+      if (isBlocked(recipient)) {
+        toast(t('messages.blocked'), 'error');
+        return;
+      }
       const result = await sendPrivateMessage({
         recipientPubkey: recipient,
         message: draft.trim(),
@@ -148,41 +181,49 @@ export function MessagesPage() {
   return (
     <div className="min-h-[100dvh] bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 pt-16 pb-28 md:pb-16">
       <PageMeta
-        title="Private messages"
-        description="Optional encrypted DMs with fans via Nostr (NIP-17 gift-wrap or NIP-04). Opt-in only."
+        title={t('messages.pageTitle')}
+        description={t('messages.pageSubtitle')}
         path="/messages"
         noindex
       />
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8 pt-24">
-        <PageHero
-          title="Private messages"
-          subtitle="Talk with fans or supporters when you want — opt in, Nostr extension only, never share seed phrases."
-        />
+      <main
+        className="max-w-3xl mx-auto px-4 sm:px-6 py-8 pt-24"
+        aria-label={t('a11y.messagesMain')}
+      >
+        <PageHero title={t('messages.pageTitle')} subtitle={t('messages.pageSubtitle')} />
 
         <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5 mb-6">
           <div className="flex items-start gap-3">
-            <Shield size={20} className="text-neon-cyan-400 shrink-0 mt-0.5" />
+            <Shield size={20} className="text-neon-cyan-400 shrink-0 mt-0.5" aria-hidden />
             <div className="min-w-0 flex-1">
               <p className="text-sm text-gray-300 leading-relaxed mb-3">
                 <strong className="text-white">Optional feature.</strong> Off by default. Uses your browser Nostr
                 extension (Alby / nos2x). Prefer gift-wrap when NIP-44 is available
                 {hasNip44() ? ' (detected)' : ' (not detected — NIP-04 fallback)'}.
               </p>
-              <label className="flex items-center gap-3 min-h-[48px] cursor-pointer touch-manipulation">
+              <label
+                className="flex items-center gap-3 min-h-[48px] cursor-pointer touch-manipulation"
+                htmlFor="messages-opt-in"
+              >
                 <input
+                  id="messages-opt-in"
                   type="checkbox"
                   className="w-5 h-5 rounded border-white/20"
                   checked={optIn}
                   onChange={(e) => void toggleOptIn(e.target.checked)}
+                  data-testid="messages-opt-in"
                 />
-                <span className="text-sm font-semibold text-white">Enable private messages on this device</span>
+                <span className="text-sm font-semibold text-white">{t('messages.enable')}</span>
               </label>
             </div>
           </div>
         </div>
 
         {!hasNip07() && (
-          <div className="mb-6 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-100">
+          <div
+            role="status"
+            className="mb-6 rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-100"
+          >
             Install a Nostr extension to use chat.{' '}
             <a className="underline font-semibold" href="https://getalby.com" target="_blank" rel="noreferrer">
               Alby
@@ -193,14 +234,18 @@ export function MessagesPage() {
 
         {optIn && (
           <div className="grid md:grid-cols-[200px_1fr] gap-4">
-            <aside className="rounded-2xl border border-white/10 bg-black/20 p-3 max-h-[50vh] overflow-y-auto">
+            <aside
+              className="rounded-2xl border border-white/10 bg-black/20 p-3 max-h-[50vh] overflow-y-auto"
+              aria-label="Conversation threads"
+            >
               <div className="flex items-center justify-between mb-2">
                 <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Threads</p>
                 <button
                   type="button"
-                  className="text-[10px] text-neon-cyan-400 min-h-[32px]"
+                  className="text-[10px] text-neon-cyan-400 min-h-[32px] min-w-[44px]"
                   onClick={() => void refresh()}
                   disabled={loading}
+                  aria-label="Refresh messages"
                 >
                   {loading ? '…' : 'Refresh'}
                 </button>
@@ -208,7 +253,7 @@ export function MessagesPage() {
               {threads.length === 0 && (
                 <p className="text-xs text-gray-500 py-4">No messages yet. Start a conversation below.</p>
               )}
-              <ul className="space-y-1">
+              <ul className="space-y-1" role="list">
                 {threads.map((hex) => (
                   <li key={hex}>
                     <button
@@ -222,6 +267,7 @@ export function MessagesPage() {
                           ? 'bg-neon-cyan-500/15 text-neon-cyan-300 border border-neon-cyan-500/30'
                           : 'text-gray-400 hover:bg-white/5'
                       }`}
+                      aria-current={activePeer === hex ? 'true' : undefined}
                     >
                       {shortNpub(hex)}
                     </button>
@@ -230,16 +276,38 @@ export function MessagesPage() {
               </ul>
             </aside>
 
-            <section className="rounded-2xl border border-white/10 bg-black/20 flex flex-col min-h-[360px]">
-              <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-2 max-h-[50vh]">
+            <section
+              className="rounded-2xl border border-white/10 bg-black/20 flex flex-col min-h-[360px]"
+              aria-label="Active conversation"
+            >
+              {activePeer && (
+                <div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-white/10">
+                  <p className="text-xs font-mono text-gray-400 truncate">{shortNpub(activePeer)}</p>
+                  <button
+                    type="button"
+                    onClick={() => handleBlock(activePeer)}
+                    className="inline-flex items-center gap-1.5 text-xs text-rose-300 hover:text-rose-200 min-h-[40px] px-2 touch-manipulation"
+                    aria-label={`${t('messages.block')} ${shortNpub(activePeer)}`}
+                  >
+                    <Ban size={14} aria-hidden />
+                    {t('messages.block')}
+                  </button>
+                </div>
+              )}
+              <div
+                className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-2 max-h-[50vh]"
+                role="log"
+                aria-live="polite"
+                aria-relevant="additions"
+              >
                 {loading && (
                   <p className="text-center text-gray-500 text-sm py-8">
-                    <Loader2 className="inline animate-spin mr-2" size={16} /> Loading…
+                    <Loader2 className="inline animate-spin mr-2" size={16} aria-hidden /> Loading…
                   </p>
                 )}
                 {!loading && threadMessages.length === 0 && (
                   <p className="text-center text-gray-500 text-sm py-8">
-                    <MessageCircle className="inline mb-1" size={18} />
+                    <MessageCircle className="inline mb-1" size={18} aria-hidden />
                     <br />
                     No messages in this thread.
                   </p>
@@ -264,7 +332,7 @@ export function MessagesPage() {
                 })}
               </div>
 
-              <form onSubmit={handleSend} className="border-t border-white/10 p-3 space-y-2">
+              <form onSubmit={handleSend} className="border-t border-white/10 p-3 space-y-2" aria-label="Compose message">
                 <Input
                   value={peer}
                   onChange={(e) => setPeer(e.target.value)}
@@ -286,12 +354,41 @@ export function MessagesPage() {
                     className="min-h-[48px] min-w-[48px] px-4"
                     aria-label="Send"
                   >
-                    {sending ? <Loader2 size={18} className="animate-spin" /> : <Send size={18} />}
+                    {sending ? <Loader2 size={18} className="animate-spin" aria-hidden /> : <Send size={18} aria-hidden />}
                   </Button>
                 </div>
               </form>
             </section>
           </div>
+        )}
+
+        {blocked.length > 0 && (
+          <section
+            className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-4"
+            aria-labelledby="blocked-list-heading"
+          >
+            <h2 id="blocked-list-heading" className="text-sm font-bold text-white mb-3 flex items-center gap-2">
+              <UserX size={16} className="text-rose-400" aria-hidden />
+              {t('messages.blockedList')}
+            </h2>
+            <ul className="space-y-2" role="list">
+              {blocked.map((hex) => (
+                <li
+                  key={hex}
+                  className="flex items-center justify-between gap-2 text-xs font-mono text-gray-400 min-h-[44px]"
+                >
+                  <span className="truncate">{shortNpub(hex)}</span>
+                  <button
+                    type="button"
+                    onClick={() => handleUnblock(hex)}
+                    className="text-neon-cyan-400 hover:text-neon-cyan-300 min-h-[40px] px-2 shrink-0 touch-manipulation"
+                  >
+                    {t('messages.unblock')}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </section>
         )}
 
         {!optIn && (
