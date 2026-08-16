@@ -36,10 +36,11 @@ Rebuild KATOA's creator surface around the OnlyFans *model* — subscription cre
 - [x] Post detail modal (media + caption + comments + Tip/Subscribe)
 - [ ] Per-post "locked" blur instead of full overlay on unlocked thumbnails
 
-### P2 — Subscription paywall
-- [ ] Real subscribe flow: tier selection → Lightning invoice (BTCPay) → subscriber state persisted
-- [ ] Subscriber-only feed + unlock state (localStorage until DB is authoritative)
-- [ ] "You're subscribed" state + manage-subscription UI
+### P2 — Subscription paywall (server spec: `docs/SUBSCRIPTION-FLOW-SPEC.md`)
+- [x] Client subscription seam (localStorage) + "Subscribed" unlock state + button state
+- [ ] Real subscribe flow: tier → Lightning invoice (BTCPay/LNbits/LND) → webhook → `subscriptions` row
+- [ ] Subscriber-only feed gated by DB state (replace the local seam)
+- [ ] "You're subscribed" manage-subscription UI
 
 ### P3 — Discovery + home
 - [ ] OF-style creator grid on home (trending / new / top), reuse `CreatorVideoCard`
@@ -50,7 +51,8 @@ Rebuild KATOA's creator surface around the OnlyFans *model* — subscription cre
 - [ ] Follow vs subscribe distinction (Nostr kind-3 contacts)
 - [ ] Notifications / unread badge (extend existing local unread)
 
-### Needs Cam / THOR (blocked)
+### Needs Cam / THOR (blocked) — handoff for next LLM on Hermes
+- **Subscription backend (SPEC'd):** `docs/SUBSCRIPTION-FLOW-SPEC.md` — needs **LND on THOR** (BTCPay/LNbits/LND REST) + webhook deploy
 - BTCPay/Lightning invoice + webhook for real subscribe paywalls
 - Platform nsec vault for NIP-07/NIP-05 + signed kind-0 (follow graph)
 - Seed real creators + content moderation policy (tasteful now, adult later)

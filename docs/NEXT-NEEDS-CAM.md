@@ -1,8 +1,13 @@
 # Next list — needs Cam / THOR (honest backlog)
 
-Updated **2026-08-11** after solo 10-pack + map/BTC Map API + agent docs (HEAD `9d38deb`, v1.1.7).
+Updated **2026-08-16** — added OF-parity subscription backend (HEAD `eccc285`, v1.1.7).
 
 ## Still needs you (cannot finish alone)
+
+### Subscriptions (OF-parity) — ⭐ handoff for next LLM on Hermes
+- **SPEC:** `docs/SUBSCRIPTION-FLOW-SPEC.md` — DB `subscriptions` table, invoice `metadata.kind='subscription'`, webhook activation.
+- **Needs the LND server on THOR** (BTCPay Greenfield, LNbits API, or LND REST). Secrets → THOR vault only.
+- Client seam is done (`src/lib/subscriptions.ts`); backend is the only missing piece.
 
 ### Money
 1. **BTCPay or LNbits / LNURL** production + CF secrets  

@@ -1,3 +1,26 @@
+## Session — 2026-08-16 (Grok M3) — Subscription client seam + handoff spec
+
+**Role:** M3 code only. Pushed `main`. Version **1.1.7**.
+
+### ⭐ HANDOFF TO NEXT LLM (Grok / Kimi on Hermes)
+- **Real subscribe flow is SPEC'd and ready to build server-side:** see **`docs/SUBSCRIPTION-FLOW-SPEC.md`**.
+- It needs the **LND server on THOR** — tie in via BTCPay Greenfield, LNbits API, or LND REST. The client scaffold (`src/lib/btcpay.ts`) + webhook stub (`supabase/functions/btcpay-webhook/`) already exist; secrets go in THOR's vault, never in git/`VITE_*`.
+- Client seam is done: `src/lib/subscriptions.ts` (localStorage demo) + `subscribed` prop wired through `CreatorPostFeed`/`CreatorPostModal`/`WishlistPage`. Replace `subscribeLocal` with invoice → webhook → DB.
+- **All other Cam/THOR/LND requirements:** `docs/NEXT-NEEDS-CAM.md` (Lightning, webhook, platform nsec vault, NIP-05 ops, seed creators).
+
+### Done this pass
+- `docs/SUBSCRIPTION-FLOW-SPEC.md` — backend handoff (DB table, invoice metadata, webhook, LND rails, acceptance criteria).
+- `src/lib/subscriptions.ts` + tests — subscribe/unsubscribe/isSubscribed (local seam).
+- "Subscribed" state unlocks locked posts in `CreatorPostFeed` + `CreatorPostModal`; Subscribe button flips to "Subscribed ✓".
+- `WishlistPage` `handleSubscribe` (demo) + toast.
+
+### Git State
+- HEAD: `eccc285`
+- Prior: `c453ada` post modal · `d0f854a` creator feed
+- Verify: `npm run check` (90 tests)
+
+---
+
 ## Session — 2026-08-16 (Grok M3) — OnlyFans-parity P1: creator post feed
 
 **Role:** M3 code only. Pushed `main`. Version still **1.1.7**.

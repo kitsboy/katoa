@@ -2,10 +2,11 @@
 
 **Status:** 🟢 Live  
 **Last updated:** 2026-08-16 by Grok (M3)  
-**Version:** 1.1.7 · **HEAD:** `c453ada`
+**Version:** 1.1.7 · **HEAD:** `eccc285`
 
 ## Recent (this session)
-- OnlyFans-parity P1: `CreatorPostFeed` + `CreatorPostModal` (stats, post grid, locked/PPV paywall, comments, Tip/Subscribe) wired into creator profiles; `mockCreatorPosts` (Luna/Sasha)
+- OnlyFans-parity P1: `CreatorPostFeed` + `CreatorPostModal` (stats, grid, locked/PPV paywall, comments, Tip/Subscribe) + subscription client seam (`src/lib/subscriptions.ts`)
+- Backend handoff: `docs/SUBSCRIPTION-FLOW-SPEC.md` (LND tie-in for next LLM)
 - Roadmap: `docs/OF-PARITY-ROADMAP.md` (tasteful-now, hybrid model)
 - Prior: map discovery batch 1 (`352708f`)
 
