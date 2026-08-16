@@ -1,3 +1,32 @@
+## Session — 2026-08-16 (Grok M3) — Map discovery batch 2: 10 solo items shipped
+
+**Role:** M3 code only. Pushed `main`. Version **1.1.7** (no bump this pass).
+
+### Done — map & discovery batch 2 (see docs/MAP-DISCOVERY-ROADMAP.md)
+1. **Incremental load on pan** — `mergePlaces` by id + `haversineKm` halo pruning; no more clear-and-refetch flicker; 400-place render cap + "Load more here" (+200/click).
+2. **KATOA pin vertical color ring** — `katoaPinColor(category)` tints photo-pin ring + fallback teardrop (ExplorePage passes `category`).
+3. **Events layer** — `GET /v4/events`, purple 📅 pins filtered to viewport, date/link popup, persisted layer toggle.
+4. **Areas-here chips** — `GET /v4/areas?lat=&lon=` for map center; chips link to area pages.
+5. **Place detail drawer** — right-side panel on merchant click: full fields, description, comments, OSM/directions/report/website links.
+6. **Read-only comments** — `GET /v4/places/{id}/comments` (top 2) inside the drawer.
+7. **Activity strip** — `GET /v4/activity?places=<visible ids>&days=7`; type glyphs + relative time; click flies to place.
+8. **Contribute flow** — toolbar ➕ opens OSM note prefilled with map center; drawer gets report-issue + suggest-edit links.
+9. **Share map view** — toolbar button copies `?lat&lon&zoom&place` URL with toast.
+10. **Remember last view** — last center/zoom persisted; restored when no URL params.
+- 25 new `map.*` i18n keys × 7 languages; `e2e/map.spec.ts` Playwright smoke (map mounts, toggles, share, search focus).
+
+### Decisions
+- **Areas layer adapted:** `GET /v4/areas` returns no geometry/bbox → chips + links instead of boundaries (documented in roadmap).
+- **Contribute uses OSM note deep-link** (`note/new?lat&lon`) — that's the funnel btcmap.org itself uses to ingest new places; no btcmap.org add-place URL exists publicly.
+- Merchant markers now open the detail **drawer** on click (popup builder stays in lib for tests/embeds).
+- Events are viewport-filtered (`bounds.pad(0.2)`) so global upcoming events don't flood the map.
+
+### Git State
+- HEAD: to be pushed (see commit) · Prior: `eccc285` subscription seam
+- Verify: `npm run check` (103 tests) · `npm run build` ✓ · Playwright 4/4 ✓
+
+---
+
 ## Session — 2026-08-16 (Grok M3) — Subscription client seam + handoff spec
 
 **Role:** M3 code only. Pushed `main`. Version **1.1.7**.

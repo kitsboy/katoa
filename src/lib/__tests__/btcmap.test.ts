@@ -1,11 +1,18 @@
 import { describe, expect, it } from 'vitest';
 import {
   BTCMAP_POPUP_STRINGS_EN,
+  buildDirectionsUrl,
   buildMapViewQuery,
   buildMerchantPopupHtml,
+  buildOSMNoteUrl,
+  buildOsmPlaceUrl,
+  buildShareMapUrl,
   escapeMapPopupText,
+  haversineKm,
+  katoaPinColor,
   LEAFLET_BASEMAP_URL,
   materialIconGlyph,
+  mergePlaces,
   merchantCategoryFor,
   parseMapViewParams,
   sanitizeImageUrl,
@@ -205,5 +212,105 @@ describe('sanitizeImageUrl', () => {
     expect(sanitizeImageUrl('')).toBeNull();
     expect(sanitizeImageUrl(null)).toBeNull();
     expect(sanitizeImageUrl(undefined)).toBeNull();
+  });
+});
+
+describe('mergePlaces', () => {
+  it('dedupes by id, incoming winning', () => {
+    const existing = [
+      { id: 1, name: 'Old', lat: 1, lon: 1 },
+      { id: 2, name: 'Keep', lat: 2, lon: 2 },
+    ] as never[] as import('../btcmap').BTCMapPlace[];
+    const incoming = [
+      { id: 1, name: 'New', lat: 1.5, lon: 1.5 },
+      { id: 3, name: 'Fresh', lat: 3, lon: 3 },
+    ] as never[] as import('../btcmap').BTCMapPlace[];
+
+    const merged = mergePlaces(existing, incoming);
+    expect(merged).toHaveLength(3);
+    expect(merged.find((p) => p.id === 1)?.name).toBe('New');
+    expect(merged.map((p) => p.id)).toEqual([1, 2, 3]);
+  });
+
+  it('keeps order when incoming only has new ids', () => {
+    const merged = mergePlaces(
+      [{ id: 10, name: 'A', lat: 0, lon: 0 }],
+      [{ id: 20, name: 'B', lat: 0, lon: 0 }]
+    );
+    expect(merged.map((p) => p.id)).toEqual([10, 20]);
+  });
+});
+
+describe('katoaPinColor', () => {
+  it('maps known verticals to distinct colors', () => {
+    expect(katoaPinColor('model')).toBe('#ec4899');
+    expect(katoaPinColor('fitness')).toBe('#22c55e');
+    expect(katoaPinColor('creator')).toBe('#f97316');
+  });
+
+  it('falls back to the brand orange for unknown or missing categories', () => {
+    expect(katoaPinColor('unknown-vertical')).toBe('#f97316');
+    expect(katoaPinColor(undefined)).toBe('#f97316');
+    expect(katoaPinColor(null)).toBe('#f97316');
+  });
+});
+
+describe('buildOSMNoteUrl', () => {
+  it('prefills lat/lon and an optional note', () => {
+    const url = buildOSMNoteUrl(50.088, 14.42);
+    expect(url).toContain('https://www.openstreetmap.org/note/new?');
+    expect(url).toContain('lat=50.088');
+    expect(url).toContain('lon=14.42');
+  });
+
+  it('includes the note when provided', () => {
+    expect(buildOSMNoteUrl(1, 2, 'Bitcoin accepted here?')).toContain('note=Bitcoin+accepted+here%3F');
+  });
+});
+
+describe('buildDirectionsUrl', () => {
+  it('builds an OSM directions link to the coordinate', () => {
+    expect(buildDirectionsUrl(50.088, 14.42)).toBe(
+      'https://www.openstreetmap.org/directions?to=50.088,14.42'
+    );
+  });
+});
+
+describe('buildOsmPlaceUrl', () => {
+  it('maps node/way/relation ids to OSM urls', () => {
+    expect(buildOsmPlaceUrl('node:123')).toBe('https://www.openstreetmap.org/node/123');
+    expect(buildOsmPlaceUrl('way:456')).toBe('https://www.openstreetmap.org/way/456');
+    expect(buildOsmPlaceUrl('relation:7')).toBe('https://www.openstreetmap.org/relation/7');
+  });
+
+  it('returns null for missing or malformed ids', () => {
+    expect(buildOsmPlaceUrl(undefined)).toBeNull();
+    expect(buildOsmPlaceUrl('nope:123')).toBeNull();
+    expect(buildOsmPlaceUrl('node:abc')).toBeNull();
+  });
+});
+
+describe('haversineKm', () => {
+  it('returns ~0 for identical points', () => {
+    expect(haversineKm(50.088, 14.42, 50.088, 14.42)).toBeCloseTo(0, 6);
+  });
+
+  it('approximates known city distance (Prague → Berlin)', () => {
+    // ~280 km as the crow flies
+    const km = haversineKm(50.088, 14.42, 52.52, 13.405);
+    expect(km).toBeGreaterThan(250);
+    expect(km).toBeLessThan(320);
+  });
+});
+
+describe('buildShareMapUrl', () => {
+  it('appends the map view query to a base url', () => {
+    const url = buildShareMapUrl({ lat: 4.6, lon: -74.08, zoom: 13, place: 42 }, 'https://katoa.org/explore');
+    expect(url).toBe('https://katoa.org/explore?lat=4.60000&lon=-74.08000&zoom=13&place=42');
+  });
+
+  it('omits place when not provided', () => {
+    const url = buildShareMapUrl({ lat: 1, lon: 2, zoom: 10 }, 'https://katoa.org/explore');
+    expect(url).not.toContain('place=');
   });
 });

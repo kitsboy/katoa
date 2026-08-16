@@ -648,6 +648,7 @@ export function ExplorePage() {
       longitude: w.longitude!,
       total_sats_raised: w.total_sats_raised,
       cover_image: w.cover_image,
+      category: w.category,
     }));
     return mergeKatoaPinsWithMap(pins);
   }, [wishlistsWithLocation]);

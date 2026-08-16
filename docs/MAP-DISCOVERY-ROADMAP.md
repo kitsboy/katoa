@@ -35,20 +35,20 @@ Focus area chosen by Cam: **Map + discovery**.
 
 ### P1 — Discovery depth (solo)
 
-- **Merchant category filter chips** — derive from `icon` (☕ 🍽 🏨 …), filter markers client-side.
-- **Areas layer** — `GET /v4/areas`, render boundaries/names, click to fit bounds.
-- **Events layer** — `GET /v4/events`, distinct pin style, date/link popup.
-- **Place detail drawer** — side panel replacing/augmenting popup: full fields, description, OSM link, directions deep-link, report-issue link.
-- **Keyboard nav on search** — arrow keys + Enter.
-- **KATOA pin richness** — cover image thumbnail, vertical color ring, verified badge, sats progress in popup.
+- [x] **Merchant category filter chips** — derive from `icon` (☕ 🍽 🏨 …), filter markers client-side. (batch 1)
+- [x] **Areas layer** — `GET /v4/areas` at map center, area chips with icons + links (API returns no geometry; boundaries not possible). (batch 2)
+- [x] **Events layer** — `GET /v4/events`, distinct pin style, date/link popup. (batch 2)
+- [x] **Place detail drawer** — side panel replacing/augmenting popup: full fields, description, OSM link, directions deep-link, report-issue link. (batch 2)
+- [x] **Keyboard nav on search** — arrow keys + Enter. (batch 1)
+- [x] **KATOA pin richness** — cover image thumbnail (b1) + vertical color ring (b2); verified badge / sats progress pending.
 
 ### P2 — Engagement & reach (solo)
 
-- **Activity strip** — `GET /v4/activity` for "recently added near here" under the map.
-- **Contribute flow** — "Add merchant / suggest edit" deep-links to btcmap.org (prefilled lat/lon).
-- **Read-only place comments** — show count + top comment (submission needs NIP-98 auth → blocked).
-- **Share map view** — copy URL with current lat/lon/zoom/place.
-- **Remember last view** — persist last center/zoom + a "my city" default.
+- [x] **Activity strip** — `GET /v4/activity?places=<visible>` "recently changed near here" under the map. (batch 2)
+- [x] **Contribute flow** — "Add a place" deep-link prefilled with map center (OSM note — the funnel btcmap.org uses). (batch 2)
+- [x] **Read-only place comments** — count + top comments in the drawer (`GET /v4/places/{id}/comments`). (batch 2)
+- [x] **Share map view** — copy URL with current lat/lon/zoom/place. (batch 2)
+- [x] **Remember last view** — persist last center/zoom; restore when no URL params. (batch 2)
 
 ### P3 — Parity & polish (solo)
 
@@ -72,10 +72,26 @@ Focus area chosen by Cam: **Map + discovery**.
 - [x] KATOA pin cover thumbnails (circular photo pin w/ orange ring; falls back to "K" teardrop)
 - [x] Search dropdown keyboard nav (arrow keys, Enter, Escape; combobox/listbox a11y)
 
-## Remaining from first batch
+## Batch 2 — shipped 2026-08-16
 
-1. KATOA pin vertical color ring (cover thumbnail shipped; per-vertical color pending).
-2. Incremental load on pan (merge cached places instead of clear-all) — clustering helps but refetch-on-move remains.
+- [x] **Incremental load on pan** — `mergePlaces` by id + `haversineKm` halo pruning (radius × 1.5); no clear-and-refetch flicker; 400-place render cap with "Load more here" (+200/click)
+- [x] **KATOA pin vertical color ring** — `katoaPinColor(category)` tints photo-pin ring + fallback teardrop (vertical colors, orange default)
+- [x] **Events layer** — `GET /v4/events`, purple 📅 pins (viewport-filtered), date/link popup, persisted layer toggle
+- [x] **Areas-here chips** — `GET /v4/areas?lat=&lon=` for the map center; chips link to area pages
+- [x] **Place detail drawer** — right-side panel on merchant click: full fields, description, comments, OSM/directions/report/website links
+- [x] **Read-only comments** — `GET /v4/places/{id}/comments` shown in the drawer (top 2)
+- [x] **Activity strip** — `GET /v4/activity?places=<visible ids>&days=7`; type glyphs + relative time; click flies to place
+- [x] **Contribute flow** — toolbar ➕ opens OSM note prefilled with map center; drawer has report-issue + suggest-edit links
+- [x] **Share map view** — toolbar button copies `?lat&lon&zoom&place` URL (+ toast)
+- [x] **Remember last view** — last center/zoom persisted to localStorage, restored when no URL params
+- [x] Playwright smoke `e2e/map.spec.ts` (map mounts, toggles, share, search focus)
+
+## Remaining from batch 1/2
+
+1. ~~KATOA pin vertical color ring~~ ✅ shipped batch 2
+2. ~~Incremental load on pan~~ ✅ shipped batch 2
+3. `GET /v4/areas` boundaries/geometry — API returns no geometry; chips + links shipped instead (P1 adaptation)
+4. Place issues layer (`GET /v4/place-issues`) — not wired yet
 
 ## Definition of done
 

@@ -40,6 +40,8 @@ export const STORAGE_KEYS = {
   exploreShowMap: 'katoa_explore_show_map',
   mapShowMerchants: 'katoa_map_show_merchants',
   mapShowKatoa: 'katoa_map_show_katoa',
+  mapShowEvents: 'katoa_map_show_events',
+  mapLastView: 'katoa_map_last_view',
   onboardingChecklist: 'katoa-onboarding-checklist',
   dmBlocked: 'katoa_dm_blocked',
   dmReadIds: 'katoa_dm_read_ids',

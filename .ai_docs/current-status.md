@@ -2,13 +2,12 @@
 
 **Status:** 🟢 Live  
 **Last updated:** 2026-08-16 by Grok (M3)  
-**Version:** 1.1.7 · **HEAD:** `eccc285`
+**Version:** 1.1.7 · **HEAD:** see KIMI-HANDOFF top
 
 ## Recent (this session)
-- OnlyFans-parity P1: `CreatorPostFeed` + `CreatorPostModal` (stats, grid, locked/PPV paywall, comments, Tip/Subscribe) + subscription client seam (`src/lib/subscriptions.ts`)
+- Map discovery batch 2 — 10 solo items: incremental place merge, events layer, areas-here chips, place detail drawer (+ read-only comments), activity strip, contribute flow, share view, remember last view, KATOA pin color rings
+- Prior: OF-parity P1 (creator feed/post modal) + subscription client seam (`eccc285`)
 - Backend handoff: `docs/SUBSCRIPTION-FLOW-SPEC.md` (LND tie-in for next LLM)
-- Roadmap: `docs/OF-PARITY-ROADMAP.md` (tasteful-now, hybrid model)
-- Prior: map discovery batch 1 (`352708f`)
 
 ## Prior
 - Solo 10-pack product UX + map popups/icons/search + family `.ai_docs`/`.ai_agent` (`9d38deb`)

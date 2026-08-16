@@ -48,6 +48,8 @@ export interface KatoaMapPin {
   longitude: number;
   total_sats_raised: number;
   cover_image?: string | null;
+  /** Creator vertical / category used to color the pin ring. */
+  category?: string | null;
 }
 
 export interface BTCMapPlace {
@@ -65,6 +67,45 @@ export interface BTCMapPlace {
   comments?: number;
   osm_id?: string;
   description?: string;
+}
+
+/** v4 event (GET /v4/events). */
+export interface BTCMapEvent {
+  id: number;
+  area_id: number | null;
+  lat: number;
+  lon: number;
+  name: string;
+  website?: string;
+  starts_at: string;
+  ends_at?: string | null;
+}
+
+/** v4 area containing a coordinate (GET /v4/areas?lat=&lon=). */
+export interface BTCMapAreaAt {
+  id: number;
+  name: string;
+  type: string;
+  url_alias: string;
+  icon?: string | null;
+  website_url?: string;
+}
+
+/** v4 activity feed item (GET /v4/activity). */
+export interface BTCMapActivityItem {
+  type: 'place_added' | 'place_updated' | 'place_deleted' | 'place_commented' | 'place_boosted' | string;
+  place_id: number;
+  place_name?: string;
+  comment?: string;
+  duration_days?: number;
+  date: string;
+}
+
+/** v4 place comment (GET /v4/places/{id}/comments). */
+export interface BTCMapComment {
+  id: number;
+  text: string;
+  created_at: string;
 }
 
 /** Result row from GET /v4/search/?q= */
@@ -362,6 +403,192 @@ export async function fetchBTCMapAreas(): Promise<BTCMapArea[]> {
   return Array.isArray(data) ? data : data.areas ?? [];
 }
 
+function parseEvent(raw: unknown): BTCMapEvent | null {
+  if (!raw || typeof raw !== 'object') return null;
+  const e = raw as Record<string, unknown>;
+  if (typeof e.id !== 'number' || typeof e.lat !== 'number' || typeof e.lon !== 'number') return null;
+  if (typeof e.name !== 'string' || !e.name) return null;
+  if (typeof e.starts_at !== 'string' || !e.starts_at) return null;
+  return {
+    id: e.id,
+    area_id: typeof e.area_id === 'number' ? e.area_id : null,
+    lat: e.lat,
+    lon: e.lon,
+    name: e.name,
+    website: typeof e.website === 'string' ? e.website : undefined,
+    starts_at: e.starts_at,
+    ends_at: typeof e.ends_at === 'string' ? e.ends_at : null,
+  };
+}
+
+function parseAreaAt(raw: unknown): BTCMapAreaAt | null {
+  if (!raw || typeof raw !== 'object') return null;
+  const a = raw as Record<string, unknown>;
+  if (typeof a.id !== 'number' || typeof a.name !== 'string' || !a.name) return null;
+  if (typeof a.type !== 'string') return null;
+  return {
+    id: a.id,
+    name: a.name,
+    type: a.type,
+    url_alias: typeof a.url_alias === 'string' ? a.url_alias : '',
+    icon: typeof a.icon === 'string' ? a.icon : null,
+    website_url: typeof a.website_url === 'string' ? a.website_url : undefined,
+  };
+}
+
+function parseActivity(raw: unknown): BTCMapActivityItem | null {
+  if (!raw || typeof raw !== 'object') return null;
+  const a = raw as Record<string, unknown>;
+  if (typeof a.place_id !== 'number' || typeof a.date !== 'string' || !a.date) return null;
+  const type = typeof a.type === 'string' ? a.type : '';
+  if (!type) return null;
+  return {
+    type,
+    place_id: a.place_id,
+    place_name: typeof a.place_name === 'string' ? a.place_name : undefined,
+    comment: typeof a.comment === 'string' ? a.comment : undefined,
+    duration_days: typeof a.duration_days === 'number' ? a.duration_days : undefined,
+    date: a.date,
+  };
+}
+
+function parseComment(raw: unknown): BTCMapComment | null {
+  if (!raw || typeof raw !== 'object') return null;
+  const c = raw as Record<string, unknown>;
+  if (typeof c.id !== 'number' || typeof c.text !== 'string') return null;
+  return {
+    id: c.id,
+    text: c.text,
+    created_at: typeof c.created_at === 'string' ? c.created_at : new Date(0).toISOString(),
+  };
+}
+
+/** Fetch all upcoming events (GET /v4/events). */
+export async function fetchBTCMapEvents(signal?: AbortSignal): Promise<BTCMapEvent[]> {
+  const base = getApiBaseUrl();
+  const response = await fetch(`${base}/v4/events`, {
+    headers: { Accept: 'application/json' },
+    signal,
+  });
+
+  if (!response.ok) {
+    throw new Error(`BTC Map events API error: ${response.status}`);
+  }
+
+  const data = await response.json();
+  if (!Array.isArray(data)) return [];
+  return data.map(parseEvent).filter((e): e is BTCMapEvent => e !== null);
+}
+
+/** Fetch areas containing a coordinate (GET /v4/areas?lat=&lon=). */
+export async function fetchAreasAt(
+  lat: number,
+  lon: number,
+  signal?: AbortSignal
+): Promise<BTCMapAreaAt[]> {
+  const base = getApiBaseUrl();
+  const params = new URLSearchParams({ lat: String(lat), lon: String(lon) });
+  const response = await fetch(`${base}/v4/areas?${params}`, {
+    headers: { Accept: 'application/json' },
+    signal,
+  });
+
+  if (!response.ok) {
+    throw new Error(`BTC Map areas API error: ${response.status}`);
+  }
+
+  const data = await response.json();
+  if (!Array.isArray(data)) return [];
+  return data.map(parseAreaAt).filter((a): a is BTCMapAreaAt => a !== null);
+}
+
+/**
+ * Fetch the merged activity feed (GET /v4/activity).
+ * Scope to up to 500 explicit place ids so "recently changed near here" works.
+ */
+export async function fetchBTCMapActivity(opts?: {
+  places?: number[];
+  days?: number;
+  signal?: AbortSignal;
+}): Promise<BTCMapActivityItem[]> {
+  const base = getApiBaseUrl();
+  const params = new URLSearchParams();
+  if (opts?.days) params.set('days', String(opts.days));
+  const places = opts?.places?.slice(0, 500);
+  if (places?.length) params.set('places', places.join(','));
+
+  const query = params.toString();
+  const response = await fetch(`${base}/v4/activity${query ? `?${query}` : ''}`, {
+    headers: { Accept: 'application/json' },
+    signal: opts?.signal,
+  });
+
+  if (!response.ok) {
+    throw new Error(`BTC Map activity API error: ${response.status}`);
+  }
+
+  const data = await response.json();
+  if (!Array.isArray(data)) return [];
+  return data.map(parseActivity).filter((a): a is BTCMapActivityItem => a !== null);
+}
+
+/** Fetch read-only comments for a place (GET /v4/places/{id}/comments). */
+export async function fetchPlaceComments(
+  placeId: number,
+  signal?: AbortSignal
+): Promise<BTCMapComment[]> {
+  const base = getApiBaseUrl();
+  const response = await fetch(`${base}/v4/places/${placeId}/comments`, {
+    headers: { Accept: 'application/json' },
+    signal,
+  });
+
+  if (!response.ok) {
+    throw new Error(`BTC Map comments API error: ${response.status}`);
+  }
+
+  const data = await response.json();
+  if (!Array.isArray(data)) return [];
+  return data.map(parseComment).filter((c): c is BTCMapComment => c !== null);
+}
+
+/** Merge two place lists by id, incoming winning. Preserves existing order then appends new ids. */
+export function mergePlaces(existing: BTCMapPlace[], incoming: BTCMapPlace[]): BTCMapPlace[] {
+  const merged = new Map<number, BTCMapPlace>();
+  for (const place of existing) merged.set(place.id, place);
+  for (const place of incoming) merged.set(place.id, place);
+  return Array.from(merged.values());
+}
+
+/** Great-circle distance in km between two coordinates (for incremental-load pruning). */
+export function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const toRad = (deg: number) => (deg * Math.PI) / 180;
+  const R = 6371;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(a));
+}
+
+/** Ring color for a KATOA pin by creator vertical / category. */
+export function katoaPinColor(category?: string | null): string {
+  const colors: Record<string, string> = {
+    creator: '#f97316',
+    model: '#ec4899',
+    fitness: '#22c55e',
+    meals: '#eab308',
+    golf: '#10b981',
+    lifestyle: '#06b6d4',
+    music: '#a855f7',
+    education: '#6366f1',
+    collective: '#14b8a6',
+  };
+  if (category && colors[category]) return colors[category];
+  return '#f97316';
+}
+
 /** Staged: merge Katoa wishlist pins with BTC Map for future overlay layer. */
 export function mergeKatoaPinsWithMap(
   wishlists: KatoaMapPin[],
@@ -620,6 +847,44 @@ export function buildMerchantPopupHtml(
 
 export function buildBTCMapPlaceUrl(placeId: number): string {
   return `${getAppBaseUrl()}/place/${placeId}`;
+}
+
+/** OSM note deep-link prefilled with coords — the standard "suggest a place" funnel. */
+export function buildOSMNoteUrl(lat: number, lon: number, note?: string): string {
+  const params = new URLSearchParams({ lat: String(lat), lon: String(lon) });
+  if (note) params.set('note', note);
+  return `https://www.openstreetmap.org/note/new?${params.toString()}#map=17/${lat}/${lon}`;
+}
+
+/** OSM directions deep-link to a coordinate. */
+export function buildDirectionsUrl(lat: number, lon: number): string {
+  return `https://www.openstreetmap.org/directions?to=${lat},${lon}`;
+}
+
+/** OSM element URL from an osm_id like "node:123". */
+export function buildOsmPlaceUrl(osmId?: string): string | null {
+  if (!osmId) return null;
+  const [type, id] = osmId.split(':');
+  if (
+    (type === 'node' || type === 'way' || type === 'relation') &&
+    /^\d+$/.test(id ?? '')
+  ) {
+    return `https://www.openstreetmap.org/${type}/${id}`;
+  }
+  return null;
+}
+
+/** Absolute shareable URL for the current map view. */
+export function buildShareMapUrl(
+  view: { lat: number; lon: number; zoom: number; place?: number },
+  baseUrl?: string
+): string {
+  const base =
+    baseUrl ??
+    (typeof window !== 'undefined'
+      ? `${window.location.origin}${window.location.pathname}`
+      : '');
+  return `${base}?${buildMapViewQuery(view)}`;
 }
 
 /** Feature flag — flip when btcmap-api proxy is configured in production. */
