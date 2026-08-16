@@ -22,7 +22,7 @@
 - Events are viewport-filtered (`bounds.pad(0.2)`) so global upcoming events don't flood the map.
 
 ### Git State
-- HEAD: to be pushed (see commit) · Prior: `eccc285` subscription seam
+- HEAD: `87fda6b` (pushed) · Prior: `eccc285` subscription seam
 - Verify: `npm run check` (103 tests) · `npm run build` ✓ · Playwright 4/4 ✓
 
 ---
