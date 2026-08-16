@@ -7,6 +7,8 @@
 2. **Marker clustering** — 64px grid `clusterPlaces()`; count badges; zoom-in on click; re-clusters on `zoomend` without refetch.
 3. **URL state sync + place deep-link** — `parseMapViewParams` / `buildMapViewQuery`; reads `?lat=&lon=&zoom=&place=` on init, writes on `moveend` via `replaceState`; `revealPlace(id)` shared by search + deep-link.
 4. **Merchant category filter chips** — 6 categories (food/shopping/stay/services/fun/travel) + All; client-side filter before clustering; `merchantCategoryFor` helper.
+5. **KATOA pin cover thumbnails** — circular photo pin w/ orange ring for safe http(s) `cover_image`; teardrop "K" fallback; `sanitizeImageUrl` guards inline-style injection.
+6. **Search keyboard nav** — combobox/listbox a11y: arrow keys, Enter, Escape; active-option highlight + scroll-into-view.
 
 ### Decisions
 - Clustering is a custom grid implementation (no `leaflet.markercluster` dependency) to keep the bundle small.
@@ -14,10 +16,10 @@
 - Category filter is client-side over already-fetched places (btcmap-api v4 places/search has no category param).
 
 ### Git State
-- HEAD: `4ace79b` (map batch 1)
-- Prior: `56bf8bb` docs handoff · `9d38deb` map popups/icons/search
+- HEAD: `352708f` (map batch 1 + pin thumbnails + search keyboard nav)
+- Prior: `4ace79b` map batch 1 · `56bf8bb` docs handoff · `9d38deb` map popups/icons/search
 - Unpushed: none (pushed after this entry)
-- Verify: `npm run check` (83 tests)
+- Verify: `npm run check` (85 tests)
 
 ### Still needs Cam / THOR
 - Unchanged: Lightning/BTCPay, NIP-05 ops, platform nsec vault, seed creators → `docs/NEXT-NEEDS-CAM.md`

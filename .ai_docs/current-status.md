@@ -2,10 +2,10 @@
 
 **Status:** 🟢 Live  
 **Last updated:** 2026-08-16 by Grok (M3)  
-**Version:** 1.1.7 · **HEAD:** `4ace79b`
+**Version:** 1.1.7 · **HEAD:** `352708f`
 
 ## Recent (this session)
-- Map discovery batch 1: popup i18n (7 langs), merchant clustering, URL deep-links (`?lat/lon/zoom/place=`), category filter chips
+- Map discovery batch 1: popup i18n (7 langs), merchant clustering, URL deep-links (`?lat/lon/zoom/place=`), category filter chips, KATOA pin cover thumbnails, search keyboard nav
 - Roadmap: `docs/MAP-DISCOVERY-ROADMAP.md`
 - Handoffs: `docs/KIMI-HANDOFF.md`, `docs/LATEST-UPDATE.md`
 
