@@ -8,6 +8,7 @@ import {
   materialIconGlyph,
   merchantCategoryFor,
   parseMapViewParams,
+  sanitizeImageUrl,
   zoomToRadiusKm,
 } from '../btcmap';
 
@@ -189,5 +190,20 @@ describe('merchantCategoryFor', () => {
     expect(merchantCategoryFor('not_real')).toBe('other');
     expect(merchantCategoryFor(undefined)).toBe('other');
     expect(merchantCategoryFor(null)).toBe('other');
+  });
+});
+
+describe('sanitizeImageUrl', () => {
+  it('allows http(s) urls', () => {
+    expect(sanitizeImageUrl('https://cdn.example.com/a.png')).toBe('https://cdn.example.com/a.png');
+    expect(sanitizeImageUrl('http://example.com/b.jpg')).toBe('http://example.com/b.jpg');
+  });
+
+  it('rejects javascript:, data:, and empty values', () => {
+    expect(sanitizeImageUrl('javascript:alert(1)')).toBeNull();
+    expect(sanitizeImageUrl('data:image/png;base64,AAA')).toBeNull();
+    expect(sanitizeImageUrl('')).toBeNull();
+    expect(sanitizeImageUrl(null)).toBeNull();
+    expect(sanitizeImageUrl(undefined)).toBeNull();
   });
 });

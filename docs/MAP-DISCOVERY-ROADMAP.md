@@ -69,12 +69,13 @@ Focus area chosen by Cam: **Map + discovery**.
 - [x] Marker clustering — 64px grid cells, count badges, zoom-in on click
 - [x] URL state sync (`?lat=&lon=&zoom=&place=`) + place deep-link
 - [x] Merchant category filter chips (6 categories + All)
+- [x] KATOA pin cover thumbnails (circular photo pin w/ orange ring; falls back to "K" teardrop)
+- [x] Search dropdown keyboard nav (arrow keys, Enter, Escape; combobox/listbox a11y)
 
 ## Remaining from first batch
 
-1. KATOA pin cover/vertical richness.
-2. Keyboard navigation on search dropdown.
-3. Incremental load on pan (merge cached places instead of clear-all) — clustering helps but refetch-on-move remains.
+1. KATOA pin vertical color ring (cover thumbnail shipped; per-vertical color pending).
+2. Incremental load on pan (merge cached places instead of clear-all) — clustering helps but refetch-on-move remains.
 
 ## Definition of done
 

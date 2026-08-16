@@ -268,6 +268,14 @@ export function escapeMapPopupText(text: string): string {
     .replace(/"/g, '&quot;');
 }
 
+/** Return a safe http(s) image URL, or null — guards against `javascript:` in inline styles. */
+export function sanitizeImageUrl(url?: string | null): string | null {
+  if (!url) return null;
+  const trimmed = url.trim();
+  if (!/^https?:\/\//i.test(trimmed)) return null;
+  return trimmed;
+}
+
 function getApiBaseUrl(): string {
   const configured = import.meta.env.VITE_BTCMAP_API_URL;
   if (configured) return configured;

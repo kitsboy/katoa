@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { KeyboardEvent as ReactKeyboardEvent } from 'react';
 import {
   Crosshair,
   ExternalLink,
@@ -34,6 +35,7 @@ import {
   materialIconGlyph,
   merchantCategoryFor,
   parseMapViewParams,
+  sanitizeImageUrl,
   searchBTCMap,
   zoomToRadiusKm,
 } from '../lib/btcmap';
@@ -51,7 +53,17 @@ function formatSats(n: number): string {
 }
 
 /** Clean orange teardrop — no brand logo image (avoids logo smear on basemap). */
-function createKatoaIcon(L: typeof import('leaflet')) {
+function createKatoaIcon(L: typeof import('leaflet'), coverImage?: string | null) {
+  const photo = sanitizeImageUrl(coverImage);
+  if (photo) {
+    return L.divIcon({
+      className: 'katoa-pin-marker leaflet-div-icon',
+      html: `<div class="katoa-map-pin katoa-map-pin--photo" style="background-image:url(&quot;${escapeMapPopupText(photo)}&quot;)" aria-hidden="true"></div>`,
+      iconSize: [34, 34],
+      iconAnchor: [17, 17],
+      popupAnchor: [0, -18],
+    });
+  }
   return L.divIcon({
     className: 'katoa-pin-marker leaflet-div-icon',
     html: `<div class="katoa-map-pin" aria-hidden="true"><span class="katoa-map-pin__dot">K</span></div>`,
@@ -228,6 +240,7 @@ export function UnifiedBTCMap({
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchError, setSearchError] = useState<string | null>(null);
+  const [activeIndex, setActiveIndex] = useState(-1);
   const searchAbortRef = useRef<AbortController | null>(null);
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const merchantMarkersRef = useRef<Map<number, import('leaflet').Marker>>(new Map());
@@ -355,7 +368,7 @@ export function UnifiedBTCMap({
 
     katoaPins.forEach((pin) => {
       const marker = L.marker([pin.latitude, pin.longitude], {
-        icon: createKatoaIcon(L),
+        icon: createKatoaIcon(L, pin.cover_image),
       });
 
       const popup = `
@@ -517,6 +530,7 @@ export function UnifiedBTCMap({
       setSearchResults([]);
       setSearchError(null);
       setSearchLoading(false);
+      setActiveIndex(-1);
       return;
     }
     setSearchLoading(true);
@@ -537,6 +551,7 @@ export function UnifiedBTCMap({
           setSearchResults(rows);
           setSearchError(null);
           setSearchOpen(true);
+          setActiveIndex(-1);
         })
         .catch((err) => {
           if (err instanceof Error && err.name === 'AbortError') return;
@@ -571,6 +586,35 @@ export function UnifiedBTCMap({
 
     await revealPlace(row.id);
   };
+
+  const handleSearchKeyDown = (e: ReactKeyboardEvent<HTMLInputElement>) => {
+    const count = searchResults.length;
+    if (count === 0) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setSearchOpen(true);
+      setActiveIndex((i) => (i + 1) % count);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setSearchOpen(true);
+      setActiveIndex((i) => (i <= 0 ? count - 1 : i - 1));
+    } else if (e.key === 'Enter') {
+      if (activeIndex >= 0 && searchResults[activeIndex]) {
+        e.preventDefault();
+        void focusSearchResult(searchResults[activeIndex]);
+      }
+    } else if (e.key === 'Escape') {
+      setSearchOpen(false);
+      setActiveIndex(-1);
+    }
+  };
+
+  useEffect(() => {
+    if (activeIndex < 0) return;
+    document
+      .getElementById(`btcmap-search-result-${activeIndex}`)
+      ?.scrollIntoView({ block: 'nearest' });
+  }, [activeIndex]);
 
   return (
     <div className={`unified-btcmap ${className}`}>
@@ -616,9 +660,14 @@ export function UnifiedBTCMap({
           <input
             id="btcmap-search"
             type="search"
+            role="combobox"
+            aria-expanded={searchOpen && searchResults.length > 0}
+            aria-controls="btcmap-search-results"
+            aria-activedescendant={activeIndex >= 0 ? `btcmap-search-result-${activeIndex}` : undefined}
             value={searchQ}
             onChange={(e) => setSearchQ(e.target.value)}
             onFocus={() => searchResults.length > 0 && setSearchOpen(true)}
+            onKeyDown={handleSearchKeyDown}
             placeholder={t('map.searchPlaceholder')}
             className="unified-btcmap__search-input"
             autoComplete="off"
@@ -633,6 +682,7 @@ export function UnifiedBTCMap({
                 setSearchQ('');
                 setSearchResults([]);
                 setSearchOpen(false);
+                setActiveIndex(-1);
               }}
               aria-label={t('map.searchClear')}
             >
@@ -640,17 +690,24 @@ export function UnifiedBTCMap({
             </button>
           )}
           {searchOpen && (searchResults.length > 0 || searchError) && (
-            <ul className="unified-btcmap__search-results" role="listbox" aria-label={t('map.search')}>
+            <ul id="btcmap-search-results" className="unified-btcmap__search-results" role="listbox" aria-label={t('map.search')}>
               {searchError && (
                 <li className="unified-btcmap__search-empty">{searchError}</li>
               )}
               {!searchError &&
-                searchResults.map((row) => (
-                  <li key={`${row.type}-${row.id}`}>
+                searchResults.map((row, i) => (
+                  <li
+                    key={`${row.type}-${row.id}`}
+                    id={`btcmap-search-result-${i}`}
+                    role="option"
+                    aria-selected={i === activeIndex}
+                  >
                     <button
                       type="button"
-                      className="unified-btcmap__search-item"
+                      className={`unified-btcmap__search-item ${i === activeIndex ? 'unified-btcmap__search-item--active' : ''}`}
                       onClick={() => void focusSearchResult(row)}
+                      onMouseEnter={() => setActiveIndex(i)}
+                      tabIndex={-1}
                     >
                       <span className="unified-btcmap__search-item-icon" aria-hidden>
                         {row.type === 'area' ? '🗺' : materialIconGlyph(row.icon)}

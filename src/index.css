@@ -1613,6 +1613,11 @@ html[data-katoa-build="2026-08-11-cssfix"] {
   outline: none;
 }
 
+.unified-btcmap__search-item--active {
+  background: rgba(20, 230, 255, 0.1);
+  outline: none;
+}
+
 .unified-btcmap__search-item-icon {
   font-size: 0.95rem;
   line-height: 1.2;
@@ -1916,6 +1921,20 @@ html[data-katoa-build="2026-08-11-cssfix"] {
   line-height: 1;
   letter-spacing: -0.02em;
   user-select: none;
+}
+
+/* KATOA pin with a cover photo — circular thumbnail with orange ring */
+.katoa-map-pin--photo {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  transform: none;
+  background-color: #0f0f18;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 2px solid #f7931a;
+  box-shadow: 0 0 12px rgba(247, 147, 26, 0.55), 0 3px 8px rgba(0, 0, 0, 0.45);
 }
 
 /* Legacy class kept if any old markup remains — no <img> */
