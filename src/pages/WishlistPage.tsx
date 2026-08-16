@@ -12,6 +12,7 @@ import { Link } from '../components/Link';
 import { supabase } from '../lib/supabase';
 import { mockWishlists, mockWishlistItems } from '../data/mockWishlists';
 import { mockCreatorPosts } from '../data/mockCreatorPosts';
+import { isSubscribed, subscribeLocal } from '../lib/subscriptions';
 import { getStorage, setStorage, STORAGE_KEYS } from '../lib/storage';
 import { copyToClipboard } from '../lib/clipboard';
 import { getQrImageUrl, lightningQrData } from '../lib/qr';
@@ -141,9 +142,14 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
   const [zapBusy, setZapBusy] = useState(false);
   const [zapInvoice, setZapInvoice] = useState<string | null>(null);
   const [zapError, setZapError] = useState<string | null>(null);
+  const [subscribed, setSubscribed] = useState(false);
 
   useEffect(() => {
     setThemeColor(getStorage<string>(STORAGE_KEYS.wishlistTheme(slug), '#f97316'));
+  }, [slug]);
+
+  useEffect(() => {
+    setSubscribed(isSubscribed(slug));
   }, [slug]);
 
   useEffect(() => {
@@ -623,6 +629,13 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
     Boolean(user && wishlist?.creator_id && user.id === wishlist.creator_id) ||
     Boolean(user && profile?.username && wishlist?.creator?.username === profile.username);
 
+  const handleSubscribe = () => {
+    if (!wishlist) return;
+    subscribeLocal(wishlist.slug, 'supporter');
+    setSubscribed(true);
+    toast(t('creator.subscribed'), 'success');
+  };
+
   async function handleOwnerImportProduct(product: ParsedProduct) {
     if (!wishlist) return;
     if (isDemoWishlist) {
@@ -779,7 +792,8 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             creatorName={wishlist.creator.username}
             subscriberCount={wishlist.subscriber_count}
             posts={mockCreatorPosts[wishlist.slug] || []}
-            onSubscribe={() => handleGiftClick()}
+            subscribed={subscribed}
+            onSubscribe={handleSubscribe}
             onTip={() => handleGiftClick()}
             t={t}
           />

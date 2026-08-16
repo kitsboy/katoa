@@ -9,6 +9,7 @@ import type { CreatorPost } from '../data/mockCreatorPosts';
 interface CreatorPostModalProps {
   post: CreatorPost | null;
   onClose: () => void;
+  subscribed?: boolean;
   onSubscribe?: () => void;
   onTip?: () => void;
   t: (key: string) => string;
@@ -18,12 +19,13 @@ interface CreatorPostModalProps {
 export function CreatorPostModal({
   post,
   onClose,
+  subscribed = false,
   onSubscribe,
   onTip,
   t,
 }: CreatorPostModalProps) {
   if (!post) return null;
-  const locked = post.isLocked;
+  const locked = post.isLocked && !subscribed;
 
   return (
     <Modal isOpen={Boolean(post)} onClose={onClose} size="lg">

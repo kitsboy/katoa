@@ -1,5 +1,5 @@
 import { useState, type KeyboardEvent as ReactKeyboardEvent } from 'react';
-import { Eye, Heart, Lock, MessageCircle, Play, Sparkles } from 'lucide-react';
+import { Check, Eye, Heart, Lock, MessageCircle, Play, Sparkles } from 'lucide-react';
 import { MediaCard } from './MediaCard';
 import { Button } from './Button';
 import { SatsDisplay } from './SatsDisplay';
@@ -11,6 +11,7 @@ interface CreatorPostFeedProps {
   creatorName: string;
   subscriberCount?: number;
   posts: CreatorPost[];
+  subscribed?: boolean;
   onSubscribe?: () => void;
   onTip?: () => void;
   t: (key: string) => string;
@@ -31,6 +32,7 @@ export function CreatorPostFeed({
   creatorName,
   subscriberCount,
   posts,
+  subscribed = false,
   onSubscribe,
   onTip,
   t,
@@ -52,9 +54,14 @@ export function CreatorPostFeed({
             {posts.length} {t('creator.posts')} · {formatCompactCount(totalLikes)} {t('creator.likes')}
           </p>
         </div>
-        <Button onClick={onSubscribe} variant="bitcoin" size="md">
-          <Sparkles size={18} className="mr-2" />
-          {t('creator.subscribe')}
+        <Button
+          onClick={onSubscribe}
+          variant={subscribed ? 'secondary' : 'bitcoin'}
+          size="md"
+          disabled={subscribed}
+        >
+          {subscribed ? <Check size={18} className="mr-2" /> : <Sparkles size={18} className="mr-2" />}
+          {subscribed ? t('creator.subscribed') : t('creator.subscribe')}
         </Button>
       </div>
 
@@ -104,7 +111,7 @@ export function CreatorPostFeed({
                   📌 {t('creator.pinned')}
                 </span>
               )}
-              {post.isLocked ? (
+              {post.isLocked && !subscribed ? (
                 <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-black/70 backdrop-blur-[3px] p-4 text-center">
                   <div className="p-3 rounded-full bg-white/10 border border-white/20">
                     <Lock size={22} className="text-white" />
@@ -160,6 +167,7 @@ export function CreatorPostFeed({
       <CreatorPostModal
         post={selectedPost}
         onClose={() => setSelectedPost(null)}
+        subscribed={subscribed}
         onSubscribe={onSubscribe}
         onTip={onTip}
         t={t}
