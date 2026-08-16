@@ -33,7 +33,7 @@ Rebuild KATOA's creator surface around the OnlyFans *model* — subscription cre
 - [x] `mockCreatorPosts` data model (media, caption, likes, locked, PPV price)
 - [x] `CreatorPostFeed` — stats strip, 3-col post grid, locked overlay (subscribe / PPV), Subscribe CTA
 - [x] Wire into `WishlistPage` for `card_style === 'creator'`
-- [ ] Post detail view (lightbox/modal with caption, likes, comments, tip)
+- [x] Post detail modal (media + caption + comments + Tip/Subscribe)
 - [ ] Per-post "locked" blur instead of full overlay on unlocked thumbnails
 
 ### P2 — Subscription paywall

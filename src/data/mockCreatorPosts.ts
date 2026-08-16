@@ -1,3 +1,8 @@
+export interface CreatorPostComment {
+  user: string;
+  text: string;
+}
+
 export interface CreatorPost {
   id: string;
   creatorSlug: string;
@@ -10,6 +15,7 @@ export interface CreatorPost {
   /** PPV price in sats when set — otherwise locked posts require a subscription. */
   priceSats?: number;
   pinned?: boolean;
+  comments?: CreatorPostComment[];
 }
 
 /**
@@ -28,6 +34,10 @@ export const mockCreatorPosts: Record<string, CreatorPost[]> = {
       commentCount: 182,
       isLocked: false,
       pinned: true,
+      comments: [
+        { user: 'zapfan', text: 'This color grade is unreal 🔥' },
+        { user: 'sats_sarah', text: "Friday drop can't come fast enough" },
+      ],
     },
     {
       id: 'luna-post-2',
@@ -38,6 +48,10 @@ export const mockCreatorPosts: Record<string, CreatorPost[]> = {
       likeCount: 9800,
       commentCount: 96,
       isLocked: false,
+      comments: [
+        { user: 'nodemeister', text: 'The rig setup is next level' },
+        { user: 'lightning_liz', text: 'Travel diaries are my favorite' },
+      ],
     },
     {
       id: 'luna-post-3',
@@ -58,6 +72,10 @@ export const mockCreatorPosts: Record<string, CreatorPost[]> = {
       likeCount: 8200,
       commentCount: 74,
       isLocked: false,
+      comments: [
+        { user: 'bali_boy', text: 'Bali is going to be epic 🌊' },
+        { user: 'satstacker', text: 'Take me with you!' },
+      ],
     },
     {
       id: 'luna-post-5',
@@ -79,6 +97,10 @@ export const mockCreatorPosts: Record<string, CreatorPost[]> = {
       likeCount: 6900,
       commentCount: 210,
       isLocked: false,
+      comments: [
+        { user: 'vote_vicky', text: 'Studio night!' },
+        { user: 'privacy_pat', text: 'Anything but a gym shoot 🙏' },
+      ],
     },
   ],
   'sasha-vip-content': [
@@ -92,6 +114,10 @@ export const mockCreatorPosts: Record<string, CreatorPost[]> = {
       commentCount: 302,
       isLocked: false,
       pinned: true,
+      comments: [
+        { user: 'movement_mia', text: 'That midnight piece was stunning' },
+        { user: 'zapdad', text: 'The lighting! 😍' },
+      ],
     },
     {
       id: 'sasha-post-2',
@@ -102,6 +128,10 @@ export const mockCreatorPosts: Record<string, CreatorPost[]> = {
       likeCount: 9100,
       commentCount: 88,
       isLocked: false,
+      comments: [
+        { user: 'warmup_wayne', text: 'Form looks so clean' },
+        { user: 'sats_sam', text: "Can't wait for the reel" },
+      ],
     },
     {
       id: 'sasha-post-3',
@@ -122,6 +152,10 @@ export const mockCreatorPosts: Record<string, CreatorPost[]> = {
       likeCount: 7200,
       commentCount: 63,
       isLocked: false,
+      comments: [
+        { user: 'studio_stu', text: 'Light test is coming together' },
+        { user: 'fan_fran', text: 'More behind the scenes please!' },
+      ],
     },
     {
       id: 'sasha-post-5',
@@ -143,6 +177,10 @@ export const mockCreatorPosts: Record<string, CreatorPost[]> = {
       likeCount: 8100,
       commentCount: 240,
       isLocked: false,
+      comments: [
+        { user: 'city_cat', text: 'Lisbon next please!' },
+        { user: 'zap_zoe', text: 'Tokyo! 🇯🇵' },
+      ],
     },
   ],
 };

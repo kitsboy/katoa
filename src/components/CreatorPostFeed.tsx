@@ -1,7 +1,9 @@
-import { Heart, Lock, MessageCircle, Play, Sparkles } from 'lucide-react';
+import { useState, type KeyboardEvent as ReactKeyboardEvent } from 'react';
+import { Eye, Heart, Lock, MessageCircle, Play, Sparkles } from 'lucide-react';
 import { MediaCard } from './MediaCard';
 import { Button } from './Button';
 import { SatsDisplay } from './SatsDisplay';
+import { CreatorPostModal } from './CreatorPostModal';
 import { formatCompactCount } from '../lib/i18nFormat';
 import type { CreatorPost } from '../data/mockCreatorPosts';
 
@@ -10,7 +12,15 @@ interface CreatorPostFeedProps {
   subscriberCount?: number;
   posts: CreatorPost[];
   onSubscribe?: () => void;
+  onTip?: () => void;
   t: (key: string) => string;
+}
+
+function openPostOnKey(e: ReactKeyboardEvent, open: () => void) {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    open();
+  }
 }
 
 /**
@@ -22,8 +32,10 @@ export function CreatorPostFeed({
   subscriberCount,
   posts,
   onSubscribe,
+  onTip,
   t,
 }: CreatorPostFeedProps) {
+  const [selectedPost, setSelectedPost] = useState<CreatorPost | null>(null);
   const totalLikes = posts.reduce((sum, post) => sum + post.likeCount, 0);
 
   return (
@@ -69,7 +81,14 @@ export function CreatorPostFeed({
             key={post.id}
             className="group relative rounded-2xl overflow-hidden border border-white/10 bg-charcoal-900 hover:border-pink-500/40 transition-colors"
           >
-            <div className="relative aspect-square">
+            <div
+              className="relative aspect-square cursor-pointer"
+              role="button"
+              tabIndex={0}
+              aria-label={post.caption}
+              onClick={() => setSelectedPost(post)}
+              onKeyDown={(e) => openPostOnKey(e, () => setSelectedPost(post))}
+            >
               <MediaCard
                 media={{
                   imageUrl: post.mediaUrl,
@@ -85,7 +104,7 @@ export function CreatorPostFeed({
                   📌 {t('creator.pinned')}
                 </span>
               )}
-              {post.isLocked && (
+              {post.isLocked ? (
                 <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-black/70 backdrop-blur-[3px] p-4 text-center">
                   <div className="p-3 rounded-full bg-white/10 border border-white/20">
                     <Lock size={22} className="text-white" />
@@ -101,9 +120,22 @@ export function CreatorPostFeed({
                       className="items-center"
                     />
                   )}
-                  <Button size="sm" variant="bitcoin" onClick={onSubscribe}>
+                  <Button
+                    size="sm"
+                    variant="bitcoin"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSubscribe?.();
+                    }}
+                  >
                     {t('creator.subscribe')}
                   </Button>
+                </div>
+              ) : (
+                <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/0 group-hover:bg-black/30 transition-all opacity-0 group-hover:opacity-100">
+                  <span className="p-2.5 rounded-full bg-black/60 backdrop-blur-sm border border-white/20 text-white">
+                    <Eye size={18} />
+                  </span>
                 </div>
               )}
             </div>
@@ -124,6 +156,14 @@ export function CreatorPostFeed({
           </article>
         ))}
       </div>
+
+      <CreatorPostModal
+        post={selectedPost}
+        onClose={() => setSelectedPost(null)}
+        onSubscribe={onSubscribe}
+        onTip={onTip}
+        t={t}
+      />
     </section>
   );
 }

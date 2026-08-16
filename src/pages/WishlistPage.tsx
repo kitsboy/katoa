@@ -780,6 +780,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             subscriberCount={wishlist.subscriber_count}
             posts={mockCreatorPosts[wishlist.slug] || []}
             onSubscribe={() => handleGiftClick()}
+            onTip={() => handleGiftClick()}
             t={t}
           />
         )}
