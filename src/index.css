@@ -1817,6 +1817,54 @@ html[data-katoa-build="2026-08-11-cssfix"] {
   background: rgba(245, 158, 11, 0.35);
 }
 
+/* Merchant category filter chips — horizontal scroll strip above the legend */
+.unified-btcmap__categories {
+  position: absolute;
+  bottom: 3rem;
+  left: 0.75rem;
+  right: 0.75rem;
+  z-index: 20;
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+  scrollbar-width: none;
+  pointer-events: none;
+}
+
+.unified-btcmap__categories::-webkit-scrollbar {
+  display: none;
+}
+
+.unified-btcmap__category {
+  pointer-events: auto;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #9ca3af;
+  background: rgba(7, 7, 17, 0.88);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.unified-btcmap__category:hover {
+  border-color: rgba(255, 255, 255, 0.22);
+  color: #e5e7eb;
+}
+
+.unified-btcmap__category--on {
+  color: #14e6ff;
+  border-color: rgba(20, 230, 255, 0.4);
+  background: rgba(20, 230, 255, 0.1);
+}
+
 .unified-btcmap__chips {
   display: flex;
   flex-wrap: wrap;
@@ -1911,6 +1959,24 @@ html[data-katoa-build="2026-08-11-cssfix"] {
 .btc-merchant-pin--boosted {
   background: linear-gradient(135deg, #fbbf24, #f7931a);
   box-shadow: 0 0 12px rgba(251, 191, 36, 0.65);
+}
+
+/* Merchant cluster badge — round count pill that zooms into its members */
+.btc-merchant-cluster {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #14e6ff, #0891b2);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 14px rgba(20, 230, 255, 0.6);
+  color: #050509;
+  font-weight: 900;
+  font-size: 0.78rem;
+  line-height: 1;
+  user-select: none;
 }
 
 /* Keep tile images from stretching if a request ever returns non-tile content */

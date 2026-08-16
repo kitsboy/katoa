@@ -150,6 +150,73 @@ export function materialIconGlyph(icon?: string | null): string {
   return MATERIAL_ICON_GLYPH[key] || '₿';
 }
 
+/** Coarse merchant category for filter chips, derived from the place icon. */
+export interface BTCMapMerchantCategory {
+  key: string;
+  glyph: string;
+  labelKey: string;
+  icons: string[];
+}
+
+export const MERCHANT_CATEGORIES: BTCMapMerchantCategory[] = [
+  {
+    key: 'food',
+    glyph: '🍽',
+    labelKey: 'map.categoryFood',
+    icons: [
+      'local_cafe', 'cafe', 'coffee', 'restaurant', 'lunch_dining', 'dinner_dining',
+      'fastfood', 'bakery_dining', 'icecream', 'liquor', 'local_bar', 'wine_bar', 'sports_bar',
+    ],
+  },
+  {
+    key: 'shopping',
+    glyph: '🛍',
+    labelKey: 'map.categoryShopping',
+    icons: ['store', 'storefront', 'shopping_bag', 'shopping_cart'],
+  },
+  {
+    key: 'stay',
+    glyph: '🏨',
+    labelKey: 'map.categoryStay',
+    icons: ['hotel', 'bed'],
+  },
+  {
+    key: 'services',
+    glyph: '🛠',
+    labelKey: 'map.categoryServices',
+    icons: [
+      'content_cut', 'spa', 'laptop', 'devices', 'fitness_center', 'medical_services',
+      'local_pharmacy', 'local_gas_station', 'ev_station', 'atm', 'account_balance',
+      'school', 'menu_book',
+    ],
+  },
+  {
+    key: 'fun',
+    glyph: '🎨',
+    labelKey: 'map.categoryFun',
+    icons: [
+      'sports', 'museum', 'palette', 'music_note', 'theater_comedy', 'park', 'pets',
+      'hiking', 'directions_bike',
+    ],
+  },
+  {
+    key: 'travel',
+    glyph: '✈',
+    labelKey: 'map.categoryTravel',
+    icons: ['directions_car', 'local_taxi', 'flight'],
+  },
+];
+
+/** Return the category key for a place icon, or 'other' when unmatched. */
+export function merchantCategoryFor(icon?: string | null): string {
+  if (!icon) return 'other';
+  const key = icon.toLowerCase().trim();
+  for (const category of MERCHANT_CATEGORIES) {
+    if (category.icons.includes(key)) return category.key;
+  }
+  return 'other';
+}
+
 export function isPlaceBoosted(place: Pick<BTCMapPlace, 'boosted_until'>): boolean {
   return Boolean(place.boosted_until && new Date(place.boosted_until) > new Date());
 }
@@ -224,6 +291,52 @@ export function buildBTCMapEmbedUrl(coords?: Partial<BTCMapCoordinates>): string
 
   const query = params.toString();
   return query ? `${base}/map?${query}` : `${base}/map`;
+}
+
+/** Map view state carried in the URL query string for shareable deep-links. */
+export interface MapViewParams {
+  lat?: number;
+  lon?: number;
+  zoom?: number;
+  place?: number;
+}
+
+/** Parse ?lat=&lon=&zoom=&place= from a query string, validating each value. */
+export function parseMapViewParams(search: string): MapViewParams {
+  const params = new URLSearchParams(search);
+  const out: MapViewParams = {};
+
+  const toNum = (raw: string | null): number => {
+    if (raw === null || raw.trim() === '') return NaN;
+    return Number(raw);
+  };
+
+  const lat = toNum(params.get('lat'));
+  const lon = toNum(params.get('lon'));
+  const zoom = toNum(params.get('zoom'));
+  const place = toNum(params.get('place'));
+
+  if (Number.isFinite(lat) && Math.abs(lat) <= 90) out.lat = lat;
+  if (Number.isFinite(lon) && Math.abs(lon) <= 180) out.lon = lon;
+  if (Number.isFinite(zoom) && zoom >= 1 && zoom <= 20) out.zoom = zoom;
+  if (Number.isFinite(place) && place > 0 && Number.isInteger(place)) out.place = place;
+
+  return out;
+}
+
+/** Serialize a map view into a query string (does not include leading '?'). */
+export function buildMapViewQuery(view: {
+  lat: number;
+  lon: number;
+  zoom: number;
+  place?: number;
+}): string {
+  const params = new URLSearchParams();
+  params.set('lat', view.lat.toFixed(5));
+  params.set('lon', view.lon.toFixed(5));
+  params.set('zoom', String(Math.round(view.zoom)));
+  if (view.place !== undefined) params.set('place', String(view.place));
+  return params.toString();
 }
 
 /** Staged: fetch areas from btcmap-api v2 (requires live API / proxy). */
@@ -423,13 +536,41 @@ export async function searchBTCMap(
   return out;
 }
 
+/** Localized strings for the merchant popup (supplied by LanguageContext). */
+export interface BTCMapPopupStrings {
+  merchant: string;
+  boosted: string;
+  hours: string;
+  verified: string;
+  website: string;
+  viewOnMap: string;
+  loading: string;
+  comment: (count: number) => string;
+}
+
+/** English defaults — used when no strings object is provided (e.g. tests). */
+export const BTCMAP_POPUP_STRINGS_EN: BTCMapPopupStrings = {
+  merchant: 'BTC Map merchant',
+  boosted: 'Boosted',
+  hours: 'Hours',
+  verified: 'Verified',
+  website: 'Website',
+  viewOnMap: 'View on BTC Map',
+  loading: 'Loading details…',
+  comment: (count) => `${count} comment${count === 1 ? '' : 's'}`,
+};
+
 /** HTML for merchant popup (initial or after detail hydrate). */
-export function buildMerchantPopupHtml(place: BTCMapPlace, opts?: { loading?: boolean }): string {
+export function buildMerchantPopupHtml(
+  place: BTCMapPlace,
+  opts?: { loading?: boolean; strings?: Partial<BTCMapPopupStrings> }
+): string {
+  const s: BTCMapPopupStrings = { ...BTCMAP_POPUP_STRINGS_EN, ...opts?.strings };
   const boosted = isPlaceBoosted(place);
   const glyph = materialIconGlyph(place.icon);
   const lines: string[] = [
     `<div class="btcmap-popup">`,
-    `<p class="btcmap-popup__eyebrow">${glyph} BTC Map merchant${boosted ? ' · Boosted' : ''}</p>`,
+    `<p class="btcmap-popup__eyebrow">${glyph} ${escapeMapPopupText(s.merchant)}${boosted ? ` · ${escapeMapPopupText(s.boosted)}` : ''}</p>`,
     `<strong class="btcmap-popup__title">${escapeMapPopupText(place.name)}</strong>`,
   ];
   if (place.address) {
@@ -442,28 +583,28 @@ export function buildMerchantPopupHtml(place: BTCMapPlace, opts?: { loading?: bo
   }
   if (place.opening_hours) {
     lines.push(
-      `<p class="btcmap-popup__meta">Hours: ${escapeMapPopupText(place.opening_hours)}</p>`
+      `<p class="btcmap-popup__meta">${escapeMapPopupText(s.hours)}: ${escapeMapPopupText(place.opening_hours)}</p>`
     );
   }
   if (place.verified_at) {
     lines.push(
-      `<p class="btcmap-popup__meta">Verified ${escapeMapPopupText(place.verified_at.slice(0, 10))}</p>`
+      `<p class="btcmap-popup__meta">${escapeMapPopupText(s.verified)} ${escapeMapPopupText(place.verified_at.slice(0, 10))}</p>`
     );
   }
   if (typeof place.comments === 'number' && place.comments > 0) {
-    lines.push(`<p class="btcmap-popup__meta">${place.comments} comment${place.comments === 1 ? '' : 's'}</p>`);
+    lines.push(`<p class="btcmap-popup__meta">${escapeMapPopupText(s.comment(place.comments))}</p>`);
   }
   if (place.website) {
     const href = escapeMapPopupText(place.website);
     lines.push(
-      `<a href="${href}" target="_blank" rel="noopener noreferrer" class="btcmap-popup__link">Website →</a>`
+      `<a href="${href}" target="_blank" rel="noopener noreferrer" class="btcmap-popup__link">${escapeMapPopupText(s.website)} →</a>`
     );
   }
   lines.push(
-    `<a href="${buildBTCMapPlaceUrl(place.id)}" target="_blank" rel="noopener noreferrer" class="btcmap-popup__link">View on BTC Map →</a>`
+    `<a href="${buildBTCMapPlaceUrl(place.id)}" target="_blank" rel="noopener noreferrer" class="btcmap-popup__link">${escapeMapPopupText(s.viewOnMap)} →</a>`
   );
   if (opts?.loading) {
-    lines.push(`<p class="btcmap-popup__meta btcmap-popup__loading">Loading details…</p>`);
+    lines.push(`<p class="btcmap-popup__meta btcmap-popup__loading">${escapeMapPopupText(s.loading)}</p>`);
   }
   lines.push(`</div>`);
   return lines.join('');

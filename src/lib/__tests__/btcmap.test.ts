@@ -1,9 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import {
+  BTCMAP_POPUP_STRINGS_EN,
+  buildMapViewQuery,
   buildMerchantPopupHtml,
   escapeMapPopupText,
   LEAFLET_BASEMAP_URL,
   materialIconGlyph,
+  merchantCategoryFor,
+  parseMapViewParams,
   zoomToRadiusKm,
 } from '../btcmap';
 
@@ -82,5 +86,108 @@ describe('buildMerchantPopupHtml', () => {
     expect(html).toContain('Hours:');
     expect(html).toContain('3 comments');
     expect(html).toContain('/place/42');
+  });
+
+  it('uses English defaults when no strings are provided', () => {
+    const html = buildMerchantPopupHtml({
+      id: 1,
+      name: 'Default',
+      lat: 0,
+      lon: 0,
+      website: 'https://example.com',
+    });
+    expect(html).toContain('BTC Map merchant');
+    expect(html).toContain('Website →');
+    expect(html).toContain('View on BTC Map →');
+  });
+
+  it('uses localized strings when provided', () => {
+    const html = buildMerchantPopupHtml(
+      {
+        id: 1,
+        name: 'Cafe',
+        lat: 0,
+        lon: 0,
+        opening_hours: 'Mo-Fr',
+        comments: 1,
+      },
+      {
+        strings: {
+          merchant: 'Comercio BTC Map',
+          hours: 'Horario',
+          comment: (n) => `${n} comentario`,
+        },
+      }
+    );
+    expect(html).toContain('Comercio BTC Map');
+    expect(html).toContain('Horario:');
+    expect(html).toContain('1 comentario');
+    expect(html).not.toContain('BTC Map merchant');
+  });
+
+  it('shows boosted badge when boosted', () => {
+    const future = new Date(Date.now() + 86_400_000).toISOString();
+    const html = buildMerchantPopupHtml({
+      id: 7,
+      name: 'Boosted Cafe',
+      lat: 0,
+      lon: 0,
+      boosted_until: future,
+    });
+    expect(html).toContain('Boosted');
+  });
+
+  it('exposes English comment helper', () => {
+    expect(BTCMAP_POPUP_STRINGS_EN.comment(1)).toBe('1 comment');
+    expect(BTCMAP_POPUP_STRINGS_EN.comment(3)).toBe('3 comments');
+  });
+});
+
+describe('parseMapViewParams', () => {
+  it('parses valid lat/lon/zoom/place', () => {
+    expect(parseMapViewParams('?lat=4.60&lon=-74.08&zoom=13&place=42')).toEqual({
+      lat: 4.6,
+      lon: -74.08,
+      zoom: 13,
+      place: 42,
+    });
+  });
+
+  it('ignores invalid or out-of-range values', () => {
+    expect(parseMapViewParams('?lat=999&lon=abc&zoom=99&place=0')).toEqual({});
+    expect(parseMapViewParams('?lat=-91')).toEqual({});
+  });
+
+  it('returns empty object for empty query', () => {
+    expect(parseMapViewParams('')).toEqual({});
+  });
+});
+
+describe('buildMapViewQuery', () => {
+  it('serializes lat/lon/zoom to fixed precision', () => {
+    expect(buildMapViewQuery({ lat: 4.6, lon: -74.08, zoom: 13 })).toBe(
+      'lat=4.60000&lon=-74.08000&zoom=13'
+    );
+  });
+
+  it('includes place when provided', () => {
+    expect(buildMapViewQuery({ lat: 1, lon: 2, zoom: 15, place: 42 })).toContain('place=42');
+  });
+});
+
+describe('merchantCategoryFor', () => {
+  it('maps known icons to categories', () => {
+    expect(merchantCategoryFor('local_cafe')).toBe('food');
+    expect(merchantCategoryFor('store')).toBe('shopping');
+    expect(merchantCategoryFor('hotel')).toBe('stay');
+    expect(merchantCategoryFor('spa')).toBe('services');
+    expect(merchantCategoryFor('museum')).toBe('fun');
+    expect(merchantCategoryFor('flight')).toBe('travel');
+  });
+
+  it('returns other for unknown or missing icons', () => {
+    expect(merchantCategoryFor('not_real')).toBe('other');
+    expect(merchantCategoryFor(undefined)).toBe('other');
+    expect(merchantCategoryFor(null)).toBe('other');
   });
 });

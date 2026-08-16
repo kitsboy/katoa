@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Crosshair,
   ExternalLink,
@@ -18,8 +18,10 @@ import {
   BTCMAP_ATTRIBUTION,
   LEAFLET_BASEMAP_OPTIONS,
   LEAFLET_BASEMAP_URL,
+  MERCHANT_CATEGORIES,
   type BTCMapCoordinates,
   type BTCMapPlace,
+  type BTCMapPopupStrings,
   type BTCMapSearchResult,
   type KatoaMapPin,
   buildMerchantPopupHtml,
@@ -30,6 +32,8 @@ import {
   isPlaceBoosted,
   isBTCMapEnabled,
   materialIconGlyph,
+  merchantCategoryFor,
+  parseMapViewParams,
   searchBTCMap,
   zoomToRadiusKm,
 } from '../lib/btcmap';
@@ -69,11 +73,59 @@ function createMerchantIcon(L: typeof import('leaflet'), place: BTCMapPlace) {
   });
 }
 
+/** Cluster badge — shows a count and zooms into its members on click. */
+function createClusterIcon(L: typeof import('leaflet'), count: number) {
+  return L.divIcon({
+    className: 'btc-merchant-marker leaflet-div-icon',
+    html: `<div class="btc-merchant-cluster" aria-hidden="true"><span class="btc-merchant-cluster__count">${count}</span></div>`,
+    iconSize: [30, 30],
+    iconAnchor: [15, 15],
+  });
+}
+
+const CLUSTER_GRID_PX = 64;
+
+interface ClusterCell {
+  lat: number;
+  lon: number;
+  places: BTCMapPlace[];
+}
+
+/** Group nearby places into grid cells so dense areas render as a single count badge. */
+function clusterPlaces(
+  places: BTCMapPlace[],
+  map: import('leaflet').Map
+): { clusters: ClusterCell[]; singles: BTCMapPlace[] } {
+  const grid = new Map<string, ClusterCell>();
+  const zoom = map.getZoom();
+  for (const place of places) {
+    const pt = map.project([place.lat, place.lon], zoom);
+    const key = `${Math.floor(pt.x / CLUSTER_GRID_PX)}:${Math.floor(pt.y / CLUSTER_GRID_PX)}`;
+    const cell = grid.get(key);
+    if (cell) cell.places.push(place);
+    else grid.set(key, { lat: place.lat, lon: place.lon, places: [place] });
+  }
+
+  const clusters: ClusterCell[] = [];
+  const singles: BTCMapPlace[] = [];
+  for (const cell of grid.values()) {
+    if (cell.places.length > 1) {
+      const lat = cell.places.reduce((sum, p) => sum + p.lat, 0) / cell.places.length;
+      const lon = cell.places.reduce((sum, p) => sum + p.lon, 0) / cell.places.length;
+      clusters.push({ lat, lon, places: cell.places });
+    } else {
+      singles.push(cell.places[0]);
+    }
+  }
+  return { clusters, singles };
+}
+
 function bindMerchantPopup(
   marker: import('leaflet').Marker,
-  place: BTCMapPlace
+  place: BTCMapPlace,
+  strings: BTCMapPopupStrings
 ) {
-  marker.bindPopup(buildMerchantPopupHtml(place), {
+  marker.bindPopup(buildMerchantPopupHtml(place, { strings }), {
     className: 'btcmap-leaflet-popup',
     maxWidth: 280,
   });
@@ -84,7 +136,7 @@ function bindMerchantPopup(
       try {
         const detail = await fetchPlaceById(place.id);
         if (!detail) return;
-        marker.setPopupContent(buildMerchantPopupHtml(detail));
+        marker.setPopupContent(buildMerchantPopupHtml(detail, { strings }));
       } catch {
         /* keep list-level popup */
       }
@@ -105,7 +157,42 @@ export function UnifiedBTCMap({
   const abortRef = useRef<AbortController | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+
+  const popupStrings = useMemo<BTCMapPopupStrings>(
+    () => ({
+      merchant: t('map.popupMerchant'),
+      boosted: t('map.popupBoosted'),
+      hours: t('map.popupHours'),
+      verified: t('map.popupVerified'),
+      website: t('map.popupWebsite'),
+      viewOnMap: t('map.popupViewOnMap'),
+      loading: t('map.popupLoading'),
+      comment: (count: number) =>
+        `${count} ${count === 1 ? t('map.popupComment') : t('map.popupComments')}`,
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [language]
+  );
+
+  const popupStringsRef = useRef(popupStrings);
+  useEffect(() => {
+    popupStringsRef.current = popupStrings;
+  }, [popupStrings]);
+
+  const katoaPopupTextRef = useRef({
+    eyebrow: t('map.popupKatoa'),
+    satsRaised: t('map.popupSatsRaised'),
+    viewWishlist: t('map.popupViewWishlist'),
+  });
+  useEffect(() => {
+    katoaPopupTextRef.current = {
+      eyebrow: t('map.popupKatoa'),
+      satsRaised: t('map.popupSatsRaised'),
+      viewWishlist: t('map.popupViewWishlist'),
+    };
+  });
+
   const [showMerchants, setShowMerchants] = useState(() =>
     getStorage(STORAGE_KEYS.mapShowMerchants, true)
   );
@@ -134,6 +221,7 @@ export function UnifiedBTCMap({
   const [merchantCount, setMerchantCount] = useState<number | null>(null);
   const [loadingMerchants, setLoadingMerchants] = useState(false);
   const [merchantError, setMerchantError] = useState<string | null>(null);
+  const [merchantCategory, setMerchantCategory] = useState<string>('all');
   const [mapReady, setMapReady] = useState(false);
   const [searchQ, setSearchQ] = useState('');
   const [searchResults, setSearchResults] = useState<BTCMapSearchResult[]>([]);
@@ -143,6 +231,91 @@ export function UnifiedBTCMap({
   const searchAbortRef = useRef<AbortController | null>(null);
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const merchantMarkersRef = useRef<Map<number, import('leaflet').Marker>>(new Map());
+  const merchantPlacesRef = useRef<BTCMapPlace[]>([]);
+  const merchantCategoryRef = useRef('all');
+
+  const renderMerchantLayer = useCallback(
+    (map: import('leaflet').Map, L: typeof import('leaflet')) => {
+      const layer = merchantLayerRef.current;
+      if (!layer) return;
+
+      layer.clearLayers();
+      merchantMarkersRef.current.clear();
+
+      const allPlaces = merchantPlacesRef.current;
+      if (allPlaces.length === 0) return;
+
+      const category = merchantCategoryRef.current;
+      const places =
+        category === 'all'
+          ? allPlaces
+          : allPlaces.filter((place) => merchantCategoryFor(place.icon) === category);
+      if (places.length === 0) return;
+
+      const { clusters, singles } = clusterPlaces(places, map);
+
+      singles.forEach((place) => {
+        const marker = L.marker([place.lat, place.lon], {
+          icon: createMerchantIcon(L, place),
+        });
+        bindMerchantPopup(marker, place, popupStringsRef.current);
+        layer.addLayer(marker);
+        merchantMarkersRef.current.set(place.id, marker);
+      });
+
+      clusters.forEach((cluster) => {
+        const marker = L.marker([cluster.lat, cluster.lon], {
+          icon: createClusterIcon(L, cluster.places.length),
+        });
+        marker.on('click', () => {
+          const bounds = L.latLngBounds(
+            cluster.places.map((p) => [p.lat, p.lon] as [number, number])
+          );
+          map.fitBounds(bounds, { padding: [40, 40], maxZoom: Math.min(map.getZoom() + 2, 18) });
+        });
+        layer.addLayer(marker);
+      });
+    },
+    []
+  );
+
+  const revealPlace = useCallback(async (placeId: number) => {
+    const map = mapRef.current;
+    if (!map) return;
+    setShowMerchants(true);
+
+    const detail = await fetchPlaceById(placeId).catch(() => null);
+    if (!detail) return;
+
+    map.flyTo([detail.lat, detail.lon], 15, { duration: 0.7 });
+
+    const L = await import('leaflet');
+    let marker = merchantMarkersRef.current.get(placeId);
+    if (!marker && merchantLayerRef.current) {
+      marker = L.marker([detail.lat, detail.lon], { icon: createMerchantIcon(L, detail) });
+      bindMerchantPopup(marker, detail, popupStringsRef.current);
+      merchantLayerRef.current.addLayer(marker);
+      merchantMarkersRef.current.set(placeId, marker);
+    }
+    if (marker) {
+      marker.setPopupContent(buildMerchantPopupHtml(detail, { strings: popupStringsRef.current }));
+      setTimeout(() => marker?.openPopup(), 350);
+    }
+
+    const url = new URL(window.location.href);
+    url.searchParams.set('lat', detail.lat.toFixed(5));
+    url.searchParams.set('lon', detail.lon.toFixed(5));
+    url.searchParams.set('zoom', '15');
+    url.searchParams.set('place', String(placeId));
+    window.history.replaceState(null, '', url);
+  }, []);
+
+  useEffect(() => {
+    merchantCategoryRef.current = merchantCategory;
+    if (mapReady && showMerchants && mapRef.current) {
+      import('leaflet').then((L) => renderMerchantLayer(mapRef.current!, L));
+    }
+  }, [merchantCategory, mapReady, showMerchants, renderMerchantLayer]);
 
   const loadMerchants = useCallback(async (map: import('leaflet').Map, L: typeof import('leaflet')) => {
     if (!showMerchants || !isBTCMapEnabled()) return;
@@ -163,16 +336,8 @@ export function UnifiedBTCMap({
 
       if (controller.signal.aborted || !merchantLayerRef.current) return;
 
-      merchantLayerRef.current.clearLayers();
-      merchantMarkersRef.current.clear();
-      places.forEach((place) => {
-        const marker = L.marker([place.lat, place.lon], {
-          icon: createMerchantIcon(L, place),
-        });
-        bindMerchantPopup(marker, place);
-        merchantLayerRef.current!.addLayer(marker);
-        merchantMarkersRef.current.set(place.id, marker);
-      });
+      merchantPlacesRef.current = places;
+      renderMerchantLayer(map, L);
 
       setMerchantCount(places.length);
     } catch (err) {
@@ -182,7 +347,7 @@ export function UnifiedBTCMap({
     } finally {
       setLoadingMerchants(false);
     }
-  }, [showMerchants]);
+  }, [showMerchants, renderMerchantLayer]);
 
   const renderKatoaPins = useCallback((L: typeof import('leaflet')) => {
     if (!katoaLayerRef.current) return;
@@ -195,11 +360,11 @@ export function UnifiedBTCMap({
 
       const popup = `
         <div class="btcmap-popup btcmap-popup--katoa">
-          <p class="btcmap-popup__eyebrow">KATOA creator project</p>
+          <p class="btcmap-popup__eyebrow">${escapeMapPopupText(katoaPopupTextRef.current.eyebrow)}</p>
           <strong class="btcmap-popup__title">${escapeMapPopupText(pin.title)}</strong>
-          <p class="btcmap-popup__meta">${formatSats(pin.total_sats_raised)} sats raised</p>
+          <p class="btcmap-popup__meta">${formatSats(pin.total_sats_raised)} ${escapeMapPopupText(katoaPopupTextRef.current.satsRaised)}</p>
           <a href="/wishlist/${pin.slug}" class="btcmap-popup__link btcmap-popup__link--katoa">
-            View wishlist →
+            ${escapeMapPopupText(katoaPopupTextRef.current.viewWishlist)} →
           </a>
         </div>
       `;
@@ -223,9 +388,12 @@ export function UnifiedBTCMap({
         mapRef.current = null;
       }
 
+      const urlView = parseMapViewParams(window.location.search);
+      const hasUrlView = urlView.lat !== undefined && urlView.lon !== undefined;
+
       const map = L.map(containerRef.current, {
-        center: [center.latitude, center.longitude],
-        zoom: center.zoom ?? 4,
+        center: [urlView.lat ?? center.latitude, urlView.lon ?? center.longitude],
+        zoom: urlView.zoom ?? center.zoom ?? 4,
         zoomControl: false,
         scrollWheelZoom: true,
       });
@@ -243,10 +411,18 @@ export function UnifiedBTCMap({
       const onMoveEnd = () => {
         if (debounceRef.current) clearTimeout(debounceRef.current);
         debounceRef.current = setTimeout(() => loadMerchants(map, L), 450);
+        const c = map.getCenter();
+        const url = new URL(window.location.href);
+        url.searchParams.set('lat', c.lat.toFixed(5));
+        url.searchParams.set('lon', c.lng.toFixed(5));
+        url.searchParams.set('zoom', String(Math.round(map.getZoom())));
+        url.searchParams.delete('place');
+        window.history.replaceState(null, '', url);
       };
       map.on('moveend', onMoveEnd);
+      map.on('zoomend', () => renderMerchantLayer(map, L));
 
-      if (katoaPins.length > 0) {
+      if (!hasUrlView && katoaPins.length > 0) {
         const bounds = L.latLngBounds(katoaPins.map((p) => [p.latitude, p.longitude] as [number, number]));
         if (katoaPins.length > 1) {
           map.fitBounds(bounds, { padding: [48, 48], maxZoom: 10 });
@@ -255,6 +431,10 @@ export function UnifiedBTCMap({
 
       mapRef.current = map;
       setMapReady(true);
+
+      if (urlView.place !== undefined) {
+        void revealPlace(urlView.place);
+      }
     })();
 
     return () => {
@@ -389,38 +569,7 @@ export function UnifiedBTCMap({
       return;
     }
 
-    map.flyTo([row.lat, row.lon], 15, { duration: 0.7 });
-    // Ensure merchants layer is on so pin can appear after reload
-    if (!showMerchants) setShowMerchants(true);
-
-    const L = await import('leaflet');
-    // Prefer existing marker
-    let marker = merchantMarkersRef.current.get(row.id);
-    if (!marker && merchantLayerRef.current) {
-      const place: BTCMapPlace = {
-        id: row.id,
-        name: row.name,
-        lat: row.lat,
-        lon: row.lon,
-        icon: row.icon,
-        address: row.address,
-      };
-      marker = L.marker([row.lat, row.lon], { icon: createMerchantIcon(L, place) });
-      bindMerchantPopup(marker, place);
-      merchantLayerRef.current.addLayer(marker);
-      merchantMarkersRef.current.set(row.id, marker);
-    }
-    if (marker) {
-      setTimeout(() => marker?.openPopup(), 400);
-      // Hydrate detail immediately
-      void fetchPlaceById(row.id)
-        .then((detail) => {
-          if (detail && marker) {
-            marker.setPopupContent(buildMerchantPopupHtml(detail));
-          }
-        })
-        .catch(() => undefined);
-    }
+    await revealPlace(row.id);
   };
 
   return (
@@ -578,6 +727,31 @@ export function UnifiedBTCMap({
             {expanded ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
           </button>
         </div>
+
+        {showMerchants && (
+          <div className="unified-btcmap__categories" role="group" aria-label={t('map.categoryLabel')}>
+            <button
+              type="button"
+              className={`unified-btcmap__category ${merchantCategory === 'all' ? 'unified-btcmap__category--on' : ''}`}
+              onClick={() => setMerchantCategory('all')}
+              aria-pressed={merchantCategory === 'all'}
+            >
+              {t('map.categoryAll')}
+            </button>
+            {MERCHANT_CATEGORIES.map((category) => (
+              <button
+                key={category.key}
+                type="button"
+                className={`unified-btcmap__category ${merchantCategory === category.key ? 'unified-btcmap__category--on' : ''}`}
+                onClick={() => setMerchantCategory(category.key)}
+                aria-pressed={merchantCategory === category.key}
+              >
+                <span aria-hidden>{category.glyph}</span>
+                {t(category.labelKey)}
+              </button>
+            ))}
+          </div>
+        )}
 
         {bothOff && (
           <div className="unified-btcmap__empty-overlay">
