@@ -1,14 +1,16 @@
 # Status
 
 **Status:** 🟢 Live  
-**Last updated:** 2026-08-11 by Grok (M3)  
-**Version:** 1.1.7 · **HEAD:** `9d38deb`
+**Last updated:** 2026-08-16 by Grok (M3)  
+**Version:** 1.1.7 · **HEAD:** `4ace79b`
 
 ## Recent (this session)
-- Solo 10-pack product UX (tips, favorites, visibility, DMs local, chips, PWA, a11y, e2e, i18n)
-- Map: CARTO basemap fix; BTC Map place detail popups; emoji category pins; search box
-- Family agent docs: `.ai_docs/ecosystem-links.md`, `project-summary.md`, `.ai_agent/README.md`
-- Handoffs: `docs/KIMI-HANDOFF.md`, `docs/LATEST-UPDATE.md`, `docs/NEXT-NEEDS-CAM.md`, `docs/GLORY-PROGRESS.md`
+- Map discovery batch 1: popup i18n (7 langs), merchant clustering, URL deep-links (`?lat/lon/zoom/place=`), category filter chips
+- Roadmap: `docs/MAP-DISCOVERY-ROADMAP.md`
+- Handoffs: `docs/KIMI-HANDOFF.md`, `docs/LATEST-UPDATE.md`
+
+## Prior
+- Solo 10-pack product UX + map popups/icons/search + family `.ai_docs`/`.ai_agent` (`9d38deb`)
 
 ## Blockers (Cam / THOR)
 - Lightning + BTCPay webhook + real counters
