@@ -12,7 +12,7 @@
 - Theme detection is conservative: OS scheme + light wrapper class; dark glass UI chrome (search/toolbar/legend/popups) stays as-is on both tile sets.
 
 ### Git State
-- HEAD: see commit · Prior: `dfe20cf` (batch 2 handoff SHA)
+- HEAD: `279a775` (pushed) · Prior: `dfe20cf` (batch 2 handoff SHA)
 - Verify: `npm run check` (108 tests) · `npm run build` ✓ · Playwright 4/4 ✓
 
 ---
