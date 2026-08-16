@@ -2,12 +2,12 @@
 
 **Status:** 🟢 Live  
 **Last updated:** 2026-08-16 by Grok (M3)  
-**Version:** 1.1.7 · **HEAD:** `352708f`
+**Version:** 1.1.7 · **HEAD:** `d0f854a`
 
 ## Recent (this session)
-- Map discovery batch 1: popup i18n (7 langs), merchant clustering, URL deep-links (`?lat/lon/zoom/place=`), category filter chips, KATOA pin cover thumbnails, search keyboard nav
-- Roadmap: `docs/MAP-DISCOVERY-ROADMAP.md`
-- Handoffs: `docs/KIMI-HANDOFF.md`, `docs/LATEST-UPDATE.md`
+- OnlyFans-parity P1: `CreatorPostFeed` (stats + post grid + locked/PPV paywall) wired into creator profiles; `mockCreatorPosts` (Luna/Sasha)
+- Roadmap: `docs/OF-PARITY-ROADMAP.md` (tasteful-now, hybrid model)
+- Prior: map discovery batch 1 (`352708f`)
 
 ## Prior
 - Solo 10-pack product UX + map popups/icons/search + family `.ai_docs`/`.ai_agent` (`9d38deb`)

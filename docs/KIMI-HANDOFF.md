@@ -1,3 +1,31 @@
+## Session — 2026-08-16 (Grok M3) — OnlyFans-parity P1: creator post feed
+
+**Role:** M3 code only. Pushed `main`. Version still **1.1.7**.
+
+### Decisions (confirmed with Cam)
+- **Content:** tasteful creator content now; adult/18+ later as a config flag.
+- **First surface:** creator profile + post feed.
+- **Model:** hybrid — subscriptions + tips + wishlists on one profile.
+- Plan captured in `docs/OF-PARITY-ROADMAP.md`.
+
+### Done
+- `CreatorPostFeed` — stats strip (subscribers/posts/likes), 3-col post grid, locked-post overlay (subscribe or PPV sats), Subscribe CTA.
+- `mockCreatorPosts` — tasteful PG-13 posts for Luna + Sasha (locked + PPV examples).
+- `formatCompactCount` (1.3K / 2.4M) + tests.
+- Wired into `WishlistPage` for `card_style === 'creator'`; 8 `creator.*` i18n keys × 7 langs.
+
+### Git State
+- HEAD: `d0f854a`
+- Prior: `352708f` map batch 1 · `4ace79b` map batch 1
+- Verify: `npm run check` (87 tests)
+
+### Next (P1 → P2)
+- Post detail modal (caption/likes/comments/tip)
+- Real subscribe → Lightning invoice (BTCPay) + persisted unlock state (needs Cam/THOR)
+- Discovery/home creator grid (P3)
+
+---
+
 ## Session — 2026-08-16 (Grok M3) — Map discovery batch 1: i18n + clustering + deep-links + filters
 
 **Role:** M3 code only. Pushed `main`. Version still **1.1.7** (no bump this pass).
