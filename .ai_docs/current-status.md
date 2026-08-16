@@ -5,8 +5,8 @@
 **Version:** 1.1.7 · **HEAD:** see KIMI-HANDOFF top
 
 ## Recent (this session)
-- Map discovery batch 2 — 10 solo items: incremental place merge, events layer, areas-here chips, place detail drawer (+ read-only comments), activity strip, contribute flow, share view, remember last view, KATOA pin color rings
-- Prior: OF-parity P1 (creator feed/post modal) + subscription client seam (`eccc285`)
+- Map P3 — theme-aware basemap (light CARTO live-swap), offline place/detail cache (localStorage, instant render + offline), marker perf (icon memo, rAF debounce, render skip)
+- Prior: map batch 2 (incremental load, events, areas, drawer, activity, contribute, share, remember-view, pin colors) · OF-parity P1 + subscription seam (`eccc285`)
 - Backend handoff: `docs/SUBSCRIPTION-FLOW-SPEC.md` (LND tie-in for next LLM)
 
 ## Prior

@@ -1,3 +1,22 @@
+## Session — 2026-08-16 (Grok M3) — Map discovery batch 3: P3 parity & polish
+
+**Role:** M3 code only. Pushed `main`. Version **1.1.7** (no bump this pass).
+
+### Done — map P3 (see docs/MAP-DISCOVERY-ROADMAP.md)
+1. **Theme-aware basemap** — CARTO `light_all` tiles for light theme; detects OS `prefers-color-scheme` + `.lp-page` / `[data-theme="light"]` ancestor; `tileLayer.setUrl` swaps live (map not recreated).
+2. **Offline place cache** — localStorage merged places (cap 600, 24h TTL) + per-place details (cap 200); map seeds from cache for instant render and works offline; detail write-through on fetch. `savePersistedPlaces` / `loadPersistedPlaces` / `savePersistedPlaceDetail` / `loadPersistedPlaceDetail` / `clearPersistedMapCache`.
+3. **Marker perf** — memoized merchant divIcons per place (`merchantIconFor` cache), rAF-throttled `moveend` (was 450ms setTimeout), render-fingerprint skip so pans don't re-cluster/rebuild unchanged markers.
+
+### Decisions
+- Persistence is localStorage (not IndexedDB) — merged-place + detail sets are small and TTL-capped; full btcmap IBD-style sync is overkill for a widget.
+- Theme detection is conservative: OS scheme + light wrapper class; dark glass UI chrome (search/toolbar/legend/popups) stays as-is on both tile sets.
+
+### Git State
+- HEAD: see commit · Prior: `dfe20cf` (batch 2 handoff SHA)
+- Verify: `npm run check` (108 tests) · `npm run build` ✓ · Playwright 4/4 ✓
+
+---
+
 ## Session — 2026-08-16 (Grok M3) — Map discovery batch 2: 10 solo items shipped
 
 **Role:** M3 code only. Pushed `main`. Version **1.1.7** (no bump this pass).

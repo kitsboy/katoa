@@ -16,12 +16,24 @@ export const BTCMAP_ATTRIBUTION =
 export const LEAFLET_BASEMAP_URL =
   'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
 
+/** Light CARTO basemap for the light theme (same attribution, `light_all` tiles). */
+export const LEAFLET_BASEMAP_LIGHT_URL =
+  'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+
 export const LEAFLET_BASEMAP_OPTIONS = {
   attribution:
     '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>',
   subdomains: 'abcd',
   maxZoom: 20,
 } as const;
+
+/**
+ * Pick the raster basemap URL for a theme. Light theme uses CARTO light_all
+ * so labels stay readable on the warm landing palette.
+ */
+export function leafletBasemapUrl(light: boolean): string {
+  return light ? LEAFLET_BASEMAP_LIGHT_URL : LEAFLET_BASEMAP_URL;
+}
 
 const PRODUCTION_API = 'https://api.btcmap.org';
 const PRODUCTION_APP = 'https://btcmap.org';
@@ -273,6 +285,93 @@ const placeDetailCache = new Map<number, { place: BTCMapPlace; fetchedAt: number
 
 function placesCacheKey(lat: number, lon: number, radiusKm: number): string {
   return `${lat.toFixed(3)}:${lon.toFixed(3)}:${radiusKm}`;
+}
+
+/* ── Offline persistence (localStorage) ────────────────────────────────
+ * The btcmap sync guide is built for full-dataset IBD, which is overkill for
+ * a map widget. We persist the merged places the user actually loaded (plus
+ * per-place details) so revisits render instantly and still work offline.
+ */
+const PERSISTED_PLACES_KEY = 'katoa_map_places_v1';
+const PERSISTED_DETAILS_KEY = 'katoa_map_place_details_v1';
+const PERSISTED_TTL_MS = 24 * 60 * 60 * 1000; // 24h
+const PERSISTED_PLACES_MAX = 600;
+const PERSISTED_DETAILS_MAX = 200;
+
+interface PersistedPlaces {
+  savedAt: number;
+  places: BTCMapPlace[];
+}
+
+interface PersistedDetails {
+  savedAt: number;
+  entries: Record<string, { place: BTCMapPlace; fetchedAt: number }>;
+}
+
+function readJson<T>(key: string): T | null {
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? (JSON.parse(raw) as T) : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeJson(key: string, value: unknown): void {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    /* quota / private mode — ignore */
+  }
+}
+
+/** Persist the merged places list (capped) for offline + instant reload. */
+export function savePersistedPlaces(places: BTCMapPlace[]): void {
+  if (places.length === 0) return;
+  const prev = readJson<PersistedPlaces>(PERSISTED_PLACES_KEY);
+  const merged = mergePlaces(prev?.places ?? [], places).slice(0, PERSISTED_PLACES_MAX);
+  writeJson(PERSISTED_PLACES_KEY, { savedAt: Date.now(), places: merged } satisfies PersistedPlaces);
+}
+
+/** Load persisted places if fresh; null when missing/stale (respects 24h TTL). */
+export function loadPersistedPlaces(): BTCMapPlace[] | null {
+  const data = readJson<PersistedPlaces>(PERSISTED_PLACES_KEY);
+  if (!data || !Array.isArray(data.places) || Date.now() - data.savedAt > PERSISTED_TTL_MS) {
+    return null;
+  }
+  return data.places.filter((p) => p && typeof p.id === 'number');
+}
+
+/** Write-through a single place detail to the persisted cache (capped, keyed by id). */
+export function savePersistedPlaceDetail(place: BTCMapPlace): void {
+  const data = readJson<PersistedDetails>(PERSISTED_DETAILS_KEY);
+  const entries = data?.entries ?? {};
+  entries[String(place.id)] = { place, fetchedAt: Date.now() };
+  const keys = Object.keys(entries);
+  if (keys.length > PERSISTED_DETAILS_MAX) {
+    // Drop the oldest entries by saved order (object insertion order is stable in practice).
+    for (const k of keys.slice(0, keys.length - PERSISTED_DETAILS_MAX)) delete entries[k];
+  }
+  writeJson(PERSISTED_DETAILS_KEY, { savedAt: Date.now(), entries } satisfies PersistedDetails);
+}
+
+/** Load a persisted place detail if fresh; null otherwise. */
+export function loadPersistedPlaceDetail(placeId: number): BTCMapPlace | null {
+  const data = readJson<PersistedDetails>(PERSISTED_DETAILS_KEY);
+  if (!data || Date.now() - data.savedAt > PERSISTED_TTL_MS) return null;
+  const entry = data.entries?.[String(placeId)];
+  if (!entry || Date.now() - entry.fetchedAt > PERSISTED_TTL_MS) return null;
+  return entry.place;
+}
+
+/** Clear persisted map caches (used by tests / future settings toggle). */
+export function clearPersistedMapCache(): void {
+  try {
+    localStorage.removeItem(PERSISTED_PLACES_KEY);
+    localStorage.removeItem(PERSISTED_DETAILS_KEY);
+  } catch {
+    /* ignore */
+  }
 }
 
 function parsePlace(raw: unknown): BTCMapPlace | null {
@@ -677,6 +776,13 @@ export async function fetchPlaceById(
     return cached.place;
   }
 
+  // Offline fallback: persisted detail from a previous session.
+  const persisted = loadPersistedPlaceDetail(placeId);
+  if (persisted) {
+    placeDetailCache.set(placeId, { place: persisted, fetchedAt: Date.now() });
+    return persisted;
+  }
+
   const base = getApiBaseUrl();
   const params = new URLSearchParams({ fields: PLACE_DETAIL_FIELDS });
   const response = await fetch(`${base}/v4/places/${placeId}?${params}`, {
@@ -691,6 +797,7 @@ export async function fetchPlaceById(
   const place = parsePlace(await response.json());
   if (place) {
     placeDetailCache.set(placeId, { place, fetchedAt: Date.now() });
+    savePersistedPlaceDetail(place);
   }
   return place;
 }

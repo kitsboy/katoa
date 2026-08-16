@@ -23,7 +23,6 @@ import { formatRelativeTime } from '../lib/i18nFormat';
 import {
   BTCMAP_ATTRIBUTION,
   LEAFLET_BASEMAP_OPTIONS,
-  LEAFLET_BASEMAP_URL,
   MERCHANT_CATEGORIES,
   type BTCMapActivityItem,
   type BTCMapAreaAt,
@@ -51,11 +50,14 @@ import {
   isPlaceBoosted,
   isBTCMapEnabled,
   katoaPinColor,
+  leafletBasemapUrl,
+  loadPersistedPlaces,
   materialIconGlyph,
   merchantCategoryFor,
   mergePlaces,
   parseMapViewParams,
   sanitizeImageUrl,
+  savePersistedPlaces,
   searchBTCMap,
   zoomToRadiusKm,
 } from '../lib/btcmap';
@@ -75,6 +77,34 @@ function formatSats(n: number): string {
 /** Render cap for merchant markers — "load more here" raises it. */
 const MERCHANT_CAP_STEP = 200;
 const MERCHANT_CAP_MIN = 400;
+
+/**
+ * True when the page is in a light-theme context: the landing page's `.lp-page`
+ * wrapper, an explicit `[data-theme="light"]`, or the OS light scheme.
+ */
+function detectLightTheme(container: HTMLElement | null): boolean {
+  if (typeof matchMedia === 'function' && window.matchMedia('(prefers-color-scheme: light)').matches) {
+    return true;
+  }
+  return Boolean(
+    container?.closest('.lp-page, [data-theme="light"]')
+  );
+}
+
+/** Coalesce repeated calls into one per animation frame (perf on rapid pans). */
+function rAFThrottle<A extends unknown[]>(fn: (...args: A) => void): (...args: A) => void {
+  let rafId: number | null = null;
+  let pending: A | null = null;
+  return (...args: A) => {
+    pending = args;
+    if (rafId !== null) return;
+    rafId = requestAnimationFrame(() => {
+      rafId = null;
+      if (pending) fn(...pending);
+      pending = null;
+    });
+  };
+}
 
 /** Clean orange teardrop — no brand logo image (avoids logo smear on basemap). */
 function createKatoaIcon(L: typeof import('leaflet'), coverImage?: string | null, ringColor?: string) {
@@ -108,6 +138,21 @@ function createMerchantIcon(L: typeof import('leaflet'), place: BTCMapPlace) {
     iconAnchor: [14, 32],
     popupAnchor: [0, -28],
   });
+}
+
+/** Memoized merchant icon per place — avoids rebuilding divIcon HTML on every pan. */
+function merchantIconFor(
+  cache: Map<string, import('leaflet').DivIcon>,
+  L: typeof import('leaflet'),
+  place: BTCMapPlace
+): import('leaflet').DivIcon {
+  const key = `${place.id}:${isPlaceBoosted(place) ? 1 : 0}`;
+  let icon = cache.get(key);
+  if (!icon) {
+    icon = createMerchantIcon(L, place);
+    cache.set(key, icon);
+  }
+  return icon;
 }
 
 /** Event pin — distinct purple calendar glyph. */
@@ -184,14 +229,16 @@ export function UnifiedBTCMap({
 }: UnifiedBTCMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<import('leaflet').Map | null>(null);
+  const tileLayerRef = useRef<import('leaflet').TileLayer | null>(null);
   const merchantLayerRef = useRef<import('leaflet').LayerGroup | null>(null);
   const katoaLayerRef = useRef<import('leaflet').LayerGroup | null>(null);
   const eventsLayerRef = useRef<import('leaflet').LayerGroup | null>(null);
+  const merchantIconCacheRef = useRef<Map<string, import('leaflet').DivIcon>>(new Map());
+  const lastRenderKeyRef = useRef('');
   const abortRef = useRef<AbortController | null>(null);
   const areasAbortRef = useRef<AbortController | null>(null);
   const activityAbortRef = useRef<AbortController | null>(null);
   const drawerAbortRef = useRef<AbortController | null>(null);
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { t, language } = useLanguage();
   const { toast } = useToast();
@@ -432,11 +479,13 @@ export function UnifiedBTCMap({
       const layer = merchantLayerRef.current;
       if (!layer) return;
 
-      layer.clearLayers();
-      merchantMarkersRef.current.clear();
-
       const allPlaces = merchantPlacesRef.current;
-      if (allPlaces.length === 0) return;
+      if (allPlaces.length === 0) {
+        layer.clearLayers();
+        merchantMarkersRef.current.clear();
+        lastRenderKeyRef.current = '';
+        return;
+      }
 
       const category = merchantCategoryRef.current;
       const filtered =
@@ -446,11 +495,20 @@ export function UnifiedBTCMap({
       const places = filtered.slice(0, merchantCapRef.current);
       if (places.length === 0) return;
 
+      // Skip re-clustering + marker rebuild when nothing meaningful changed.
+      const zoom = map.getZoom();
+      const renderKey = `${zoom}:${category}:${places.length}:${places[0].id}:${places[places.length - 1].id}`;
+      if (renderKey === lastRenderKeyRef.current) return;
+      lastRenderKeyRef.current = renderKey;
+
+      layer.clearLayers();
+      merchantMarkersRef.current.clear();
+
       const { clusters, singles } = clusterPlaces(places, map);
 
       singles.forEach((place) => {
         const marker = L.marker([place.lat, place.lon], {
-          icon: createMerchantIcon(L, place),
+          icon: merchantIconFor(merchantIconCacheRef.current, L, place),
         });
         marker.on('click', () => openPlaceDrawer(place));
         layer.addLayer(marker);
@@ -487,7 +545,9 @@ export function UnifiedBTCMap({
     const L = await import('leaflet');
     let marker = merchantMarkersRef.current.get(placeId);
     if (!marker && merchantLayerRef.current) {
-      marker = L.marker([detail.lat, detail.lon], { icon: createMerchantIcon(L, detail) });
+      marker = L.marker([detail.lat, detail.lon], {
+        icon: merchantIconFor(merchantIconCacheRef.current, L, detail),
+      });
       marker.on('click', () => openPlaceDrawer(detail));
       merchantLayerRef.current.addLayer(marker);
       merchantMarkersRef.current.set(placeId, marker);
@@ -540,6 +600,8 @@ export function UnifiedBTCMap({
 
         renderMerchantLayer(map, L);
         setMerchantCount(merchantPlacesRef.current.length);
+        // Persist merged places for offline reloads + instant re-render.
+        savePersistedPlaces(merchantPlacesRef.current);
         void loadActivity();
       } catch (err) {
         if (err instanceof Error && err.name === 'AbortError') return;
@@ -607,26 +669,35 @@ export function UnifiedBTCMap({
         scrollWheelZoom: true,
       });
 
-      L.tileLayer(LEAFLET_BASEMAP_URL, { ...LEAFLET_BASEMAP_OPTIONS }).addTo(map);
-
       L.control.zoom({ position: 'bottomright' }).addTo(map);
 
       merchantLayerRef.current = L.layerGroup().addTo(map);
       katoaLayerRef.current = L.layerGroup().addTo(map);
       eventsLayerRef.current = L.layerGroup().addTo(map);
 
+      // Offline / instant render: seed with the last persisted places before
+      // fetching fresh data (savePersistedPlaces runs after each successful load).
+      const persistedPlaces = loadPersistedPlaces();
+      if (persistedPlaces && persistedPlaces.length > 0) {
+        merchantPlacesRef.current = persistedPlaces;
+        renderMerchantLayer(map, L);
+        setMerchantCount(persistedPlaces.length);
+      }
+
+      // Theme-aware basemap (light CARTO for light theme, dark CARTO otherwise).
+      tileLayerRef.current = L.tileLayer(leafletBasemapUrl(lightThemeRef.current), {
+        ...LEAFLET_BASEMAP_OPTIONS,
+      }).addTo(map);
+
       renderKatoaPins(L);
       await loadMerchants(map, L);
       if (showEvents) await loadEvents();
       await loadAreasAt(map);
 
-      const onMoveEnd = () => {
-        if (debounceRef.current) clearTimeout(debounceRef.current);
-        debounceRef.current = setTimeout(() => {
-          void loadMerchants(map, L);
-          void loadAreasAt(map);
-          renderEventsLayerRef.current(map, L);
-        }, 450);
+      const onMoveEnd = rAFThrottle(() => {
+        void loadMerchants(map, L);
+        void loadAreasAt(map);
+        renderEventsLayerRef.current(map, L);
         const c = map.getCenter();
         const url = new URL(window.location.href);
         url.searchParams.set('lat', c.lat.toFixed(5));
@@ -639,7 +710,7 @@ export function UnifiedBTCMap({
           lon: c.lng,
           zoom: map.getZoom(),
         });
-      };
+      });
       map.on('moveend', onMoveEnd);
       map.on('zoomend', () => {
         renderMerchantLayer(map, L);
@@ -667,7 +738,6 @@ export function UnifiedBTCMap({
       areasAbortRef.current?.abort();
       activityAbortRef.current?.abort();
       drawerAbortRef.current?.abort();
-      if (debounceRef.current) clearTimeout(debounceRef.current);
       if (mapRef.current) {
         mapRef.current.remove();
         mapRef.current = null;
@@ -784,6 +854,26 @@ export function UnifiedBTCMap({
   useEffect(() => {
     renderEventsLayerRef.current = renderEventsLayer;
   }, [renderEventsLayer]);
+
+  const [lightTheme, setLightTheme] = useState(() => detectLightTheme(containerRef.current));
+  const lightThemeRef = useRef(lightTheme);
+  useEffect(() => {
+    lightThemeRef.current = lightTheme;
+  }, [lightTheme]);
+
+  // Swap basemap tiles when the OS light/dark scheme changes (light CARTO ↔ dark CARTO),
+  // or when mounted inside a light-theme wrapper (.lp-page / [data-theme="light"]).
+  useEffect(() => {
+    setLightTheme(detectLightTheme(containerRef.current));
+    const mq = window.matchMedia('(prefers-color-scheme: light)');
+    const onChange = () => setLightTheme(detectLightTheme(containerRef.current));
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+
+  useEffect(() => {
+    tileLayerRef.current?.setUrl(leafletBasemapUrl(lightTheme));
+  }, [lightTheme]);
 
   // Debounced BTC Map search (GET /v4/search/?q=)
   useEffect(() => {

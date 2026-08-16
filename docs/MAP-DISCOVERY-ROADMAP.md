@@ -52,10 +52,16 @@ Focus area chosen by Cam: **Map + discovery**.
 
 ### P3 — Parity & polish (solo)
 
-- **Theme-aware basemap** — light CARTO when site is in light theme.
-- **Offline cache** — IndexedDB/localStorage place cache + incremental sync (btcmap sync guide).
-- **Perf** — memoize marker creation, rAF debounce, virtualize popups.
-- **Optional** — MapLibre + OpenFreeMap vector dark parity (tracked in `NEXT-NEEDS-CAM.md` #18).
+- [x] **Theme-aware basemap** — CARTO `light_all` for light theme (OS `prefers-color-scheme` + `.lp-page`/`[data-theme="light"]` ancestor); `tileLayer.setUrl` swaps live without recreating the map. (batch 3)
+- [x] **Offline cache** — localStorage place cache (merged, capped 600, 24h TTL) + per-place detail cache (capped 200); map seeds from cache for instant render + works offline; `savePersistedPlaceDetail` write-through on detail fetch. (batch 3)
+- [x] **Perf** — memoized merchant divIcons (per place), rAF-throttled `moveend`, render-fingerprint skip (no re-cluster when nothing changed). (batch 3)
+- [ ] **Optional** — MapLibre + OpenFreeMap vector dark parity (tracked in `NEXT-NEEDS-CAM.md` #18).
+
+## Batch 3 — shipped 2026-08-16 (P3)
+
+- [x] Theme-aware basemap (light CARTO live-swap)
+- [x] Offline place + detail cache (localStorage, TTL-capped)
+- [x] Marker perf (icon memo, rAF debounce, render skip)
 
 ### Needs Cam / THOR (blocked)
 
@@ -97,3 +103,7 @@ Focus area chosen by Cam: **Map + discovery**.
 
 - `npm run check` (typecheck + eslint + vitest) green; tests added for new `src/lib/btcmap.ts` helpers.
 - Handoff appended to `docs/KIMI-HANDOFF.md`, `LATEST-UPDATE.md` updated, pushed to `main`.
+
+## Map roadmap status
+
+Batch 1 (popup i18n, clustering, URL sync, category chips, pin thumbnails, search nav) ✅ · Batch 2 (incremental load, events, areas, drawer, activity, contribute, share, remember-view, pin colors) ✅ · Batch 3 (P3: theme basemap, offline cache, perf) ✅ — remaining: MapLibre vector parity (#18, optional) + Cam/THOR blocked items (NIP-98 auth, real creator geo-seed, dynamic OG).

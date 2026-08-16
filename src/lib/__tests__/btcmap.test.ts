@@ -1,21 +1,28 @@
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import {
   BTCMAP_POPUP_STRINGS_EN,
+  LEAFLET_BASEMAP_LIGHT_URL,
+  LEAFLET_BASEMAP_URL,
   buildDirectionsUrl,
   buildMapViewQuery,
   buildMerchantPopupHtml,
   buildOSMNoteUrl,
   buildOsmPlaceUrl,
   buildShareMapUrl,
+  clearPersistedMapCache,
   escapeMapPopupText,
   haversineKm,
   katoaPinColor,
-  LEAFLET_BASEMAP_URL,
+  leafletBasemapUrl,
+  loadPersistedPlaceDetail,
+  loadPersistedPlaces,
   materialIconGlyph,
   mergePlaces,
   merchantCategoryFor,
   parseMapViewParams,
   sanitizeImageUrl,
+  savePersistedPlaceDetail,
+  savePersistedPlaces,
   zoomToRadiusKm,
 } from '../btcmap';
 
@@ -62,6 +69,12 @@ describe('LEAFLET_BASEMAP_URL', () => {
   it('uses a working raster provider (not broken openfreemap /osm/*.png)', () => {
     expect(LEAFLET_BASEMAP_URL).not.toMatch(/tiles\.openfreemap\.org\/osm/);
     expect(LEAFLET_BASEMAP_URL).toMatch(/\{z\}.*\{x\}.*\{y\}/);
+  });
+
+  it('swaps to light CARTO tiles for the light theme', () => {
+    expect(leafletBasemapUrl(true)).toBe(LEAFLET_BASEMAP_LIGHT_URL);
+    expect(leafletBasemapUrl(false)).toBe(LEAFLET_BASEMAP_URL);
+    expect(LEAFLET_BASEMAP_LIGHT_URL).toContain('light_all');
   });
 });
 
@@ -300,6 +313,45 @@ describe('haversineKm', () => {
     const km = haversineKm(50.088, 14.42, 52.52, 13.405);
     expect(km).toBeGreaterThan(250);
     expect(km).toBeLessThan(320);
+  });
+});
+
+describe('persisted map cache', () => {
+  beforeEach(() => {
+    clearPersistedMapCache();
+  });
+
+  it('round-trips merged places and caps at 600', () => {
+    const places = Array.from({ length: 700 }, (_, i) => ({
+      id: i + 1,
+      name: `Place ${i + 1}`,
+      lat: 1,
+      lon: 2,
+    })) as never[] as import('../btcmap').BTCMapPlace[];
+
+    savePersistedPlaces(places);
+    const loaded = loadPersistedPlaces();
+    expect(loaded).not.toBeNull();
+    expect(loaded?.length).toBe(600);
+  });
+
+  it('merges with previously persisted places by id', () => {
+    savePersistedPlaces([{ id: 1, name: 'A', lat: 1, lon: 1 }] as never[] as import('../btcmap').BTCMapPlace[]);
+    savePersistedPlaces([{ id: 1, name: 'A2', lat: 1, lon: 1 }, { id: 2, name: 'B', lat: 2, lon: 2 }] as never[] as import('../btcmap').BTCMapPlace[]);
+    const loaded = loadPersistedPlaces();
+    expect(loaded?.length).toBe(2);
+    expect(loaded?.find((p) => p.id === 1)?.name).toBe('A2');
+  });
+
+  it('returns null when nothing persisted', () => {
+    expect(loadPersistedPlaces()).toBeNull();
+  });
+
+  it('round-trips a place detail and falls back offline', () => {
+    const detail = { id: 42, name: 'Cafe', lat: 1, lon: 2, description: 'desc' } as never as import('../btcmap').BTCMapPlace;
+    expect(loadPersistedPlaceDetail(42)).toBeNull();
+    savePersistedPlaceDetail(detail);
+    expect(loadPersistedPlaceDetail(42)?.name).toBe('Cafe');
   });
 });
 
