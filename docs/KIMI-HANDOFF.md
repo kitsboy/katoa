@@ -13,10 +13,11 @@
 - `mockCreatorPosts` — tasteful PG-13 posts for Luna + Sasha (locked + PPV examples).
 - `formatCompactCount` (1.3K / 2.4M) + tests.
 - Wired into `WishlistPage` for `card_style === 'creator'`; 8 `creator.*` i18n keys × 7 langs.
+- `CreatorPostModal` — full-size post view (media + caption + tasteful comments + Tip/Subscribe); locked posts show the paywall in the modal. Click-to-open on post cards.
 
 ### Git State
-- HEAD: `d0f854a`
-- Prior: `352708f` map batch 1 · `4ace79b` map batch 1
+- HEAD: `c453ada`
+- Prior: `d0f854a` creator feed · `352708f` map batch 1 · `4ace79b` map batch 1
 - Verify: `npm run check` (87 tests)
 
 ### Next (P1 → P2)

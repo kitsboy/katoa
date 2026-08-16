@@ -2,10 +2,10 @@
 
 **Status:** 🟢 Live  
 **Last updated:** 2026-08-16 by Grok (M3)  
-**Version:** 1.1.7 · **HEAD:** `d0f854a`
+**Version:** 1.1.7 · **HEAD:** `c453ada`
 
 ## Recent (this session)
-- OnlyFans-parity P1: `CreatorPostFeed` (stats + post grid + locked/PPV paywall) wired into creator profiles; `mockCreatorPosts` (Luna/Sasha)
+- OnlyFans-parity P1: `CreatorPostFeed` + `CreatorPostModal` (stats, post grid, locked/PPV paywall, comments, Tip/Subscribe) wired into creator profiles; `mockCreatorPosts` (Luna/Sasha)
 - Roadmap: `docs/OF-PARITY-ROADMAP.md` (tasteful-now, hybrid model)
 - Prior: map discovery batch 1 (`352708f`)
 
