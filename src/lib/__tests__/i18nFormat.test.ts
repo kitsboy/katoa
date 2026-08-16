@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatCurrency, formatNumber, formatRelativeTime, formatSatsLabel } from '../i18nFormat';
+import { formatCompactCount, formatCurrency, formatNumber, formatRelativeTime, formatSatsLabel } from '../i18nFormat';
 
 describe('formatSatsLabel', () => {
   it('uses singular sat for 1', () => {
@@ -28,5 +28,17 @@ describe('formatRelativeTime', () => {
     const past = new Date(Date.now() - 60_000);
     const result = formatRelativeTime(past, 'en');
     expect(result.length).toBeGreaterThan(0);
+  });
+});
+
+describe('formatCompactCount', () => {
+  it('abbreviates thousands and millions', () => {
+    expect(formatCompactCount(1284, 'en-US')).toBe('1.3K');
+    expect(formatCompactCount(1_250_000, 'en-US')).toBe('1.3M');
+  });
+
+  it('leaves values under 1,000 plain', () => {
+    expect(formatCompactCount(876, 'en-US')).toBe('876');
+    expect(formatCompactCount(0, 'en-US')).toBe('0');
   });
 });

@@ -11,6 +11,7 @@ import { SatsDisplay } from '../components/SatsDisplay';
 import { Link } from '../components/Link';
 import { supabase } from '../lib/supabase';
 import { mockWishlists, mockWishlistItems } from '../data/mockWishlists';
+import { mockCreatorPosts } from '../data/mockCreatorPosts';
 import { getStorage, setStorage, STORAGE_KEYS } from '../lib/storage';
 import { copyToClipboard } from '../lib/clipboard';
 import { getQrImageUrl, lightningQrData } from '../lib/qr';
@@ -36,6 +37,7 @@ import { ProductUrlImport } from '../components/ProductUrlImport';
 import { SubscriptionTiers } from '../components/SubscriptionTiers';
 import { TipMenu } from '../components/TipMenu';
 import { VisibilityBadge } from '../components/VisibilityBadge';
+import { CreatorPostFeed } from '../components/CreatorPostFeed';
 
 const SAT_PRESETS = [
   { label: '1K', value: 1000 },
@@ -89,6 +91,7 @@ interface Wishlist {
   card_style?: 'creator' | 'default';
   total_sats_goal: number;
   total_sats_raised: number;
+  subscriber_count?: number;
   country?: string;
   country_code?: string;
   country_flag?: string;
@@ -769,6 +772,16 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {resolvedBreadcrumbs.length > 0 && (
           <Breadcrumbs items={resolvedBreadcrumbs} className="mb-6" />
+        )}
+
+        {(wishlist.card_style === 'creator' || isDemoWishlist) && (
+          <CreatorPostFeed
+            creatorName={wishlist.creator.username}
+            subscriberCount={wishlist.subscriber_count}
+            posts={mockCreatorPosts[wishlist.slug] || []}
+            onSubscribe={() => handleGiftClick()}
+            t={t}
+          />
         )}
 
         <div className="mb-8 p-4 rounded-xl bg-white/[0.03] border border-white/10">

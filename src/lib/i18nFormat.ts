@@ -12,6 +12,15 @@ export function formatNumber(value: number, locale?: string): string {
   return new Intl.NumberFormat(locale).format(value);
 }
 
+/** Compact count for badges (1.3K, 2.4M); values under 1,000 stay plain. */
+export function formatCompactCount(value: number, locale?: string): string {
+  const abs = Math.abs(value);
+  const compact = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 });
+  if (abs >= 1_000_000) return `${compact.format(value / 1_000_000)}M`;
+  if (abs >= 1_000) return `${compact.format(value / 1_000)}K`;
+  return new Intl.NumberFormat(locale).format(value);
+}
+
 export function formatRelativeTime(date: Date, locale?: string): string {
   const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' });
   const diffSec = Math.round((date.getTime() - Date.now()) / 1000);
