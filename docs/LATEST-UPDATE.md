@@ -1,7 +1,7 @@
 # KATOA — Last Updated 2026-08-16 by Grok
 
 Brief: OF-parity solo backlog shipped — locked-post blur previews, PPV unlock demo, manage-subscription UI, likes/comments, home creator grid + search, new-drop badges.
-Commit: `pending`
+Commit: `a9d4be3`
 
 ## What landed (OF-parity P1–P4 solo items)
 

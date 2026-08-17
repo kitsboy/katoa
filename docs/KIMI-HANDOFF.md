@@ -20,7 +20,7 @@
 - Fixed a flaky e2e race surfaced by the new suite: ChangelogModal auto-opens at 1.5s in fresh contexts and intercepts clicks — tests now pre-seed `katoa_changelog_seen` (JSON-encoded, since `getStorage` parses).
 
 ### Git State
-- HEAD: `pending` (push after docs) · Prior: `1c16bd0` (offline tiles batch)
+- HEAD: `a9d4be3` (pushed) · Prior: `1c16bd0` (offline tiles batch)
 - Verify: `npm run check` (121 tests) · `npm run build` ✓ · Playwright 8/8 ×3 ✓
 
 ---
