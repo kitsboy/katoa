@@ -12,7 +12,7 @@
 - Kept LRU eviction (1,000 entries) so the tile cache can't grow unbounded on long exploration sessions.
 
 ### Git State
-- HEAD: `pending` (push after docs) · Prior: `7061b85` (batch 4 handoff SHA)
+- HEAD: `4eec62a` (pushed) · Prior: `7061b85` (batch 4 handoff SHA)
 - Verify: `npm run check` (108 tests) · `npm run build` ✓ · Playwright 5/5 ✓
 
 ---

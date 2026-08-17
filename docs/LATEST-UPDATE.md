@@ -1,7 +1,7 @@
 # KATOA — Last Updated 2026-08-16 by Grok
 
 Brief: Map fully offline after first view — SW caches OpenFreeMap vector tiles (style, .pbf, glyphs, sprites); fixed flaky double-canvas map init race.
-Commit: `pending`
+Commit: `4eec62a`
 
 ## What landed (batch 5 — offline vector tiles)
 
