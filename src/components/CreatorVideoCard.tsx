@@ -17,6 +17,8 @@ export interface CreatorVideoWishlist {
   total_sats_raised: number;
   country?: string;
   country_flag?: string;
+  city?: string;
+  created_at?: string;
   creator: {
     username: string;
     avatar_url?: string | null;

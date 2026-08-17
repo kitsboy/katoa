@@ -29,27 +29,28 @@ Rebuild KATOA's creator surface around the OnlyFans *model* — subscription cre
 
 ## Phases
 
-### P1 — Creator profile + feed (in progress)
-- [x] `mockCreatorPosts` data model (media, caption, likes, locked, PPV price)
+### P1 — Creator profile + feed (complete)
+- [x] `mockCreatorPosts` data model (media, caption, likes, locked, PPV price, `isNew`)
 - [x] `CreatorPostFeed` — stats strip, 3-col post grid, locked overlay (subscribe / PPV), Subscribe CTA
 - [x] Wire into `WishlistPage` for `card_style === 'creator'`
 - [x] Post detail modal (media + caption + comments + Tip/Subscribe)
-- [ ] Per-post "locked" blur instead of full overlay on unlocked thumbnails
+- [x] Per-post "locked" blur preview instead of full overlay — blurred media + lock chip (OF-style tease)
 
 ### P2 — Subscription paywall (server spec: `docs/SUBSCRIPTION-FLOW-SPEC.md`)
 - [x] Client subscription seam (localStorage) + "Subscribed" unlock state + button state
 - [ ] Real subscribe flow: tier → Lightning invoice (BTCPay/LNbits/LND) → webhook → `subscriptions` row
 - [ ] Subscriber-only feed gated by DB state (replace the local seam)
-- [ ] "You're subscribed" manage-subscription UI
+- [x] "You're subscribed" manage-subscription UI — `ManageSubscriptionPanel` (tier, since, unsubscribe, local seam)
+- [x] PPV unlock demo flow — per-post unlock persisted locally + toast (real flow = Lightning invoice)
 
 ### P3 — Discovery + home
-- [ ] OF-style creator grid on home (trending / new / top), reuse `CreatorVideoCard`
-- [ ] Creator search by vertical/tag, follower counts
+- [x] OF-style creator grid on home (`CreatorDiscoveryGrid` — trending / new sections reusing `CreatorVideoCard`)
+- [x] Creator search by vertical/tag + live follower counts (`filterCreators` lib)
 
 ### P4 — Engagement
-- [ ] Zaps as likes (reuse `nostr-tools` zap path); comments
+- [x] Interactive likes on posts (local seam, persisted per post; real = Nostr zaps) + comment posting (local seam)
 - [ ] Follow vs subscribe distinction (Nostr kind-3 contacts)
-- [ ] Notifications / unread badge (extend existing local unread)
+- [x] Notifications / unread badge — new-drop badge for subscribed creators (`CreatorNewDropsBadge` in nav + feed pill)
 
 ### Needs Cam / THOR (blocked) — handoff for next LLM on Hermes
 - **Subscription backend (SPEC'd):** `docs/SUBSCRIPTION-FLOW-SPEC.md` — needs **LND on THOR** (BTCPay/LNbits/LND REST) + webhook deploy

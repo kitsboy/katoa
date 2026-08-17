@@ -12,7 +12,7 @@ import { Link } from '../components/Link';
 import { supabase } from '../lib/supabase';
 import { mockWishlists, mockWishlistItems } from '../data/mockWishlists';
 import { mockCreatorPosts } from '../data/mockCreatorPosts';
-import { isSubscribed, subscribeLocal } from '../lib/subscriptions';
+import { isSubscribed, subscribeLocal, unsubscribe } from '../lib/subscriptions';
 import { getStorage, setStorage, STORAGE_KEYS } from '../lib/storage';
 import { copyToClipboard } from '../lib/clipboard';
 import { getQrImageUrl, lightningQrData } from '../lib/qr';
@@ -39,6 +39,7 @@ import { SubscriptionTiers } from '../components/SubscriptionTiers';
 import { TipMenu } from '../components/TipMenu';
 import { VisibilityBadge } from '../components/VisibilityBadge';
 import { CreatorPostFeed } from '../components/CreatorPostFeed';
+import { ManageSubscriptionPanel } from '../components/ManageSubscriptionPanel';
 
 const SAT_PRESETS = [
   { label: '1K', value: 1000 },
@@ -636,6 +637,13 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
     toast(t('creator.subscribed'), 'success');
   };
 
+  const handleUnsubscribe = () => {
+    if (!wishlist) return;
+    unsubscribe(wishlist.slug);
+    setSubscribed(false);
+    toast(t('creator.unsubscribed'), 'info');
+  };
+
   async function handleOwnerImportProduct(product: ParsedProduct) {
     if (!wishlist) return;
     if (isDemoWishlist) {
@@ -788,15 +796,24 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
         )}
 
         {(wishlist.card_style === 'creator' || isDemoWishlist) && (
-          <CreatorPostFeed
-            creatorName={wishlist.creator.username}
-            subscriberCount={wishlist.subscriber_count}
-            posts={mockCreatorPosts[wishlist.slug] || []}
-            subscribed={subscribed}
-            onSubscribe={handleSubscribe}
-            onTip={() => handleGiftClick()}
-            t={t}
-          />
+          <>
+            {subscribed && (
+              <ManageSubscriptionPanel
+                creatorSlug={wishlist.slug}
+                onUnsubscribe={handleUnsubscribe}
+                t={t}
+              />
+            )}
+            <CreatorPostFeed
+              creatorName={wishlist.creator.username}
+              subscriberCount={wishlist.subscriber_count}
+              posts={mockCreatorPosts[wishlist.slug] || []}
+              subscribed={subscribed}
+              onSubscribe={handleSubscribe}
+              onTip={() => handleGiftClick()}
+              t={t}
+            />
+          </>
         )}
 
         <div className="mb-8 p-4 rounded-xl bg-white/[0.03] border border-white/10">

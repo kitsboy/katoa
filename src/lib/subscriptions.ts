@@ -23,6 +23,10 @@ export function isSubscribed(creatorSlug: string): boolean {
   return Boolean(getSubscriptions()[creatorSlug]);
 }
 
+export function getSubscription(creatorSlug: string): SubscriptionState | undefined {
+  return getSubscriptions()[creatorSlug];
+}
+
 export function subscribeLocal(creatorSlug: string, tierId = 'supporter'): SubscriptionState {
   const subs = getSubscriptions();
   const state: SubscriptionState = {

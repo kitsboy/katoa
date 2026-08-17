@@ -47,5 +47,9 @@ export const STORAGE_KEYS = {
   dmReadIds: 'katoa_dm_read_ids',
   creatorTipPresets: 'katoa_creator_tip_presets',
   creatorSubscriptions: 'katoa_creator_subscriptions',
+  creatorPostLikes: 'katoa_creator_post_likes',
+  creatorPostComments: 'katoa_creator_post_comments',
+  creatorPpvUnlocks: 'katoa_creator_ppv_unlocks',
+  creatorSeenPosts: 'katoa_creator_seen_posts',
   pwaCreatorPromptDismissed: 'katoa_pwa_creator_prompt',
 } as const;

@@ -1,3 +1,30 @@
+## Session — 2026-08-16 (Grok M3) — OF-parity P1–P4: 10 solo engagement/discovery items
+
+**Role:** M3 code only. Pushed `main`. Version **1.1.7** (no bump this pass).
+
+### Done — OF-parity solo backlog (see docs/OF-PARITY-ROADMAP.md)
+1. **Locked-post blur previews (P1)** — locked post cards/modal now blur the media (OF-style tease) instead of a full black overlay; lock chip + price + CTA.
+2. **PPV unlock demo (P2 client)** — per-post unlock persisted locally + toast; real flow is the Lightning-invoice spec.
+3. **Manage-subscription UI (P2 client)** — `ManageSubscriptionPanel` shows tier, since (relative), unsubscribe; wired into WishlistPage.
+4. **Interactive likes (P4)** — heart toggles on cards + modal, persisted per post, count updates live; like state survives reload.
+5. **Comment posting (P4)** — comment input in the modal, persisted locally, merged with mock comments.
+6. **Home creator grid (P3)** — `CreatorDiscoveryGrid` on the home page: trending / new sections reusing `CreatorVideoCard`.
+7. **Creator search by vertical/tag (P3)** — `filterCreators` lib (query + vertical tags) + live follower count; search box + vertical chips on home.
+8. **New-drop unread badge (P4)** — `CreatorNewDropsBadge` in the nav (desktop + mobile) counts unseen new posts from subscribed creators; feed shows a "new" pill + per-post NEW chip (`isNew` mock flag).
+9. **Engagement lib** — `src/lib/creatorEngagement.ts` (likes/comments/PPV/seen stores) + `getSubscription`; 13 new unit tests (121 total).
+10. **i18n** — 27 new `creator.*` keys × 7 languages; `e2e/creator-feed.spec.ts` (subscribe→manage panel, PPV unlock, like).
+
+### Decisions
+- Likes/comments/PPV/seen stay **local seams** (same posture as subscriptions) — real zaps/comments/DB state come with Nostr + the LND backend.
+- New-drop badge is mock-driven (`isNew` flag on 2 posts) until real post creation exists.
+- Fixed a flaky e2e race surfaced by the new suite: ChangelogModal auto-opens at 1.5s in fresh contexts and intercepts clicks — tests now pre-seed `katoa_changelog_seen` (JSON-encoded, since `getStorage` parses).
+
+### Git State
+- HEAD: `pending` (push after docs) · Prior: `1c16bd0` (offline tiles batch)
+- Verify: `npm run check` (121 tests) · `npm run build` ✓ · Playwright 8/8 ×3 ✓
+
+---
+
 ## Session — 2026-08-16 (Grok M3) — Offline vector tiles (SW tile cache) + map init race fix
 
 **Role:** M3 code only. Pushed `main`. Version **1.1.7** (no bump this pass).

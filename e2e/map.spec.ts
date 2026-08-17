@@ -6,6 +6,12 @@ import { test, expect } from '@playwright/test';
  */
 test.describe('explore map', () => {
   test('map frame mounts with layer toggles and share', async ({ page }) => {
+    // ChangelogModal auto-opens at ~1.5s in fresh contexts and would cover the
+    // map chrome — pre-seed the seen flag so the run is deterministic.
+    // (getStorage JSON-parses, so the seed must be a quoted string.)
+    await page.addInitScript(() => {
+      localStorage.setItem('katoa_changelog_seen', JSON.stringify('1.1.0'));
+    });
     await page.goto('/explore?map=1');
 
     const canvas = page.locator('.unified-btcmap__canvas');
@@ -30,6 +36,9 @@ test.describe('explore map', () => {
   });
 
   test('map search box is reachable', async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem('katoa_changelog_seen', JSON.stringify('1.1.0'));
+    });
     await page.goto('/explore?map=1');
 
     const search = page.getByRole('combobox');
@@ -39,6 +48,9 @@ test.describe('explore map', () => {
   });
 
   test('map renders offline from cached OpenFreeMap vector tiles', async ({ page, context }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem('katoa_changelog_seen', JSON.stringify('1.1.0'));
+    });
     // First view: the service worker registers and (after it takes control) caches
     // the style JSON, vector .pbf tiles, glyphs and sprites from tiles.openfreemap.org.
     await page.goto('/explore?map=1');

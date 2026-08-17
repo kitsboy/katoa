@@ -15,6 +15,8 @@ export interface CreatorPost {
   /** PPV price in sats when set — otherwise locked posts require a subscription. */
   priceSats?: number;
   pinned?: boolean;
+  /** New-drop flag — drives the unread badge until the post is seen. */
+  isNew?: boolean;
   comments?: CreatorPostComment[];
 }
 
@@ -97,6 +99,7 @@ export const mockCreatorPosts: Record<string, CreatorPost[]> = {
       likeCount: 6900,
       commentCount: 210,
       isLocked: false,
+      isNew: true,
       comments: [
         { user: 'vote_vicky', text: 'Studio night!' },
         { user: 'privacy_pat', text: 'Anything but a gym shoot 🙏' },
@@ -177,6 +180,7 @@ export const mockCreatorPosts: Record<string, CreatorPost[]> = {
       likeCount: 8100,
       commentCount: 240,
       isLocked: false,
+      isNew: true,
       comments: [
         { user: 'city_cat', text: 'Lisbon next please!' },
         { user: 'zap_zoe', text: 'Tokyo! 🇯🇵' },

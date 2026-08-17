@@ -9,6 +9,7 @@ import { Menu, X, User, LogOut, LayoutDashboard, Settings, Zap, Globe, HelpCircl
 import { CurrencySelector } from './CurrencySelector';
 import { OfflineIndicator } from './OfflineIndicator';
 import { UnreadMessagesBadge } from './UnreadMessagesBadge';
+import { CreatorNewDropsBadge } from './CreatorNewDropsBadge';
 import { getBitcoinPrice, formatUsd } from '../lib/bitcoinPrice';
 
 type LangMenuPos = { top: number; left: number; maxHeight: number };
@@ -166,9 +167,10 @@ export function Navbar() {
               }`}>
                 <Link
                   href="/explore"
-                  className={`nav-link-pill ${isActive('/explore') ? 'nav-link-pill-active' : ''}`}
+                  className={`nav-link-pill relative ${isActive('/explore') ? 'nav-link-pill-active' : ''}`}
                 >
                   {t('nav.explore')}
+                  <CreatorNewDropsBadge className="absolute -top-1.5 -right-2.5" />
                 </Link>
                 <Link
                   href="/comparison"
@@ -400,8 +402,9 @@ export function Navbar() {
                   className="flex items-center gap-3 px-5 py-4 text-white bg-white/5 hover:bg-neon-cyan/10 rounded-xl transition-all duration-200 group border border-white/10 hover:border-neon-cyan/50"
                   onClick={() => setShowMenu(false)}
                 >
-                  <div className="p-2 bg-neon-cyan/15 rounded-lg group-hover:bg-neon-cyan/25 transition-colors">
+                  <div className="relative p-2 bg-neon-cyan/15 rounded-lg group-hover:bg-neon-cyan/25 transition-colors">
                     <Globe size={20} className="text-neon-cyan" />
+                    <CreatorNewDropsBadge className="absolute -top-1 -right-1" />
                   </div>
                   <span className="font-bold text-lg">{t('nav.explore')}</span>
                 </Link>

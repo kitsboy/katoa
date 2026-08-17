@@ -14,6 +14,9 @@ import { FeeComparison } from '../components/FeeComparison';
 import { OnboardingChecklist } from '../components/OnboardingChecklist';
 import { FamilyLinks } from '../components/FamilyLinks';
 import { CreatorVerticalsGrid } from '../components/CreatorVerticalsGrid';
+import { CreatorDiscoveryGrid } from '../components/CreatorDiscoveryGrid';
+import { mockWishlists } from '../data/mockWishlists';
+import type { CreatorVideoWishlist } from '../components/CreatorVideoCard';
 
 const howItWorksSteps = [
   { titleKey: 'home.step1.title', descKey: 'home.step1.desc', step: '01' },
@@ -27,6 +30,11 @@ const pillars = [
   { icon: Globe, titleKey: 'home.pillar2.title', descKey: 'home.pillar2.desc', oldKey: 'home.pillar2.old', nextKey: 'home.pillar2.next' },
   { icon: Shield, titleKey: 'home.pillar3.title', descKey: 'home.pillar3.desc', oldKey: 'home.pillar3.old', nextKey: 'home.pillar3.next' },
 ];
+
+/** Creator-profile wishlists used by the home discovery grid (P3). */
+const discoveryCreators: CreatorVideoWishlist[] = (
+  mockWishlists.filter((w) => w.card_style === 'creator') as CreatorVideoWishlist[]
+);
 
 export function HomePage() {
   const { t } = useLanguage();
@@ -117,6 +125,12 @@ export function HomePage() {
       <section className="lp-section">
         <div className="lp-container">
           <CreatorVerticalsGrid />
+        </div>
+      </section>
+
+      <section className="lp-section lp-section-muted">
+        <div className="lp-container">
+          <CreatorDiscoveryGrid creators={discoveryCreators} t={t} />
         </div>
       </section>
 
