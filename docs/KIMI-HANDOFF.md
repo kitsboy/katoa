@@ -15,7 +15,7 @@
 - Bundle: maplibre-gl ships as its own lazy chunk (`maplibre-*.js`, ~259 kB gzip) loaded only when the map mounts.
 
 ### Git State
-- HEAD: <pending push> · Prior: `ac1435b` (batch 3 handoff SHA)
+- HEAD: `dc650ee` (pushed) · Prior: `ac1435b` (batch 3 handoff SHA)
 - Verify: `npm run check` (108 tests) · `npm run build` ✓ · Playwright 4/4 ✓
 
 ---
