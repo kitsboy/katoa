@@ -55,11 +55,19 @@ Focus area chosen by Cam: **Map + discovery**.
 - [x] **Theme-aware basemap** — CARTO `light_all` for light theme (OS `prefers-color-scheme` + `.lp-page`/`[data-theme="light"]` ancestor); `tileLayer.setUrl` swaps live without recreating the map. (batch 3)
 - [x] **Offline cache** — localStorage place cache (merged, capped 600, 24h TTL) + per-place detail cache (capped 200); map seeds from cache for instant render + works offline; `savePersistedPlaceDetail` write-through on detail fetch. (batch 3)
 - [x] **Perf** — memoized merchant divIcons (per place), rAF-throttled `moveend`, render-fingerprint skip (no re-cluster when nothing changed). (batch 3)
-- [ ] **Optional** — MapLibre + OpenFreeMap vector dark parity (tracked in `NEXT-NEEDS-CAM.md` #18).
+- [x] **MapLibre + OpenFreeMap vector parity** — Leaflet + CARTO raster replaced by MapLibre GL v6 + OpenFreeMap vector styles (`styles/dark` for dark theme, `styles/liberty` for light). Same renderer btcmap.org uses. (batch 4)
+
+## Batch 4 — shipped 2026-08-16 (MapLibre vector parity #18)
+
+- [x] Leaflet → **MapLibre GL v6** migration — `UnifiedBTCMap` + `KatoaPinsMap`; `leaflet` + `@types/leaflet` deps removed
+- [x] **OpenFreeMap vector basemap** — `styles/dark` (dark theme) ↔ `styles/liberty` (light theme) live-swap via `map.setStyle`; same style family as btcmap.org
+- [x] All features preserved: grid clustering (`map.project`), merchant/KATOA/event DOM markers, popups (i18n), place drawer, incremental load + offline cache, search, share, remember-view, theme detection
+- [x] CSP `worker-src 'self' blob:` + `connect-src tiles.openfreemap.org`; vite manualChunk `maplibre`; maplibregl-* CSS for controls/popups
+- [x] Playwright smoke asserts `.maplibregl-canvas` (WebGL + vector style actually render)
 
 ## Batch 3 — shipped 2026-08-16 (P3)
 
-- [x] Theme-aware basemap (light CARTO live-swap)
+- [x] Theme-aware basemap (light CARTO live-swap → now OpenFreeMap Liberty via MapLibre)
 - [x] Offline place + detail cache (localStorage, TTL-capped)
 - [x] Marker perf (icon memo, rAF debounce, render skip)
 
@@ -106,4 +114,4 @@ Focus area chosen by Cam: **Map + discovery**.
 
 ## Map roadmap status
 
-Batch 1 (popup i18n, clustering, URL sync, category chips, pin thumbnails, search nav) ✅ · Batch 2 (incremental load, events, areas, drawer, activity, contribute, share, remember-view, pin colors) ✅ · Batch 3 (P3: theme basemap, offline cache, perf) ✅ — remaining: MapLibre vector parity (#18, optional) + Cam/THOR blocked items (NIP-98 auth, real creator geo-seed, dynamic OG).
+Batch 1 (popup i18n, clustering, URL sync, category chips, pin thumbnails, search nav) ✅ · Batch 2 (incremental load, events, areas, drawer, activity, contribute, share, remember-view, pin colors) ✅ · Batch 3 (P3: theme basemap, offline cache, perf) ✅ · Batch 4 (MapLibre + OpenFreeMap vector parity) ✅ — **map roadmap complete.** Remaining map work is Cam/THOR blocked: NIP-98 auth, real creator geo-seed, dynamic OG.

@@ -6,33 +6,23 @@
  */
 
 export const BTCMAP_ATTRIBUTION =
-  'Map data © BTC Map · © OpenStreetMap · © CARTO';
+  'Map data © BTC Map · © OpenStreetMap · © OpenFreeMap';
 
 /**
- * Free dark raster basemap for Leaflet (no API key).
- * Note: OpenFreeMap is vector-only (MapLibre styles) — do NOT use
- * tiles.openfreemap.org/osm/{z}/{x}/{y}.png (403 / broken tiles).
+ * Free OpenFreeMap vector style for MapLibre GL (no API key) — dark theme.
+ * Same style family btcmap.org uses (MapLibre + OpenFreeMap).
  */
-export const LEAFLET_BASEMAP_URL =
-  'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+export const MAPLIBRE_STYLE_DARK_URL = 'https://tiles.openfreemap.org/styles/dark';
 
-/** Light CARTO basemap for the light theme (same attribution, `light_all` tiles). */
-export const LEAFLET_BASEMAP_LIGHT_URL =
-  'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
-
-export const LEAFLET_BASEMAP_OPTIONS = {
-  attribution:
-    '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>',
-  subdomains: 'abcd',
-  maxZoom: 20,
-} as const;
+/** Light OpenFreeMap vector style for the light theme (classic Liberty look). */
+export const MAPLIBRE_STYLE_LIGHT_URL = 'https://tiles.openfreemap.org/styles/liberty';
 
 /**
- * Pick the raster basemap URL for a theme. Light theme uses CARTO light_all
+ * Pick the MapLibre vector style URL for a theme. Light theme uses Liberty
  * so labels stay readable on the warm landing palette.
  */
-export function leafletBasemapUrl(light: boolean): string {
-  return light ? LEAFLET_BASEMAP_LIGHT_URL : LEAFLET_BASEMAP_URL;
+export function mapLibreStyleUrl(light: boolean): string {
+  return light ? MAPLIBRE_STYLE_LIGHT_URL : MAPLIBRE_STYLE_DARK_URL;
 }
 
 const PRODUCTION_API = 'https://api.btcmap.org';

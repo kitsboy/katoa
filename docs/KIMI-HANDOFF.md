@@ -1,3 +1,25 @@
+## Session — 2026-08-16 (Grok M3) — MapLibre + OpenFreeMap vector parity (#18)
+
+**Role:** M3 code only. Pushed `main`. Version **1.1.7** (no bump this pass).
+
+### Done — map roadmap complete (see docs/MAP-DISCOVERY-ROADMAP.md batch 4)
+1. **Leaflet → MapLibre GL v6 migration** — `UnifiedBTCMap` + `KatoaPinsMap` rewritten on MapLibre; `leaflet` + `@types/leaflet` deps removed. Markers are now DOM elements (`buildPinElement` + `maplibregl.Marker`), popups use `maplibregl.Popup`, grid clustering uses `map.project([lon, lat])`, zoom control is `NavigationControl`.
+2. **OpenFreeMap vector basemap** — `styles/dark` (dark theme) ↔ `styles/liberty` (light theme) via `map.setStyle` (live swap, camera preserved). Same renderer + style family btcmap.org uses.
+3. **Everything preserved** — incremental load + offline cache, events layer, areas chips, place drawer + comments, activity strip, contribute/share/remember-view, category filters, i18n popups, KATOA pin rings, theme detection.
+4. **Infra** — CSP `worker-src 'self' blob:` (MapLibre blob worker) + explicit `connect-src tiles.openfreemap.org`; vite manualChunk `leaflet` → `maplibre`; index.css `leaflet-*` → `maplibregl-*` (controls, popup theme `btcmap-maplibre-popup`).
+5. **Tests** — lib tests swapped to `MAPLIBRE_STYLE_*` / `mapLibreStyleUrl`; Playwright smoke now asserts `.maplibregl-canvas` (WebGL + vector style render).
+
+### Decisions
+- Kept the custom grid clustering (markers as DOM elements) instead of MapLibre GeoJSON sources — preserves the existing render-key perf skip and pin CSS without a layer-spec rewrite.
+- `styles/dark` for dark theme (Dark Matter fork) matches the old CARTO dark_all look; `styles/liberty` for light (btcmap.org's default light style).
+- Bundle: maplibre-gl ships as its own lazy chunk (`maplibre-*.js`, ~259 kB gzip) loaded only when the map mounts.
+
+### Git State
+- HEAD: <pending push> · Prior: `ac1435b` (batch 3 handoff SHA)
+- Verify: `npm run check` (108 tests) · `npm run build` ✓ · Playwright 4/4 ✓
+
+---
+
 ## Session — 2026-08-16 (Grok M3) — Map discovery batch 3: P3 parity & polish
 
 **Role:** M3 code only. Pushed `main`. Version **1.1.7** (no bump this pass).

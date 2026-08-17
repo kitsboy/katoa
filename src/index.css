@@ -1381,25 +1381,25 @@ html[data-katoa-build="2026-08-11-cssfix"] {
   overflow: hidden;
 }
 
-/* Leaflet map inside Katoa dark theme */
-.leaflet-container {
+/* MapLibre map inside Katoa dark theme */
+.maplibregl-map {
   background: #070711;
   font-family: inherit;
 }
 
-/* Leaflet divIcon: strip default white square so only our pin shows */
+/* MapLibre marker wrappers: strip any default box so only our pin shows */
 .katoa-pin-marker,
 .katoa-logo-marker,
 .btc-merchant-marker,
-.leaflet-div-icon.katoa-pin-marker,
-.leaflet-div-icon.btc-merchant-marker {
+.maplibregl-marker.katoa-pin-marker,
+.maplibregl-marker.btc-merchant-marker {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
 }
 
 /* Prevent any marker img (legacy logo pins) from exploding to full asset size */
-.leaflet-marker-icon img,
+.maplibregl-marker img,
 .katoa-logo-pin img {
   width: 16px !important;
   height: 16px !important;
@@ -1407,24 +1407,31 @@ html[data-katoa-build="2026-08-11-cssfix"] {
   object-fit: contain;
 }
 
-.leaflet-popup-content-wrapper {
+.maplibregl-popup-content-wrapper {
   border-radius: 12px;
 }
 
-.leaflet-control-zoom {
+.maplibregl-ctrl-group {
   border: none !important;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45) !important;
+  overflow: hidden;
+  border-radius: 10px;
 }
 
-.leaflet-control-zoom a {
+.maplibregl-ctrl-group button {
   color: #e5e7eb !important;
   background: rgba(7, 7, 17, 0.92) !important;
   border-color: rgba(255, 255, 255, 0.12) !important;
 }
 
-.leaflet-control-zoom a:hover {
+.maplibregl-ctrl-group button:hover {
   background: rgba(20, 230, 255, 0.15) !important;
   color: #14e6ff !important;
+}
+
+.maplibregl-ctrl-zoom-in .maplibregl-ctrl-icon,
+.maplibregl-ctrl-zoom-out .maplibregl-ctrl-icon {
+  filter: invert(1) brightness(1.4);
 }
 
 /* ── Unified BTC Map ── */
@@ -2274,20 +2281,15 @@ html[data-katoa-build="2026-08-11-cssfix"] {
   user-select: none;
 }
 
-/* Keep tile images from stretching if a request ever returns non-tile content */
-.leaflet-tile {
-  max-width: none !important;
-}
-
-/* Leaflet popups — dark theme */
-.btcmap-leaflet-popup .leaflet-popup-content-wrapper {
+/* MapLibre popups — dark theme */
+.btcmap-maplibre-popup .maplibregl-popup-content-wrapper {
   background: #0f0f18;
   color: #e5e7eb;
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
 }
 
-.btcmap-leaflet-popup .leaflet-popup-tip {
+.btcmap-maplibre-popup .maplibregl-popup-tip {
   background: #0f0f18;
   border: 1px solid rgba(255, 255, 255, 0.08);
 }

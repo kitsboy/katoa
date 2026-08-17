@@ -33,7 +33,7 @@ Updated **2026-08-16** — added OF-parity subscription backend (HEAD `eccc285`,
 15. Dynamic OG **edge worker** (static `og-share.svg` is a start)  
 16. Image CDN transforms  
 17. Server-side invoice rate limits  
-18. Optional later: MapLibre + OpenFreeMap dark style (parity with btcmap.org web) — Leaflet+CARTO is fine for now  
+18. ~~MapLibre + OpenFreeMap vector parity~~ ✅ shipped batch 4 (2026-08-16) — Leaflet fully removed  
 
 ---
 

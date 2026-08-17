@@ -5,8 +5,8 @@
 **Version:** 1.1.7 · **HEAD:** see KIMI-HANDOFF top
 
 ## Recent (this session)
-- Map P3 — theme-aware basemap (light CARTO live-swap), offline place/detail cache (localStorage, instant render + offline), marker perf (icon memo, rAF debounce, render skip)
-- Prior: map batch 2 (incremental load, events, areas, drawer, activity, contribute, share, remember-view, pin colors) · OF-parity P1 + subscription seam (`eccc285`)
+- MapLibre GL v6 + OpenFreeMap vector parity (#18) — Leaflet fully removed (`leaflet`/`@types/leaflet` deps dropped); `styles/dark` ↔ `styles/liberty` theme swap; all map features preserved; CSP worker-src blob:; map roadmap complete
+- Prior: Map P3 (theme basemap, offline cache, perf) · map batch 2 (incremental load, events, areas, drawer, activity, contribute, share, remember-view, pin colors) · OF-parity P1 + subscription seam (`eccc285`)
 - Backend handoff: `docs/SUBSCRIPTION-FLOW-SPEC.md` (LND tie-in for next LLM)
 
 ## Prior

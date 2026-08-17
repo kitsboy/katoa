@@ -11,6 +11,10 @@ test.describe('explore map', () => {
     const canvas = page.locator('.unified-btcmap__canvas');
     await expect(canvas).toBeVisible({ timeout: 30_000 });
 
+    // MapLibre GL initialized: the vector canvas element exists inside the frame
+    // (proves the OpenFreeMap style loaded and WebGL didn't bail).
+    await expect(page.locator('.unified-btcmap__canvas .maplibregl-canvas')).toBeVisible({ timeout: 30_000 });
+
     // Layer toggles
     await expect(page.getByRole('button', { name: /merchants/i }).first()).toBeVisible();
     await expect(page.getByRole('button', { name: /KATOA/i }).first()).toBeVisible();

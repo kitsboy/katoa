@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import {
   BTCMAP_POPUP_STRINGS_EN,
-  LEAFLET_BASEMAP_LIGHT_URL,
-  LEAFLET_BASEMAP_URL,
+  MAPLIBRE_STYLE_DARK_URL,
+  MAPLIBRE_STYLE_LIGHT_URL,
   buildDirectionsUrl,
   buildMapViewQuery,
   buildMerchantPopupHtml,
@@ -13,9 +13,9 @@ import {
   escapeMapPopupText,
   haversineKm,
   katoaPinColor,
-  leafletBasemapUrl,
   loadPersistedPlaceDetail,
   loadPersistedPlaces,
+  mapLibreStyleUrl,
   materialIconGlyph,
   mergePlaces,
   merchantCategoryFor,
@@ -65,16 +65,16 @@ describe('zoomToRadiusKm', () => {
   });
 });
 
-describe('LEAFLET_BASEMAP_URL', () => {
-  it('uses a working raster provider (not broken openfreemap /osm/*.png)', () => {
-    expect(LEAFLET_BASEMAP_URL).not.toMatch(/tiles\.openfreemap\.org\/osm/);
-    expect(LEAFLET_BASEMAP_URL).toMatch(/\{z\}.*\{x\}.*\{y\}/);
+describe('MAPLIBRE_STYLE_URL', () => {
+  it('uses OpenFreeMap vector style endpoints (not raster tile templates)', () => {
+    expect(MAPLIBRE_STYLE_DARK_URL).toBe('https://tiles.openfreemap.org/styles/dark');
+    expect(MAPLIBRE_STYLE_LIGHT_URL).toBe('https://tiles.openfreemap.org/styles/liberty');
+    expect(MAPLIBRE_STYLE_DARK_URL).not.toMatch(/\{z\}.*\{x\}.*\{y\}/);
   });
 
-  it('swaps to light CARTO tiles for the light theme', () => {
-    expect(leafletBasemapUrl(true)).toBe(LEAFLET_BASEMAP_LIGHT_URL);
-    expect(leafletBasemapUrl(false)).toBe(LEAFLET_BASEMAP_URL);
-    expect(LEAFLET_BASEMAP_LIGHT_URL).toContain('light_all');
+  it('swaps to the light OpenFreeMap style for the light theme', () => {
+    expect(mapLibreStyleUrl(true)).toBe(MAPLIBRE_STYLE_LIGHT_URL);
+    expect(mapLibreStyleUrl(false)).toBe(MAPLIBRE_STYLE_DARK_URL);
   });
 });
 

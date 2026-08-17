@@ -2,8 +2,8 @@ import { useEffect, useRef } from 'react';
 import { Link } from './Link';
 import type { KatoaMapPin } from '../lib/btcmap';
 import type { BTCMapCoordinates } from '../lib/btcmap';
-import { LEAFLET_BASEMAP_OPTIONS, LEAFLET_BASEMAP_URL } from '../lib/btcmap';
-import 'leaflet/dist/leaflet.css';
+import { mapLibreStyleUrl } from '../lib/btcmap';
+import 'maplibre-gl/dist/maplibre-gl.css';
 
 interface KatoaPinsMapProps {
   pins: KatoaMapPin[];
@@ -21,7 +21,7 @@ export function KatoaPinsMap({
   onPinSelect,
 }: KatoaPinsMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<import('leaflet').Map | null>(null);
+  const mapRef = useRef<import('maplibre-gl').Map | null>(null);
 
   useEffect(() => {
     if (!containerRef.current || pins.length === 0) return;
@@ -29,7 +29,7 @@ export function KatoaPinsMap({
     let cancelled = false;
 
     (async () => {
-      const L = await import('leaflet');
+      const maplibregl = await import('maplibre-gl');
 
       if (cancelled || !containerRef.current) return;
 
@@ -38,43 +38,61 @@ export function KatoaPinsMap({
         mapRef.current = null;
       }
 
-      const map = L.map(containerRef.current, {
-        center: [center.latitude, center.longitude],
+      const map = new maplibregl.Map({
+        container: containerRef.current,
+        style: mapLibreStyleUrl(false),
+        center: [center.longitude, center.latitude],
         zoom: center.zoom ?? 4,
-        zoomControl: true,
-        scrollWheelZoom: true,
+        attributionControl: false,
       });
 
-      L.tileLayer(LEAFLET_BASEMAP_URL, { ...LEAFLET_BASEMAP_OPTIONS }).addTo(map);
+      map.addControl(
+        new maplibregl.NavigationControl({ showCompass: false, visualizePitch: false }),
+        'bottom-right'
+      );
 
-      const icon = L.divIcon({
-        className: 'katoa-pin-marker leaflet-div-icon',
-        html: `<div class="katoa-map-pin" aria-hidden="true"><span class="katoa-map-pin__dot">K</span></div>`,
-        iconSize: [28, 36],
-        iconAnchor: [14, 34],
-        popupAnchor: [0, -30],
-      });
+      const makeElement = () => {
+        const el = document.createElement('div');
+        el.className = 'katoa-pin-marker';
+        el.style.width = '28px';
+        el.style.height = '36px';
+        el.innerHTML = `<div class="katoa-map-pin" aria-hidden="true"><span class="katoa-map-pin__dot">K</span></div>`;
+        return el;
+      };
 
-      const bounds = L.latLngBounds([]);
+      const lons: number[] = [];
+      const lats: number[] = [];
 
       pins.forEach((pin) => {
-        const marker = L.marker([pin.latitude, pin.longitude], { icon }).addTo(map);
-        bounds.extend([pin.latitude, pin.longitude]);
+        lons.push(pin.longitude);
+        lats.push(pin.latitude);
+
+        const marker = new maplibregl.Marker({ element: makeElement(), anchor: 'bottom' })
+          .setLngLat([pin.longitude, pin.latitude])
+          .addTo(map);
 
         const raised = new Intl.NumberFormat().format(pin.total_sats_raised);
-        marker.bindPopup(`
-          <div style="min-width:180px;font-family:system-ui,sans-serif">
-            <strong style="color:#F7931A">${pin.title}</strong>
-            <p style="margin:6px 0 0;font-size:12px;color:#666">${raised} sats raised</p>
-            <a href="/wishlist/${pin.slug}" style="display:inline-block;margin-top:8px;font-size:12px;color:#14E6FF;font-weight:600">View project →</a>
-          </div>
-        `);
+        marker.setPopup(
+          new maplibregl.Popup({ maxWidth: '260px', className: 'btcmap-maplibre-popup', offset: 24 }).setHTML(`
+            <div style="min-width:180px;font-family:system-ui,sans-serif">
+              <strong style="color:#F7931A">${pin.title}</strong>
+              <p style="margin:6px 0 0;font-size:12px;color:#666">${raised} sats raised</p>
+              <a href="/wishlist/${pin.slug}" style="display:inline-block;margin-top:8px;font-size:12px;color:#14E6FF;font-weight:600">View project →</a>
+            </div>
+          `)
+        );
 
-        marker.on('click', () => onPinSelect?.(pin));
+        marker.getElement().addEventListener('click', () => onPinSelect?.(pin));
       });
 
       if (pins.length > 1) {
-        map.fitBounds(bounds, { padding: [40, 40], maxZoom: 10 });
+        map.fitBounds(
+          [
+            [Math.min(...lons), Math.min(...lats)],
+            [Math.max(...lons), Math.max(...lats)],
+          ],
+          { padding: 40, maxZoom: 10 }
+        );
       }
 
       mapRef.current = map;

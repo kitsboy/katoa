@@ -23,7 +23,7 @@ export default defineConfig({
           ui: ['lucide-react'],
           supabase: ['@supabase/supabase-js'],
           nostr: ['nostr-tools'],
-          leaflet: ['leaflet'],
+          maplibre: ['maplibre-gl'],
         },
       },
     },
