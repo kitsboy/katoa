@@ -749,6 +749,12 @@ export function UnifiedBTCMap({
         'bottom-right'
       );
 
+      // Register the instance immediately (before any awaits) so the effect
+      // cleanup can always remove it — without this, a re-run mid-init leaks
+      // the first map's canvas and a second map appends another one.
+      mapRef.current = map;
+      setMapReady(true);
+
       // Offline / instant render: seed with the last persisted places before
       // fetching fresh data (savePersistedPlaces runs after each successful load).
       const persistedPlaces = loadPersistedPlaces();
@@ -760,8 +766,11 @@ export function UnifiedBTCMap({
 
       renderKatoaPins(maplibregl);
       await loadMerchants(map, maplibregl);
+      if (cancelled) return;
       if (showEvents) await loadEvents();
+      if (cancelled) return;
       await loadAreasAt(map);
+      if (cancelled) return;
 
       const onMoveEnd = rAFThrottle(() => {
         void loadMerchants(map, maplibregl);
@@ -789,9 +798,6 @@ export function UnifiedBTCMap({
       if (!hasUrlView && !savedView && katoaPins.length > 1) {
         map.fitBounds(pinsBounds(katoaPins), { padding: 48, maxZoom: 10 });
       }
-
-      mapRef.current = map;
-      setMapReady(true);
 
       if (urlView.place !== undefined) {
         void revealPlace(urlView.place);

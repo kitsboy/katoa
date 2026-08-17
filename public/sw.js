@@ -1,4 +1,6 @@
 const CACHE_NAME = 'katoa-static-v17';
+const TILE_CACHE_NAME = 'katoa-map-tiles-v1';
+const TILE_MAX_ENTRIES = 3000;
 const OFFLINE_URL = '/offline.html';
 
 // caches.put() rejects on 206 Partial Content (range requests) — guard every put.
@@ -6,6 +8,19 @@ function cacheable(request, response) {
   if (!response || response.status !== 200) return false;
   if (request.headers.get('range')) return false;
   return true;
+}
+
+/** OpenFreeMap vector basemap requests (style JSON, .pbf tiles, glyphs, sprites). */
+function isMapTileRequest(url) {
+  return url.hostname === 'tiles.openfreemap.org';
+}
+
+/** Cap the tile cache so panning the map can't fill the browser's storage quota. */
+async function evictTileOverflow(cache) {
+  const keys = await cache.keys();
+  const overflow = keys.length - TILE_MAX_ENTRIES;
+  if (overflow <= 0) return;
+  await Promise.all(keys.slice(0, overflow).map((key) => cache.delete(key)));
 }
 
 const PRECACHE = [
@@ -26,7 +41,11 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
-      Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key)))
+      Promise.all(
+        keys
+          .filter((key) => key !== CACHE_NAME && key !== TILE_CACHE_NAME)
+          .map((key) => caches.delete(key))
+      )
     ).then(() => self.clients.claim())
   );
 });
@@ -47,6 +66,27 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET') return;
 
   const url = new URL(request.url);
+
+  // OpenFreeMap vector basemap — cache-first so the map renders offline after
+  // the first view. Cross-origin CORS responses are cacheable (not opaque).
+  if (isMapTileRequest(url)) {
+    event.respondWith(
+      caches.open(TILE_CACHE_NAME).then(async (cache) => {
+        const cached = await cache.match(request);
+        const network = fetch(request)
+          .then((response) => {
+            if (cacheable(request, response)) {
+              cache.put(request, response.clone()).then(() => evictTileOverflow(cache));
+            }
+            return response;
+          })
+          .catch(() => cached);
+        return cached || network;
+      })
+    );
+    return;
+  }
+
   if (url.origin !== self.location.origin) return;
 
   const isNavigation = request.mode === 'navigate';

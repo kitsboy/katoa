@@ -1,3 +1,22 @@
+## Session — 2026-08-16 (Grok M3) — Offline vector tiles (SW tile cache) + map init race fix
+
+**Role:** M3 code only. Pushed `main`. Version **1.1.7** (no bump this pass).
+
+### Done — map fully offline after first view (see docs/MAP-DISCOVERY-ROADMAP.md batch 5)
+1. **SW caches OpenFreeMap vector tiles** — `public/sw.js` intercepts `tiles.openfreemap.org` (style JSON, `.pbf` vector tiles, glyphs, sprites) into persistent Cache Storage `katoa-map-tiles-v1` (cap 1,000, LRU eviction, stale-while-revalidate online). Map works fully offline after first view — no MapLibre code changes needed (tile requests flow through the page fetch).
+2. **Fixed a map init race (double canvas)** — the init effect assigned `mapRef.current` only after `await loadMerchants/loadEvents/loadAreasAt`; when the `center` deps changed mid-init (ExplorePage `mapCenter` updates as wishlists load async), cleanup ran with `mapRef.current` still null → first map's canvas leaked → second init appended another canvas to the same container (flaky, ~1/5 loads). Fix: register `mapRef.current` immediately after `new maplibregl.Map(...)` + bail out of the async chain after each `await` when cancelled.
+3. **Tests** — Playwright offline flow added to `e2e/map.spec.ts`: first view → SW takes control → reload → assert tile cache non-empty → `context.setOffline(true)` → reload → map canvas still renders. Map e2e 3/3 ×3 runs (was flaky), full 5/5, units 108.
+
+### Decisions
+- Tile caching lives in the existing SW (not MapLibre) — works for both map components with zero library changes; same-origin shell assets were already SW-cached.
+- Kept LRU eviction (1,000 entries) so the tile cache can't grow unbounded on long exploration sessions.
+
+### Git State
+- HEAD: `pending` (push after docs) · Prior: `7061b85` (batch 4 handoff SHA)
+- Verify: `npm run check` (108 tests) · `npm run build` ✓ · Playwright 5/5 ✓
+
+---
+
 ## Session — 2026-08-16 (Grok M3) — MapLibre + OpenFreeMap vector parity (#18)
 
 **Role:** M3 code only. Pushed `main`. Version **1.1.7** (no bump this pass).

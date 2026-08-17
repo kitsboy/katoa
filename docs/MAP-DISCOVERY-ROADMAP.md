@@ -61,6 +61,7 @@ Focus area chosen by Cam: **Map + discovery**.
 
 - [x] Leaflet → **MapLibre GL v6** migration — `UnifiedBTCMap` + `KatoaPinsMap`; `leaflet` + `@types/leaflet` deps removed
 - [x] **OpenFreeMap vector basemap** — `styles/dark` (dark theme) ↔ `styles/liberty` (light theme) live-swap via `map.setStyle`; same style family as btcmap.org
+- [x] **Offline vector basemap (SW tile cache)** — service worker (`sw.js`) caches `tiles.openfreemap.org` responses (style JSON, vector `.pbf` tiles, glyphs, sprites) in a persistent Cache Storage (`katoa-map-tiles-v1`, cap 1,000, LRU eviction); stale-while-revalidate when online so the map works fully offline after first view. E2E verifies: first view → SW caches tiles → offline reload still renders the MapLibre canvas. Also fixed a map init race (effect re-run mid-init leaked the first MapLibre canvas → double canvas) by registering `mapRef.current` immediately after map creation.
 - [x] All features preserved: grid clustering (`map.project`), merchant/KATOA/event DOM markers, popups (i18n), place drawer, incremental load + offline cache, search, share, remember-view, theme detection
 - [x] CSP `worker-src 'self' blob:` + `connect-src tiles.openfreemap.org`; vite manualChunk `maplibre`; maplibregl-* CSS for controls/popups
 - [x] Playwright smoke asserts `.maplibregl-canvas` (WebGL + vector style actually render)
@@ -114,4 +115,4 @@ Focus area chosen by Cam: **Map + discovery**.
 
 ## Map roadmap status
 
-Batch 1 (popup i18n, clustering, URL sync, category chips, pin thumbnails, search nav) ✅ · Batch 2 (incremental load, events, areas, drawer, activity, contribute, share, remember-view, pin colors) ✅ · Batch 3 (P3: theme basemap, offline cache, perf) ✅ · Batch 4 (MapLibre + OpenFreeMap vector parity) ✅ — **map roadmap complete.** Remaining map work is Cam/THOR blocked: NIP-98 auth, real creator geo-seed, dynamic OG.
+Batch 1 (popup i18n, clustering, URL sync, category chips, pin thumbnails, search nav) ✅ · Batch 2 (incremental load, events, areas, drawer, activity, contribute, share, remember-view, pin colors) ✅ · Batch 3 (P3: theme basemap, offline cache, perf) ✅ · Batch 4 (MapLibre + OpenFreeMap vector parity) ✅ · Batch 5 (offline vector tiles via SW cache + double-canvas init race fix) ✅ — **map roadmap complete.** Remaining map work is Cam/THOR blocked: NIP-98 auth, real creator geo-seed, dynamic OG.

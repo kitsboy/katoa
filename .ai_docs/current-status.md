@@ -5,7 +5,8 @@
 **Version:** 1.1.7 · **HEAD:** see KIMI-HANDOFF top
 
 ## Recent (this session)
-- MapLibre GL v6 + OpenFreeMap vector parity (#18) — Leaflet fully removed (`leaflet`/`@types/leaflet` deps dropped); `styles/dark` ↔ `styles/liberty` theme swap; all map features preserved; CSP worker-src blob:; map roadmap complete
+- Offline vector tiles — SW caches `tiles.openfreemap.org` (style JSON, .pbf, glyphs, sprites) in Cache Storage `katoa-map-tiles-v1` (cap 1,000, LRU); map fully offline after first view; fixed flaky double-canvas map init race (mapRef registered before awaits + cancelled bail); e2e offline flow added (5/5)
+- Prior: MapLibre GL v6 + OpenFreeMap vector parity (#18) — Leaflet fully removed (`leaflet`/`@types/leaflet` deps dropped); `styles/dark` ↔ `styles/liberty` theme swap; all map features preserved; CSP worker-src blob:; map roadmap complete
 - Prior: Map P3 (theme basemap, offline cache, perf) · map batch 2 (incremental load, events, areas, drawer, activity, contribute, share, remember-view, pin colors) · OF-parity P1 + subscription seam (`eccc285`)
 - Backend handoff: `docs/SUBSCRIPTION-FLOW-SPEC.md` (LND tie-in for next LLM)
 

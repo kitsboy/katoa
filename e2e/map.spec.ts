@@ -37,4 +37,37 @@ test.describe('explore map', () => {
     await search.focus();
     await expect(search).toBeFocused();
   });
+
+  test('map renders offline from cached OpenFreeMap vector tiles', async ({ page, context }) => {
+    // First view: the service worker registers and (after it takes control) caches
+    // the style JSON, vector .pbf tiles, glyphs and sprites from tiles.openfreemap.org.
+    await page.goto('/explore?map=1');
+    await expect(page.locator('.unified-btcmap__canvas .maplibregl-canvas')).toBeVisible({ timeout: 30_000 });
+
+    // Wait for the SW to control the page, then reload so the tile requests on this
+    // load are intercepted and stored in the persistent tile cache.
+    await page.waitForFunction(
+      () => navigator.serviceWorker?.controller !== null,
+      undefined,
+      { timeout: 30_000 }
+    );
+    await page.reload();
+    await expect(page.locator('.unified-btcmap__canvas .maplibregl-canvas')).toBeVisible({ timeout: 30_000 });
+
+    // The SW tile cache should now hold basemap responses.
+    await page.waitForFunction(
+      async () => {
+        const cache = await caches.open('katoa-map-tiles-v1');
+        return (await cache.keys()).length > 0;
+      },
+      undefined,
+      { timeout: 30_000 }
+    );
+
+    // Go fully offline and reload: app shell + basemap must come from the SW cache.
+    await context.setOffline(true);
+    await page.reload();
+    await expect(page.locator('.unified-btcmap__canvas .maplibregl-canvas')).toBeVisible({ timeout: 30_000 });
+    await context.setOffline(false);
+  });
 });
