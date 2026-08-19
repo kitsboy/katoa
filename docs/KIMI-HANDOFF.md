@@ -1,3 +1,23 @@
+## 2026-08-19 (Kimi/THOR — Standard Project Kit adopted + debrief + repo re-sync)
+
+**Scope:** Standard Project Kit rollout + first machine-readable session debrief + repo sync check.
+
+**Done:**
+- Adopted the senior-engineer **Standard Project Kit** (skill `standard-project-kit`): investigate → bounded implement → verify real system → milestone tag → handoff; two-actor loop (Kimi assistant + Grok/Aider coder). Default build/handoff method for ALL projects.
+- Session debrief now runs **automatically at session end** (silent, machine-readable YAML) via the `/goodbye` pipeline.
+- Wrote first debrief: `docs/debriefs/session-2026-08-19-001.yaml`.
+- Re-synced `/root/ref/katoa` from origin — was 39 commits behind; now at `8c9c3a4`.
+- Verified live: `https://katoa.org` → HTTP 200.
+
+**Git State:**
+- Tip SHA: `8c9c3a4`; in sync with origin/main.
+
+**Open (unchanged, still live):** see OF-PARITY-ROADMAP + MAP-DISCOVERY-ROADMAP remaining batches.
+
+**Do not regress:** likes/comments/PPV/seen are local seams until Nostr + LND backend · SW tile cache (LRU 1000) · `dist/`/build not committed (CI builds).
+
+---
+
 ## Session — 2026-08-16 (Grok M3) — OF-parity P1–P4: 10 solo engagement/discovery items
 
 **Role:** M3 code only. Pushed `main`. Version **1.1.7** (no bump this pass).
