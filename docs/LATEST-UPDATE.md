@@ -1,7 +1,7 @@
 # KATOA — Last Updated 2026-08-20 by Grok
 
 Brief: Solo sprint — public `/u/:username` profiles, demo project manage, dashboard tabs + earnings + inbox, i18n.
-Commit: `cd58112`
+Commit: `a0ce095`
 
 Prior: Wishlist template polish at `e0e2757`.
 
