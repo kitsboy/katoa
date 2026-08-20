@@ -1,7 +1,7 @@
 # KATOA — Last Updated 2026-08-20 by Grok
 
 Brief: Wishlist template polish — cinematic hero, sticky support rail, subscription tiers full-width (no longer squished in the sidebar).
-Commit: `923b7e0`
+Commit: `e0e2757`
 
 ## What landed
 - `SubscriptionTiers` redesigned as glass pricing cards in a full-width band (`lg:grid-cols-3`).

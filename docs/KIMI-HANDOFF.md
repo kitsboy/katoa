@@ -14,6 +14,7 @@
 - Community pages (Medellín skate park) use the wide hero; creator pages keep the post feed above the two-column body.
 
 ### Git State
+- HEAD: `e0e2757` (pushed)
 - Prior: `7733c31` (Cam open-ops reminder)
 
 **Open (unchanged):** Lightning invoice → webhook → `subscriptions` row · production nsec/NIP-05 · confirm CF Pages on latest `main`.
