@@ -82,7 +82,7 @@ const MERCHANT_CAP_STEP = 200;
 const MERCHANT_CAP_MIN = 400;
 
 /**
- * True when the page is in a light-theme context: the landing page's `.lp-page`
+ * True when the page is in a light-theme context (`[data-theme="light"]`).
  * wrapper, an explicit `[data-theme="light"]`, or the OS light scheme.
  */
 function detectLightTheme(container: HTMLElement | null): boolean {
@@ -90,7 +90,7 @@ function detectLightTheme(container: HTMLElement | null): boolean {
     return true;
   }
   return Boolean(
-    container?.closest('.lp-page, [data-theme="light"]')
+    container?.closest('[data-theme="light"]')
   );
 }
 
@@ -927,7 +927,7 @@ export function UnifiedBTCMap({
   }, [lightTheme]);
 
   // Swap basemap style when the OS light/dark scheme changes (OpenFreeMap dark ↔ Liberty),
-  // or when mounted inside a light-theme wrapper (.lp-page / [data-theme="light"]).
+  // or when mounted inside `[data-theme="light"]`.
   useEffect(() => {
     setLightTheme(detectLightTheme(containerRef.current));
     const mq = window.matchMedia('(prefers-color-scheme: light)');

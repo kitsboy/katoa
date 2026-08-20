@@ -27,7 +27,7 @@ export function CreatorVerticalsGrid({ className = '' }: { className?: string })
           <Link
             key={v.id}
             href={`/templates?vertical=${v.id}`}
-            className="group rounded-2xl border border-white/10 bg-white/[0.03] p-3 sm:p-4 hover:border-bitcoin-orange-500/40 hover:bg-bitcoin-orange-500/5 transition-all touch-manipulation min-h-[120px] flex flex-col"
+            className="group rounded-2xl border border-white/15 bg-white/[0.05] p-3 sm:p-4 shadow-[0_0_0_1px_rgba(247,147,26,0.22),inset_0_1px_0_rgba(255,255,255,0.12)] hover:shadow-[0_0_0_1px_rgba(247,147,26,0.5),inset_0_1px_0_rgba(255,255,255,0.16)] hover:bg-bitcoin-orange-500/8 transition-all touch-manipulation min-h-[120px] flex flex-col"
           >
             <span className="text-2xl sm:text-3xl mb-2" aria-hidden>
               {v.emoji}

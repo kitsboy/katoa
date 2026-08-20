@@ -1,7 +1,7 @@
 # KATOA — Last Updated 2026-08-20 by Grok
 
-Brief: Cover dropzone on dashboard cards, live inbox sync + BTCPay webhook, live earnings lifetime sats, real /u/:username, onboarding wishlist auto-check.
-Commit: `7d02560`
+Brief: Landing page dark ember + highlight-trim cards; beige marketing theme retired.
+Commit: `cc3bca4`
 
 Prior: Wishlist template polish at `e0e2757`.
 

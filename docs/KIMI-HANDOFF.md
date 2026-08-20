@@ -1,3 +1,16 @@
+## Session — 2026-08-20 (Grok M3) — Landing page ember + highlight trim
+
+**Role:** M3 code only. Pushed `main`.
+
+### Done
+- Retired beige `#dfd4c8` marketing theme. Home is dark ember (`--ember-950`) aligned with product + Give A Bit.
+- Cards use highlight trim: orange 1px ring + inner white catch-light + deeper fill (`white/5`). Applied to bento, metrics, trust, onboarding, CTA, fee cards, glass `Card`.
+- Navbar no longer switches to a light island on `/`.
+- Tokens documented in `docs/DESIGN.md` and root `DESIGN.md` v3.
+- e2e `e2e/landing.spec.ts` asserts dark background (not beige).
+
+---
+
 ## Session — 2026-08-20 (Grok M3) — Close the five dashboard follow-ups
 
 **Role:** M3 code only. Pushed `main`.

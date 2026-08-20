@@ -53,7 +53,7 @@ export function TrustProofStrip({
         );
         const cls = `inline-flex items-center gap-1.5 ${
           compact ? 'text-[10px] px-2 py-1' : 'text-xs sm:text-sm px-2.5 py-1.5'
-        } rounded-full bg-white/[0.04] border border-white/10 text-gray-300 hover:border-neon-cyan-500/40 hover:text-white transition-colors touch-manipulation min-h-[36px]`;
+        } rounded-full bg-white/[0.06] border border-white/15 text-gray-200 shadow-[0_0_0_1px_rgba(247,147,26,0.2),inset_0_1px_0_rgba(255,255,255,0.1)] hover:border-neon-cyan-500/40 hover:text-white transition-colors touch-manipulation min-h-[36px]`;
 
         if (item.external) {
           return (

@@ -79,7 +79,7 @@ export function HomePage() {
   }
 
   return (
-    <div className="lp-page">
+    <div className="lp-page" data-theme="dark">
       <PageMeta
         title="KATOA — Zero-Fee Bitcoin Creator Platform"
         description="Keep 100% of your earnings. Privacy-first wishlists and donations on Bitcoin Lightning. 0% fees forever."

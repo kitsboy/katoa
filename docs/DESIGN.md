@@ -1,6 +1,6 @@
 # KATOA Design System
 
-**Last updated:** 2026-07-06  
+**Last updated:** 2026-08-20  
 **Status:** Living document — reflects current codebase; edit when tokens or patterns change.
 
 > **Quick links:** Tokens live in [`tailwind.config.js`](../tailwind.config.js) and [`src/index.css`](../src/index.css).  
@@ -32,14 +32,26 @@ KATOA is a **dark, glassy, Bitcoin-native** product UI. It should feel:
 | Success / savings | `emerald-400` | Checkmarks, “you keep 100%”, positive comparisons |
 | Body text | `gray-300`–`gray-500` | Descriptions, metadata, secondary copy |
 | Surfaces | `charcoal-950` / `charcoal-900` | Page backgrounds, nav, footer |
-| Glass panels | `white/[0.03]` + `border-white/10` | Cards, drawers, modals |
+| Glass panels | `white/[0.05]` + highlight trim | Cards, drawers, modals |
+
+### Highlight trim (cards)
+
+Every elevated surface uses a **three-layer edge** so it lifts off charcoal:
+
+1. **Hairline border** — `rgba(255,255,255,0.12)`
+2. **Accent trim** — `0 0 0 1px rgba(247, 147, 26, 0.42)` (bitcoin orange)
+3. **Inner catch-light** — `inset 0 1px 0 rgba(255,255,255,0.16)`
+
+Landing helper: `.lp-card` / `.lp-bento-card` / `.lp-onboarding` / `.lp-cta-panel` / `.lp-metric`. Product primitive: `Card variant="glass"`.
+
+Do **not** use `white/3` + `white/10` alone — those cards disappear into the background.
 
 ### Two surface eras (migration note)
 
-**Modern (preferred):** `charcoal-*` + glass + `neon-cyan` / `bitcoin-orange`  
-— Home, Footer, Pricing, Navbar, MobileNav, DonateQRModal
+**Modern (preferred):** Ember charcoal + glass + highlight trim + `neon-cyan` / `bitcoin-orange`  
+— Home (`.lp-page`), Footer, Pricing, Navbar, MobileNav, DonateQRModal, dashboard
 
-**Legacy tokens in CSS only:** `night-blue-*` / `sand-tan` remain in `index.css` for reference — no longer used in components.
+**Legacy tokens in CSS only:** `night-blue-*` / `sand-tan` remain in `index.css` for reference — no longer used in components. Beige landing (`#dfd4c8`) is retired.
 
 **Migrated to charcoal/glass (2026-07-06):** All 17 pages + all shared components. Legacy `night-blue` tokens remain in CSS only for reference.
 
@@ -54,12 +66,17 @@ When building **new** UI, use the **modern** palette exclusively.
 ```css
 --charcoal-950: #050509;
 --charcoal-900: #070711;
+--ember-950: #080510;       /* landing page base (Give A Bit ember) */
+--ember-900: #0c0816;       /* muted landing bands */
 --neon-cyan: #14E6FF;
 --bitcoin-orange: #F7931A;
---sand-tan: #e1b382;
---sand-tan-shadow: #c89666;
---night-blue: #2d545e;
---night-blue-shadow: #12343b;
+--ink: #f6f1ea;             /* landing body on dark */
+--ink-muted: #b4aba2;
+--trim-orange: rgba(247, 147, 26, 0.42);
+--trim-cyan: rgba(20, 230, 255, 0.22);
+--highlight: rgba(255, 255, 255, 0.16);
+--sand-tan: #e1b382;        /* legacy */
+--night-blue: #2d545e;      /* legacy */
 ```
 
 ### Tailwind extended palette (`tailwind.config.js`)
@@ -117,14 +134,16 @@ When building **new** UI, use the **modern** palette exclusively.
 ### Opacity patterns
 
 ```
-bg-white/[0.03]     — glass card fill
-bg-white/[0.04]     — inline stat bars
-border-white/10     — default glass border
-border-white/15     — secondary button border
+bg-white/[0.05]     — glass card fill (never below 0.05 on charcoal)
+border-white/15     — default glass border
+trim-orange ring    — 0 0 0 1px rgba(247,147,26,0.42)
+inset highlight     — inset 0 1px 0 rgba(255,255,255,0.12)
 bg-black/30         — inset info panels
 bg-charcoal-950/70  — sticky nav (with backdrop-blur)
 bg-charcoal-950/95  — mobile nav
 ```
+
+Landing (`.lp-page`) is **dark ember**, same family as the product UI. Do not reintroduce the beige `#dfd4c8` marketing theme — it failed contrast (cards at 55% white on taupe).
 
 ### Gradient recipes (copy-paste)
 
