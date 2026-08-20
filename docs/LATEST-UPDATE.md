@@ -1,7 +1,7 @@
 # KATOA — Last Updated 2026-08-20 by Grok
 
 Brief: Cover dropzone on dashboard cards, live inbox sync + BTCPay webhook, live earnings lifetime sats, real /u/:username, onboarding wishlist auto-check.
-Commit: `11a32fb`
+Commit: `7d02560`
 
 Prior: Wishlist template polish at `e0e2757`.
 
