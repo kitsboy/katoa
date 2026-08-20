@@ -1,3 +1,18 @@
+## Session — 2026-08-20 (Grok M3) — Dashboard template polish
+
+**Role:** M3 code only. Pushed `main`. Version **1.1.7** (no bump).
+
+### Done
+- Rebuilt `/dashboard`: welcome identity, honest stats (no fake Supporters/Views/“Coming soon”), shortcut chips, two-column projects + sticky rail.
+- Demo session seeds two projects + following (Medellín / Luna / Sasha) so the page is not an empty shell; create/edit/delete persist locally.
+- Loading skeletons, VisibilityBadge, onboarding checklist dark variant (auto-checks account + Lightning), Lightning-missing callout, referral campaign uses username.
+- Public/manage links go to `/project/:slug` (was wrongly `/wishlist/:slug`). Followed creators no longer 404 on missing `/profile/:user`.
+- Playwright `e2e/dashboard.spec.ts` (desktop + mobile, demo session).
+
+**Do not regress:** likes/comments/PPV/seen stay local. Dashboard demo numbers are labeled by the global demo banner.
+
+---
+
 ## Session — 2026-08-20 (Grok M3) — Wishlist template polish + un-squished tiers
 
 **Role:** M3 code only. Pushed `main`. Version **1.1.7** (no bump).

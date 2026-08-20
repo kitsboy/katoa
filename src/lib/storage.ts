@@ -52,4 +52,5 @@ export const STORAGE_KEYS = {
   creatorPpvUnlocks: 'katoa_creator_ppv_unlocks',
   creatorSeenPosts: 'katoa_creator_seen_posts',
   pwaCreatorPromptDismissed: 'katoa_pwa_creator_prompt',
+  demoDashboardProjects: 'katoa_demo_dashboard_projects',
 } as const;

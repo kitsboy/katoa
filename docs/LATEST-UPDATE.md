@@ -1,7 +1,9 @@
 # KATOA — Last Updated 2026-08-20 by Grok
 
-Brief: Wishlist template polish — cinematic hero, sticky support rail, subscription tiers full-width (no longer squished in the sidebar).
-Commit: `e0e2757`
+Brief: Creator dashboard rebuilt — identity header, honest stats, demo seed, sticky rail, skeletons.
+Commit: `184c32c`
+
+Prior: Wishlist template polish at `e0e2757`.
 
 ## What landed
 - `SubscriptionTiers` redesigned as glass pricing cards in a full-width band (`lg:grid-cols-3`).

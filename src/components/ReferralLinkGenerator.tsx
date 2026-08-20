@@ -4,10 +4,10 @@ import { Button } from './Button';
 import { copyToClipboard } from '../lib/clipboard';
 import { useToast } from './Toast';
 
-export function ReferralLinkGenerator() {
+export function ReferralLinkGenerator({ campaign }: { campaign?: string }) {
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
-  const ref = 'katoa-ref';
+  const ref = campaign?.replace(/[^a-z0-9_-]/gi, '').slice(0, 40) || 'katoa-ref';
   const url = `${typeof window !== 'undefined' ? window.location.origin : 'https://katoa.org'}/?utm_source=referral&utm_medium=share&utm_campaign=${ref}`;
 
   const copy = async () => {
