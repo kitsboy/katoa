@@ -1,7 +1,7 @@
 # KATOA — Last Updated 2026-08-20 by Grok
 
 Brief: Creator dashboard rebuilt — identity header, honest stats, demo seed, sticky rail, skeletons.
-Commit: `184c32c`
+Commit: `da8687e`
 
 Prior: Wishlist template polish at `e0e2757`.
 
