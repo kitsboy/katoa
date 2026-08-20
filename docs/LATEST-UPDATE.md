@@ -1,7 +1,14 @@
-# KATOA — Last Updated 2026-08-16 by Grok
+# KATOA — Last Updated 2026-08-20 by Grok
 
-Brief: OF-parity solo backlog shipped — locked-post blur previews, PPV unlock demo, manage-subscription UI, likes/comments, home creator grid + search, new-drop badges.
-Commit: `a9d4be3`
+Brief: Wishlist template polish — cinematic hero, sticky support rail, subscription tiers full-width (no longer squished in the sidebar).
+Commit: `923b7e0`
+
+## What landed
+- `SubscriptionTiers` redesigned as glass pricing cards in a full-width band (`lg:grid-cols-3`).
+- Wishlist page: wide cover, identity card, sticky donate rail, collapsed theme picker.
+- Playwright coverage for desktop row + mobile stack on `/wishlist/medellin-skate-park`.
+
+Prior: OF-parity solo backlog at `a9d4be3`.
 
 ## What landed (OF-parity P1–P4 solo items)
 

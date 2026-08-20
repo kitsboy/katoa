@@ -1,3 +1,27 @@
+## Session — 2026-08-20 (Grok M3) — Wishlist template polish + un-squished tiers
+
+**Role:** M3 code only. Pushed `main`. Version **1.1.7** (no bump).
+
+### Done
+- Subscription tiers were jammed into the 1/3 sidebar (`lg:grid-cols-3`) so Patron/Champion cards collapsed. They now sit in a **full-width** band with a 1-col → 3-col grid (`lg:grid-cols-3`).
+- Redesigned `SubscriptionTiers` to match Pricing glass cards (bitcoin-orange popular, equal-height, no purple-pink scale-up).
+- Wishlist template upgrade: cinematic wide hero, overlapping identity card (avatar / title / location / share / gift + progress), sticky support rail, theme picker collapsed, story + items no longer competing with a portrait OF header.
+- Mock wishlists no longer default `card_style` to `creator` (Luna/Sasha still opt in). Creator post feed only renders when posts exist.
+- Playwright: `e2e/wishlist-template.spec.ts` asserts three Lightning subscribe buttons sit in a row at 1280px and stack on 390px. Creator-feed e2e 3/3 still green.
+
+### Decisions
+- Tiers stay on demo + creator surfaces (`showSubscribe`). Real subscribe remains the local seam until LND/BTCPay webhook.
+- Community pages (Medellín skate park) use the wide hero; creator pages keep the post feed above the two-column body.
+
+### Git State
+- Prior: `7733c31` (Cam open-ops reminder)
+
+**Open (unchanged):** Lightning invoice → webhook → `subscriptions` row · production nsec/NIP-05 · confirm CF Pages on latest `main`.
+
+**Do not regress:** likes/comments/PPV/seen stay local until Nostr + Lightning backend.
+
+---
+
 ## Session — 2026-08-20 (Grok M3) — Cam reminder: open ops + do-not-regress
 
 **Role:** M3 code only. M3 `main` pulled to `0d94d02` (in sync with origin).

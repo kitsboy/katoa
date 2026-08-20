@@ -23,8 +23,9 @@ import { useToast } from '../components/Toast';
 import { PaymentMethodTabs, PaymentTab } from '../components/PaymentMethodTabs';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
-import { Gift, ExternalLink, Zap, Bitcoin, Check, Copy, MapPin, QrCode, ArrowLeft, Heart, TrendingUp, Package, ChevronUp, ChevronDown, ShoppingBag, Loader2, MessageCircle } from 'lucide-react';
+import { Gift, ExternalLink, Zap, Bitcoin, Check, Copy, QrCode, ArrowLeft, Heart, TrendingUp, Package, ChevronUp, ChevronDown, ShoppingBag, Loader2, MessageCircle } from 'lucide-react';
 import { MilestoneBanner } from '../components/MilestoneBanner';
+import { ProgressBar } from '../components/ProgressBar';
 import { ActivityFeed } from '../components/ActivityFeed';
 import { TrustProofStrip } from '../components/TrustProofStrip';
 import { EmbedSnippet } from '../components/EmbedSnippet';
@@ -237,7 +238,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
           ...mockWishlist,
           creator_id: (mockWishlist as { creator_id?: string }).creator_id || 'demo',
           theme_color: '#f97316',
-          card_style: (mockWishlist as { card_style?: 'creator' }).card_style || 'creator',
+          card_style: (mockWishlist as { card_style?: 'creator' | 'default' }).card_style ?? 'default',
           cover_video_url: (mockWishlist as { cover_video_url?: string }).cover_video_url,
         } as Wishlist);
 
@@ -630,12 +631,17 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
     Boolean(user && wishlist?.creator_id && user.id === wishlist.creator_id) ||
     Boolean(user && profile?.username && wishlist?.creator?.username === profile.username);
 
-  const handleSubscribe = () => {
+  const handleSubscribe = (tierId = 'supporter') => {
     if (!wishlist) return;
-    subscribeLocal(wishlist.slug, 'supporter');
+    subscribeLocal(wishlist.slug, tierId);
     setSubscribed(true);
     toast(t('creator.subscribed'), 'success');
   };
+
+  const isCreatorSurface = wishlist.card_style === 'creator';
+  const creatorPosts = mockCreatorPosts[wishlist.slug] || [];
+  const showSubscribe = isCreatorSurface || isDemoWishlist;
+  const creatorInitial = (wishlist.creator.username?.[0] || '?').toUpperCase();
 
   const handleUnsubscribe = () => {
     if (!wishlist) return;
@@ -724,38 +730,50 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
           <span>Sample wishlist for preview — payments auto-complete after 3s. Not a live creator account.</span>
         </div>
       )}
-      <div className={`relative ${wishlist.card_style === 'creator' || wishlist.cover_video_url ? 'bg-charcoal-950' : ''}`}>
-        <MediaCard
-          className={
-            wishlist.card_style === 'creator'
-              ? '!aspect-[3/4] max-w-md mx-auto !max-h-[min(70vh,640px)] sm:!max-h-[min(75vh,720px)]'
-              : '!aspect-auto h-56 sm:h-72 md:h-96'
-          }
-          media={{
-            imageUrl: wishlist.cover_image,
-            videoUrl: wishlist.cover_video_url,
-            alt: wishlist.title,
-          }}
-          aspect={wishlist.card_style === 'creator' ? 'tall' : 'wide'}
-          variant={wishlist.card_style === 'creator' ? 'creator' : 'default'}
-          autoplayOnHover={Boolean(wishlist.cover_video_url)}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-charcoal-950 pointer-events-none" />
+      <header className="relative">
+        <div className="relative h-52 sm:h-72 lg:h-[22rem] overflow-hidden">
+          <MediaCard
+            className="!aspect-auto h-full w-full"
+            media={{
+              imageUrl: wishlist.cover_image,
+              videoUrl: wishlist.cover_video_url,
+              alt: wishlist.title,
+            }}
+            aspect="wide"
+            variant="default"
+            autoplayOnHover={Boolean(wishlist.cover_video_url)}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-charcoal-950 via-charcoal-950/40 to-black/25 pointer-events-none" />
+        </div>
+      </header>
 
-        <div className="absolute bottom-0 left-0 right-0 z-10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6 sm:pb-8">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-              <div className="flex-1 min-w-0">
-                <div className="flex flex-wrap items-center gap-2 sm:gap-4 mb-3">
-                  <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-white drop-shadow-lg leading-tight">
-                    {wishlist.title}
-                  </h1>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        {resolvedBreadcrumbs.length > 0 && (
+          <Breadcrumbs items={resolvedBreadcrumbs} className="pt-4 mb-2" />
+        )}
+
+        <Card variant="glass" className="relative z-10 -mt-16 sm:-mt-24 p-5 sm:p-7 mb-10">
+          <div className="flex flex-col lg:flex-row lg:items-start gap-6">
+            <div className="flex items-start gap-4 flex-1 min-w-0">
+              {wishlist.creator.avatar_url ? (
+                <img
+                  src={wishlist.creator.avatar_url}
+                  alt=""
+                  className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover border border-white/15 shrink-0"
+                />
+              ) : (
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-bitcoin-orange-500 to-amber-600 flex items-center justify-center text-white font-bold text-2xl shrink-0 border border-white/10">
+                  {creatorInitial}
+                </div>
+              )}
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2 mb-1.5">
                   <VisibilityBadge
                     visibility={isDemoWishlist ? 'public' : wishlist.visibility || 'public'}
                   />
                   {wishlist.country_flag && (
                     <span
-                      className="text-3xl sm:text-4xl"
+                      className="text-xl"
                       title={wishlist.country}
                       aria-label={
                         wishlist.country
@@ -767,159 +785,147 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
                     </span>
                   )}
                 </div>
-                <p className="text-white/90 text-base sm:text-lg leading-relaxed max-w-3xl backdrop-blur-sm bg-black/30 px-3 sm:px-4 py-2 rounded-xl mb-3">
-                  {wishlist.description}
+                <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-white leading-tight">
+                  {wishlist.title}
+                </h1>
+                <p className="text-sm text-gray-400 mt-1">
+                  @{wishlist.creator.username}
+                  {wishlist.country ? ` · ${wishlist.city ? `${wishlist.city}, ` : ''}${wishlist.country}` : ''}
                 </p>
-                {wishlist.country && (
-                  <div className="inline-flex items-center gap-2 text-white/80 backdrop-blur-sm bg-black/40 px-3 py-2 rounded-lg text-sm">
-                    <MapPin size={16} className="text-bitcoin-orange-500" />
-                    <span className="font-medium">{wishlist.city ? `${wishlist.city}, ` : ''}{wishlist.country}</span>
-                  </div>
+                {wishlist.description && (
+                  <p className="text-gray-300 text-sm sm:text-base leading-relaxed mt-3 max-w-2xl">
+                    {wishlist.description}
+                  </p>
                 )}
               </div>
-
-              <div className="flex sm:flex-col gap-3 shrink-0">
-                <ShareButton
-                  url={`/wishlist/${wishlist.slug}`}
-                  title={wishlist.title}
-                  description={wishlist.description}
-                />
-              </div>
+            </div>
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
+              <ShareButton
+                url={`/wishlist/${wishlist.slug}`}
+                title={wishlist.title}
+                description={wishlist.description}
+              />
+              <Button variant="bitcoin" onClick={() => handleGiftClick()} className="min-h-[44px]">
+                <Gift size={18} className="mr-2" />
+                {t('wishlist.sendGift')}
+              </Button>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {resolvedBreadcrumbs.length > 0 && (
-          <Breadcrumbs items={resolvedBreadcrumbs} className="mb-6" />
+          {wishlist.total_sats_goal > 0 && (
+            <div className="mt-6 pt-5 border-t border-white/10">
+              <ProgressBar
+                current={wishlist.total_sats_raised}
+                goal={wishlist.total_sats_goal}
+                height="lg"
+                gradient="from-bitcoin-orange-500 to-amber-400"
+              />
+            </div>
+          )}
+        </Card>
+
+        {subscribed && (
+          <ManageSubscriptionPanel
+            creatorSlug={wishlist.slug}
+            onUnsubscribe={handleUnsubscribe}
+            t={t}
+          />
         )}
 
-        {(wishlist.card_style === 'creator' || isDemoWishlist) && (
-          <>
-            {subscribed && (
-              <ManageSubscriptionPanel
-                creatorSlug={wishlist.slug}
-                onUnsubscribe={handleUnsubscribe}
-                t={t}
-              />
-            )}
-            <CreatorPostFeed
-              creatorName={wishlist.creator.username}
-              subscriberCount={wishlist.subscriber_count}
-              posts={mockCreatorPosts[wishlist.slug] || []}
-              subscribed={subscribed}
-              onSubscribe={handleSubscribe}
-              onTip={() => handleGiftClick()}
-              t={t}
-            />
-          </>
+        {creatorPosts.length > 0 && (
+          <CreatorPostFeed
+            creatorName={wishlist.creator.username}
+            subscriberCount={wishlist.subscriber_count}
+            posts={creatorPosts}
+            subscribed={subscribed}
+            onSubscribe={() => handleSubscribe()}
+            onTip={() => handleGiftClick()}
+            t={t}
+          />
         )}
 
-        <div className="mb-8 p-4 rounded-xl bg-white/[0.03] border border-white/10">
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Theme color</p>
-          <div className="flex flex-wrap gap-2">
-            {THEME_PRESETS.map((preset) => (
-              <button
-                key={preset.color}
-                type="button"
-                onClick={() => handleThemeChange(preset.color)}
-                className={`w-10 h-10 rounded-full border-2 transition-transform hover:scale-110 touch-manipulation ${
-                  themeColor === preset.color ? 'border-white scale-110' : 'border-white/20'
-                }`}
-                style={{ backgroundColor: preset.color }}
-                aria-label={`${preset.label} theme`}
-                aria-pressed={themeColor === preset.color}
-              />
-            ))}
-          </div>
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-          <div className="lg:col-span-2 space-y-8">
-            <Card className=" p-8 group hover:border-orange-500/50 transition-all duration-300" title="Creator information">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-amber-600 rounded-full flex items-center justify-center text-white font-black text-2xl ring-4 ring-orange-500/20">
-                  {wishlist.creator.username[0].toUpperCase()}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-14">
+          <div className="lg:col-span-8 space-y-8">
+            <Card variant="glass" className="p-5 sm:p-7" title="Creator information">
+              <div className="flex items-center gap-4 mb-4">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-bitcoin-orange-500 to-amber-600 flex items-center justify-center text-white font-bold text-lg shrink-0">
+                  {creatorInitial}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-white font-black text-xl">{wishlist.creator.username}</p>
+                  <p className="text-white font-bold text-lg leading-tight">{wishlist.creator.username}</p>
                   {wishlist.creator.lightning_address && (
-                    <p className="text-sm text-gray-400 flex items-center gap-1.5 mt-1">
-                      <Zap size={14} className="text-orange-500" />
+                    <p className="text-sm text-gray-400 flex items-center gap-1.5 mt-1 truncate">
+                      <Zap size={14} className="text-bitcoin-orange-400 shrink-0" />
                       {wishlist.creator.lightning_address}
                     </p>
                   )}
-                  {wishlist.creator.nostr_pubkey && (
-                    <div className="mt-2 flex flex-col sm:flex-row sm:items-center gap-2">
-                      <ZapTotals pubkey={wishlist.creator.nostr_pubkey} />
-                      <Link
-                        href={`/messages?to=${encodeURIComponent(wishlist.creator.nostr_pubkey)}`}
-                        className="inline-flex items-center justify-center gap-1.5 min-h-[40px] px-3 rounded-full border border-purple-500/30 bg-purple-500/10 text-xs font-semibold text-purple-200 hover:bg-purple-500/15"
-                      >
-                        <MessageCircle size={14} />
-                        Message (optional DM)
-                      </Link>
-                    </div>
-                  )}
                 </div>
               </div>
-
+              {wishlist.creator.nostr_pubkey && (
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-4">
+                  <ZapTotals pubkey={wishlist.creator.nostr_pubkey} />
+                  <Link
+                    href={`/messages?to=${encodeURIComponent(wishlist.creator.nostr_pubkey)}`}
+                    className="inline-flex items-center justify-center gap-1.5 min-h-[40px] px-3 rounded-full border border-neon-cyan-500/25 bg-neon-cyan-500/10 text-xs font-semibold text-neon-cyan-200 hover:bg-neon-cyan-500/15"
+                  >
+                    <MessageCircle size={14} />
+                    Message (optional DM)
+                  </Link>
+                </div>
+              )}
               {wishlist.creator.bio && (
-                <p className="text-gray-300 leading-relaxed border-t border-white/10 pt-6">{wishlist.creator.bio}</p>
+                <p className="text-gray-300 leading-relaxed border-t border-white/10 pt-4 text-sm sm:text-base">
+                  {wishlist.creator.bio}
+                </p>
               )}
             </Card>
 
             {wishlist.full_story && (
-              <Card className=" p-8" title="Project story">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="p-3 bg-purple-500/20 rounded-xl">
-                    <Heart size={24} className="text-purple-500" />
+              <Card variant="glass" className="p-5 sm:p-7" title="Project story">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="p-2.5 bg-bitcoin-orange-500/15 rounded-xl">
+                    <Heart size={20} className="text-bitcoin-orange-400" />
                   </div>
-                  <h2 className="text-3xl font-black text-white">Our Story</h2>
+                  <h2 className="font-display text-2xl font-bold text-white">Our story</h2>
                 </div>
-                <div className="text-gray-300 whitespace-pre-line leading-relaxed text-lg">
+                <div className="text-gray-300 whitespace-pre-line leading-relaxed text-sm sm:text-base">
                   {wishlist.full_story}
                 </div>
               </Card>
             )}
           </div>
 
-          <div className="space-y-6">
+          <aside className="lg:col-span-4 space-y-5 lg:sticky lg:top-24 lg:self-start">
             {wishlist.total_sats_goal > 0 && (
-              <Card className=" p-8 hover:border-emerald-500/50 transition-all duration-300" title="Funding progress">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="p-3 bg-emerald-500/20 rounded-xl">
-                    <TrendingUp size={24} className="text-emerald-500" />
+              <Card variant="glass" className="p-5 sm:p-6" title="Funding progress">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-2.5 bg-emerald-500/15 rounded-xl">
+                    <TrendingUp size={20} className="text-emerald-400" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-black text-white">Progress</h3>
-                    <p className="text-gray-400 text-sm">Community support</p>
+                    <h3 className="text-base font-bold text-white">Progress</h3>
+                    <p className="text-gray-500 text-xs">Community support</p>
                   </div>
                 </div>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between gap-4">
-                    <SatsDisplay sats={wishlist.total_sats_raised} size="lg" showBtc />
-                    <span className="text-emerald-400 font-black text-xl sm:text-2xl">
-                      {totalProgress.toFixed(0)}%
-                    </span>
-                  </div>
-                  <div className="w-full h-4 bg-white/10 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-emerald-500 to-cyan-600 transition-all duration-500 shadow-[0_0_20px_rgba(16,185,129,0.5)]"
-                      style={{ width: `${Math.min(totalProgress, 100)}%` }}
-                    />
-                  </div>
-                  <p className="text-gray-400 font-medium">
-                    of {formatSats(wishlist.total_sats_goal)} sats goal
-                  </p>
+                <SatsDisplay sats={wishlist.total_sats_raised} size="lg" showBtc />
+                <div className="mt-3">
+                  <ProgressBar
+                    current={wishlist.total_sats_raised}
+                    goal={wishlist.total_sats_goal}
+                    height="md"
+                    gradient="from-bitcoin-orange-500 to-amber-400"
+                    showValues={false}
+                  />
                 </div>
+                <p className="text-gray-500 text-xs mt-2">
+                  of {formatSats(wishlist.total_sats_goal)} sats goal
+                </p>
               </Card>
             )}
 
-            <MilestoneBanner percent={totalProgress} className="mb-4" />
+            <MilestoneBanner percent={totalProgress} />
 
             <ActivityFeed
-              className="mb-4"
               items={
                 isDemoWishlist
                   ? [
@@ -932,7 +938,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             />
 
             {(isOwner || isDemoWishlist) && (
-              <div className="mb-4 space-y-3">
+              <div className="space-y-3">
                 <ProductUrlImport compact onImport={handleOwnerImportProduct} />
                 <NostrPublishWishlist
                   title={wishlist.title}
@@ -947,17 +953,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
               </div>
             )}
 
-            {(wishlist.card_style === 'creator' || isDemoWishlist) && (
-              <div className="mb-4">
-                <SubscriptionTiers
-                  creatorName={wishlist.creator.username}
-                  onSubscribe={() => handleGiftClick()}
-                />
-              </div>
-            )}
-
             <TipMenu
-              className="mb-4"
               onSelect={(sats) => {
                 setGiftForm((prev) => ({ ...prev, amount: String(sats) }));
                 setAmountPreset(
@@ -967,20 +963,20 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
               }}
             />
 
-            <Card className=" p-6 space-y-4">
+            <Card variant="glass" className="p-5 space-y-3">
               <TrustProofStrip compact />
               <Button
-                className="w-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 font-black text-lg py-4 min-h-[52px] shadow-[0_0_30px_rgba(255,135,0,0.3)]"
+                variant="bitcoin"
+                className="w-full font-bold"
                 onClick={() => handleGiftClick()}
                 title="Support this wishlist with Bitcoin"
               >
-                <Gift size={22} className="mr-2" />
+                <Gift size={20} className="mr-2" />
                 {t('wishlist.sendGift')}
               </Button>
-
               <Button
                 variant="outline"
-                className="w-full border-white/10 text-gray-300 hover:bg-gray-800 hover:border-orange-500/50 font-bold py-4 min-h-[48px]"
+                className="w-full"
                 onClick={() => {
                   setQrAddress('bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh');
                   setQrAmount(undefined);
@@ -988,43 +984,71 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
                 }}
                 title="View Bitcoin QR code"
               >
-                <QrCode size={20} className="mr-2" />
+                <QrCode size={18} className="mr-2" />
                 Show QR Code
               </Button>
-
               <EmbedSnippet path={`/wishlist/${wishlist.slug}`} title={`Support ${wishlist.title}`} />
+              <details className="pt-1">
+                <summary className="text-[11px] font-semibold uppercase tracking-wider text-gray-500 cursor-pointer">
+                  Theme color
+                </summary>
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {THEME_PRESETS.map((preset) => (
+                    <button
+                      key={preset.color}
+                      type="button"
+                      onClick={() => handleThemeChange(preset.color)}
+                      className={`w-8 h-8 rounded-full border-2 transition-transform hover:scale-110 touch-manipulation ${
+                        themeColor === preset.color ? 'border-white scale-110' : 'border-white/20'
+                      }`}
+                      style={{ backgroundColor: preset.color }}
+                      aria-label={`${preset.label} theme`}
+                      aria-pressed={themeColor === preset.color}
+                    />
+                  ))}
+                </div>
+              </details>
             </Card>
-          </div>
+          </aside>
         </div>
+
+        {showSubscribe && (
+          <div className="mb-14 py-10 px-4 sm:px-6 lg:px-8 -mx-4 sm:-mx-6 lg:-mx-8 rounded-3xl border border-white/10 bg-white/[0.02]">
+            <SubscriptionTiers
+              creatorName={wishlist.creator.username}
+              onSubscribe={(tierId) => handleSubscribe(tierId)}
+            />
+          </div>
+        )}
 
         <div className="space-y-8 pb-20">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-purple-500/20 rounded-xl">
-              <Package size={28} className="text-purple-500" />
+            <div className="p-2.5 bg-bitcoin-orange-500/15 rounded-xl">
+              <Package size={22} className="text-bitcoin-orange-400" />
             </div>
             <div>
-              <h2 className="text-3xl font-black text-white">Wishlist Items</h2>
-              <p className="text-gray-400">{t('wishlist.supportItems')}</p>
+              <h2 className="font-display text-2xl sm:text-3xl font-bold text-white">Wishlist items</h2>
+              <p className="text-gray-400 text-sm">{t('wishlist.supportItems')}</p>
             </div>
           </div>
 
           {items.length === 0 ? (
-            <Card className="p-20 text-center ">
-              <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl mb-6 shadow-[0_0_40px_rgba(168,85,247,0.5)]">
-                <Gift size={48} className="text-white" />
+            <Card variant="glass" className="p-12 sm:p-16 text-center">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-bitcoin-orange-500/15 border border-bitcoin-orange-500/25 rounded-2xl mb-5">
+                <Gift size={28} className="text-bitcoin-orange-400" />
               </div>
-              <h3 className="text-3xl font-black text-white mb-3">No Items Yet</h3>
-              <p className="text-gray-300 text-lg">Check back soon for specific items you can support!</p>
+              <h3 className="text-xl font-bold text-white mb-2">No items yet</h3>
+              <p className="text-gray-400">Check back soon for specific items you can support.</p>
             </Card>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {items.map((item) => {
                 const itemProgress = (item.sats_raised / item.price_sats) * 100;
 
                 return (
                   <Card
                     key={item.id}
-                    className={`overflow-hidden  hover:border-purple-500/50 transition-all duration-300 hover:shadow-[0_0_40px_rgba(168,85,247,0.25)] ${item.is_funded ? 'ring-2 ring-emerald-500/50' : ''}`}
+                    className={`overflow-hidden hover:border-bitcoin-orange-500/40 transition-all duration-300 ${item.is_funded ? 'ring-2 ring-emerald-500/40' : ''}`}
                     title={item.is_funded ? "This item has been fully funded!" : "Click to support this item"}
                   >
                     {(item.image_url || item.video_url) && (
@@ -1048,7 +1072,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
                         )}
                       </div>
                     )}
-                    <div className="p-8 space-y-5">
+                    <div className="p-5 sm:p-6 space-y-4">
                       <div className="flex items-start justify-between gap-2">
                         <h3 className="text-2xl font-black text-white mb-3 line-clamp-2 flex-1">{item.title}</h3>
                         {items.length > 1 && (
