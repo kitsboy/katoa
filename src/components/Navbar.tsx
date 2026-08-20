@@ -10,6 +10,7 @@ import { CurrencySelector } from './CurrencySelector';
 import { OfflineIndicator } from './OfflineIndicator';
 import { UnreadMessagesBadge } from './UnreadMessagesBadge';
 import { CreatorNewDropsBadge } from './CreatorNewDropsBadge';
+import { NotificationCenter } from './NotificationCenter';
 import { getBitcoinPrice, formatUsd } from '../lib/bitcoinPrice';
 
 type LangMenuPos = { top: number; left: number; maxHeight: number };
@@ -236,6 +237,7 @@ export function Navbar() {
                     <Settings size={16} />
                     {t('nav.settings')}
                   </Link>
+                  <NotificationCenter />
 
                   <div className="flex items-center gap-3">
                     <Link href="/settings" className="flex items-center gap-2 hover:opacity-90 transition-opacity">
@@ -482,7 +484,8 @@ export function Navbar() {
 
               {user ? (
                 <>
-                  <div className="border-t border-white/10 pt-6 space-y-2">
+                  <div className="border-t border-white/10 pt-6 space-y-3">
+                    <NotificationCenter variant="inline" onNavigate={() => setShowMenu(false)} />
                     <Link
                       href="/dashboard"
                       className="flex items-center gap-3 px-5 py-4 text-white bg-white/5 hover:bg-neon-cyan/10 rounded-xl transition-all duration-200 group border border-white/10 hover:border-neon-cyan/50"

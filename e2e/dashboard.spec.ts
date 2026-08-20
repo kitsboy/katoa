@@ -23,6 +23,12 @@ test.describe('creator dashboard', () => {
     await expect(page.getByText('Coming soon')).toHaveCount(0);
     await expect(page.getByText('Views')).toHaveCount(0);
 
+    await page.getByRole('tab', { name: /Wishlists/i }).first().click();
+    await expect(page.getByRole('heading', { name: /Medellín Youth/i }).first()).toBeVisible();
+
+    await page.getByRole('tab', { name: /Total Raised/i }).click();
+    await expect(page.getByText(/live totals update after confirmed Lightning/i)).toBeVisible();
+
     await page.screenshot({ path: 'test-results/dashboard-desktop.png', fullPage: true });
   });
 

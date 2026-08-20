@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react';
-import { Upload, X, Image, Video, FileText, Loader } from 'lucide-react';
+import { useState, useRef, useId } from 'react';
+import { Upload, X, Image, Video, FileText } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Button } from './Button';
 import { Card } from './Card';
@@ -11,6 +11,7 @@ import {
   DEFAULT_IMAGE_MAX_MB,
   isVideoFile,
   normalizeVideoMime,
+  formatFileSize,
 } from '../lib/videoFormats';
 
 export interface UploadedMedia {
@@ -48,6 +49,9 @@ type MediaUploadProps = MediaUploadPropsWishlist | MediaUploadPropsSimple;
 
 export function MediaUpload(props: MediaUploadProps) {
   const { t } = useLanguage();
+  const inputId = useId();
+  const hintId = `${inputId}-hint`;
+  const errorId = `${inputId}-error`;
   const [uploading, setUploading] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedMedia[]>([]);
   const [error, setError] = useState('');
@@ -192,29 +196,31 @@ export function MediaUpload(props: MediaUploadProps) {
     }
   };
 
-  const formatFileSize = (bytes: number): string => {
-    if (bytes < 1024) return bytes + ' B';
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
-  };
+  const chooseLabel = isSimpleMode
+    ? 'Choose files'
+    : `Choose files (${uploadedFiles.length}/${maxFiles})`;
 
   return (
     <div className="space-y-4">
       <div>
         {!isSimpleMode && (
-          <label className="block text-sm font-medium text-gray-300 mb-2">
+          <label htmlFor={inputId} className="block text-sm font-medium text-gray-300 mb-2">
             Upload Media (Images, Videos, Documents)
           </label>
         )}
 
         <input
           ref={fileInputRef}
+          id={inputId}
           type="file"
           multiple={maxFiles > 1}
           accept={acceptedTypes}
           onChange={handleFileSelect}
-          className="hidden"
+          className="sr-only"
+          tabIndex={-1}
           disabled={uploading}
+          aria-describedby={error ? `${hintId} ${errorId}` : hintId}
+          aria-invalid={error ? true : undefined}
         />
 
         <Button
@@ -222,31 +228,32 @@ export function MediaUpload(props: MediaUploadProps) {
           variant="outline"
           onClick={() => fileInputRef.current?.click()}
           disabled={uploading || uploadedFiles.length >= maxFiles}
-          className="w-full"
+          loading={uploading}
+          aria-label={chooseLabel}
+          className="w-full min-h-[44px]"
         >
           {uploading ? (
-            <>
-              <Loader size={20} className="mr-2 animate-spin" />
-              Uploading...
-            </>
+            t('common.loading')
           ) : (
             <>
-              <Upload size={20} className="mr-2" />
-              {isSimpleMode ? 'Choose Files' : `Choose Files (${uploadedFiles.length}/${maxFiles})`}
+              <Upload size={20} className="mr-2" aria-hidden />
+              {chooseLabel}
             </>
           )}
         </Button>
 
         {isSimpleMode ? (
-          <p className="text-xs text-gray-500 mt-2">{t('video.upload.hint')}</p>
+          <p id={hintId} className="text-xs text-gray-500 mt-2">{t('video.upload.hint')}</p>
         ) : (
-          <p className="text-xs text-gray-500 mt-2">
+          <p id={hintId} className="text-xs text-gray-500 mt-2">
             Accepted: Images, Videos, PDF, Word documents. Max {maxSizeMB}MB per file.
           </p>
         )}
 
         {error && (
-          <p className="text-sm text-red-400 mt-2">{error}</p>
+          <p id={errorId} className="text-sm text-red-400 mt-2" role="alert">
+            {error}
+          </p>
         )}
       </div>
 

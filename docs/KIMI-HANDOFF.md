@@ -1,3 +1,22 @@
+## Session — 2026-08-20 (Grok M3) — Solo sprint: profiles, demo manage, earnings, inbox
+
+**Role:** M3 code only. Pushed `main`. Version **1.1.7**. Parallel agents + parent integration.
+
+### Done
+- **Public creator profiles** at `/u/:username` (redirect `/profile/:username`). Luna/Sasha/skate prerender + sitemap. Dashboard/Explore/Wishlist/video cards link there.
+- **Demo Manage loop:** `/project/skate-colombia` and `/project/studio-drops` load seeded wishlists from local storage (`demoProjectStore`). Create/edit/delete local.
+- **Dashboard tabs:** Projects (search + bulk public/private/draft) · Wishlists · Earnings (`EarningsPanel` sparkline + recent gifts, demo-labeled).
+- **Notification center** (local seam) in Navbar — bell, unread, seed demo inbox. Coexists with new-drop badge.
+- **Cover video/image upload** restyled to design tokens; new `CoverImageUpload`.
+- **i18n:** missing `dashboard.*` keys filled in es/pt/fr/de/ja/zh + creator.profile keys.
+- Tests: 148 unit; e2e dashboard / project-demo / creator-profile / creator-feed / wishlist-template.
+
+**Do not regress:** likes/comments/PPV/seen and notifications/earnings/subscriptions stay **local seams** until Nostr + Lightning webhook.
+
+**Still blocked (Cam/THOR):** invoice → webhook → `subscriptions` row; production nsec/NIP-05; confirm CF Pages deployed this `main`.
+
+---
+
 ## Session — 2026-08-20 (Grok M3) — Dashboard template polish
 
 **Role:** M3 code only. Pushed `main`. Version **1.1.7** (no bump).

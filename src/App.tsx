@@ -5,7 +5,7 @@ import { CurrencyProvider } from './contexts/CurrencyContext';
 import { ToastProvider } from './components/Toast';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { DemoBanner } from './components/DemoBanner';
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation, useParams } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { MobileNav } from './components/MobileNav';
@@ -46,6 +46,14 @@ const Nip05ClaimPage = lazy(() => import('./pages/Nip05ClaimPage').then((m) => (
 const CreatorGuidelinesPage = lazy(() =>
   import('./pages/CreatorGuidelinesPage').then((m) => ({ default: m.CreatorGuidelinesPage }))
 );
+const CreatorProfilePage = lazy(() =>
+  import('./pages/CreatorProfilePage').then((m) => ({ default: m.CreatorProfilePage }))
+);
+
+function ProfileUsernameRedirect() {
+  const { username } = useParams();
+  return <Navigate to={username ? `/u/${encodeURIComponent(username)}` : '/explore'} replace />;
+}
 
 function PageLoader() {
   const { t } = useLanguage();
@@ -78,6 +86,8 @@ function RouteAnnouncer() {
       home: t('nav.route.home'),
       explore: t('nav.route.explore'),
       wishlist: t('nav.route.wishlist'),
+      u: t('creator.profile'),
+      profile: t('creator.profile'),
       dashboard: t('dashboard.title'),
       settings: t('nav.route.settings'),
       auth: t('common.signIn'),
@@ -143,6 +153,8 @@ function AppShell() {
               <Route path="/explore" element={<RouteTransition><ExplorePage /></RouteTransition>} />
               <Route path="/wishlist/:slug" element={<RouteTransition><WishlistRoutePage /></RouteTransition>} />
               <Route path="/wishlist" element={<Navigate to="/explore" replace />} />
+              <Route path="/u/:username" element={<RouteTransition><CreatorProfilePage /></RouteTransition>} />
+              <Route path="/profile/:username" element={<ProfileUsernameRedirect />} />
               <Route path="/auth" element={<RouteTransition><AuthPage /></RouteTransition>} />
               <Route path="/about" element={<RouteTransition><AboutPage /></RouteTransition>} />
               <Route path="/contact" element={<RouteTransition><ContactPage /></RouteTransition>} />

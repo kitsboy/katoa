@@ -24,6 +24,7 @@ import {
   LayoutTemplate,
   Compass,
   Wallet,
+  Search,
   type LucideIcon,
 } from 'lucide-react';
 import { PageMeta } from '../components/PageMeta';
@@ -39,6 +40,7 @@ import { VisibilityBadge } from '../components/VisibilityBadge';
 import { OnboardingChecklist } from '../components/OnboardingChecklist';
 import { GlassCallout } from '../components/GlassCallout';
 import { CardSkeleton } from '../components/Skeleton';
+import { EarningsPanel } from '../components/EarningsPanel';
 
 import { getStorage, setStorage, STORAGE_KEYS } from '../lib/storage';
 import { DEMO_USER_ID } from '../lib/demoAuth';
@@ -89,6 +91,37 @@ const DEMO_PROJECTS: Project[] = [
     wishlist_count: 2,
   },
 ];
+
+type OwnedWishlist = {
+  id: string;
+  title: string;
+  slug: string;
+  cover_image: string | null;
+  total_sats_goal: number;
+  total_sats_raised: number;
+  visibility: string;
+  projectSlug: string;
+};
+
+function demoOwnedWishlists(): OwnedWishlist[] {
+  const map: Record<string, string> = {
+    'medellin-skate-park': 'skate-colombia',
+    'luna-exclusive-videos': 'studio-drops',
+    'sasha-vip-content': 'studio-drops',
+  };
+  return mockWishlists
+    .filter((w) => map[w.slug])
+    .map((w) => ({
+      id: w.id,
+      title: w.title,
+      slug: w.slug,
+      cover_image: w.cover_image,
+      total_sats_goal: w.total_sats_goal,
+      total_sats_raised: w.total_sats_raised,
+      visibility: 'public',
+      projectSlug: map[w.slug],
+    }));
+}
 
 function demoFollowing() {
   const featured = mockWishlists.filter((w) =>
@@ -156,6 +189,9 @@ export function DashboardPage() {
   });
   const [deleteProjectId, setDeleteProjectId] = useState<string | null>(null);
   const [followFilter, setFollowFilter] = useState<'all' | 'projects' | 'wishlists' | 'creators'>('all');
+  const [mainTab, setMainTab] = useState<'projects' | 'wishlists' | 'earnings'>('projects');
+  const [projectQuery, setProjectQuery] = useState('');
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [following, setFollowing] = useState<{
     projects: FollowedProject[];
     wishlists: FollowedWishlist[];
@@ -502,6 +538,31 @@ export function DashboardPage() {
     }
   }
 
+  async function handleBulkVisibility(visibility: Project['visibility']) {
+    if (selectedIds.length === 0 || processing) return;
+    setProcessing(true);
+    try {
+      if (isDemoUser) {
+        const next = projects.map((p) => (selectedIds.includes(p.id) ? { ...p, visibility } : p));
+        setProjects(next);
+        persistDemoProjects(next);
+        setSelectedIds([]);
+        toast(t('success.saved'), 'success');
+        return;
+      }
+      await Promise.all(
+        selectedIds.map((id) => supabase.from('projects').update({ visibility }).eq('id', id))
+      );
+      await loadProjects();
+      setSelectedIds([]);
+      toast(t('success.saved'), 'success');
+    } catch {
+      toast(t('error.updateProject'), 'error');
+    } finally {
+      setProcessing(false);
+    }
+  }
+
   const followingCount = following.projects.length + following.wishlists.length + following.creators.length;
   const displayName = profile?.username || user?.email?.split('@')[0] || 'creator';
   const initial = displayName[0]?.toUpperCase() || 'K';
@@ -522,6 +583,17 @@ export function DashboardPage() {
 
   const filteredFollowCount =
     filteredFollows.projects.length + filteredFollows.wishlists.length + filteredFollows.creators.length;
+
+  const q = projectQuery.trim().toLowerCase();
+  const visibleProjects = q
+    ? projects.filter(
+        (p) =>
+          p.title.toLowerCase().includes(q) ||
+          (p.description || '').toLowerCase().includes(q) ||
+          p.slug.toLowerCase().includes(q)
+      )
+    : projects;
+  const ownedWishlists = isDemoUser ? demoOwnedWishlists() : [];
 
   if (loading) {
     return (
@@ -653,7 +725,35 @@ export function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           <div className="lg:col-span-8 space-y-12">
             <section>
-              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-6">
+              <div className="flex flex-wrap gap-2 mb-5" role="tablist" aria-label="Dashboard views">
+                {(
+                  [
+                    ['projects', t('dashboard.yourProjects'), projects.length],
+                    ['wishlists', t('dashboard.wishlists'), isDemoUser ? demoOwnedWishlists().length : stats.totalWishlists],
+                    ['earnings', t('dashboard.raised'), null],
+                  ] as const
+                ).map(([id, label, count]) => (
+                  <button
+                    key={id}
+                    type="button"
+                    role="tab"
+                    aria-selected={mainTab === id}
+                    onClick={() => setMainTab(id)}
+                    className={`min-h-[40px] px-4 rounded-full text-sm font-semibold border transition-colors ${
+                      mainTab === id
+                        ? 'bg-bitcoin-orange-500/15 border-bitcoin-orange-500/40 text-bitcoin-orange-200'
+                        : 'bg-white/[0.03] border-white/10 text-gray-400 hover:text-white'
+                    }`}
+                  >
+                    {label}
+                    {count !== null ? ` · ${count}` : ''}
+                  </button>
+                ))}
+              </div>
+
+              {mainTab === 'projects' && (
+                <>
+              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-4">
                 <div>
                   <h2 className="font-display text-2xl font-bold text-white">{t('dashboard.yourProjects')}</h2>
                   <p className="text-gray-400 text-sm">{t('dashboard.yourProjectsSub')}</p>
@@ -663,6 +763,35 @@ export function DashboardPage() {
                   {t('dashboard.newProject')}
                 </Button>
               </div>
+
+              {projects.length > 0 && (
+                <div className="flex flex-col sm:flex-row gap-2 mb-5">
+                  <label className="relative flex-1">
+                    <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
+                    <input
+                      value={projectQuery}
+                      onChange={(e) => setProjectQuery(e.target.value)}
+                      placeholder="Search projects…"
+                      className="w-full min-h-[44px] pl-9 pr-3 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder-gray-500"
+                      aria-label="Search projects"
+                    />
+                  </label>
+                  {selectedIds.length > 0 && (
+                    <div className="flex flex-wrap gap-2 items-center">
+                      <span className="text-xs text-gray-400">{selectedIds.length} selected</span>
+                      <Button size="sm" variant="outline" onClick={() => handleBulkVisibility('public')}>
+                        Public
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => handleBulkVisibility('private')}>
+                        Private
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => handleBulkVisibility('draft')}>
+                        Draft
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {projects.length === 0 ? (
                 <Card variant="glass">
@@ -676,11 +805,26 @@ export function DashboardPage() {
                     secondaryHref="/templates"
                   />
                 </Card>
+              ) : visibleProjects.length === 0 ? (
+                <p className="text-sm text-gray-500 py-8 text-center">No projects match that search.</p>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  {projects.map((project) => (
+                  {visibleProjects.map((project) => (
+                    <div key={project.id} className="relative">
+                      <label className="absolute top-3 left-3 z-20">
+                        <input
+                          type="checkbox"
+                          checked={selectedIds.includes(project.id)}
+                          onChange={() =>
+                            setSelectedIds((prev) =>
+                              prev.includes(project.id) ? prev.filter((id) => id !== project.id) : [...prev, project.id]
+                            )
+                          }
+                          className="w-4 h-4 rounded border-white/30 bg-black/40"
+                          aria-label={`Select ${project.title}`}
+                        />
+                      </label>
                     <ProjectCard
-                      key={project.id}
                       project={project}
                       editing={editingProject === project.id}
                       editFormData={editFormData}
@@ -693,7 +837,55 @@ export function DashboardPage() {
                       onDelete={() => setDeleteProjectId(project.id)}
                       onEditChange={setEditFormData}
                     />
+                    </div>
                   ))}
+                </div>
+              )}
+                </>
+              )}
+
+              {mainTab === 'wishlists' && (
+                <div>
+                  <h2 className="font-display text-2xl font-bold text-white mb-1">{t('dashboard.wishlists')}</h2>
+                  <p className="text-gray-400 text-sm mb-5">Lists under your projects — open one to fund or edit.</p>
+                  {ownedWishlists.length === 0 ? (
+                    <Card variant="glass">
+                      <EmptyState
+                        icon={<Gift size={28} />}
+                        title="No wishlists yet"
+                        description="Create a project, then add wishlists from Manage."
+                        actionLabel={t('dashboard.newProject')}
+                        onAction={() => setShowCreateModal(true)}
+                      />
+                    </Card>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {ownedWishlists.map((w) => (
+                        <Link key={w.id} href={`/wishlist/${w.slug}`}>
+                          <Card variant="glass" hover className="overflow-hidden h-full">
+                            <FollowCover src={w.cover_image} fallback={<Gift size={28} className="text-gray-600" />} />
+                            <div className="p-4">
+                              <VisibilityBadge visibility={w.visibility} />
+                              <h3 className="text-base font-bold text-white mt-2 line-clamp-1">{w.title}</h3>
+                              <p className="text-xs text-gray-500 mt-1">/{w.projectSlug}</p>
+                              {w.total_sats_goal > 0 && (
+                                <p className="text-xs text-gray-400 mt-2">
+                                  {Math.round((w.total_sats_raised / w.total_sats_goal) * 100)}% funded
+                                </p>
+                              )}
+                            </div>
+                          </Card>
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {mainTab === 'earnings' && (
+                <div id="dashboard-earnings">
+                  <h2 className="font-display text-2xl font-bold text-white mb-2">{t('dashboard.raised')}</h2>
+                  <EarningsPanel isDemo={isDemoUser} userId={user?.id} />
                 </div>
               )}
             </section>
@@ -789,7 +981,7 @@ export function DashboardPage() {
                     </Link>
                   ))}
                   {filteredFollows.creators.map((creator) => (
-                    <Link key={creator.id} href={`/explore`}>
+                    <Link key={creator.id} href={`/u/${creator.username}`}>
                       <Card variant="glass" hover className="p-4 h-full">
                         <div className="flex items-center gap-3">
                           {creator.avatar_url ? (

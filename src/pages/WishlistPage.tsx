@@ -789,7 +789,12 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
                   {wishlist.title}
                 </h1>
                 <p className="text-sm text-gray-400 mt-1">
-                  @{wishlist.creator.username}
+                  <Link
+                    href={`/u/${wishlist.creator.username}`}
+                    className="hover:text-bitcoin-orange-400 transition-colors"
+                  >
+                    @{wishlist.creator.username}
+                  </Link>
                   {wishlist.country ? ` · ${wishlist.city ? `${wishlist.city}, ` : ''}${wishlist.country}` : ''}
                 </p>
                 {wishlist.description && (
@@ -852,7 +857,9 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
                   {creatorInitial}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-white font-bold text-lg leading-tight">{wishlist.creator.username}</p>
+                  <Link href={`/u/${wishlist.creator.username}`} className="text-white font-bold text-lg leading-tight hover:text-bitcoin-orange-300 transition-colors">
+                    {wishlist.creator.username}
+                  </Link>
                   {wishlist.creator.lightning_address && (
                     <p className="text-sm text-gray-400 flex items-center gap-1.5 mt-1 truncate">
                       <Zap size={14} className="text-bitcoin-orange-400 shrink-0" />

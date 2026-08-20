@@ -152,6 +152,72 @@ export const PRERENDER_ROUTES = [
     paragraphs: ['Privacy-first design: your data stays yours on the KATOA platform.'],
   },
   {
+    path: '/u/luna_vip',
+    title: '@luna_vip — Creator Profile | KATOA',
+    description:
+      'Video creator · VIP drops · Bitcoin-native monetization. Support Luna with Lightning — 0% platform fees.',
+    h1: '@luna_vip',
+    paragraphs: [
+      'Public creator profile for Luna. Exclusive video wishlists funded with Bitcoin Lightning on KATOA.',
+    ],
+    breadcrumbs: [
+      { name: 'Home', item: 'https://katoa.org/' },
+      { name: 'Explore', item: 'https://katoa.org/explore' },
+      { name: '@luna_vip', item: 'https://katoa.org/u/luna_vip' },
+    ],
+    schema: {
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      name: 'luna_vip',
+      url: `${SITE_URL}/u/luna_vip`,
+      description: 'Video creator · VIP drops · Bitcoin-native monetization',
+    },
+  },
+  {
+    path: '/u/sasha_vip',
+    title: '@sasha_vip — Creator Profile | KATOA',
+    description:
+      'Movement artist · Premium video · 0% fee Lightning payouts. Support Sasha directly on KATOA.',
+    h1: '@sasha_vip',
+    paragraphs: [
+      'Public creator profile for Sasha. VIP video wishlists funded with Bitcoin Lightning on KATOA.',
+    ],
+    breadcrumbs: [
+      { name: 'Home', item: 'https://katoa.org/' },
+      { name: 'Explore', item: 'https://katoa.org/explore' },
+      { name: '@sasha_vip', item: 'https://katoa.org/u/sasha_vip' },
+    ],
+    schema: {
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      name: 'sasha_vip',
+      url: `${SITE_URL}/u/sasha_vip`,
+      description: 'Movement artist · Premium video · 0% fee Lightning payouts',
+    },
+  },
+  {
+    path: '/u/skate_colombia',
+    title: '@skate_colombia — Creator Profile | KATOA',
+    description:
+      'Founder of Skate Colombia Foundation. Support the Medellín youth skatepark with Bitcoin Lightning.',
+    h1: '@skate_colombia',
+    paragraphs: [
+      'Public creator profile for Skate Colombia. Community skatepark wishlists funded with Bitcoin Lightning on KATOA.',
+    ],
+    breadcrumbs: [
+      { name: 'Home', item: 'https://katoa.org/' },
+      { name: 'Explore', item: 'https://katoa.org/explore' },
+      { name: '@skate_colombia', item: 'https://katoa.org/u/skate_colombia' },
+    ],
+    schema: {
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      name: 'skate_colombia',
+      url: `${SITE_URL}/u/skate_colombia`,
+      description: 'Founder of Skate Colombia Foundation. Using skateboarding to empower youth in Medellín.',
+    },
+  },
+  {
     path: '/wishlist/luna-exclusive-videos',
     title: 'Luna — Exclusive Video Collection | KATOA',
     description: 'Premium video creator wishlist on Bitcoin Lightning — 0% platform fees.',

@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo, useCallback, lazy, Suspense, memo, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card } from '../components/Card';
 import { Link } from '../components/Link';
 import { Input } from '../components/Input';
@@ -135,6 +136,7 @@ const WishlistCard = memo(function WishlistCard({
   onToggleFavorite: (id: string) => void;
   t: (key: string) => string;
 }) {
+  const navigate = useNavigate();
   const progress = wishlist.total_sats_goal > 0
     ? (wishlist.total_sats_raised / wishlist.total_sats_goal) * 100
     : 0;
@@ -224,12 +226,21 @@ const WishlistCard = memo(function WishlistCard({
           </div>
 
           {wishlist.creator?.username && (
-            <div className="flex items-center gap-2.5 shrink-0">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                navigate(`/u/${wishlist.creator.username}`);
+              }}
+              className="flex items-center gap-2.5 shrink-0 text-left rounded-xl hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bitcoin-orange-500/60"
+              aria-label={`@${wishlist.creator.username}`}
+            >
               <div className="w-9 h-9 bg-gradient-to-r from-bitcoin-orange-500 to-amber-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
                 {wishlist.creator.username[0].toUpperCase()}
               </div>
               <span className="text-sm text-gray-300 font-medium">{wishlist.creator.username}</span>
-            </div>
+            </button>
           )}
 
           {wishlist.total_sats_goal > 0 && (

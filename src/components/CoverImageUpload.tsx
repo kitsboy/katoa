@@ -1,23 +1,17 @@
 import { useCallback, useEffect, useId, useRef, useState, type DragEvent } from 'react';
-import { Loader, Trash2, Upload, Video } from 'lucide-react';
+import { Image, Loader, Trash2, Upload } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Button } from './Button';
-import {
-  VIDEO_ACCEPT_ATTR,
-  DEFAULT_VIDEO_MAX_MB,
-  isVideoFile,
-  formatFileSize,
-} from '../lib/videoFormats';
+import { formatFileSize } from '../lib/videoFormats';
 
-export interface CoverVideoUploadProps {
-  /** Object URL or remote URL. Pass `''` from the parent after a clear if you own form state. */
-  onVideoUrl: (url: string) => void;
-  /** Selected file for upload pipelines. `null` when cleared. */
-  onFile?: (file: File | null) => void;
-  currentUrl?: string | null;
-  maxSizeMB?: number;
-  disabled?: boolean;
-  className?: string;
+export const DEFAULT_COVER_IMAGE_MAX_MB = 8;
+export const COVER_IMAGE_ACCEPT_ATTR = 'image/*';
+
+const IMAGE_EXT = /\.(jpe?g|png|gif|webp|avif|bmp|svg)$/i;
+
+function isImageFile(file: File): boolean {
+  if (file.type && file.type.startsWith('image/')) return true;
+  return IMAGE_EXT.test(file.name);
 }
 
 function fileNameFromUrl(url: string): string | null {
@@ -30,14 +24,27 @@ function fileNameFromUrl(url: string): string | null {
   }
 }
 
-export function CoverVideoUpload({
-  onVideoUrl,
+export interface CoverImageUploadProps {
+  /** Object URL or remote URL. Pass `''` from the parent after a clear if you own form state. */
+  onImageUrl: (url: string) => void;
+  /** Selected file for upload pipelines. `null` when cleared. */
+  onFile?: (file: File | null) => void;
+  currentUrl?: string | null;
+  maxSizeMB?: number;
+  accept?: string;
+  disabled?: boolean;
+  className?: string;
+}
+
+export function CoverImageUpload({
+  onImageUrl,
   onFile,
   currentUrl,
-  maxSizeMB = DEFAULT_VIDEO_MAX_MB,
+  maxSizeMB = DEFAULT_COVER_IMAGE_MAX_MB,
+  accept = COVER_IMAGE_ACCEPT_ATTR,
   disabled = false,
   className = '',
-}: CoverVideoUploadProps) {
+}: CoverImageUploadProps) {
   const { t } = useLanguage();
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -50,7 +57,7 @@ export function CoverVideoUpload({
   const [fileName, setFileName] = useState<string | null>(null);
   const [fileSize, setFileSize] = useState<number | null>(null);
 
-  const hasVideo = Boolean(currentUrl);
+  const hasImage = Boolean(currentUrl);
   const displayName = fileName || (currentUrl ? fileNameFromUrl(currentUrl) : null);
 
   const revokeOwnedBlob = useCallback(() => {
@@ -80,12 +87,12 @@ export function CoverVideoUpload({
       if (disabled) return;
       setError('');
 
-      if (!isVideoFile(file)) {
-        setError(t('video.upload.invalid'));
+      if (!isImageFile(file)) {
+        setError(t('cover.image.invalid'));
         return;
       }
       if (file.size > maxSizeMB * 1024 * 1024) {
-        setError(t('video.upload.tooLarge').replace('${max}', String(maxSizeMB)));
+        setError(t('cover.image.tooLarge').replace('${max}', String(maxSizeMB)));
         return;
       }
 
@@ -96,14 +103,14 @@ export function CoverVideoUpload({
         blobUrlRef.current = url;
         setFileName(file.name);
         setFileSize(file.size);
-        onVideoUrl(url);
+        onImageUrl(url);
         onFile?.(file);
       } finally {
         setBusy(false);
         if (inputRef.current) inputRef.current.value = '';
       }
     },
-    [disabled, maxSizeMB, onFile, onVideoUrl, revokeOwnedBlob, t]
+    [disabled, maxSizeMB, onFile, onImageUrl, revokeOwnedBlob, t]
   );
 
   const clear = useCallback(() => {
@@ -112,10 +119,10 @@ export function CoverVideoUpload({
     setFileName(null);
     setFileSize(null);
     setError('');
-    onVideoUrl('');
+    onImageUrl('');
     onFile?.(null);
     if (inputRef.current) inputRef.current.value = '';
-  }, [disabled, onFile, onVideoUrl, revokeOwnedBlob]);
+  }, [disabled, onFile, onImageUrl, revokeOwnedBlob]);
 
   const onDragEnter = (e: DragEvent<HTMLElement>) => {
     e.preventDefault();
@@ -146,32 +153,34 @@ export function CoverVideoUpload({
     if (file) adoptFile(file);
   };
 
+  const hint = t('cover.image.hint').replace('${max}', String(maxSizeMB));
+
   return (
     <div
-      className={`cover-video-upload relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5 ${className}`}
+      className={`cover-image-upload relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5 ${className}`}
     >
       <div
-        className="pointer-events-none absolute -top-16 -right-10 h-36 w-36 rounded-full bg-neon-cyan-500/10 blur-3xl"
+        className="pointer-events-none absolute -top-16 -right-10 h-36 w-36 rounded-full bg-bitcoin-orange-500/10 blur-3xl"
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute -bottom-16 -left-10 h-32 w-32 rounded-full bg-bitcoin-orange-500/10 blur-3xl"
+        className="pointer-events-none absolute -bottom-16 -left-10 h-32 w-32 rounded-full bg-neon-cyan-500/10 blur-3xl"
         aria-hidden
       />
 
       <div className="relative flex items-start justify-between gap-3 mb-4">
         <div className="flex items-center gap-3 min-w-0">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-neon-cyan-500/20 to-bitcoin-orange-500/10 border border-white/10 text-neon-cyan-500">
-            <Video size={18} aria-hidden />
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-bitcoin-orange-500/20 to-neon-cyan-500/10 border border-white/10 text-bitcoin-orange-400">
+            <Image size={18} aria-hidden />
           </div>
           <div className="min-w-0">
-            <p className="text-[10px] uppercase tracking-[0.2em] text-neon-cyan-500 font-semibold">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-bitcoin-orange-400 font-semibold">
               Media
             </p>
-            <h4 className="text-sm font-display font-bold text-white">{t('video.upload.title')}</h4>
+            <h4 className="text-sm font-display font-bold text-white">{t('cover.image.title')}</h4>
           </div>
         </div>
-        <span className="shrink-0 inline-flex items-center rounded-full border border-bitcoin-orange-500/30 bg-bitcoin-orange-500/10 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider text-bitcoin-orange-400">
+        <span className="shrink-0 inline-flex items-center rounded-full border border-neon-cyan-500/30 bg-neon-cyan-500/10 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider text-neon-cyan-400">
           {maxSizeMB}MB
         </span>
       </div>
@@ -180,7 +189,7 @@ export function CoverVideoUpload({
         ref={inputRef}
         id={inputId}
         type="file"
-        accept={VIDEO_ACCEPT_ATTR}
+        accept={accept}
         className="sr-only"
         tabIndex={-1}
         disabled={disabled || busy}
@@ -190,9 +199,9 @@ export function CoverVideoUpload({
         }}
       />
 
-      {hasVideo && currentUrl ? (
+      {hasImage && currentUrl ? (
         <div
-          className={`relative rounded-xl overflow-hidden border bg-charcoal-950/60 transition-all duration-200 ${
+          className={`relative group rounded-xl overflow-hidden border bg-charcoal-950/60 transition-all duration-200 ${
             dragging
               ? 'border-neon-cyan-500 shadow-[0_0_24px_rgba(20,230,255,0.25)]'
               : 'border-white/10'
@@ -202,23 +211,44 @@ export function CoverVideoUpload({
           onDragOver={onDragOver}
           onDrop={onDrop}
         >
-          <video
+          <img
             src={currentUrl}
-            className="w-full max-h-56 object-cover bg-black"
-            muted
-            playsInline
-            controls
-            preload="metadata"
+            alt={displayName || t('cover.image.title')}
+            className="w-full max-h-56 aspect-[16/9] object-cover bg-charcoal-900"
           />
+          <button
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            disabled={disabled || busy}
+            aria-label={t('cover.image.change')}
+            className="absolute inset-0 flex items-center justify-center bg-charcoal-950/0 hover:bg-charcoal-950/55 focus-visible:bg-charcoal-950/55 transition-colors touch-manipulation"
+          >
+            <span className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity text-sm font-semibold text-white flex items-center gap-2">
+              <Upload size={16} aria-hidden />
+              {t('cover.image.change')}
+            </span>
+          </button>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              clear();
+            }}
+            disabled={disabled || busy}
+            aria-label={t('cover.image.remove')}
+            className="absolute top-2 right-2 z-10 flex h-11 w-11 items-center justify-center rounded-xl bg-charcoal-950/70 border border-white/10 text-gray-300 hover:text-red-400 hover:border-red-400/40 backdrop-blur-md touch-manipulation"
+          >
+            <Trash2 size={16} aria-hidden />
+          </button>
           {busy && (
-            <div className="absolute inset-0 flex items-center justify-center bg-charcoal-950/70 backdrop-blur-sm">
+            <div className="absolute inset-0 flex items-center justify-center bg-charcoal-950/70 backdrop-blur-sm z-10">
               <Loader size={22} className="animate-spin text-neon-cyan-500" aria-hidden />
               <span className="sr-only">{t('common.loading')}</span>
             </div>
           )}
           {dragging && (
-            <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-neon-cyan-500/15 text-sm font-semibold text-neon-cyan-400">
-              {t('video.upload.drop')}
+            <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-neon-cyan-500/15 text-sm font-semibold text-neon-cyan-400">
+              {t('cover.image.drop')}
             </div>
           )}
         </div>
@@ -232,7 +262,7 @@ export function CoverVideoUpload({
           onDrop={onDrop}
           disabled={disabled || busy}
           aria-describedby={`${inputId}-hint`}
-          aria-label={t('video.upload.drop')}
+          aria-label={t('cover.image.drop')}
           className={`group w-full min-h-[180px] rounded-xl border-2 border-dashed px-4 py-8 text-center transition-all duration-200 touch-manipulation ${
             dragging
               ? 'border-neon-cyan-500 bg-neon-cyan-500/10 shadow-[0_0_24px_rgba(20,230,255,0.25)]'
@@ -242,17 +272,17 @@ export function CoverVideoUpload({
           {busy ? (
             <Loader size={28} className="mx-auto mb-3 animate-spin text-neon-cyan-500" aria-hidden />
           ) : (
-            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-neon-cyan-500/20 to-bitcoin-orange-500/10 border border-white/10 text-neon-cyan-500 group-hover:text-neon-cyan-400 transition-colors">
+            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-bitcoin-orange-500/20 to-neon-cyan-500/10 border border-white/10 text-bitcoin-orange-400 group-hover:text-neon-cyan-400 transition-colors">
               <Upload size={22} aria-hidden />
             </div>
           )}
-          <p className="text-sm font-semibold text-white mb-1">{t('video.upload.empty')}</p>
-          <p className="text-xs text-gray-400">{t('video.upload.drop')}</p>
+          <p className="text-sm font-semibold text-white mb-1">{t('cover.image.empty')}</p>
+          <p className="text-xs text-gray-400">{t('cover.image.drop')}</p>
         </button>
       )}
 
       <p id={`${inputId}-hint`} className="mt-3 text-xs text-gray-500">
-        {t('video.upload.hint')}
+        {hint}
       </p>
 
       {(displayName || fileSize != null) && (
@@ -265,7 +295,7 @@ export function CoverVideoUpload({
         </p>
       )}
 
-      {hasVideo && (
+      {hasImage && (
         <div className="mt-3 flex flex-wrap gap-2">
           <Button
             type="button"
@@ -275,18 +305,18 @@ export function CoverVideoUpload({
             className="min-h-[44px]"
           >
             <Upload size={16} className="mr-2" aria-hidden />
-            {t('video.upload.change')}
+            {t('cover.image.change')}
           </Button>
           <Button
             type="button"
             variant="ghost"
             disabled={disabled || busy}
             onClick={clear}
-            aria-label={t('video.upload.remove')}
+            aria-label={t('cover.image.remove')}
             className="min-h-[44px] text-gray-400 hover:text-red-400"
           >
             <Trash2 size={16} className="mr-2" aria-hidden />
-            {t('video.upload.remove')}
+            {t('cover.image.remove')}
           </Button>
         </div>
       )}

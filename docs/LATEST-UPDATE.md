@@ -1,7 +1,7 @@
 # KATOA — Last Updated 2026-08-20 by Grok
 
-Brief: Creator dashboard rebuilt — identity header, honest stats, demo seed, sticky rail, skeletons.
-Commit: `da8687e`
+Brief: Solo sprint — public `/u/:username` profiles, demo project manage, dashboard tabs + earnings + inbox, i18n.
+Commit: `cd58112`
 
 Prior: Wishlist template polish at `e0e2757`.
 
