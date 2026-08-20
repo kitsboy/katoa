@@ -2,11 +2,13 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   DEMO_EARNINGS_TOTAL_SATS,
   EARNINGS_SERIES_DAYS,
+  LIVE_EARNINGS_STATUSES,
   demoEarnings,
   earningsFromTransactions,
   emptyEarnings,
   fetchLiveEarnings,
   formatSparkline,
+  isLiveEarningsEmpty,
   sumSats,
 } from '../earnings';
 
@@ -148,6 +150,73 @@ describe('earningsFromTransactions', () => {
     expect(snapshot.gifts[0].wishlistTitle).toBe('Skate Colombia');
     expect(snapshot.gifts[1].from).toBe('Anonymous');
   });
+
+  it('includes paid status in the day buckets and skips pending', () => {
+    const snapshot = earningsFromTransactions(
+      [
+        {
+          id: 'tx-paid',
+          contributor_name: 'Anonymous',
+          amount_sats: 10_000,
+          created_at: '2026-08-20T09:00:00.000Z',
+          wishlist_id: 'wl-1',
+          status: 'paid',
+        },
+        {
+          id: 'tx-pending',
+          contributor_name: 'Skip me',
+          amount_sats: 99_000,
+          created_at: '2026-08-20T11:00:00.000Z',
+          wishlist_id: 'wl-1',
+          status: 'pending',
+        },
+      ],
+      { 'wl-1': 'Skate Colombia' },
+      NOW,
+    );
+
+    expect(snapshot.series.find((p) => p.day === '2026-08-20')?.sats).toBe(10_000);
+    expect(sumSats(snapshot.series)).toBe(10_000);
+    expect(snapshot.gifts).toHaveLength(1);
+    expect(snapshot.gifts[0].id).toBe('tx-paid');
+  });
+
+  it('returns 14 zero days for an empty list', () => {
+    const snapshot = earningsFromTransactions([], {}, NOW);
+    expect(snapshot.series).toHaveLength(EARNINGS_SERIES_DAYS);
+    expect(snapshot.series).toHaveLength(14);
+    expect(snapshot.series.every((p) => p.sats === 0)).toBe(true);
+    expect(sumSats(snapshot.series)).toBe(0);
+    expect(snapshot.gifts).toEqual([]);
+    expect(snapshot.series[0].day).toBe('2026-08-07');
+    expect(snapshot.series[13].day).toBe('2026-08-20');
+  });
+});
+
+describe('isLiveEarningsEmpty', () => {
+  it('is true for null, undefined, and zero-sats snapshots', () => {
+    expect(isLiveEarningsEmpty(null)).toBe(true);
+    expect(isLiveEarningsEmpty(undefined)).toBe(true);
+    expect(isLiveEarningsEmpty(emptyEarnings(NOW))).toBe(true);
+    expect(isLiveEarningsEmpty(earningsFromTransactions([], {}, NOW))).toBe(true);
+  });
+
+  it('is false when the 14-day series has sats', () => {
+    expect(isLiveEarningsEmpty(demoEarnings(NOW))).toBe(false);
+    const live = earningsFromTransactions(
+      [
+        {
+          id: 'tx-1',
+          amount_sats: 21_000,
+          created_at: '2026-08-20T10:00:00.000Z',
+          status: 'confirmed',
+        },
+      ],
+      {},
+      NOW,
+    );
+    expect(isLiveEarningsEmpty(live)).toBe(false);
+  });
 });
 
 describe('fetchLiveEarnings', () => {
@@ -179,6 +248,25 @@ describe('fetchLiveEarnings', () => {
     await expect(fetchLiveEarnings('user-1')).resolves.toBeNull();
   });
 
+  it('returns emptyEarnings when the creator has no wishlists', async () => {
+    vi.mocked(isSupabaseConfigured).mockReturnValue(true);
+    vi.mocked(supabase.from).mockImplementation((table: string) => {
+      if (table === 'wishlists') {
+        return thenable({ data: [], error: null });
+      }
+      return thenable({ data: [], error: null });
+    });
+
+    const snapshot = await fetchLiveEarnings('user-1');
+    expect(snapshot).not.toBeNull();
+    expect(snapshot!.series).toHaveLength(14);
+    expect(sumSats(snapshot!.series)).toBe(0);
+    expect(snapshot!.gifts).toEqual([]);
+    expect(isLiveEarningsEmpty(snapshot)).toBe(true);
+    expect(supabase.from).toHaveBeenCalledWith('wishlists');
+    expect(supabase.from).not.toHaveBeenCalledWith('transactions');
+  });
+
   it('maps confirmed rows when the table exists', async () => {
     vi.mocked(isSupabaseConfigured).mockReturnValue(true);
     vi.mocked(supabase.from).mockImplementation((table: string) => {
@@ -205,6 +293,35 @@ describe('fetchLiveEarnings', () => {
     expect(sumSats(snapshot!.series)).toBe(21_000);
     expect(snapshot!.gifts[0]?.from).toBe('Anonymous');
     expect(snapshot!.gifts[0]?.wishlistTitle).toBe('Skate Colombia');
+    expect(isLiveEarningsEmpty(snapshot)).toBe(false);
+  });
+
+  it('maps paid rows as live earnings', async () => {
+    vi.mocked(isSupabaseConfigured).mockReturnValue(true);
+    vi.mocked(supabase.from).mockImplementation((table: string) => {
+      if (table === 'wishlists') {
+        return thenable({ data: [{ id: 'wl-1', title: 'Skate Colombia' }], error: null });
+      }
+      return thenable({
+        data: [
+          {
+            id: 'tx-paid',
+            contributor_name: 'Nostr supporter',
+            amount_sats: 5_000,
+            created_at: new Date().toISOString(),
+            status: 'paid',
+            wishlist_id: 'wl-1',
+          },
+        ],
+        error: null,
+      });
+    });
+
+    const snapshot = await fetchLiveEarnings('user-1');
+    expect(snapshot).not.toBeNull();
+    expect(sumSats(snapshot!.series)).toBe(5_000);
+    expect(snapshot!.gifts[0]?.from).toBe('Nostr supporter');
+    expect(LIVE_EARNINGS_STATUSES).toEqual(['confirmed', 'completed', 'paid']);
   });
 });
 

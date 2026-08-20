@@ -22,6 +22,8 @@ export type GiftEvent = {
 export type EarningsSnapshot = {
   series: EarningsPoint[];
   gifts: GiftEvent[];
+  /** All confirmed txs in the fetch window, not only the 14-day sparkline. */
+  lifetimeSats: number;
 };
 
 export type LiveTransactionRow = {
@@ -40,7 +42,8 @@ export const EARNINGS_SERIES_DAYS = 14;
 
 const MS_PER_DAY = 86_400_000;
 
-const CONFIRMED_STATUSES = ['confirmed', 'completed'] as const;
+/** Webhook/live rows that count toward creator earnings (pending/failed do not). */
+export const LIVE_EARNINGS_STATUSES = ['confirmed', 'completed', 'paid'] as const;
 
 /**
  * Rising 14-day weights (×1000) that sum to 3_250_000 — smooth climb, not noise.
@@ -73,7 +76,14 @@ export function emptyEarnings(now = new Date()): EarningsSnapshot {
   return {
     series: lastNUtcDays(EARNINGS_SERIES_DAYS, now).map((day) => ({ day, sats: 0 })),
     gifts: [],
+    lifetimeSats: 0,
   };
+}
+
+/** True when there is no snapshot or the 14-day series sums to 0 sats. */
+export function isLiveEarningsEmpty(snapshot?: EarningsSnapshot | null): boolean {
+  if (!snapshot) return true;
+  return sumSats(snapshot.series) === 0;
 }
 
 export function demoEarnings(now = new Date()): EarningsSnapshot {
@@ -81,6 +91,7 @@ export function demoEarnings(now = new Date()): EarningsSnapshot {
   return {
     series: days.map((day, i) => ({ day, sats: DEMO_DAY_WEIGHTS[i] * 1000 })),
     gifts: DEMO_GIFTS.map((gift, i) => ({ id: `demo-gift-${i + 1}`, ...gift })),
+    lifetimeSats: DEMO_EARNINGS_TOTAL_SATS,
   };
 }
 
@@ -144,13 +155,17 @@ export function earningsFromTransactions(
   return {
     series: days.map((day) => ({ day, sats: buckets.get(day) || 0 })),
     gifts,
+    lifetimeSats: confirmed.reduce((sum, row) => sum + (row.amount_sats || 0), 0),
   };
 }
 
 /**
- * Confirmed/completed Lightning gifts for a creator. Returns null when
- * Supabase is missing, the table is absent, or the query fails — caller
- * falls back to demo (isDemoUser) or empty.
+ * Confirmed Lightning gifts for a creator from `transactions`.
+ * Queries rows whose `wishlist_id` is in the creator's wishlists.
+ * `wishlist_id` is NOT NULL in schema, so we do not join `wishlist_items`
+ * for null ids. Returns null when Supabase is missing, the table is absent,
+ * or the query fails — caller falls back to demo (isDemoUser) or empty.
+ * Empty wishlists → `emptyEarnings()` (UI zeros, not a hang).
  */
 export async function fetchLiveEarnings(userId?: string | null): Promise<EarningsSnapshot | null> {
   if (!userId || !isSupabaseConfigured()) return null;
@@ -173,7 +188,7 @@ export async function fetchLiveEarnings(userId?: string | null): Promise<Earning
       .from('transactions')
       .select('id, contributor_name, amount_sats, created_at, status, wishlist_id')
       .in('wishlist_id', ids)
-      .in('status', [...CONFIRMED_STATUSES])
+      .in('status', [...LIVE_EARNINGS_STATUSES])
       .order('created_at', { ascending: false })
       .limit(500);
 
@@ -186,8 +201,8 @@ export async function fetchLiveEarnings(userId?: string | null): Promise<Earning
 }
 
 function isConfirmedStatus(status?: string | null): boolean {
-  if (!status) return true;
-  return status === 'confirmed' || status === 'completed';
+  if (!status) return false;
+  return (LIVE_EARNINGS_STATUSES as readonly string[]).includes(status.toLowerCase());
 }
 
 function aliasContributor(name?: string | null): string {

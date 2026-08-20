@@ -73,6 +73,31 @@ describe('notifications', () => {
     expect(unreadCount()).toBe(1);
   });
 
+  it('addNotification with the same id does not duplicate', () => {
+    const first = addNotification({
+      id: 'gift:tx-1',
+      type: 'gift',
+      title: 'Gift confirmed — 21,000 sats',
+      body: 'Lightning payment settled toward your wishlist.',
+      href: '/dashboard',
+    });
+    markRead('gift:tx-1');
+    const second = addNotification({
+      id: 'gift:tx-1',
+      type: 'gift',
+      title: 'Gift confirmed — 21,000 sats',
+      body: 'Should not replace',
+      href: '/dashboard',
+    });
+    const list = getNotifications();
+    expect(list).toHaveLength(1);
+    expect(list[0].id).toBe('gift:tx-1');
+    expect(list[0].read).toBe(true);
+    expect(list[0].body).toBe('Lightning payment settled toward your wishlist.');
+    expect(second.id).toBe(first.id);
+    expect(unreadCount()).toBe(0);
+  });
+
   it('notifies subscribers on write', () => {
     let hits = 0;
     const unsub = subscribeNotifications(() => {

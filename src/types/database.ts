@@ -157,11 +157,13 @@ export interface Database {
         user_id: string;
         project_id: string;
         project_creator_id: string | null;
+        created_at?: string;
       }>;
       wishlist_follows: TableDef<{
         id: string;
         user_id: string;
         wishlist_id: string;
+        created_at?: string;
       }>;
       follows: TableDef<{
         id: string;

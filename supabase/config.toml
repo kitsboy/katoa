@@ -22,3 +22,7 @@ port = 54323
 enabled = true
 site_url = "http://localhost:5173"
 additional_redirect_urls = ["http://localhost:5173/dashboard", "https://katoa.org/dashboard"]
+
+# BTCPay posts with HMAC (BTCPay-Sig), not a Supabase JWT.
+[functions.btcpay-webhook]
+verify_jwt = false

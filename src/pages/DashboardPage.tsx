@@ -17,8 +17,6 @@ import {
   FolderOpen,
   ExternalLink,
   Heart,
-  Camera,
-  Upload,
   Zap,
   MessageCircle,
   LayoutTemplate,
@@ -41,8 +39,10 @@ import { OnboardingChecklist } from '../components/OnboardingChecklist';
 import { GlassCallout } from '../components/GlassCallout';
 import { CardSkeleton } from '../components/Skeleton';
 import { EarningsPanel } from '../components/EarningsPanel';
+import { CoverImageUpload } from '../components/CoverImageUpload';
 
 import { getStorage, setStorage, STORAGE_KEYS } from '../lib/storage';
+import { fetchLiveEarnings } from '../lib/earnings';
 import { DEMO_USER_ID } from '../lib/demoAuth';
 import { mockWishlists } from '../data/mockWishlists';
 
@@ -339,7 +339,9 @@ export function DashboardPage() {
         .select('total_sats_raised', { count: 'exact' })
         .in('project_id', projectIds.length ? projectIds : ['__none__']);
 
-      const totalRaised = wishlistData?.reduce((sum, w) => sum + (w.total_sats_raised || 0), 0) || 0;
+      const wishlistRaised = wishlistData?.reduce((sum, w) => sum + (w.total_sats_raised || 0), 0) || 0;
+      const live = await fetchLiveEarnings(user.id);
+      const totalRaised = live && live.lifetimeSats > 0 ? live.lifetimeSats : wishlistRaised;
 
       setStats({
         totalProjects: projectCount || 0,
@@ -444,20 +446,37 @@ export function DashboardPage() {
     }
   }
 
-  async function handleBackgroundUpload(e: React.ChangeEvent<HTMLInputElement>, projectId: string) {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
+  async function handleBackgroundUpload(file: File | null, projectId: string) {
     if (isDemoUser) {
-      toast(t('dashboard.uploadDemo'), 'info');
-      e.target.value = '';
+      setProjects((prev) => {
+        const next = prev.map((p) => {
+          if (p.id !== projectId) return p;
+          const prevUrl = p.background_url;
+          if (prevUrl?.startsWith('blob:')) URL.revokeObjectURL(prevUrl);
+          return { ...p, background_url: file ? URL.createObjectURL(file) : null };
+        });
+        persistDemoProjects(next);
+        return next;
+      });
       return;
     }
 
+    if (!user) return;
+
     setProcessing(true);
     try {
-      const file = files[0];
+      if (!file) {
+        const { error: updateError } = await supabase
+          .from('projects')
+          .update({ background_url: null })
+          .eq('id', projectId);
+        if (updateError) throw updateError;
+        await loadProjects();
+        return;
+      }
+
       const fileExt = (file.name.split('.').pop() || 'bin').toLowerCase().replace(/[^a-z0-9]/g, '');
-      const fileName = `${user!.id}/project-${projectId}-${Date.now()}.${fileExt || 'bin'}`;
+      const fileName = `${user.id}/project-${projectId}-${Date.now()}.${fileExt || 'bin'}`;
 
       const { error: uploadError } = await supabase.storage
         .from('media')
@@ -830,7 +849,12 @@ export function DashboardPage() {
                       editFormData={editFormData}
                       processing={processing}
                       t={t}
-                      onCoverChange={(e) => handleBackgroundUpload(e, project.id)}
+                      onImageUrl={(url) => {
+                        if (url === '') void handleBackgroundUpload(null, project.id);
+                      }}
+                      onFile={(file) => {
+                        void handleBackgroundUpload(file, project.id);
+                      }}
                       onEdit={() => startEditingProject(project)}
                       onCancelEdit={cancelEditing}
                       onSaveEdit={() => handleUpdateProject(project.id)}
@@ -1126,7 +1150,8 @@ function ProjectCard({
   editFormData,
   processing,
   t,
-  onCoverChange,
+  onImageUrl,
+  onFile,
   onEdit,
   onCancelEdit,
   onSaveEdit,
@@ -1138,7 +1163,8 @@ function ProjectCard({
   editFormData: { title: string; description: string; visibility: 'public' | 'private' | 'draft' } | null;
   processing: boolean;
   t: (key: string) => string;
-  onCoverChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onImageUrl: (url: string) => void;
+  onFile: (file: File | null) => void;
   onEdit: () => void;
   onCancelEdit: () => void;
   onSaveEdit: () => void;
@@ -1147,43 +1173,19 @@ function ProjectCard({
 }) {
   return (
     <Card variant="glass" className="overflow-hidden group">
-      <input
-        type="file"
-        id={`project-bg-${project.id}`}
-        accept="image/*"
-        onChange={onCoverChange}
-        className="hidden"
-      />
-      <button
-        type="button"
-        onClick={() => document.getElementById(`project-bg-${project.id}`)?.click()}
-        className="w-full relative"
-        disabled={processing}
-        aria-label={project.background_url ? t('dashboard.changeCover') : t('dashboard.addCover')}
-      >
-        {project.background_url ? (
-          <div
-            className="w-full h-40 bg-cover bg-center relative"
-            style={{ backgroundImage: `url(${project.background_url})` }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-t from-charcoal-950 via-black/20 to-transparent" />
-            <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-              <div className="text-center">
-                <Camera size={28} className="mx-auto text-white mb-1" />
-                <p className="text-white text-xs font-semibold">{t('dashboard.changeCover')}</p>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="w-full h-40 bg-charcoal-900 flex flex-col items-center justify-center gap-2">
-            <Upload size={28} className="text-gray-600" />
-            <p className="text-xs text-gray-500">{t('dashboard.addCover')}</p>
-          </div>
-        )}
-        <div className="absolute top-3 right-3">
+      <div className="relative h-40 overflow-hidden">
+        <CoverImageUpload
+          currentUrl={project.background_url}
+          onImageUrl={onImageUrl}
+          onFile={onFile}
+          disabled={processing}
+          compact
+          className="h-40"
+        />
+        <div className="absolute top-3 right-3 z-20 pointer-events-none">
           <VisibilityBadge visibility={project.visibility} />
         </div>
-      </button>
+      </div>
 
       <div className="p-5">
         {editing && editFormData ? (

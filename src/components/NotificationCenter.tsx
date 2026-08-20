@@ -4,6 +4,7 @@ import { Link } from './Link';
 import { DemoBadge } from './DemoBadge';
 import { useAuth } from '../contexts/AuthContext';
 import { formatRelativeTime } from '../lib/i18nFormat';
+import { syncLiveInbox } from '../lib/liveInbox';
 import {
   getNotifications,
   markAllRead,
@@ -13,6 +14,8 @@ import {
   type Notification,
   type NotificationType,
 } from '../lib/notifications';
+
+const LIVE_SYNC_MS = 60_000;
 
 const TYPE_ICON: Record<NotificationType, typeof Bell> = {
   gift: Gift,
@@ -118,7 +121,7 @@ export function NotificationCenter({
   variant?: 'popover' | 'inline';
   onNavigate?: () => void;
 }) {
-  const { isDemoUser } = useAuth();
+  const { user, isDemoUser } = useAuth();
   const panelId = useId();
   const wrapRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -131,9 +134,32 @@ export function NotificationCenter({
   }, []);
 
   useEffect(() => {
-    setItems(refreshList());
-    return subscribeNotifications(sync);
-  }, [sync]);
+    const unsub = subscribeNotifications(sync);
+
+    if (!user || isDemoUser) {
+      setItems(refreshList());
+      return unsub;
+    }
+
+    let cancelled = false;
+    const pull = async () => {
+      await syncLiveInbox(user.id);
+      if (cancelled) return;
+      if (getNotifications().length === 0) seedDemoNotifications();
+      setItems(getNotifications());
+    };
+
+    void pull();
+    const interval = window.setInterval(() => {
+      void pull();
+    }, LIVE_SYNC_MS);
+
+    return () => {
+      cancelled = true;
+      window.clearInterval(interval);
+      unsub();
+    };
+  }, [user, isDemoUser, sync]);
 
   useEffect(() => {
     if (variant !== 'popover' || !open) return;

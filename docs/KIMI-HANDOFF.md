@@ -1,3 +1,20 @@
+## Session — 2026-08-20 (Grok M3) — Close the five dashboard follow-ups
+
+**Role:** M3 code only. Pushed `main`.
+
+### Done
+- Dashboard project cards use `CoverImageUpload` (compact dropzone). Demo persists object URLs; live uploads to `media`.
+- BTCPay webhook Edge Function confirms txs + bumps sats (HMAC). Client `syncLiveInbox` polls confirmed gifts/follows into the notification center (idempotent ids). Never confirms from the browser.
+- `fetchLiveEarnings` treats confirmed/completed/paid; empty wishlists → zero snapshot; dashboard Total Raised prefers `lifetimeSats` from confirmed txs.
+- `/u/:username` loads Supabase profiles case-insensitively (`creatorProfile.ts`); live row wins even with 0 wishlists; mocks are fallback only.
+- Onboarding `wishlist` auto-checks when demo wishlist storage has items (or live wishlist count > 0). Does not seed demo data on the landing page.
+
+**Tests:** 180 unit. e2e dashboard / project-demo / creator-profile / creator-feed.
+
+**Still blocked:** deploy webhook + `BTCPAY_WEBHOOK_SECRET`; confirm CF Pages; real Lightning.
+
+---
+
 ## Session — 2026-08-20 (Grok M3) — Solo sprint: profiles, demo manage, earnings, inbox
 
 **Role:** M3 code only. Pushed `main`. Version **1.1.7**. Parallel agents + parent integration.

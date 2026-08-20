@@ -197,13 +197,14 @@ VITE_SUPABASE_URL=your-supabase-url
 VITE_SUPABASE_ANON_KEY=your-anon-key
 ```
 
-Optional (for Bitcoin payments):
+Optional (for Bitcoin payments — public config only; never put store API keys in `VITE_*`):
 
 ```env
 VITE_BTCPAY_SERVER_URL=your-btcpay-url
 VITE_BTCPAY_STORE_ID=your-store-id
-VITE_BTCPAY_API_KEY=your-api-key
 ```
+
+BTCPay settlement is `supabase/functions/btcpay-webhook` (HMAC + service role). Deploy with `supabase functions deploy btcpay-webhook --no-verify-jwt` and `supabase secrets set BTCPAY_WEBHOOK_SECRET`. Point the store webhook at `https://<project-ref>.supabase.co/functions/v1/btcpay-webhook` for `InvoiceSettled` / `InvoicePaymentSettled`. See `supabase/functions/btcpay-webhook/README.md`.
 
 ## 🗄️ Database Schema
 

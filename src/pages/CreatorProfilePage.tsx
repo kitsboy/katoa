@@ -18,41 +18,18 @@ import { ManageSubscriptionPanel } from '../components/ManageSubscriptionPanel';
 import { SubscriptionTiers } from '../components/SubscriptionTiers';
 import { useToast } from '../components/Toast';
 import { useLanguage } from '../contexts/LanguageContext';
-import { mockWishlists } from '../data/mockWishlists';
 import { mockCreatorPosts, type CreatorPost } from '../data/mockCreatorPosts';
-import { supabase, isSupabaseConfigured, asRow, asRows } from '../lib/supabase';
+import {
+  loadCreatorProfile,
+  type CreatorProfile,
+  type ProfileWishlist,
+} from '../lib/creatorProfile';
 import { isSubscribed, subscribeLocal, unsubscribe } from '../lib/subscriptions';
 import { toJsonLdScript } from '../lib/jsonLd';
 import { copyToClipboard } from '../lib/clipboard';
 import { formatCompactCount, formatNumber } from '../lib/i18nFormat';
 
 const SITE_URL = (import.meta.env.VITE_SITE_URL ?? 'https://katoa.org').replace(/\/$/, '');
-
-interface ProfileWishlist {
-  id: string;
-  title: string;
-  description: string;
-  slug: string;
-  cover_image: string | null;
-  cover_video_url?: string | null;
-  total_sats_goal: number;
-  total_sats_raised: number;
-  subscriber_count?: number;
-  country?: string | null;
-  city?: string | null;
-  country_flag?: string | null;
-}
-
-interface CreatorProfile {
-  username: string;
-  avatar_url: string | null;
-  bio?: string;
-  lightning_address?: string | null;
-  nostr_pubkey?: string | null;
-  banner_url?: string | null;
-  wishlists: ProfileWishlist[];
-  fromMock: boolean;
-}
 
 function decodeUsername(raw: string | undefined): string {
   if (!raw) return '';
@@ -68,53 +45,6 @@ function locationLabel(wishlists: ProfileWishlist[]): string | null {
   if (!withPlace) return null;
   if (withPlace.city && withPlace.country) return `${withPlace.city}, ${withPlace.country}`;
   return withPlace.city || withPlace.country || null;
-}
-
-type MockCreatorExtras = {
-  bio?: string;
-  lightning_address?: string | null;
-  nostr_pubkey?: string | null;
-};
-type MockListExtras = {
-  cover_video_url?: string;
-  subscriber_count?: number;
-};
-
-function mockProfileForUsername(username: string): CreatorProfile | null {
-  const lists = mockWishlists.filter(
-    (w) => w.creator.username.toLowerCase() === username.toLowerCase()
-  );
-  if (lists.length === 0) return null;
-  const first = lists[0];
-  const creators = lists.map((w) => w.creator as typeof w.creator & MockCreatorExtras);
-  const withBio = creators.find((c) => c.bio);
-  const withLn = creators.find((c) => c.lightning_address);
-  return {
-    username: first.creator.username,
-    avatar_url: first.creator.avatar_url,
-    bio: withBio?.bio,
-    lightning_address: withLn?.lightning_address ?? null,
-    nostr_pubkey: creators.find((c) => c.nostr_pubkey)?.nostr_pubkey ?? null,
-    banner_url: null,
-    wishlists: lists.map((w) => {
-      const extra = w as typeof w & MockListExtras;
-      return {
-        id: w.id,
-        title: w.title,
-        description: w.description,
-        slug: w.slug,
-        cover_image: w.cover_image,
-        cover_video_url: extra.cover_video_url,
-        total_sats_goal: w.total_sats_goal,
-        total_sats_raised: w.total_sats_raised,
-        subscriber_count: extra.subscriber_count,
-        country: w.country,
-        city: w.city,
-        country_flag: w.country_flag,
-      };
-    }),
-    fromMock: true,
-  };
 }
 
 function subscriptionKeys(profile: CreatorProfile): string[] {
@@ -138,8 +68,6 @@ export function CreatorProfilePage() {
   const loadProfile = useCallback(
     async (signal?: { cancelled: boolean }) => {
       const isCancelled = () => signal?.cancelled === true;
-      const mock = username ? mockProfileForUsername(username) : null;
-
       if (!username) {
         if (!isCancelled()) {
           setProfile(null);
@@ -148,83 +76,9 @@ export function CreatorProfilePage() {
         return;
       }
 
-      if (isSupabaseConfigured()) {
-        try {
-          const { data: row, error } = await supabase
-            .from('profiles')
-            .select('id, username, avatar_url, lightning_address, nostr_pubkey, bio, banner_url')
-            .eq('username', username)
-            .maybeSingle();
-
-          if (!error && row) {
-            const live = asRow<{
-              id: string;
-              username: string;
-              avatar_url: string | null;
-              lightning_address: string | null;
-              nostr_pubkey: string | null;
-              bio: string;
-              banner_url: string | null;
-            }>(row);
-
-            if (live) {
-              const { data: listRows } = await supabase
-                .from('wishlists')
-                .select(
-                  'id, title, description, slug, cover_image, cover_video_url, total_sats_goal, total_sats_raised, country, city, country_flag, visibility'
-                )
-                .eq('creator_id', live.id)
-                .eq('visibility', 'public');
-
-              const wishlists: ProfileWishlist[] = asRows<{
-                id: string;
-                title: string;
-                description: string;
-                slug: string;
-                cover_image: string | null;
-                cover_video_url: string | null;
-                total_sats_goal: number;
-                total_sats_raised: number;
-                country: string | null;
-                city: string | null;
-                country_flag: string | null;
-              }>(listRows).map((w) => ({
-                id: w.id,
-                title: w.title,
-                description: w.description,
-                slug: w.slug,
-                cover_image: w.cover_image,
-                cover_video_url: w.cover_video_url,
-                total_sats_goal: w.total_sats_goal,
-                total_sats_raised: w.total_sats_raised,
-                country: w.country,
-                city: w.city,
-                country_flag: w.country_flag,
-              }));
-
-              if (!isCancelled()) {
-                setProfile({
-                  username: live.username,
-                  avatar_url: live.avatar_url,
-                  bio: live.bio || undefined,
-                  lightning_address: live.lightning_address,
-                  nostr_pubkey: live.nostr_pubkey,
-                  banner_url: live.banner_url,
-                  wishlists,
-                  fromMock: false,
-                });
-                setLoading(false);
-              }
-              return;
-            }
-          }
-        } catch {
-          /* fall through to mocks */
-        }
-      }
-
+      const loaded = await loadCreatorProfile(username);
       if (!isCancelled()) {
-        setProfile(mock);
+        setProfile(loaded);
         setLoading(false);
       }
     },

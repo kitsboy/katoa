@@ -3,7 +3,8 @@ import { Check, Circle } from 'lucide-react';
 import { Link } from './Link';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
-import { STORAGE_KEYS } from '../lib/storage';
+import { getStorage, STORAGE_KEYS } from '../lib/storage';
+import { isSupabaseConfigured, supabase } from '../lib/supabase';
 
 interface ChecklistItem {
   id: string;
@@ -28,9 +29,16 @@ function loadProgress(): Record<string, boolean> {
   }
 }
 
+function demoWishlistsExist(): boolean {
+  const stored = getStorage<Array<{ wishlist_count?: number }>>(STORAGE_KEYS.demoDashboardProjects, []);
+  if (stored.some((p) => (p.wishlist_count ?? 0) > 0)) return true;
+  const wl = getStorage<Record<string, unknown[]>>(STORAGE_KEYS.demoProjectWishlists, {});
+  return Object.values(wl).some((arr) => Array.isArray(arr) && arr.length > 0);
+}
+
 export function OnboardingChecklist({ variant = 'landing' }: { variant?: 'landing' | 'dark' }) {
   const { t } = useLanguage();
-  const { user, profile } = useAuth();
+  const { user, profile, isDemoUser } = useAuth();
   const [checked, setChecked] = useState<Record<string, boolean>>(loadProgress);
   const dark = variant === 'dark';
 
@@ -39,9 +47,32 @@ export function OnboardingChecklist({ variant = 'landing' }: { variant?: 'landin
       const next = { ...prev };
       if (user) next.account = true;
       if (profile?.lightning_address) next.wallet = true;
+      if (isDemoUser && demoWishlistsExist()) next.wishlist = true;
       return next;
     });
-  }, [user, profile?.lightning_address]);
+
+    if (!user || isDemoUser || !isSupabaseConfigured()) return;
+
+    let cancelled = false;
+    const userId = user.id;
+    void (async () => {
+      try {
+        const { count } = await supabase
+          .from('wishlists')
+          .select('id', { count: 'exact', head: true })
+          .eq('creator_id', userId);
+        if (!cancelled && (count ?? 0) > 0) {
+          setChecked((prev) => (prev.wishlist ? prev : { ...prev, wishlist: true }));
+        }
+      } catch {
+        /* live wishlist count is optional */
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [user, profile?.lightning_address, isDemoUser]);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.onboardingChecklist, JSON.stringify(checked));

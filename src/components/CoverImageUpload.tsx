@@ -34,6 +34,8 @@ export interface CoverImageUploadProps {
   accept?: string;
   disabled?: boolean;
   className?: string;
+  /** Card slot: no chrome, fills ~h-40. */
+  compact?: boolean;
 }
 
 export function CoverImageUpload({
@@ -44,6 +46,7 @@ export function CoverImageUpload({
   accept = COVER_IMAGE_ACCEPT_ATTR,
   disabled = false,
   className = '',
+  compact = false,
 }: CoverImageUploadProps) {
   const { t } = useLanguage();
   const inputId = useId();
@@ -157,33 +160,41 @@ export function CoverImageUpload({
 
   return (
     <div
-      className={`cover-image-upload relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5 ${className}`}
+      className={`cover-image-upload relative overflow-hidden ${
+        compact
+          ? 'h-40 p-0 rounded-none border-0 bg-transparent'
+          : 'rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5'
+      } ${className}`}
     >
-      <div
-        className="pointer-events-none absolute -top-16 -right-10 h-36 w-36 rounded-full bg-bitcoin-orange-500/10 blur-3xl"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute -bottom-16 -left-10 h-32 w-32 rounded-full bg-neon-cyan-500/10 blur-3xl"
-        aria-hidden
-      />
+      {!compact && (
+        <>
+          <div
+            className="pointer-events-none absolute -top-16 -right-10 h-36 w-36 rounded-full bg-bitcoin-orange-500/10 blur-3xl"
+            aria-hidden
+          />
+          <div
+            className="pointer-events-none absolute -bottom-16 -left-10 h-32 w-32 rounded-full bg-neon-cyan-500/10 blur-3xl"
+            aria-hidden
+          />
 
-      <div className="relative flex items-start justify-between gap-3 mb-4">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-bitcoin-orange-500/20 to-neon-cyan-500/10 border border-white/10 text-bitcoin-orange-400">
-            <Image size={18} aria-hidden />
+          <div className="relative flex items-start justify-between gap-3 mb-4">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-bitcoin-orange-500/20 to-neon-cyan-500/10 border border-white/10 text-bitcoin-orange-400">
+                <Image size={18} aria-hidden />
+              </div>
+              <div className="min-w-0">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-bitcoin-orange-400 font-semibold">
+                  Media
+                </p>
+                <h4 className="text-sm font-display font-bold text-white">{t('cover.image.title')}</h4>
+              </div>
+            </div>
+            <span className="shrink-0 inline-flex items-center rounded-full border border-neon-cyan-500/30 bg-neon-cyan-500/10 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider text-neon-cyan-400">
+              {maxSizeMB}MB
+            </span>
           </div>
-          <div className="min-w-0">
-            <p className="text-[10px] uppercase tracking-[0.2em] text-bitcoin-orange-400 font-semibold">
-              Media
-            </p>
-            <h4 className="text-sm font-display font-bold text-white">{t('cover.image.title')}</h4>
-          </div>
-        </div>
-        <span className="shrink-0 inline-flex items-center rounded-full border border-neon-cyan-500/30 bg-neon-cyan-500/10 px-2 py-0.5 text-[10px] font-mono uppercase tracking-wider text-neon-cyan-400">
-          {maxSizeMB}MB
-        </span>
-      </div>
+        </>
+      )}
 
       <input
         ref={inputRef}
@@ -214,7 +225,11 @@ export function CoverImageUpload({
           <img
             src={currentUrl}
             alt={displayName || t('cover.image.title')}
-            className="w-full max-h-56 aspect-[16/9] object-cover bg-charcoal-900"
+            className={
+              compact
+                ? 'w-full h-40 object-cover bg-charcoal-900'
+                : 'w-full max-h-56 aspect-[16/9] object-cover bg-charcoal-900'
+            }
           />
           <button
             type="button"
@@ -236,7 +251,9 @@ export function CoverImageUpload({
             }}
             disabled={disabled || busy}
             aria-label={t('cover.image.remove')}
-            className="absolute top-2 right-2 z-10 flex h-11 w-11 items-center justify-center rounded-xl bg-charcoal-950/70 border border-white/10 text-gray-300 hover:text-red-400 hover:border-red-400/40 backdrop-blur-md touch-manipulation"
+            className={`absolute z-10 flex h-11 w-11 items-center justify-center rounded-xl bg-charcoal-950/70 border border-white/10 text-gray-300 hover:text-red-400 hover:border-red-400/40 backdrop-blur-md touch-manipulation ${
+              compact ? 'bottom-2 right-2' : 'top-2 right-2'
+            }`}
           >
             <Trash2 size={16} aria-hidden />
           </button>
@@ -261,9 +278,11 @@ export function CoverImageUpload({
           onDragOver={onDragOver}
           onDrop={onDrop}
           disabled={disabled || busy}
-          aria-describedby={`${inputId}-hint`}
+          aria-describedby={compact ? undefined : `${inputId}-hint`}
           aria-label={t('cover.image.drop')}
-          className={`group w-full min-h-[180px] rounded-xl border-2 border-dashed px-4 py-8 text-center transition-all duration-200 touch-manipulation ${
+          className={`group w-full rounded-xl border-2 border-dashed text-center transition-all duration-200 touch-manipulation ${
+            compact ? 'h-40 min-h-0 px-3 py-4' : 'min-h-[180px] px-4 py-8'
+          } ${
             dragging
               ? 'border-neon-cyan-500 bg-neon-cyan-500/10 shadow-[0_0_24px_rgba(20,230,255,0.25)]'
               : 'border-white/15 bg-black/20 hover:border-neon-cyan-500/50 hover:bg-white/[0.04]'
@@ -281,48 +300,59 @@ export function CoverImageUpload({
         </button>
       )}
 
-      <p id={`${inputId}-hint`} className="mt-3 text-xs text-gray-500">
-        {hint}
-      </p>
+      {!compact && (
+        <>
+          <p id={`${inputId}-hint`} className="mt-3 text-xs text-gray-500">
+            {hint}
+          </p>
 
-      {(displayName || fileSize != null) && (
-        <p className="mt-2 text-xs text-gray-300 truncate" title={displayName ?? undefined}>
-          <span className="text-gray-500">Selected: </span>
-          {displayName && <span className="text-neon-cyan-400 font-medium">{displayName}</span>}
-          {fileSize != null && (
-            <span className="text-gray-500 font-mono"> · {formatFileSize(fileSize)}</span>
+          {(displayName || fileSize != null) && (
+            <p className="mt-2 text-xs text-gray-300 truncate" title={displayName ?? undefined}>
+              <span className="text-gray-500">Selected: </span>
+              {displayName && <span className="text-neon-cyan-400 font-medium">{displayName}</span>}
+              {fileSize != null && (
+                <span className="text-gray-500 font-mono"> · {formatFileSize(fileSize)}</span>
+              )}
+            </p>
           )}
-        </p>
-      )}
 
-      {hasImage && (
-        <div className="mt-3 flex flex-wrap gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            disabled={disabled || busy}
-            onClick={() => inputRef.current?.click()}
-            className="min-h-[44px]"
-          >
-            <Upload size={16} className="mr-2" aria-hidden />
-            {t('cover.image.change')}
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            disabled={disabled || busy}
-            onClick={clear}
-            aria-label={t('cover.image.remove')}
-            className="min-h-[44px] text-gray-400 hover:text-red-400"
-          >
-            <Trash2 size={16} className="mr-2" aria-hidden />
-            {t('cover.image.remove')}
-          </Button>
-        </div>
+          {hasImage && (
+            <div className="mt-3 flex flex-wrap gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                disabled={disabled || busy}
+                onClick={() => inputRef.current?.click()}
+                className="min-h-[44px]"
+              >
+                <Upload size={16} className="mr-2" aria-hidden />
+                {t('cover.image.change')}
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                disabled={disabled || busy}
+                onClick={clear}
+                aria-label={t('cover.image.remove')}
+                className="min-h-[44px] text-gray-400 hover:text-red-400"
+              >
+                <Trash2 size={16} className="mr-2" aria-hidden />
+                {t('cover.image.remove')}
+              </Button>
+            </div>
+          )}
+        </>
       )}
 
       {error && (
-        <p className="mt-2 text-sm text-red-400" role="alert">
+        <p
+          className={
+            compact
+              ? 'absolute bottom-1 left-2 right-14 z-20 text-xs text-red-400 bg-charcoal-950/80 rounded-md px-2 py-1'
+              : 'mt-2 text-sm text-red-400'
+          }
+          role="alert"
+        >
           {error}
         </p>
       )}

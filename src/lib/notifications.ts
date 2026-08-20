@@ -69,8 +69,8 @@ function write(list: Notification[]): Notification[] {
 /**
  * Client notification inbox — localStorage seam only.
  *
- * Real gift/follow/drop/PPV events will come from Lightning webhooks + Nostr.
- * Seeded items are a preview of the center, not live payment truth.
+ * Confirmed gifts/follows are pulled by `syncLiveInbox` after the BTCPay webhook
+ * writes `transactions.status='confirmed'`. Seeded items are a preview, not payment truth.
  */
 export function getNotifications(): Notification[] {
   const raw = getStorage<unknown>(STORAGE_KEYS.notifications, []);
@@ -79,6 +79,11 @@ export function getNotifications(): Notification[] {
 }
 
 export function addNotification(draft: NotificationDraft): Notification {
+  const existing = getNotifications();
+  if (draft.id) {
+    const found = existing.find((n) => n.id === draft.id);
+    if (found) return found;
+  }
   const item: Notification = {
     id: draft.id ?? nextId(),
     type: draft.type,
@@ -88,8 +93,7 @@ export function addNotification(draft: NotificationDraft): Notification {
     read: draft.read ?? false,
   };
   if (draft.href) item.href = draft.href;
-  const next = [item, ...getNotifications().filter((n) => n.id !== item.id)];
-  write(next);
+  write([item, ...existing]);
   return item;
 }
 

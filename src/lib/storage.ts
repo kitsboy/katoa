@@ -55,4 +55,5 @@ export const STORAGE_KEYS = {
   demoDashboardProjects: 'katoa_demo_dashboard_projects',
   demoProjectWishlists: 'katoa_demo_project_wishlists',
   notifications: 'katoa_notifications',
+  inboxSyncCursor: 'katoa_inbox_sync_cursor',
 } as const;
