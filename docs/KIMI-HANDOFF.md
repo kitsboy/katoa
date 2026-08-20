@@ -1,3 +1,17 @@
+## Session — 2026-08-20 (Grok M3) — Cam reminder: open ops + do-not-regress
+
+**Role:** M3 code only. M3 `main` pulled to `0d94d02` (in sync with origin).
+
+**Open (Cam / THOR — still live):**
+- Real subscribe: Lightning invoice → webhook → `subscriptions` row (LND/BTCPay/LNbits on THOR)
+- Production Lightning + webhook, platform nsec in the vault, NIP-05 claim ops
+- Confirm Cloudflare Pages deployed latest `main`
+
+**Do not regress:**
+- Likes, comments, PPV, and “seen” stay local until Nostr + Lightning backend exist. Do not regress that.
+
+---
+
 ## 2026-08-19 (Kimi/THOR — Standard Project Kit adopted + debrief + repo re-sync)
 
 **Scope:** Standard Project Kit rollout + first machine-readable session debrief + repo sync check.
