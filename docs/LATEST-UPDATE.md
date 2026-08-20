@@ -1,7 +1,7 @@
 # KATOA — Last Updated 2026-08-20 by Grok
 
 Brief: Landing page dark ember + highlight-trim cards; beige marketing theme retired.
-Commit: `cc3bca4`
+Commit: `027422c`
 
 Prior: Wishlist template polish at `e0e2757`.
 
