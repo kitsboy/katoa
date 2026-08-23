@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Zap } from 'lucide-react';
+import { Zap, BadgeCheck } from 'lucide-react';
 import { nostrService } from '../lib/nostr';
+import { Tooltip } from './Tooltip';
 
 /** Fetch recent NIP-57 zap receipts for a pubkey and show total sats. */
 export function ZapTotals({
@@ -54,7 +55,6 @@ export function ZapTotals({
   return (
     <div
       className={`inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-xs ${className}`}
-      title="From recent NIP-57 zap receipts on public relays"
     >
       <Zap size={14} className="text-amber-400 shrink-0" aria-hidden />
       {loading ? (
@@ -67,6 +67,12 @@ export function ZapTotals({
           <span className="text-gray-500 font-normal"> · {count} receipts</span>
         </span>
       )}
+      <Tooltip
+        position="top"
+        content="These are real NIP-57 zap receipts pulled from public relays — proof of the sats this creator has already received. No trust required: you can check each receipt yourself on any Nostr client. Every zap lands straight in the creator's wallet (non-custodial), and Katoa takes 0%."
+      >
+        <BadgeCheck size={14} className="text-violet-300 hover:text-violet-100 transition-colors shrink-0" aria-label="Proof: verified NIP-57 zap receipts on public relays" />
+      </Tooltip>
     </div>
   );
 }

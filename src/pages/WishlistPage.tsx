@@ -23,7 +23,7 @@ import { useToast } from '../components/Toast';
 import { PaymentMethodTabs, PaymentTab } from '../components/PaymentMethodTabs';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
-import { Gift, ExternalLink, Zap, Bitcoin, Check, Copy, QrCode, ArrowLeft, Heart, TrendingUp, Package, ChevronUp, ChevronDown, ShoppingBag, Loader2, MessageCircle } from 'lucide-react';
+import { Gift, ExternalLink, Zap, Bitcoin, Check, Copy, QrCode, ArrowLeft, Heart, TrendingUp, Package, ChevronUp, ChevronDown, ShoppingBag, Loader2, MessageCircle, BadgeCheck } from 'lucide-react';
 import { MilestoneBanner } from '../components/MilestoneBanner';
 import { ProgressBar } from '../components/ProgressBar';
 import { ActivityFeed } from '../components/ActivityFeed';
@@ -35,6 +35,7 @@ import { WalletDeepLinks } from '../components/WalletDeepLinks';
 import { hasNip07, nip07UserMessage, nostrService } from '../lib/nostr';
 import { NostrPublishWishlist } from '../components/NostrPublishWishlist';
 import { ZapTotals } from '../components/ZapTotals';
+import { Tooltip } from '../components/Tooltip';
 import { ProductUrlImport } from '../components/ProductUrlImport';
 import { SubscriptionTiers } from '../components/SubscriptionTiers';
 import { TipMenu } from '../components/TipMenu';
@@ -1149,6 +1150,17 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
                               </>
                             )}
                           </Button>
+                          {!item.is_funded && (
+                            <Tooltip
+                              position="bottom"
+                              content="A zap is a Bitcoin payment sent over Lightning — near-instant, near-zero fee, straight into the creator's wallet. No account, no sign-up, no third party holding your sats (non-custodial). Katoa takes 0%."
+                            >
+                              <span className="self-center inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-amber-500/25 bg-amber-500/10 text-[10px] text-amber-200/90 font-semibold cursor-help touch-manipulation min-h-[28px]">
+                                <BadgeCheck size={12} className="text-amber-300 shrink-0" aria-hidden />
+                                0% fee · non-custodial
+                              </span>
+                            </Tooltip>
+                          )}
                         </div>
                         {item.merchant_link && (
                           <a
