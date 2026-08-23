@@ -915,19 +915,24 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
                     <p className="text-gray-500 text-xs">Community support</p>
                   </div>
                 </div>
-                <SatsDisplay sats={wishlist.total_sats_raised} size="lg" showBtc />
-                <div className="mt-3">
-                  <ProgressBar
-                    current={wishlist.total_sats_raised}
-                    goal={wishlist.total_sats_goal}
-                    height="md"
-                    gradient="from-bitcoin-orange-500 to-amber-400"
-                    showValues={false}
-                  />
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between gap-4">
+                    <SatsDisplay sats={wishlist.total_sats_raised} size="lg" showBtc />
+                    <span className="text-emerald-400 font-black text-xl sm:text-2xl">
+                      {totalProgress.toFixed(0)}%
+                    </span>
+                  </div>
+                  <div className="w-full h-4 bg-white/10 rounded-full overflow-hidden">
+                    <div
+                      className="wishlist-jewel-progress h-full transition-all duration-500"
+                      style={{ width: `${Math.min(totalProgress, 100)}%` }}
+                      data-tip={`${totalProgress.toFixed(0)}% funded — ${formatSats(wishlist.total_sats_raised)} of ${formatSats(wishlist.total_sats_goal)} sats. Every zap lands straight in the creator's non-custodial wallet. Katoa takes 0%.`}
+                    />
+                  </div>
+                  <p className="text-gray-400 font-medium">
+                    of {formatSats(wishlist.total_sats_goal)} sats goal
+                  </p>
                 </div>
-                <p className="text-gray-500 text-xs mt-2">
-                  of {formatSats(wishlist.total_sats_goal)} sats goal
-                </p>
               </Card>
             )}
 
@@ -975,7 +980,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
               <TrustProofStrip compact />
               <Button
                 variant="bitcoin"
-                className="w-full font-bold"
+                className="w-full font-black text-lg py-4 min-h-[52px] wishlist-jewel-ring"
                 onClick={() => handleGiftClick()}
                 title="Support this wishlist with Bitcoin"
               >
@@ -1121,8 +1126,9 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
                         </div>
                         <div className="w-full h-3 bg-white/10 rounded-full overflow-hidden">
                           <div
-                            className={`h-full ${item.is_funded ? 'bg-gradient-to-r from-emerald-500 to-cyan-600' : 'bg-gradient-to-r from-orange-500 to-amber-600'} transition-all duration-500`}
+                            className={`h-full ${item.is_funded ? 'bg-gradient-to-r from-emerald-500 to-cyan-600' : 'wishlist-jewel-progress'} transition-all duration-500`}
                             style={{ width: `${Math.min(itemProgress, 100)}%` }}
+                            data-tip={item.is_funded ? "Fully funded — thank you!" : `${itemProgress.toFixed(0)}% of ${formatSats(item.price_sats)} sats funded. Supporters zap directly to the creator's wallet — no middleman, 0% fee.`}
                           />
                         </div>
                         <p className="text-gray-300 font-medium text-sm">

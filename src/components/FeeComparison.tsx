@@ -319,6 +319,32 @@ export function FeeComparison({
           ))}
         </div>
 
+        {/* Interactive hover graph — how much of every $1 you keep */}
+        <div
+          className="katoa-keep-graph"
+          role="img"
+          aria-label="How much of every dollar you keep, by platform: KATOA keeps 100%, Linktree 91%, Throne 90%, OnlyFans 80%"
+          data-tip="Hover a bar to compare how much of each dollar actually reaches you. KATOA is the only platform where 100% is yours — every other platform takes a cut before you ever see it."
+        >
+          {[results.onlyfans, results.throne, results.linktree, results.katoa].map((platform) => {
+            const keepPct = platform.platform === 'KATOA' ? 100 : Math.round((platform.net / amountInUSD) * 100);
+            const isKatoa = platform.platform === 'KATOA';
+            return (
+              <div key={platform.platform} className={`katoa-keep-graph__bar-wrap ${isKatoa ? 'katoa-keep-graph__bar-wrap--katoa' : ''}`}>
+                <div className="katoa-keep-graph__track">
+                  <div
+                    className={`katoa-keep-graph__fill ${isKatoa ? 'katoa-keep-graph__fill--katoa' : 'katoa-keep-graph__fill--rival'}`}
+                    style={{ height: `${keepPct}%` }}
+                    data-tip={`${platform.platform}: you keep ${keepPct}% of every dollar${isKatoa ? ' — zero fees, ever' : ''}.`}
+                  />
+                </div>
+                <span className="katoa-keep-graph__label">{keepPct}%</span>
+                <span className="katoa-keep-graph__label">{platform.platform}</span>
+              </div>
+            );
+          })}
+        </div>
+
         <table className="sr-only mt-4 w-full">
           <caption>Platform fee comparison for monthly earnings</caption>
           <thead>

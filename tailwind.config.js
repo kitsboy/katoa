@@ -58,10 +58,35 @@ export default {
           400: '#3DEBFF',
           600: '#00D4ED',
         },
+        // Design-token accent for Katoa (family tokens: violet #a78bfa)
+        'katoa-violet': {
+          50: '#f5f3ff',
+          100: '#ede9fe',
+          200: '#ddd6fe',
+          300: '#c4b5fd',
+          400: '#a78bfa',
+          500: '#a78bfa',
+          600: '#8b5cf6',
+          700: '#7c3aed',
+          800: '#6d28d9',
+          900: '#5b21b6',
+        },
+        'katoa-fuchsia': {
+          400: '#e879f9',
+          500: '#d946ef',
+          600: '#c026d3',
+        },
         'bitcoin-orange': {
           500: '#F7931A',
           400: '#F9A825',
           600: '#E67E00',
+        },
+        'jewel': {
+          amber: '#f59e0b',
+          teal: '#2dd4bf',
+          emerald: '#34d399',
+          violet: '#a78bfa',
+          fuchsia: '#e879f9',
         },
       },
       backdropBlur: {

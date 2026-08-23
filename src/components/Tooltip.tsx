@@ -74,7 +74,7 @@ export function Tooltip({ content, children, icon = false, position = 'bottom' }
       onMouseEnter={() => setIsVisible(true)}
       onMouseLeave={() => setIsVisible(false)}
     >
-      <div className="bg-charcoal-900 border border-neon-cyan-500/40 rounded-xl px-4 sm:px-6 py-4 sm:py-5 shadow-2xl">
+      <div className="katoa-tooltip-surface rounded-xl px-4 sm:px-6 py-4 sm:py-5 shadow-2xl">
         <p className="text-white text-sm leading-relaxed font-medium">
           {content}
         </p>

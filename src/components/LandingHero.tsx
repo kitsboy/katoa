@@ -78,12 +78,12 @@ function ProductScreenshot() {
               <span className="lp-shot-live" title="Sample product preview">Demo</span>
             </div>
 
-            <div className="lp-shot-progress">
+            <div className="lp-shot-progress" data-tip="Real progress bar from the live wishlist page — this sample wishlist shows 65% of a 5,000,000 sats goal. On Katoa, every bar you see on a real wishlist updates live as supporters zap in.">
               <div className="lp-shot-progress-head">
                 <span>{formatSats(FEATURED.raised)} sats raised</span>
                 <strong>{progress}%</strong>
               </div>
-              <div className="lp-shot-progress-bar">
+              <div className="lp-shot-progress-bar" role="img" aria-label={`${progress}% funded`}>
                 <div style={{ width: `${progress}%` }} />
               </div>
               <span className="lp-shot-progress-goal">of {formatSats(FEATURED.goal)} sats goal</span>
@@ -124,9 +124,9 @@ export function LandingHero({
   stats,
 }: LandingHeroProps) {
   const metricItems = [
-    { value: stats.volume, label: stats.processedLabel, accent: 'orange' as const },
-    { value: stats.countries, label: stats.countriesLabel, accent: 'cyan' as const },
-    { value: '0%', label: stats.feesLabel, accent: 'emerald' as const },
+    { value: stats.volume, label: stats.processedLabel, accent: 'orange' as const, tip: 'Sats processed on the Katoa network. This is a labeled sample until live counters exist — the honest number is always shown, never padded.' },
+    { value: stats.countries, label: stats.countriesLabel, accent: 'cyan' as const, tip: 'Countries where anyone can support a creator over Bitcoin Lightning — no bank account, no KYC, no borders.' },
+    { value: '0%', label: stats.feesLabel, accent: 'emerald' as const, tip: 'Platform fees forever: zero. Not a promo, not a trial — it is the product. Katoa makes money only when you succeed.' },
   ];
 
   return (
@@ -138,7 +138,7 @@ export function LandingHero({
       <div className="lp-hero-inner">
         <div className="lp-hero-grid">
           <div className="lp-hero-copy">
-            <p className="lp-eyebrow">{badge}</p>
+            <p className="lp-eyebrow" data-tip="Katoa — the zero-fee, non-custodial, Bitcoin-native creator platform. Part of the Give A Bit family.">{badge}</p>
 
             <h1 className="lp-headline">
               <span className="lp-headline-pre">{keepLabel}</span>
@@ -180,7 +180,7 @@ export function LandingHero({
 
         <div className="lp-metrics">
           {metricItems.map((item) => (
-            <div key={item.label} className={`lp-metric lp-metric--${item.accent}`}>
+            <div key={item.label} className={`lp-metric lp-metric--${item.accent}`} data-tip={item.tip}>
               <span className="lp-metric-value">{item.value}</span>
               <span className="lp-metric-label">{item.label}</span>
             </div>
