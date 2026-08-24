@@ -49,4 +49,4 @@ Use `/whatsup` in a new chat to load this summary. Product work next is THOR Lig
 
 ## Git
 - Product: `6f43b743251553f8c2f9a73bf5ae7cf51a1e591e` — *fix: gift/tip Lightning follows the saved wallet address*
-- Docs/pitch/goodbye stamp: this commit on `main`
+- Docs/pitch/goodbye stamp: `dc82bb97bdf33f6b2591debd6d3fa37838bf1c67`

@@ -44,7 +44,8 @@ Keep All That's Owed Always — creators keep 100%. Give A Bit sovereignty witho
 
 **Git State:**
 - Product SHA: `6f43b743251553f8c2f9a73bf5ae7cf51a1e591e`
-- Unpushed at goodbye start: none (`origin/main` was `6f43b74`). Docs/pitch stamp follows on `main`.
+- Docs/pitch/goodbye SHA: `dc82bb97bdf33f6b2591debd6d3fa37838bf1c67`
+- Unpushed at goodbye start: none (`origin/main` was `6f43b74`).
 
 ---
 
@@ -61,7 +62,7 @@ Keep All That's Owed Always — creators keep 100%. Give A Bit sovereignty witho
 - ELI16 is the spoken pitch; honesty box always travels with it.
 
 **Git State:**
-- Product: `6f43b74` · this docs stamp on `main`.
+- Product: `6f43b74` · docs stamp: `dc82bb9` on `main`.
 
 ---
 
