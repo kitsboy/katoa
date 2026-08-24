@@ -14,7 +14,14 @@ import {
   Plus, Edit, Trash2, Bitcoin, Zap, Hash, Shield, Star,
   Check, X, Scan
 } from 'lucide-react';
-import { validateBitcoinAddress, validateLightningAddress } from '../lib/validateAddress';
+import {
+  decodePaymentUri,
+  validateBitcoinAddress,
+  validateLightningAddress,
+  validateNpub,
+  validatePynym,
+  validateXpub,
+} from '../lib/validateAddress';
 
 type PaymentMethod = DbPaymentMethod;
 
@@ -22,24 +29,21 @@ function validatePaymentAddress(
   methodType: PaymentMethod['method_type'],
   address: string
 ): string | null {
-  const trimmed = address.trim();
+  const trimmed = decodePaymentUri(address);
   if (!trimmed) return 'Address is required';
 
   switch (methodType) {
     case 'lightning':
       return validateLightningAddress(trimmed);
     case 'bitcoin_address':
+    case 'onchain':
       return validateBitcoinAddress(trimmed);
     case 'bitcoin_xpub':
-      if (!/^(xpub|ypub|zpub|tpub|vpub|upub)/i.test(trimmed)) {
-        return 'Extended public key must start with xpub, ypub, or zpub';
-      }
-      return null;
+      return validateXpub(trimmed);
     case 'nostr':
-      if (!trimmed.startsWith('npub1')) {
-        return 'Nostr public key must start with npub1';
-      }
-      return null;
+      return validateNpub(trimmed);
+    case 'nym':
+      return validatePynym(trimmed);
     default:
       return null;
   }
@@ -71,7 +75,7 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
   const [deleting, setDeleting] = useState(false);
 
   function handleQRScan(data: string) {
-    setFormData({ ...formData, address: data });
+    setFormData({ ...formData, address: decodePaymentUri(data) });
     setShowQRScanner(false);
   }
 
@@ -124,7 +128,8 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
     e.preventDefault();
     if (processing) return;
 
-    const validationError = validatePaymentAddress(formData.method_type, formData.address);
+    const address = decodePaymentUri(formData.address);
+    const validationError = validatePaymentAddress(formData.method_type, address);
     if (validationError) {
       toast(validationError, 'error');
       return;
@@ -142,7 +147,7 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
           .from('payment_methods')
           .update({
             label: formData.label,
-            address: formData.address,
+            address,
             metadata,
             is_primary: formData.is_primary,
           })
@@ -156,7 +161,7 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
             project_id: projectId,
             method_type: formData.method_type,
             label: formData.label,
-            address: formData.address,
+            address,
             metadata,
             is_primary: formData.is_primary,
             is_active: true,
@@ -366,7 +371,7 @@ export function PaymentMethodManager({ projectId }: PaymentMethodManagerProps) {
             <select
               value={formData.method_type}
               onChange={(e) => setFormData({ ...formData, method_type: e.target.value as PaymentMethod['method_type'] })}
-              className="w-full px-4 py-3 bg-charcoal-900/50 border border-white/20 rounded-lg text-white focus:outline-none focus:border-emerald-500"
+              className="w-full px-4 py-3 min-h-[44px] bg-charcoal-900/50 border border-white/20 rounded-lg text-white focus:outline-none focus:border-emerald-500"
               disabled={!!editingMethod}
             >
               <option value="bitcoin_address">Bitcoin Address</option>

@@ -8,6 +8,7 @@ import { Link } from '../components/Link';
 import { Gift, Mail, Lock, User, Zap, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { PageMeta } from '../components/PageMeta';
 import { STORAGE_KEYS } from '../lib/storage';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
 function getPasswordStrength(password: string): 'weak' | 'medium' | 'strong' | null {
   if (!password) return null;
@@ -34,6 +35,8 @@ export function AuthPage() {
   const [error, setError] = useState('');
   const [signUpSuccess, setSignUpSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
+  const [nostrNote, setNostrNote] = useState('');
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -95,6 +98,7 @@ export function AuthPage() {
         setError(result.error.message);
       } else if (isSignUp) {
         setSignUpSuccess(true);
+        setIsSignUp(false);
       } else {
         setTimeout(() => navigate(postAuthPath(), { replace: true }), 300);
       }
@@ -124,17 +128,51 @@ export function AuthPage() {
     }
   }
 
-  async function handleNostrSignIn() {
+  async function handleNostrCheck() {
     setError('');
+    setNostrNote('');
     setLoading(true);
 
     try {
       const result = await signInWithNostr();
       if (result.error) {
-        setError(result.error.message);
+        setNostrNote(result.error.message);
+      } else {
+        setNostrNote(
+          'Extension connected. Sign in with email or Google, then link your npub in Settings. Continue with Nostr cannot create a session until the server challenge is live.'
+        );
       }
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setNostrNote(err instanceof Error ? err.message : 'Could not reach the Nostr extension');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleForgotPassword() {
+    setError('');
+    setResetSent(false);
+    const email = formData.email.trim();
+    if (!email) {
+      setError('Enter your email first, then tap Forgot password.');
+      return;
+    }
+    if (!isSupabaseConfigured()) {
+      setError('Password reset needs a live Katoa account. Email hello@giveabit.io if you need help.');
+      return;
+    }
+    setLoading(true);
+    try {
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/auth`,
+      });
+      if (resetError) {
+        setError(resetError.message);
+        return;
+      }
+      setResetSent(true);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Could not send reset email');
     } finally {
       setLoading(false);
     }
@@ -192,6 +230,20 @@ export function AuthPage() {
             </div>
           )}
 
+          {resetSent && (
+            <div className="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-lg" role="status" aria-live="polite">
+              <p className="text-emerald-300 text-sm">
+                Password reset email sent if that address has an account. Check your inbox.
+              </p>
+            </div>
+          )}
+
+          {nostrNote && (
+            <div className="mb-6 p-4 bg-purple-500/10 border border-purple-500/30 rounded-lg" role="status" aria-live="polite">
+              <p className="text-purple-200 text-sm">{nostrNote}</p>
+            </div>
+          )}
+
           {canUseDemoAuth && (
             <div className="mb-6 p-4 rounded-xl bg-neon-cyan/10 border border-neon-cyan/30">
               <p className="text-sm text-neon-cyan-300 mb-3">
@@ -206,7 +258,7 @@ export function AuthPage() {
                   setLoading(true);
                   const { error: demoError } = await signInAsDemo();
                   if (demoError) setError(demoError.message);
-                  else navigate('/dashboard', { replace: true });
+                  else navigate(postAuthPath(), { replace: true });
                   setLoading(false);
                 }}
               >
@@ -217,6 +269,7 @@ export function AuthPage() {
 
           {/* Google Sign In */}
           <Button
+            type="button"
             onClick={handleGoogleSignIn}
             loading={loading}
             variant="outline"
@@ -243,18 +296,25 @@ export function AuthPage() {
             Continue with Google
           </Button>
 
-          {/* Nostr Sign In */}
-          <Button
-            onClick={handleNostrSignIn}
-            loading={loading}
-            variant="outline"
-            className="w-full mb-6 border-purple-500/30 hover:border-purple-500 hover:bg-purple-500/10 text-purple-300"
-          >
-            <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
-            </svg>
-            Continue with Nostr
-          </Button>
+          {/* Nostr is not a login — challenge Edge Function is not deployed. */}
+          <div className="mb-6 p-4 rounded-xl border border-purple-500/30 bg-purple-500/5">
+            <p className="text-sm text-purple-200/90 mb-3 leading-relaxed">
+              Nostr cannot create a session here (server challenge missing). Check your extension, then
+              sign in with email or Google and link your npub in Settings.
+            </p>
+            <Button
+              type="button"
+              onClick={handleNostrCheck}
+              loading={loading}
+              variant="outline"
+              className="w-full min-h-[44px] border-purple-500/30 hover:border-purple-500 hover:bg-purple-500/10 text-purple-300"
+            >
+              <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+              </svg>
+              Check Nostr extension
+            </Button>
+          </div>
 
           {/* Divider */}
           <div className="relative mb-6">
@@ -358,6 +418,18 @@ export function AuthPage() {
               )}
             </div>
 
+            {!isSignUp && (
+              <div className="flex justify-end -mt-1">
+                <button
+                  type="button"
+                  onClick={handleForgotPassword}
+                  className="text-sm text-gray-400 hover:text-white min-h-[44px] px-1"
+                >
+                  Forgot password?
+                </button>
+              </div>
+            )}
+
             <Button
               type="submit"
               loading={loading}
@@ -373,6 +445,7 @@ export function AuthPage() {
               onClick={() => {
                 setIsSignUp(!isSignUp);
                 setError('');
+                setResetSent(false);
               }}
               className="text-gray-400 hover:text-white transition-colors"
             >

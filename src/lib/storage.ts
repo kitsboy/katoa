@@ -47,6 +47,7 @@ export const STORAGE_KEYS = {
   dmReadIds: 'katoa_dm_read_ids',
   creatorTipPresets: 'katoa_creator_tip_presets',
   creatorSubscriptions: 'katoa_creator_subscriptions',
+  creatorFollows: 'katoa_creator_follows',
   creatorPostLikes: 'katoa_creator_post_likes',
   creatorPostComments: 'katoa_creator_post_comments',
   creatorPpvUnlocks: 'katoa_creator_ppv_unlocks',
@@ -56,4 +57,48 @@ export const STORAGE_KEYS = {
   demoProjectWishlists: 'katoa_demo_project_wishlists',
   notifications: 'katoa_notifications',
   inboxSyncCursor: 'katoa_inbox_sync_cursor',
+  themeAccent: 'katoa_theme_accent',
+  shippingAddresses: 'katoa_shipping_addresses',
+  walletAddresses: 'katoa_wallet_addresses',
 } as const;
+
+const ACCENT_RE = /^#[0-9A-Fa-f]{6}$/;
+export const DEFAULT_THEME_ACCENT = '#ff8700';
+
+export function applyThemeAccent(color: string): void {
+  if (typeof document === 'undefined') return;
+  if (!ACCENT_RE.test(color)) return;
+  document.documentElement.style.setProperty('--theme-accent', color);
+}
+
+export function loadThemeAccent(): string | null {
+  const stored = getStorage<string | null>(STORAGE_KEYS.themeAccent, null);
+  return stored && ACCENT_RE.test(stored) ? stored : null;
+}
+
+export function saveThemeAccent(color: string): void {
+  if (!ACCENT_RE.test(color)) return;
+  setStorage(STORAGE_KEYS.themeAccent, color);
+  applyThemeAccent(color);
+}
+
+/** Device-local demo/account preview data — not a live Katoa wipe. */
+export function clearDemoAccountStorage(): void {
+  removeStorage(STORAGE_KEYS.demoDashboardProjects);
+  removeStorage(STORAGE_KEYS.demoProjectWishlists);
+  removeStorage(STORAGE_KEYS.walletAddresses);
+  removeStorage(STORAGE_KEYS.shippingAddresses);
+  removeStorage(STORAGE_KEYS.notifications);
+  removeStorage(STORAGE_KEYS.inboxSyncCursor);
+  removeStorage(STORAGE_KEYS.creatorPostLikes);
+  removeStorage(STORAGE_KEYS.creatorPostComments);
+  removeStorage(STORAGE_KEYS.creatorPpvUnlocks);
+  removeStorage(STORAGE_KEYS.creatorSeenPosts);
+  removeStorage(STORAGE_KEYS.creatorSubscriptions);
+  removeStorage(STORAGE_KEYS.creatorTipPresets);
+}
+
+if (typeof window !== 'undefined') {
+  const storedAccent = loadThemeAccent();
+  if (storedAccent) applyThemeAccent(storedAccent);
+}

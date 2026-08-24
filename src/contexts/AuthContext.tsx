@@ -181,12 +181,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  function safeNextPath(): string | null {
+    try {
+      const next = new URLSearchParams(window.location.search).get('next');
+      if (next && next.startsWith('/') && !next.startsWith('//')) return next;
+    } catch {
+      /* ignore */
+    }
+    return null;
+  }
+
   async function signInWithGoogle() {
     try {
+      const next = safeNextPath();
+      const redirectTo = next
+        ? `${window.location.origin}/auth?next=${encodeURIComponent(next)}`
+        : `${window.location.origin}/dashboard`;
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/dashboard`,
+          redirectTo,
           queryParams: {
             access_type: 'offline',
             prompt: 'consent',
@@ -254,19 +268,33 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function syncNostrProfile() {
-    if (!user || !profile?.nostr_pubkey) {
-      return { error: new Error('Not authenticated with Nostr') };
+    if (!user) {
+      return { error: new Error('Not authenticated') };
     }
 
     try {
-      const nostrProfile = await nostrService.getProfile(profile.nostr_pubkey);
-      if (!nostrProfile) throw new Error('Nostr profile not found');
+      let pubkey = profile?.nostr_pubkey || '';
+      if (!pubkey && typeof window !== 'undefined' && window.nostr) {
+        pubkey = await window.nostr.getPublicKey();
+      }
+      if (!pubkey) {
+        return { error: new Error('Link a Nostr public key first (Settings → Link NIP-07)') };
+      }
+
+      const hex = nostrService.normalizePubkey(pubkey);
+      const nostrProfile = await nostrService.getProfile(hex);
+      if (!nostrProfile) throw new Error('Nostr kind-0 profile not found on relays');
 
       const updates = {
-        avatar_url: nostrProfile.picture || profile.avatar_url,
-        bio: nostrProfile.about || profile.bio,
-        lightning_address: nostrProfile.lud16 || nostrProfile.lud06 || profile.lightning_address,
+        avatar_url: nostrProfile.picture || profile?.avatar_url || null,
+        bio: nostrProfile.about || profile?.bio || '',
+        lightning_address: nostrProfile.lud16 || nostrProfile.lud06 || profile?.lightning_address || null,
       };
+
+      if (isDemoUser) {
+        setProfile((prev) => (prev ? { ...prev, ...updates } : prev));
+        return { error: null };
+      }
 
       const { error } = await supabase
         .from('profiles')

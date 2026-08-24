@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
@@ -6,17 +7,31 @@ import { Input } from '../components/Input';
 import { WalletAddressManager } from '../components/WalletAddressManager';
 import { CurrencySelector } from '../components/CurrencySelector';
 import { Link } from '../components/Link';
-import { supabase } from '../lib/supabase';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { ReferralLinkGenerator } from '../components/ReferralLinkGenerator';
 import { useToast } from '../components/Toast';
 import { useLanguage } from '../contexts/LanguageContext';
 import { PageMeta } from '../components/PageMeta';
+import { ConfirmDialog } from '../components/ConfirmDialog';
+import { Modal } from '../components/Modal';
+import { DemoBadge } from '../components/DemoBadge';
 import {
   User, Wallet, MapPin,
   Settings as SettingsIcon, Save, Upload, Camera, Zap, Check, AlertCircle, LayoutDashboard,
-  Heart, TrendingUp, Users, FolderOpen, Stamp, ExternalLink
+  Heart, TrendingUp, Users, FolderOpen, Stamp, ExternalLink, MessageCircle, Trash2
 } from 'lucide-react';
+import { validateLightningAddress } from '../lib/validateAddress';
+import {
+  clearDemoAccountStorage,
+  DEFAULT_THEME_ACCENT,
+  getStorage,
+  loadThemeAccent,
+  saveThemeAccent,
+  setStorage,
+  STORAGE_KEYS,
+} from '../lib/storage';
+import { getDemoProjects } from '../lib/demoProjectStore';
 import {
   getApiHealth,
   sha256Hex,
@@ -37,21 +52,60 @@ import { getCreatorTipPresets, setCreatorTipPresets } from '../lib/dmPrefs';
 type Tab = 'profile' | 'wallet' | 'projects' | 'shipping' | 'advanced';
 
 const TIP_PRESET_OPTIONS = [21_000, 50_000, 100_000] as const;
+const MAX_AVATAR_BYTES = 5 * 1024 * 1024;
+
+type ShippingAddress = {
+  id: string;
+  name: string;
+  line: string;
+  city: string;
+  country: string;
+  notes: string;
+};
+
+const EMPTY_SHIPPING: Omit<ShippingAddress, 'id'> = {
+  name: '',
+  line: '',
+  city: '',
+  country: '',
+  notes: '',
+};
+
+function loadShipping(userId: string): ShippingAddress[] {
+  const all = getStorage<Record<string, ShippingAddress[]>>(STORAGE_KEYS.shippingAddresses, {});
+  return all[userId] ?? [];
+}
+
+function saveShipping(userId: string, list: ShippingAddress[]): void {
+  const all = getStorage<Record<string, ShippingAddress[]>>(STORAGE_KEYS.shippingAddresses, {});
+  all[userId] = list;
+  setStorage(STORAGE_KEYS.shippingAddresses, all);
+}
 
 export function SettingsPage() {
-  const { user, profile, updateProfile } = useAuth();
+  const { user, profile, updateProfile, syncNostrProfile, signOut, isDemoUser } = useAuth();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<Tab>('profile');
   const [tipPresets, setTipPresets] = useState<number[]>(() => getCreatorTipPresets());
   const [processing, setProcessing] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [statsAreDemo, setStatsAreDemo] = useState(false);
   const [stats, setStats] = useState({
     wishlists: 0,
     following: 0,
     contributions: 0,
     projectFollowers: 0,
   });
+  const [themeAccent, setThemeAccent] = useState(() => loadThemeAccent() ?? DEFAULT_THEME_ACCENT);
+  const [shipping, setShipping] = useState<ShippingAddress[]>([]);
+  const [showShippingModal, setShowShippingModal] = useState(false);
+  const [shippingForm, setShippingForm] = useState(EMPTY_SHIPPING);
+  const [deleteShippingId, setDeleteShippingId] = useState<string | null>(null);
+  const [confirmImportNostr, setConfirmImportNostr] = useState(false);
+  const [confirmDeleteDemo, setConfirmDeleteDemo] = useState(false);
+  const [deletingDemo, setDeletingDemo] = useState(false);
 
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [satohashBusy, setSatohashBusy] = useState(false);
@@ -85,11 +139,33 @@ export function SettingsPage() {
   useEffect(() => {
     if (user) {
       loadStats();
+      setShipping(loadShipping(user.id));
     }
-  }, [user]);
+    // loadStats reads isDemoUser; shipping is keyed by user id.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, isDemoUser]);
 
   async function loadStats() {
     if (!user) return;
+
+    if (isDemoUser) {
+      const projects = getDemoProjects();
+      const wishlists = projects.reduce((n, p) => n + (p.wishlist_count ?? 0), 0);
+      setStatsAreDemo(true);
+      setStats({
+        wishlists,
+        following: 0,
+        contributions: 0,
+        projectFollowers: 0,
+      });
+      return;
+    }
+
+    if (!isSupabaseConfigured()) {
+      setStatsAreDemo(true);
+      setStats({ wishlists: 0, following: 0, contributions: 0, projectFollowers: 0 });
+      return;
+    }
 
     try {
       const [wishlistsRes, followingRes, contributionsRes, followersRes] = await Promise.all([
@@ -99,6 +175,7 @@ export function SettingsPage() {
         supabase.from('project_follows').select('id', { count: 'exact', head: true }).eq('project_creator_id', user.id),
       ]);
 
+      setStatsAreDemo(false);
       setStats({
         wishlists: wishlistsRes.count || 0,
         following: followingRes.count || 0,
@@ -107,17 +184,29 @@ export function SettingsPage() {
       });
     } catch (error) {
       console.error('Error loading stats:', error);
-      toast('Could not load stats — try refreshing', 'error');
+      setStatsAreDemo(true);
+      setStats({ wishlists: 0, following: 0, contributions: 0, projectFollowers: 0 });
+      toast('Could not load live stats — not showing empty counts as live', 'error');
     }
   }
 
   async function handleSaveProfile(e: React.FormEvent) {
     e.preventDefault();
     if (processing) return;
+
+    const ln = profileForm.lightning_address.trim();
+    if (ln) {
+      const lnError = validateLightningAddress(ln);
+      if (lnError) {
+        toast(lnError, 'error');
+        return;
+      }
+    }
+
     setProcessing(true);
 
     try {
-      const { error } = await updateProfile(profileForm);
+      const { error } = await updateProfile({ ...profileForm, lightning_address: ln || null });
       if (error) {
         toast(error.message || t('error.updateProfile'), 'error');
         return;
@@ -176,12 +265,35 @@ export function SettingsPage() {
     if (!files || files.length === 0) return;
 
     const file = files[0];
+    if (file.size > MAX_AVATAR_BYTES) {
+      toast('Avatar must be 5MB or smaller', 'error');
+      e.target.value = '';
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = () => setAvatarPreview(reader.result as string);
     reader.readAsDataURL(file);
 
     setProcessing(true);
     try {
+      if (isDemoUser) {
+        const dataUrl = await new Promise<string>((resolve, reject) => {
+          const r = new FileReader();
+          r.onload = () => resolve(String(r.result));
+          r.onerror = () => reject(new Error('Could not read image'));
+          r.readAsDataURL(file);
+        });
+        const result = await updateProfile({ avatar_url: dataUrl });
+        if (result.error) throw result.error;
+        setProfileForm({ ...profileForm, avatar_url: dataUrl });
+        setAvatarPreview(null);
+        setShowSuccess(true);
+        toast('Avatar saved on this device (demo)', 'success');
+        setTimeout(() => setShowSuccess(false), 3000);
+        return;
+      }
+
       const fileExt = (file.name.split('.').pop() || 'bin').toLowerCase().replace(/[^a-z0-9]/g, '');
       const fileName = `${user!.id}/avatar-${Date.now()}.${fileExt || 'bin'}`;
 
@@ -215,6 +327,49 @@ export function SettingsPage() {
       toast(`${t('error.uploadAvatar')}: ${(error as Error).message}`, 'error');
     } finally {
       setProcessing(false);
+      e.target.value = '';
+    }
+  }
+
+  function persistShipping(next: ShippingAddress[]) {
+    if (!user) return;
+    setShipping(next);
+    saveShipping(user.id, next);
+  }
+
+  function handleSaveShipping(e: React.FormEvent) {
+    e.preventDefault();
+    if (!shippingForm.name.trim() || !shippingForm.line.trim()) {
+      toast('Name and street line are required', 'error');
+      return;
+    }
+    const row: ShippingAddress = {
+      id:
+        typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+          ? crypto.randomUUID()
+          : `ship-${Date.now()}`,
+      name: shippingForm.name.trim(),
+      line: shippingForm.line.trim(),
+      city: shippingForm.city.trim(),
+      country: shippingForm.country.trim(),
+      notes: shippingForm.notes.trim(),
+    };
+    persistShipping([row, ...shipping]);
+    setShippingForm(EMPTY_SHIPPING);
+    setShowShippingModal(false);
+    toast('Address saved on this device', 'success');
+  }
+
+  async function handleDeleteDemoAccount() {
+    setDeletingDemo(true);
+    try {
+      clearDemoAccountStorage();
+      await signOut();
+      toast('Demo data cleared on this device', 'success');
+      navigate('/', { replace: true });
+    } finally {
+      setDeletingDemo(false);
+      setConfirmDeleteDemo(false);
     }
   }
 
@@ -225,6 +380,22 @@ export function SettingsPage() {
     setProcessing(true);
     try {
       const file = files[0];
+      if (isDemoUser) {
+        const dataUrl = await new Promise<string>((resolve, reject) => {
+          const r = new FileReader();
+          r.onload = () => resolve(String(r.result));
+          r.onerror = () => reject(new Error('Could not read image'));
+          r.readAsDataURL(file);
+        });
+        const result = await updateProfile({ banner_url: dataUrl });
+        if (result.error) throw result.error;
+        setProfileForm({ ...profileForm, banner_url: dataUrl });
+        setShowSuccess(true);
+        toast('Banner saved on this device (demo)', 'success');
+        setTimeout(() => setShowSuccess(false), 3000);
+        return;
+      }
+
       const fileExt = (file.name.split('.').pop() || 'bin').toLowerCase().replace(/[^a-z0-9]/g, '');
       const fileName = `${user!.id}/banner-${Date.now()}.${fileExt || 'bin'}`;
 
@@ -336,31 +507,47 @@ export function SettingsPage() {
                 <form onSubmit={handleSaveProfile} className="space-y-8">
 
                   {/* Live Profile Preview */}
-                  <div className="p-1 bg-gradient-to-r from-orange-500 to-amber-600 rounded-2xl">
+                  <div className="p-1 bg-gradient-to-r from-orange-500 to-amber-600 rounded-2xl" style={{ background: `linear-gradient(90deg, var(--theme-accent, #ff8700), #d97706)` }}>
                     <div className="bg-black rounded-xl overflow-hidden">
                       <div className="relative">
-                        {profileForm.banner_url ? (
-                          <div
-                            className="w-full h-64 bg-cover bg-center"
-                            style={{ backgroundImage: `url(${profileForm.banner_url})` }}
-                          />
-                        ) : (
-                          <div className="w-full h-64 bg-charcoal-900 flex items-center justify-center">
-                            <Camera size={64} className="text-gray-700" />
-                          </div>
-                        )}
-                        <div className="absolute -bottom-16 left-8">
-                          {(avatarPreview || profileForm.avatar_url) ? (
-                            <img
-                              src={avatarPreview || profileForm.avatar_url}
-                              alt="Avatar Preview"
-                              className="w-32 h-32 rounded-full object-cover border-4 border-black shadow-2xl"
+                        <button
+                          type="button"
+                          onClick={() => document.getElementById('banner-upload')?.click()}
+                          className="block w-full text-left min-h-[44px]"
+                          aria-label="Upload banner"
+                          disabled={processing}
+                        >
+                          {profileForm.banner_url ? (
+                            <div
+                              className="w-full h-64 bg-cover bg-center"
+                              style={{ backgroundImage: `url(${profileForm.banner_url})` }}
                             />
                           ) : (
-                            <div className="w-32 h-32 rounded-full bg-gradient-to-r from-orange-500 to-amber-600 flex items-center justify-center text-white text-5xl font-black border-4 border-black shadow-2xl">
-                              {profileForm.username?.[0]?.toUpperCase() || '?'}
+                            <div className="w-full h-64 bg-charcoal-900 flex items-center justify-center">
+                              <Camera size={64} className="text-gray-700" />
                             </div>
                           )}
+                        </button>
+                        <div className="absolute -bottom-16 left-8">
+                          <button
+                            type="button"
+                            onClick={() => document.getElementById('avatar-upload')?.click()}
+                            className="block rounded-full min-h-[44px] min-w-[44px]"
+                            aria-label="Upload avatar"
+                            disabled={processing}
+                          >
+                            {(avatarPreview || profileForm.avatar_url) ? (
+                              <img
+                                src={avatarPreview || profileForm.avatar_url}
+                                alt="Avatar Preview"
+                                className="w-32 h-32 rounded-full object-cover border-4 border-black shadow-2xl"
+                              />
+                            ) : (
+                              <div className="w-32 h-32 rounded-full bg-gradient-to-r from-orange-500 to-amber-600 flex items-center justify-center text-white text-5xl font-black border-4 border-black shadow-2xl">
+                                {profileForm.username?.[0]?.toUpperCase() || '?'}
+                              </div>
+                            )}
+                          </button>
                         </div>
                       </div>
                       <div className="pt-20 px-8 pb-6">
@@ -521,6 +708,12 @@ export function SettingsPage() {
                         placeholder={t('settings.placeholder.lightning')}
                         icon={<Zap size={18} className="text-amber-500" />}
                         className="bg-black border-white/10 text-white"
+                        error={
+                          profileForm.lightning_address.trim()
+                            ? validateLightningAddress(profileForm.lightning_address) ?? undefined
+                            : undefined
+                        }
+                        helperText="Lightning address (user@domain), lnurl, or lnbc/lntb. Katoa never settles Lightning for you."
                       />
 
                       <div>
@@ -568,6 +761,15 @@ export function SettingsPage() {
                         }}
                       >
                         Link NIP-07 extension
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="min-h-[44px]"
+                        disabled={nostrBusy}
+                        onClick={() => setConfirmImportNostr(true)}
+                      >
+                        Import from Nostr (kind-0)
                       </Button>
                       <Button
                         type="button"
@@ -651,18 +853,55 @@ export function SettingsPage() {
                     </div>
 
                     <div className="p-6 bg-black rounded-xl border border-white/10">
-                      <label className="block text-sm font-bold text-gray-200 mb-4 uppercase tracking-wider">
+                      <p className="text-sm font-bold text-gray-200 mb-3 uppercase tracking-wider">
+                        Public links
+                      </p>
+                      <div className="flex flex-col sm:flex-row flex-wrap gap-2">
+                        <Link
+                          href={profileForm.username ? `/u/${encodeURIComponent(profileForm.username)}` : '/explore'}
+                          className="inline-flex items-center justify-center min-h-[44px] px-4 rounded-xl border border-white/10 text-sm text-neon-cyan-400 hover:bg-white/5"
+                        >
+                          <User size={16} className="mr-2" />
+                          Public profile {profileForm.username ? `/u/${profileForm.username}` : ''}
+                        </Link>
+                        <Link
+                          href="/nip05"
+                          className="inline-flex items-center justify-center min-h-[44px] px-4 rounded-xl border border-white/10 text-sm text-gray-300 hover:bg-white/5"
+                        >
+                          NIP-05 claim
+                        </Link>
+                        <Link
+                          href="/messages"
+                          className="inline-flex items-center justify-center min-h-[44px] px-4 rounded-xl border border-white/10 text-sm text-gray-300 hover:bg-white/5"
+                        >
+                          <MessageCircle size={16} className="mr-2" />
+                          Messages
+                        </Link>
+                      </div>
+                    </div>
+
+                    <div className="p-6 bg-black rounded-xl border border-white/10">
+                      <label className="block text-sm font-bold text-gray-200 mb-4 uppercase tracking-wider" htmlFor="theme-accent">
                         Theme Accent Color
                       </label>
                       <div className="flex items-center gap-4">
                         <input
+                          id="theme-accent"
                           type="color"
-                          className="w-20 h-20 rounded-xl cursor-pointer border-4 border-white/10 hover:border-orange-500 transition-colors"
-                          defaultValue="#ff8700"
+                          value={themeAccent}
+                          onChange={(e) => {
+                            const color = e.target.value;
+                            setThemeAccent(color);
+                            saveThemeAccent(color);
+                          }}
+                          className="w-20 h-20 min-h-[44px] min-w-[44px] rounded-xl cursor-pointer border-4 border-white/10 hover:border-orange-500 transition-colors"
                         />
                         <div>
                           <p className="text-white font-bold mb-1">Choose Your Color</p>
-                          <p className="text-sm text-gray-500">This color will accent your profile</p>
+                          <p className="text-sm text-gray-500">
+                            Saved on this device as <code className="text-gray-400">--theme-accent</code>
+                          </p>
+                          <p className="text-xs font-mono text-gray-500 mt-1">{themeAccent}</p>
                         </div>
                       </div>
                     </div>
@@ -707,11 +946,21 @@ export function SettingsPage() {
                   </div>
                   <div>
                     <h2 className="text-3xl font-black text-white">Projects & Analytics</h2>
-                    <p className="text-gray-400">Overview of your wishlists and activity</p>
+                    <p className="text-gray-400">
+                      {statsAreDemo
+                        ? 'Device preview — not live Katoa stats'
+                        : 'Overview of your wishlists and activity'}
+                    </p>
                   </div>
                 </div>
 
                 <div className="space-y-6">
+                  {statsAreDemo && (
+                    <div className="flex items-center gap-2 text-sm text-gray-400">
+                      <DemoBadge title="Counts from this device, not the live Katoa database" />
+                      <span>Demo/offline counts are labeled so empty live numbers are not shown as real.</span>
+                    </div>
+                  )}
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div className="p-6 bg-gradient-to-br from-orange-500/10 to-orange-600/5 rounded-xl border border-orange-500/30 hover:border-orange-500/50 transition-all">
                       <div className="flex items-center justify-between mb-4">
@@ -721,7 +970,9 @@ export function SettingsPage() {
                         <span className="text-4xl font-black text-white">{stats.wishlists}</span>
                       </div>
                       <h4 className="text-lg font-bold text-white mb-1">Wishlists</h4>
-                      <p className="text-orange-400 text-sm font-medium">Active projects</p>
+                      <p className="text-orange-400 text-sm font-medium">
+                        {statsAreDemo ? 'On this device' : 'Active projects'}
+                      </p>
                     </div>
 
                     <div className="p-6 bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 rounded-xl border border-emerald-500/30 hover:border-emerald-500/50 transition-all">
@@ -732,7 +983,9 @@ export function SettingsPage() {
                         <span className="text-4xl font-black text-white">{stats.following}</span>
                       </div>
                       <h4 className="text-lg font-bold text-white mb-1">Following</h4>
-                      <p className="text-emerald-400 text-sm font-medium">Creators you support</p>
+                      <p className="text-emerald-400 text-sm font-medium">
+                        {statsAreDemo ? 'Not tracked in demo' : 'Creators you support'}
+                      </p>
                     </div>
 
                     <div className="p-6 bg-gradient-to-br from-cyan-500/10 to-cyan-600/5 rounded-xl border border-cyan-500/30 hover:border-cyan-500/50 transition-all">
@@ -743,7 +996,9 @@ export function SettingsPage() {
                         <span className="text-4xl font-black text-white">{stats.contributions}</span>
                       </div>
                       <h4 className="text-lg font-bold text-white mb-1">Contributions</h4>
-                      <p className="text-cyan-400 text-sm font-medium">Payments made</p>
+                      <p className="text-cyan-400 text-sm font-medium">
+                        {statsAreDemo ? 'Not tracked in demo' : 'Payments made'}
+                      </p>
                     </div>
 
                     <div className="p-6 bg-gradient-to-br from-purple-500/10 to-purple-600/5 rounded-xl border border-purple-500/30 hover:border-purple-500/50 transition-all">
@@ -754,7 +1009,9 @@ export function SettingsPage() {
                         <span className="text-4xl font-black text-white">{stats.projectFollowers}</span>
                       </div>
                       <h4 className="text-lg font-bold text-white mb-1">Followers</h4>
-                      <p className="text-purple-400 text-sm font-medium">Project supporters</p>
+                      <p className="text-purple-400 text-sm font-medium">
+                        {statsAreDemo ? 'Not tracked in demo' : 'Project supporters'}
+                      </p>
                     </div>
                   </div>
 
@@ -787,20 +1044,71 @@ export function SettingsPage() {
                   </div>
                   <div>
                     <h2 className="text-3xl font-black text-white">Shipping Addresses</h2>
-                    <p className="text-gray-400">Add locations where you can receive physical items</p>
+                    <p className="text-gray-400">
+                      Stored on this device. Shown to gifters you choose — Katoa does not ship items.
+                    </p>
                   </div>
                 </div>
-                <div className="text-center py-16 bg-black rounded-xl border border-white/10">
-                  <div className="inline-flex items-center justify-center w-20 h-20 bg-purple-500/20 rounded-2xl mb-6">
-                    <MapPin size={40} className="text-purple-500" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-white mb-2">No Addresses Yet</h3>
-                  <p className="text-gray-400 mb-6">Add your first shipping address to receive physical gifts</p>
-                  <Button className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 font-bold text-lg px-8 py-3 shadow-lg">
+
+                <div className="flex justify-end mb-4">
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      setShippingForm(EMPTY_SHIPPING);
+                      setShowShippingModal(true);
+                    }}
+                    className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 font-bold min-h-[44px]"
+                  >
                     <MapPin size={20} className="mr-2" />
                     Add Address
                   </Button>
                 </div>
+
+                {shipping.length === 0 ? (
+                  <div className="text-center py-16 bg-black rounded-xl border border-white/10">
+                    <div className="inline-flex items-center justify-center w-20 h-20 bg-purple-500/20 rounded-2xl mb-6">
+                      <MapPin size={40} className="text-purple-500" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-white mb-2">No Addresses Yet</h3>
+                    <p className="text-gray-400 mb-6 max-w-md mx-auto">
+                      Add a shipping address if you want physical gifts. It stays on this device and is only shown to gifters you choose.
+                    </p>
+                    <Button
+                      type="button"
+                      onClick={() => setShowShippingModal(true)}
+                      className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 font-bold text-lg px-8 py-3 shadow-lg min-h-[44px]"
+                    >
+                      <MapPin size={20} className="mr-2" />
+                      Add Address
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {shipping.map((addr) => (
+                      <div
+                        key={addr.id}
+                        className="p-4 rounded-xl border border-white/10 bg-black flex items-start justify-between gap-3"
+                      >
+                        <div className="min-w-0">
+                          <p className="text-white font-bold">{addr.name}</p>
+                          <p className="text-gray-300 text-sm">{addr.line}</p>
+                          <p className="text-gray-400 text-sm">
+                            {[addr.city, addr.country].filter(Boolean).join(', ')}
+                          </p>
+                          {addr.notes && <p className="text-gray-500 text-xs mt-1">{addr.notes}</p>}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setDeleteShippingId(addr.id)}
+                          className="p-2 text-gray-400 hover:text-red-400 min-h-[44px] min-w-[44px] flex items-center justify-center"
+                          aria-label={`Delete ${addr.name}`}
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </Card>
             )}
 
@@ -937,15 +1245,44 @@ export function SettingsPage() {
                       <AlertCircle size={20} />
                       Danger Zone
                     </h3>
-                    <p className="text-gray-300 mb-4 leading-relaxed">
-                      Permanently delete your account and all associated data. This action cannot be undone.
-                    </p>
-                    <Button
-                      variant="outline"
-                      className="border-red-500 text-red-400 hover:bg-red-500/20 hover:border-red-400 font-bold"
-                    >
-                      Delete Account
-                    </Button>
+                    {isDemoUser ? (
+                      <>
+                        <p className="text-gray-300 mb-4 leading-relaxed">
+                          This is a demo session. Delete clears this device&apos;s demo storage and signs you out.
+                          It does not wipe a live Katoa account.
+                        </p>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="border-red-500 text-red-400 hover:bg-red-500/20 hover:border-red-400 font-bold min-h-[44px]"
+                          onClick={() => setConfirmDeleteDemo(true)}
+                        >
+                          Delete demo data
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-gray-300 mb-4 leading-relaxed">
+                          Self-serve account deletion is not available in the app. Email{' '}
+                          <a
+                            href="mailto:hello@giveabit.io?subject=Katoa%20account%20deletion"
+                            className="text-red-300 underline"
+                          >
+                            hello@giveabit.io
+                          </a>{' '}
+                          to request a real wipe. We will not pretend this button deleted your account.
+                        </p>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          disabled
+                          className="border-red-500/40 text-red-400/60 font-bold min-h-[44px] cursor-not-allowed"
+                          title="Email hello@giveabit.io — in-app delete is not available"
+                        >
+                          Delete Account
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </div>
               </Card>
@@ -953,6 +1290,116 @@ export function SettingsPage() {
           </div>
         </div>
       </div>
+
+      <Modal
+        isOpen={showShippingModal}
+        onClose={() => setShowShippingModal(false)}
+        title="Add shipping address"
+        size="md"
+      >
+        <form onSubmit={handleSaveShipping} className="space-y-4">
+          <p className="text-sm text-gray-400">
+            Saved on this device. Shown to gifters you choose — not a public listing.
+          </p>
+          <Input
+            label="Name"
+            value={shippingForm.name}
+            onChange={(e) => setShippingForm({ ...shippingForm, name: e.target.value })}
+            required
+            autoComplete="name"
+          />
+          <Input
+            label="Street line"
+            value={shippingForm.line}
+            onChange={(e) => setShippingForm({ ...shippingForm, line: e.target.value })}
+            required
+            autoComplete="street-address"
+          />
+          <Input
+            label="City"
+            value={shippingForm.city}
+            onChange={(e) => setShippingForm({ ...shippingForm, city: e.target.value })}
+            autoComplete="address-level2"
+          />
+          <Input
+            label="Country"
+            value={shippingForm.country}
+            onChange={(e) => setShippingForm({ ...shippingForm, country: e.target.value })}
+            autoComplete="country-name"
+          />
+          <div>
+            <label htmlFor="shipping-notes" className="block text-sm font-medium text-gray-300 mb-2">
+              Notes
+            </label>
+            <textarea
+              id="shipping-notes"
+              value={shippingForm.notes}
+              onChange={(e) => setShippingForm({ ...shippingForm, notes: e.target.value })}
+              className="w-full px-4 py-3 min-h-[88px] bg-white/5 border border-white/10 rounded-xl text-white text-base"
+              placeholder="Apartment, pickup notes…"
+            />
+          </div>
+          <div className="flex flex-col-reverse sm:flex-row gap-3 pt-2">
+            <Button type="button" variant="outline" className="flex-1 min-h-[44px]" onClick={() => setShowShippingModal(false)}>
+              Cancel
+            </Button>
+            <Button type="submit" className="flex-1 min-h-[44px]">
+              Save address
+            </Button>
+          </div>
+        </form>
+      </Modal>
+
+      <ConfirmDialog
+        isOpen={deleteShippingId !== null}
+        title="Remove shipping address?"
+        message="This only deletes the address stored on this device."
+        confirmLabel="Remove"
+        cancelLabel="Cancel"
+        variant="danger"
+        onConfirm={() => {
+          if (deleteShippingId) persistShipping(shipping.filter((a) => a.id !== deleteShippingId));
+          setDeleteShippingId(null);
+        }}
+        onCancel={() => setDeleteShippingId(null)}
+      />
+
+      <ConfirmDialog
+        isOpen={confirmImportNostr}
+        title="Import from Nostr (kind-0)"
+        message="Replace avatar, bio, and Lightning address with your kind-0 profile from relays? Katoa never sees your private key."
+        confirmLabel="Import"
+        cancelLabel="Cancel"
+        variant="primary"
+        loading={nostrBusy}
+        onConfirm={async () => {
+          setNostrBusy(true);
+          try {
+            const { error } = await syncNostrProfile();
+            if (error) {
+              toast(error.message, 'error');
+              return;
+            }
+            toast('Imported kind-0 profile from relays', 'success');
+            setConfirmImportNostr(false);
+          } finally {
+            setNostrBusy(false);
+          }
+        }}
+        onCancel={() => setConfirmImportNostr(false)}
+      />
+
+      <ConfirmDialog
+        isOpen={confirmDeleteDemo}
+        title="Clear demo data?"
+        message="This clears demo projects, wallets, shipping, and inbox stored on this device, then signs you out. It does not delete a live Katoa account."
+        confirmLabel="Clear and sign out"
+        cancelLabel="Cancel"
+        variant="danger"
+        loading={deletingDemo}
+        onConfirm={handleDeleteDemoAccount}
+        onCancel={() => setConfirmDeleteDemo(false)}
+      />
     </div>
   );
 }
