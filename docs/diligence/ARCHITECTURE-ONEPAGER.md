@@ -1,10 +1,10 @@
 ---
 title: Technical Architecture One-Pager
 project: Katoa
-version: 1.0.0
+version: 1.1.7
 audience: developers, technical partners
-last_updated: 2026-07-13
-owner: Kimi (Orchestrator) + Nova (Docs)
+last_updated: 2026-08-24
+owner: Kimi (Orchestrator) + Grok (M3)
 self_evolving: true
 update_rule: >
   Any material change to product, stack, deploy path, traction, or ask
@@ -14,10 +14,10 @@ tags: [diligence, pitch, mvp, giveabit]
 ---
 # Katoa — Technical Architecture One-Pager
 
-**Live:** https://katoa.org · **Repo:** https://github.com/kitsboy/katoa · **Version:** `1.0.0`
+**Live:** https://katoa.org · **Repo:** https://github.com/kitsboy/katoa · **Version:** `1.1.7` · **Product HEAD:** `6f43b74`
 
 ## Stack
-React/Vite · Lightning Address/LNURL · Nostr NIP-07/78 · i18n · Cloudflare Pages
+React 18 / TypeScript / Vite / Tailwind v3 · React Router v6 · Supabase (Postgres, Auth, Storage, RLS) · Lightning Address + on-chain wallets · nostr-tools (NIP-07 **check**) · MapLibre + OpenFreeMap · i18n (en es pt fr de ja zh) · Cloudflare Pages
 
 ## System map (boxes)
 ```
@@ -27,48 +27,52 @@ React/Vite · Lightning Address/LNURL · Nostr NIP-07/78 · i18n · Cloudflare P
 [SPA / static app on Cloudflare Pages]
      |
         +--------+--------+
-|                 |
+        |                 |
         v                 v
-[Public APIs / LN / Nostr / OTS]   [Optional M3/M4 services]
+[Supabase Auth/RLS]   [Creator Lightning / on-chain dest]
+        |
+        v
+[Optional: BTCPay webhook Edge Function — code exists, not claimed live]
 ```
 
 ## Architecture notes
-- SPA frontend for campaigns/wishlists
-- Payments via Lightning address / LNURL (BTCPay wiring in progress)
-- Nostr auth + profile/wishlist publish paths
-- Client-heavy; payment rails external
-- Multi-language UI
+- SPA frontend for campaigns/wishlists/public profiles (`/u/:username`)
+- Payments: creator-controlled Lightning + on-chain addresses. Gift dest picker: `src/lib/creatorProfile.ts` (`pickReceiveDestinations` — **wallet Lightning wins** over stale `profiles.lightning_address`)
+- Dummy example addresses rejected (`isDummyPaymentTarget`)
+- Nostr: extension check/link until NIP-07 challenge Edge Function
+- Subscribe / PPV / likes / comments / seen: **localStorage seams**
+- Client never sets `confirmed` / `sats_raised` from a gift close
+- Night-jewel UI: live CSS `#0e0a18` / `#160e24`
 
 ## Deploy path
-Build → wrangler pages deploy dist/ --project-name katoa
+Build → Cloudflare Pages project `katoa` (`npm run build` → `dist/`). GitHub push may auto-build; confirm hard-refresh after `6f43b74`. Prefer `wrangler pages deploy dist/ --project-name katoa` if Pages lags.
 
 ## Data & privacy posture
-Prefer client-side and user-held keys. Minimize PII. Bitcoin rails where payments exist. See project privacy/security docs if present.
+Prefer client-side and user-held keys. Minimize PII. No KYC product. Bitcoin rails where payments exist. No `VITE_` payment secrets.
 
 ## MVP boundary
-- **In MVP now:** Campaign UX, LN receive surfaces, Nostr hooks, fee comparison education.
-- **Explicitly later:** Live BTCPay E2E, Silent Payments/BIP-47, mobile, agent funding flows.
+- **In MVP now:** Auth (email/Google), editable wallets, public profiles, gift/tip QR to saved Lightning, wishlists, fee comparison, night-jewel chrome, SPA 404, legal URLs, 7 languages.
+- **Explicitly later:** Live BTCPay/LND E2E webhook, NIP-07 session, Silent Payments/BIP-47, BOLT12 recurring as a product, paid unlocks.
 
 ## Dependencies
-Lightning receivers; optional BTCPay; Nostr relays
+Creator Lightning receivers; optional BTCPay on THOR; Nostr relays; Supabase
 
 ## How a technical helper starts (15 min)
 ```bash
 git clone https://github.com/kitsboy/katoa.git
 cd katoa
-# typically:
 npm install
 npm run dev
 ```
-Read `README.md`, `docs/DEPLOYMENT.md` (or `DEPLOY.md`), and this file.
+Read `README.md`, `docs/DESIGN.md`, `docs/EXECUTIVE-SUMMARY.md`, and this file.
 
 ## Known gaps (full disclosure)
-See Investor one-pager risks + project `LATEST-UPDATE.md` / handoffs. Do not claim production hardness without tests/deploy verification.
+See Investor one-pager risks + `docs/KIMI-HANDOFF.md` + `docs/NEXT-NEEDS-CAM.md`. Do not claim production Lightning invoices without webhook confirmation.
 
 ## Related
 - [Investor one-pager](./INVESTOR-ONEPAGER.md)
 - [Ask sheet](./ASK-SHEET.md)
-- Deeper docs: `docs/ARCHITECTURE.md` (if present), `SOURCE-OF-TRUTH.md`, `docs/.ai_docs/`
+- Deeper docs: `docs/ARCHITECTURE.md`, `docs/DESIGN.md`, `docs/KIMI-HANDOFF.md`
 
 ---
 **Safe Harbour:** Educational / informational only. Not financial, legal, or investment advice.

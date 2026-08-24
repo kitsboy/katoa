@@ -3,12 +3,13 @@
 **Date:** 2026-08-24  
 **Project:** KATOA (katoa.org)  
 **Version:** 1.1.7  
+**Product HEAD:** `6f43b74` — *fix: gift/tip Lightning follows the saved wallet address*  
 **Status:** Live product SPA · night-jewel visual era · Cloudflare Pages  
 **Ecosystem:** [Give A Bit](https://giveabit.io) — Bitcoin sovereignty tools for private, feel-good giving  
 **License:** MIT (open source)  
 **Source:** [github.com/kitsboy/katoa](https://github.com/kitsboy/katoa)
 
-> **5-minute read.** Pitch copy: [`MARKETING.md`](./MARKETING.md). Visuals: [`DESIGN.md`](./DESIGN.md) · deck [`marketing/KATOA-Marketing-Presentation.pdf`](./marketing/KATOA-Marketing-Presentation.pdf).
+> **5-minute read.** Pitch copy: [`MARKETING.md`](./MARKETING.md). Visuals: [`DESIGN.md`](./DESIGN.md) · deck [`marketing/KATOA-Marketing-Presentation.pdf`](./marketing/KATOA-Marketing-Presentation.pdf) · HTML source [`marketing/katoa-presentation.html`](./marketing/katoa-presentation.html).
 
 ---
 
@@ -19,6 +20,30 @@
 It turns “I want to help this person or project” into a borderless payment where the recipient **keeps 100%** of what they are owed (minus tiny network fees, never a Katoa skim).
 
 **One line:** *Zero fees. Bitcoin Lightning. 195+ countries. Creators keep everything.*
+
+---
+
+## ELI16 pitch (investor / 25-year-old user)
+
+*Canonical spoken pitch from 2026-08-24. Use this for investors, waitstaff, students, and anyone who should get it in under a minute.*
+
+Katoa is a place where you can get paid directly in Bitcoin — from anywhere, without a bank, a middleman, or a 20% “platform cut.” You make a page (a profile plus wishlists of things you need or want), share the link, and people send you sats over Lightning. That’s the same idea as a tip jar, a GoFundMe, or a subscribe button, except the money is meant to land in *your* wallet, and Katoa’s fee is **0%**. Forever. You’re not waiting a week for PayPal. You’re not handing a fifth of your tips to a corporation.
+
+If you’re a student, a waitress, a musician, a skater, a tutor — anyone with fans, regulars, or a community — you sign up with email or Google (Nostr is optional if you’re into that). You add your own Lightning or Bitcoin address. You put up a profile people can actually use: tip, follow, message, subscribe, fund a wishlist item, or buy something from a product link. Supporters scan a QR, tap their wallet, done. Katoa never holds your money and does not KYC you. That’s the point: private, global, and you keep 100%.
+
+The cool bits are the ones that make that feel real instead of “crypto homework.” Lightning is coffee-money speed on rails that work in 195+ countries with no bank account. Wishlists turn “I need rent / gear / a skate ramp” into a clear list with progress bars. Creator profiles look like a modern feed — posts, tips, tiers — without the platform owning you. There’s a map of Bitcoin-accepting places, seven languages, and you’re part of Give A Bit, not a random app. Under the hood it’s open source, so anyone can audit that the 0% claim isn’t a marketing trick.
+
+You’d use it because the old internet taxes the people doing the work. Large subscription apps take ~20%. Link-in-bio tools take a slice or a monthly fee. Banks freeze, delay, or lock out whole countries. Katoa is the opposite bet: if someone wants to support you, almost every sat should reach you, on terms you control. For an investor, that’s a creator economy that isn’t rented from Visa and app stores. For a 25-year-old with a following or a night shift, it’s simpler: share a link, get paid, keep it.
+
+### Honest today (do not skip this box)
+
+| Claim in the story | Product truth |
+|--------------------|---------------|
+| “Get paid in Bitcoin” | Gifts/tips open the creator’s **saved Lightning or on-chain address** (wallet row wins over a stale profile field). Katoa never holds funds. |
+| “Instantly / seconds” | Lightning **path**. Production invoice → webhook → `confirmed` is **not live** until THOR deploys it. Browser never fakes settlement. |
+| “Subscribe / PPV / likes / comments” | **Client-local seams**, labeled demo, until Lightning webhook + Nostr. |
+| “Nostr login” | Extension **check / link**, not a session. Email + Google are the real register path. |
+| “Thousands of creators” | **False.** Sample catalog: **11** creators, `metrics.json` `demo: true`. |
 
 ---
 
@@ -49,7 +74,7 @@ Givers want to send real value **directly and privately**. Instead they get surv
 | Banking / KYC | **Not required** to receive support |
 | Identity | **Nostr optional** — your keys, your profile |
 | Code | **MIT open source** — auditable, forkable |
-| Design | **Night-jewel** — deep plum / ember glass, violet product, bitcoin-orange money |
+| Design | **Night-jewel** — live CSS `#0e0a18` / `#160e24`; DESIGN plum `#12081c` / ember `#080510`. Violet product, bitcoin-orange money |
 
 **For creators:** You keep what you're owed. You own the relationship with supporters. You can live anywhere and still get paid.
 
@@ -57,12 +82,13 @@ Givers want to send real value **directly and privately**. Instead they get surv
 
 ---
 
-## What is built today (August 2026)
+## What is built today (24 August 2026)
 
 ### Product (live at [katoa.org](https://katoa.org))
 
 - **Full SPA:** ~29 lazy-loaded page modules (Home, Explore, Creators, public `/u/:username` profiles, wishlists, dashboard, pricing, comparison, security, templates, press, meetup, case studies, guidelines, legal, pitch, 404, and more)
-- **Night-jewel UI:** Deep plum `#12081c` / ember `#080510` surfaces (not beige, not pure black). Violet `#a78bfa` product energy, bitcoin orange for money, neon cyan for interactive. Highlight-trim cards + violet hover rings. CSS landing on this target in parallel with this doc.
+- **Night-jewel UI:** Deep plum / ember surfaces (not beige, not pure black). Violet `#a78bfa` product energy, bitcoin orange for money, neon cyan for interactive. Highlight-trim cards + violet hover rings. Opaque header island + mobile dock; page copy clears safe-area chrome.
+- **MVP client path:** Email + Google register/sign-in; signup agrees to Terms/Privacy; Nostr is **check/link only**; add **and edit** Lightning/on-chain wallets; dummy `bitcoin.org` / example addresses rejected; solid `/u/:username` with Tip / Follow / Message and owner “Edit addresses”; complete `/terms` `/privacy` + SPA 404; gift/tip QR uses the **saved wallet Lightning address**.
 - **UX infrastructure:** Toast, ConfirmDialog, PageMeta (OG share card `og-share.svg` 1200×630), Breadcrumbs, EmptyState, PWA, `npm run sitemap`, prerender for crawlers
 - **Education & conversion:** Fee comparison calculator, platform comparison tables, templates, creator guidelines
 - **Bitcoin surface area:** Lightning addresses, on-chain, QR, footer/nav **BTC price strip**. Map is **MapLibre + OpenFreeMap** (Leaflet fully removed). BTCPay webhook **code exists**; production invoice → webhook settlement is **not claimed live**
@@ -74,13 +100,14 @@ Givers want to send real value **directly and privately**. Instead they get surv
 ### What was removed
 
 - **Pulse / Protocol widgets** removed 2026-07-06. Do not market “live network widgets.” The footer/nav BTC **price** strip remains.
+- **Beige marketing** `#dfd4c8` retired. Changelog does **not** auto-open (it stole first taps).
 
 ### Engineering
 
 | Layer | Stack |
 |-------|-------|
 | Frontend | React 18, TypeScript, Vite, Tailwind v3 |
-| Routing | React Router DOM v6 (clean URLs) |
+| Routing | React Router DOM v6 (clean URLs; SPA `/* /index.html 200`) |
 | Backend | Supabase (Postgres, Auth, Storage, RLS) |
 | Bitcoin / map / social | nostr-tools, **MapLibre GL + OpenFreeMap**, mempool / price APIs |
 | Hosting | **Cloudflare Pages** (katoa.org) |
@@ -94,10 +121,16 @@ Profiles · Wishlists · Items · Contributions · Projects · Follows · Wallet
 
 [`public/metrics.json`](../public/metrics.json) is a **labeled SAMPLE** (`raw.demo: true`). Current catalog snapshot: **11 creators**. Never say “thousands of creators.” UI must keep the demo/sample label until live Supabase counters exist.
 
+### Tests (this era)
+
+Unit suite green in the night-jewel/MVP pass (~222). Playwright coverage includes landing, FAQ, dashboard, 404, auth, legal, creator-profile.
+
 ### Staged / blocked (Cam / THOR)
 
+- Confirm Cloudflare Pages rebuilt `main` after `6f43b74` (hard-refresh katoa.org)
 - BTCPay / LND webhook deployed + `BTCPAY_WEBHOOK_SECRET` — invoice → confirmed tx → dashboard
 - Real Lightning subscribe / PPV (replace local seams)
+- Platform nsec in THOR vault; NIP-05 merge process; NIP-07 challenge login Edge Function
 - Authoritative product counters
 - First creators with **settled** sats on production rails
 
@@ -115,7 +148,7 @@ Profiles · Wishlists · Items · Contributions · Projects · Follows · Wallet
 4. **Radical transparency** — in-app fee math, open source, labeled demo data  
 5. **Give A Bit alignment** — mission, tone, Safe Harbour, ecosystem credibility
 
-**Primary audiences:** Independent creators, activists, mutual-aid organizers, unbanked or censored builders, Bitcoin/Nostr natives.
+**Primary audiences:** Independent creators, activists, mutual-aid organizers, unbanked or censored builders, Bitcoin/Nostr natives. Also: students, hospitality workers, tutors, musicians — anyone with a community who should not pay 20% rent.
 
 **Not primary (yet):** Enterprise compliance suites, traditional e-commerce at scale.
 
@@ -155,15 +188,18 @@ Drive prospects to `/comparison` and the live calculator — let the math close.
 | Doc | Purpose |
 |-----|---------|
 | [`EXECUTIVE-SUMMARY.md`](./EXECUTIVE-SUMMARY.md) | This file — leadership & handoff |
-| [`MARKETING.md`](./MARKETING.md) | Pitch, messaging, CTAs, campaigns |
-| [`marketing/KATOA-Marketing-Presentation.pdf`](./marketing/KATOA-Marketing-Presentation.pdf) | Embellished slide deck |
+| [`MARKETING.md`](./MARKETING.md) | Pitch, messaging, CTAs, campaigns, ELI16 |
+| [`marketing/KATOA-Marketing-Presentation.pdf`](./marketing/KATOA-Marketing-Presentation.pdf) | Slide deck (PDF) |
+| [`marketing/katoa-presentation.html`](./marketing/katoa-presentation.html) | Editable 16:9 slide source |
 | [`DESIGN.md`](./DESIGN.md) | Night-jewel tokens, components, UI rules |
 | [`GROK-HANDOFF.md`](./GROK-HANDOFF.md) | Developer quick-start |
+| [`KIMI-HANDOFF.md`](./KIMI-HANDOFF.md) | Rolling M3 → Kimi log |
 | [`KIMI-HERMES-OPS.md`](./KIMI-HERMES-OPS.md) | Supabase + Cloudflare ops |
 | [`ARCHITECTURE.md`](./ARCHITECTURE.md) | Technical deep dive |
 | [`ROADMAP.md`](./ROADMAP.md) | Implementation phases |
 | [`MISSION.md`](./MISSION.md) | Purpose & values |
 | [`SEO.md`](./SEO.md) | Search + locale titles |
+| [`diligence/`](./diligence/) | Investor one-pager + ask |
 
 ---
 

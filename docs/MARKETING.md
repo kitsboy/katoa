@@ -85,6 +85,20 @@ For givers: you want to help someone directly. Instead you get surveillance chec
 
 ---
 
+## ELI16 pitch (investor / waitress / student)
+
+*Canonical 2026-08-24. Read this out loud. Full version also lives in [`EXECUTIVE-SUMMARY.md`](./EXECUTIVE-SUMMARY.md).*
+
+Katoa is a place where you can get paid directly in Bitcoin — from anywhere, without a bank, a middleman, or a 20% platform cut. You make a page (a profile plus wishlists), share the link, and people send you sats over Lightning. Same idea as a tip jar, a GoFundMe, or a subscribe button — except Katoa’s fee is **0%**, forever, and the money is meant to land in *your* wallet.
+
+Sign up with email or Google (Nostr is optional). Add your own Lightning or Bitcoin address. Put up a profile people can actually use: tip, follow, message, subscribe, fund a wishlist item. Supporters scan a QR, tap their wallet, done. Katoa never holds your money and does not KYC you.
+
+You’d use it because the old internet taxes the people doing the work. For an investor: a creator economy that isn’t rented from Visa and app stores. For a 25-year-old with a following or a night shift: share a link, get paid, keep it.
+
+**Honesty overlay (always attach):** gifts use the creator’s saved Lightning address; production invoices/webhooks are still THOR; subscribe/PPV/likes are local seams; catalog is 11 demo creators.
+
+---
+
 ## Who it's for
 
 ### Primary
@@ -228,8 +242,8 @@ Align all campaigns with [`DESIGN.md`](./DESIGN.md) — **night-jewel**, not bei
 
 | Role | Token | Hex |
 |------|-------|-----|
-| Page / product | Deep plum | `#12081c` |
-| Ember wells | Ember | `#080510` |
+| Page / product | Deep plum | `#12081c` (DESIGN) · live CSS `#0e0a18` / `#160e24` |
+| Ember wells | Ember | `#080510` (DESIGN) · live `--ember-950` `#0e0a18` |
 | Product accent | Violet | `#a78bfa` |
 | Money | Bitcoin orange | `#F7931A` |
 | Interactive | Neon cyan | `#14E6FF` |
@@ -351,7 +365,25 @@ Edit `katoa-presentation.html` first, then re-run. See `docs/marketing/README.md
 
 **Use this document as the narrative layer on top of the product.** The app sells itself with hero copy and fee math — this is how we tell the story everywhere else. Stay honest about Lightning, metrics, and local seams.
 
-*Marketing foundation updated for the night-jewel era (August 2026).*
+## What's live to market (24 August 2026)
+
+Market **what ships**. Product HEAD `6f43b74`.
+
+| Ship | Say |
+|------|-----|
+| Email + Google auth | Register without a bank. Nostr is optional check/link. |
+| Add/edit Lightning + on-chain wallets | Dummy example addresses rejected. Gift QR follows the **saved wallet**. |
+| Public `/u/:username` | Tip, follow, message. Owner can edit addresses on the page. |
+| Night-jewel UI | Deep plum glass, violet energy, bitcoin-orange money. Not beige. Not all-black. |
+| 7 languages | en es pt fr de ja zh |
+| Fee calculator + comparison | Let the math close |
+| Open source MIT | Anyone can audit 0% |
+
+Do **not** market live Lightning invoices, paid unlocks, or “thousands of creators.”
+
+---
+
+*Marketing foundation updated for the night-jewel + honest-MVP era (24 August 2026).*
 
 ---
 **Diligence pack:** [docs/diligence/](./diligence/) (investor + architecture + ask)

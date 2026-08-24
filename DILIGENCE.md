@@ -1,7 +1,7 @@
             ---
             title: Diligence pointer
             project: Katoa
-            last_updated: 2026-07-13
+            last_updated: 2026-08-24
             ---
 
 # Diligence pack

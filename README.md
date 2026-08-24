@@ -83,7 +83,7 @@ All docs are Obsidian-friendly Markdown. Run the `giveabit-project-handoff` skil
 ### Core Platform (0% Fees Forever)
 - ✅ **0% Platform Fees** — Keep 100% of your earnings ("Keep All That's Owed Always")
 - ✅ **Global Accessibility** — Works in 195+ countries, no bank or KYC required
-- ✅ **Instant Settlement** — Lightning Network (seconds, not days)
+- ✅ **Lightning settlement path** — sats to wallets you control (production invoice webhook still THOR)
 - ✅ **Censorship Resistant & Private** — Decentralized infrastructure + Nostr identity today; PYNYM / BIP-47 / Silent Payments planned
 
 ### Creator & Project Features

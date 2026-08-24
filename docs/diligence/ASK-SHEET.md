@@ -1,9 +1,9 @@
 ---
 title: Ask Sheet
 project: Katoa
-version: 1.0.0
+version: 1.1.7
 audience: investors, partners, collaborators
-last_updated: 2026-07-13
+last_updated: 2026-08-24
 owner: Kimi (Orchestrator) + Nova (Docs)
 self_evolving: true
 update_rule: >
@@ -17,7 +17,7 @@ tags: [diligence, pitch, mvp, giveabit]
 Use this in conversations. Customize the numbers before sending.
 
 ## What we want help with
-Lightning/BTCPay integrators; creator distribution partners.
+Lightning/BTCPay/LND webhook live on THOR; creator distribution partners; first real creators with settled sats. Confirm CF Pages after `6f43b74`.
 
 ## What success looks like (suggest)
 - Technical: mergeable PRs, deploy green, one integration live

@@ -1,5 +1,6 @@
-# KATOA — Last Updated 2026-08-24 by Grok
+# Katoa — Last Updated 2026-08-24 by Grok
 
-Brief: Night-jewel YOLO complete on M3 — contrast, mobile clearance, honest gifts, i18n packs, NIP-07 chip.
-Commit: `57782b2` plus mega-handoff stamp on `main`.
-Kimi: confirm CF Pages + webhook/nsec (see top of `docs/KIMI-HANDOFF.md`).
+Brief: Night-jewel + honest MVP pushed; ELI16 pitch, exec, 11-slide deck, and handoffs refreshed. Product HEAD `6f43b74`.
+Commit: `6f43b74` (product) + this docs/pitch/goodbye stamp on `main`.
+Kimi: confirm CF Pages after `6f43b74` + webhook/nsec (see top of `docs/KIMI-HANDOFF.md`).
+Do not sync to M4 until Kimi says so.

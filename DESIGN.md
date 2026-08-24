@@ -3,7 +3,7 @@
 *Template v4 — 2026-08-24 · night-jewel era*
 
 ## Theme
-- **Era:** Night-jewel (deep plum + ember). Parent is landing this in CSS in parallel — **this is the target.**
+- **Era:** Night-jewel (deep plum + ember). Live in CSS (`#0e0a18` / `#160e24`); DESIGN plum `#12081c` remains the documented page token.
 - **Background:** `#12081c` (deep plum) / `#080510` (ember). **Not** beige `#dfd4c8`. **Not** pure `#000`.
 - **Accents:** violet `#a78bfa` (product) · bitcoin orange `#F7931A` (money) · neon cyan `#14E6FF` (interactive)
 - **Cards:** glass fill `white/5` + **highlight trim** (orange 1px ring + inner white catch-light) + **violet rings** on hover

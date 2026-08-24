@@ -1,3 +1,70 @@
+## Latest Session Summary (from 2026-08-24 goodbye)
+
+**Chat Topic:** Night-jewel visual era + honest “creator support for everyone” MVP client path, then a full docs/pitch/exec refresh and clean goodbye.
+
+**Key Things We Did**
+- Pulled `main`, read handoffs, then YOLO: kill beige-on-cream contrast, night-jewel redesign, mobile chrome clearance, honest auth/wallets/profile/gifts.
+- MVP client path: email + Google register; Nostr is check/link only; add/edit wallets; dummy addresses rejected; solid `/u/:username`; legal URLs; gift/tip Lightning follows the **saved wallet** (`6f43b74`).
+- ELI16 spoken pitch (investor / 25-year-old / waitress) written, then folded into exec, marketing, diligence, and the 11-slide night-jewel deck.
+- Docs/handoffs/pitch/exec updated for goodbye. Do **not** sync to M4 until Kimi says so.
+
+**What We Finished**
+- Product HEAD `6f43b74` on `origin/main` (gift dest uses wallet Lightning over stale profile field).
+- Night-jewel UI live in CSS (`#0e0a18` / `#160e24`); beige `#dfd4c8` retired; changelog does not auto-open.
+- Pitch deck: `docs/marketing/katoa-presentation.html` + PDF (11 slides, August 2026).
+- Executive summary + MARKETING.md include the ELI16 pitch and an honesty box.
+- Diligence pack (investor / architecture / ask) refreshed to 2026-08-24.
+
+**What We Are Still Aiming to Finish (Cam / THOR)**
+- Confirm Cloudflare Pages rebuilt after `6f43b74`.
+- Lightning invoice → webhook → `confirmed` (`BTCPAY_WEBHOOK_SECRET` in vault only).
+- Platform nsec in THOR vault; NIP-05 merge; NIP-07 challenge login Edge Function.
+- Live `metrics.json` (keep sample / 11 demo creators until then).
+- Replace local seams (subscribe / PPV / likes / comments / seen).
+- Seed real creators with settled sats.
+
+**Update / Status**
+As of 2026-08-24, Katoa `main` product is `6f43b74`. M3 code for the visual era + honest MVP is pushed. This goodbye stamps docs, pitch, and exec on top. Production Lightning settlement remains THOR. Security: never fake `confirmed` in the browser; no secrets in git.
+
+**Key Decisions / Notes**
+- 0% is **platform** fee. Lightning routing fees still exist.
+- Wallet Lightning **wins** over `profiles.lightning_address` for gifts (`pickReceiveDestinations`).
+- Public SEO: do not use “OnlyFans alternative.” Internal comparison math may name competitors.
+- Night-jewel, not beige, not `#000` slop.
+- Pitch slide **bodies** in-app remain English (`/pitch` is `noindex`).
+
+**Mission Tie-in**
+Keep All That's Owed Always — creators keep 100%. Give A Bit sovereignty without lying about settlement.
+
+**Finished in this session:** night-jewel + MVP client path + Lightning dest fix + ELI16 pitch + exec/marketing/deck/diligence/handoffs.
+
+**Still to do:** THOR ops list above.
+
+**Next for Kimi:** Integrate this summary into MASTER-BRAIN.md / Kanban / Obsidian vault. Confirm CF Pages + webhook/nsec/NIP-05. Educate Hermes. Use the giveabit-project-handoff skill. **Do not move or sync anything to M4 until you or Kimi say it’s time.**
+
+**Git State:**
+- Product SHA: `6f43b743251553f8c2f9a73bf5ae7cf51a1e591e`
+- Unpushed at goodbye start: none (`origin/main` was `6f43b74`). Docs/pitch stamp follows on `main`.
+
+---
+
+## Session — 2026-08-24 (Grok M3) — Docs, pitch deck, executive summary, goodbye
+
+**Done:**
+- Refreshed `docs/EXECUTIVE-SUMMARY.md` (ELI16 pitch + honesty box + product HEAD `6f43b74`).
+- Refreshed `docs/MARKETING.md` (ELI16, live CSS tokens, “what’s live to market”).
+- Pitch deck night-jewel + honest MVP: HTML + regenerated PDF (11 slides). In-app `PitchPage` copy aligned (no fake “instant invoices”).
+- Diligence pack, GROK-HANDOFF, ARCHITECTURE date, NEXT-NEEDS-CAM, README Lightning wording, LATEST-UPDATE, SESSION-SUMMARY.
+
+**Decisions:**
+- Market wallets + QR now; do not claim production invoices.
+- ELI16 is the spoken pitch; honesty box always travels with it.
+
+**Git State:**
+- Product: `6f43b74` · this docs stamp on `main`.
+
+---
+
 ## Session — 2026-08-24 (Grok M3) — MVP flow: auth, wallets, profile, legal
 
 **Done:**
@@ -14,7 +81,7 @@
 
 **From:** Grok on M3 (`~/projects/katoa`)  
 **To:** Kimi on THOR  
-**Git:** `main` pushed through `57782b2` plus this stamp.  
+**Git:** `main` pushed through product `6f43b74` (gift dest) plus later docs/pitch stamp. MEGA below was written at `57782b2` — ops questions still apply; bump SHA to `6f43b74` when you hard-refresh.  
 **Live:** https://katoa.org · CF Pages project `katoa`
 
 Cam was in meetings. Grok shipped night-jewel + honesty + i18n + mobile clearance **without Cam**. **Security: never fake Lightning settlement. No secrets in git.**

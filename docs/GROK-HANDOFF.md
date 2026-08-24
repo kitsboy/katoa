@@ -1,17 +1,17 @@
 # Katoa — Grok Handoff
 
-**Prepared:** 2026-07-06 by Grok (M3) — updated after frontend polish batches
+**Prepared:** 2026-07-06 by Grok (M3) — refreshed 2026-08-24 (night-jewel + honest MVP)
 **For:** Grok / first-time katoa developer
 **Repo:** github.com/kitsboy/katoa
 **Live:** katoa.org → Cloudflare Pages
 **Branch:** main
-**Last commit:** `c65d1ed`
+**Product HEAD:** `6f43b74` — gift/tip Lightning follows the saved wallet address
 
 ---
 
 ## 1. What Is Katoa
 
-Zero-fee Bitcoin Lightning creator support platform. Wishlists, crowdfunding, Nostr identity, 7 languages. Tagline: "Keep All That's Owed Always."
+Zero-fee Bitcoin Lightning creator support platform. Wishlists, crowdfunding, optional Nostr, 7 languages. Tagline: "Keep All That's Owed Always." Night-jewel UI. Auth is email + Google; Nostr is check/link. Gifts use the creator's saved Lightning wallet.
 
 **Pitch & leadership docs:** [`EXECUTIVE-SUMMARY.md`](./EXECUTIVE-SUMMARY.md) · [`MARKETING.md`](./MARKETING.md) · PDF deck [`marketing/KATOA-Marketing-Presentation.pdf`](./marketing/KATOA-Marketing-Presentation.pdf)
 
@@ -35,8 +35,8 @@ npm run sitemap    # → public/sitemap.xml
 | State | React Context (Auth, Language, Currency) + ToastProvider | No external state library |
 | Auth | Supabase + Nostr NIP-07 | Lazy client — placeholder fallback if down |
 | i18n | `LanguageContext` + `pageStrings` | 7 languages — see [`I18N.md`](./I18N.md) |
-| Styling | Tailwind CSS v3 + custom theme | **Read [`docs/DESIGN.md`](./DESIGN.md)** — floating nav, hero overlay |
-| Payments | Supabase (DB) + Nostr + Lightning | BTCPay stubs in `lib/btcpay.ts` |
+| Styling | Tailwind CSS v3 + custom theme | **Read [`docs/DESIGN.md`](./DESIGN.md)** — night-jewel, floating nav |
+| Payments | Supabase (DB) + Lightning addresses | Gift dest: `pickReceiveDestinations`. BTCPay webhook code exists; settlement is THOR. |
 
 ## 4. File Tree (key paths)
 
@@ -52,8 +52,8 @@ katoa/
 │   │   ├── Toast.tsx, ConfirmDialog.tsx, PageMeta.tsx
 │   │   ├── Footer.tsx, MobileNav.tsx, FeeComparison.tsx
 │   │   └── ...
-│   ├── pages/               # 17 page components (all lazy)
-│   │   ├── HomePage.tsx, ExplorePage.tsx, WishlistRoutePage.tsx
+│   ├── pages/               # ~29 page components (all lazy)
+│   │   ├── HomePage.tsx, ExplorePage.tsx, CreatorProfilePage.tsx
 │   │   ├── DashboardPage.tsx, ProjectPage.tsx, SettingsPage.tsx
 │   │   ├── PitchPage.tsx, ComparisonPage.tsx, PricingPage.tsx
 │   │   ├── AboutPage.tsx, ContactPage.tsx, FAQPage.tsx

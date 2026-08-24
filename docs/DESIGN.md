@@ -1,7 +1,7 @@
 # KATOA Design System
 
 **Last updated:** 2026-08-24  
-**Status:** Living document — **night-jewel is the visual target.** Parent is implementing these tokens in CSS in parallel. Document the target, not beige.
+**Status:** Living document — **night-jewel is the visual target and is live in CSS** (`src/index.css` `--ember-950: #0e0a18`, `--ember-900: #160e24`). DESIGN plum `#12081c` remains the documented page token. Not beige.
 
 > **Quick links:** Tokens live in [`tailwind.config.js`](../tailwind.config.js) and [`src/index.css`](../src/index.css).  
 > **Primitives:** [`Card`](../src/components/Card.tsx) · [`Button`](../src/components/Button.tsx) · [`Modal`](../src/components/Modal.tsx) · [`Input`](../src/components/Input.tsx)

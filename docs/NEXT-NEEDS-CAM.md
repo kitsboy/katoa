@@ -1,6 +1,6 @@
 # Next list — needs Cam / THOR (honest backlog)
 
-Updated **2026-08-16** — added OF-parity subscription backend (HEAD `eccc285`, v1.1.7).
+Updated **2026-08-24** — night-jewel + honest MVP on `main` (product HEAD `6f43b74`, v1.1.7).
 
 ## Still needs you (cannot finish alone)
 
@@ -21,7 +21,7 @@ Updated **2026-08-16** — added OF-parity subscription backend (HEAD `eccc285`,
 7. **Deploy Edge Function** for NIP-07 challenge login (stub README ready)  
 8. **Ops process for NIP-05 claims** (`/nip05` UI copies request; merge into `public/.well-known/nostr.json` or automate)  
 9. **Sign platform kind-0 + NIP-65** once with vault nsec  
-10. **Confirm CF Pages** deployed `main` through `9d38deb` (hard-refresh Explore map)
+10. **Confirm CF Pages** deployed `main` through `6f43b74` (hard-refresh: night-jewel, opaque header, gift QR follows saved Lightning wallet)
 
 ### Human growth
 11. **Seed 10–20 real creators**  

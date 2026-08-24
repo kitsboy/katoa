@@ -8,10 +8,10 @@
 
 | Doc | Use when |
 |-----|----------|
-| [**EXECUTIVE-SUMMARY.md**](./EXECUTIVE-SUMMARY.md) | 5-minute leadership / handoff overview |
-| [**MARKETING.md**](./MARKETING.md) | Pitch copy, social, CTAs, campaigns |
-| [**marketing/KATOA-Marketing-Presentation.pdf**](./marketing/KATOA-Marketing-Presentation.pdf) | Embellished slide deck (PDF) |
-| [**marketing/katoa-presentation.html**](./marketing/katoa-presentation.html) | Editable slide source |
+| [**EXECUTIVE-SUMMARY.md**](./EXECUTIVE-SUMMARY.md) | 5-minute leadership / handoff overview (includes ELI16 pitch) |
+| [**MARKETING.md**](./MARKETING.md) | Pitch copy, social, CTAs, campaigns, ELI16 |
+| [**marketing/KATOA-Marketing-Presentation.pdf**](./marketing/KATOA-Marketing-Presentation.pdf) | Night-jewel slide deck (11 slides, August 2026) |
+| [**marketing/katoa-presentation.html**](./marketing/katoa-presentation.html) | Editable 16:9 slide source |
 | [**MISSION.md**](./MISSION.md) | Purpose, values, safe harbour |
 
 ## Design & product

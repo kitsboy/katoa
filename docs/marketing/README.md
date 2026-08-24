@@ -7,7 +7,7 @@ Editable presentation and PDF export for pitches, social, and Give A Bit handoff
 | File | Purpose |
 |------|---------|
 | `katoa-presentation.html` | **Source of truth** for slides — edit text/numbers here |
-| `KATOA-Marketing-Presentation.pdf` | Exported deck (9 slides, 16:9) |
+| `KATOA-Marketing-Presentation.pdf` | Exported deck (11 slides, 16:9, night-jewel, August 2026) |
 | `katoa-cover.jpg` | Grok Imagine hero background for cover slide |
 
 ## Regenerate PDF

@@ -1,8 +1,8 @@
 # ARCHITECTURE — KATOA
 
-**Date**: 2026-07-09 (security audit remediations + CF Pages; prior: Router v6, charcoal/glass UI, PWA)
+**Date**: 2026-08-24 (night-jewel + honest MVP; prior: 2026-07-09 security audit + CF Pages)
 **Audience**: Kimi, future developers, Give A Bit architects. Keep it simple + accurate.  
-**Related**: [`DESIGN.md`](./DESIGN.md) · [`EXECUTIVE-SUMMARY.md`](./EXECUTIVE-SUMMARY.md)
+**Related**: [`DESIGN.md`](./DESIGN.md) · [`EXECUTIVE-SUMMARY.md`](./EXECUTIVE-SUMMARY.md) · product HEAD `6f43b74`
 
 ---
 
@@ -17,7 +17,7 @@ The product lets creators publish rich "support surfaces" (wishlists / projects)
 - Row Level Security (RLS) is the source of truth for authorization — never trust client code alone.
 - Nostr is a first-class identity and distribution layer (not bolted on).
 - Bitcoin payment options are plural and progressive (direct addresses today → full BTCPay invoices + BOLT12 tomorrow).
-- UI is premium but accessible; charcoal/glass aesthetic with motion hero, live Bitcoin price strip, and accessible overlays (toast, confirm dialogs).
+- UI is premium but accessible; **night-jewel** (plum/ember glass, violet product, bitcoin-orange money) with motion hero, BTC price strip, and accessible overlays (toast, confirm dialogs). Beige and all-black are retired.
 - Everything is open source (MIT) so users can audit, fork, or self-host the frontend.
 
 ---
@@ -43,8 +43,8 @@ src/
     - UX: Toast, ConfirmDialog, PwaInstallPrompt, ChangelogModal, OnboardingChecklist
     - Bitcoin: FeeComparison, DonateQRModal, FooterBitcoinStrip, QRCodeModal, SatsDisplay
     - Data: PaymentMethodManager, WalletAddressManager, WishlistItemsList, ContributorsWall
-  pages/ (17, lazy-loaded)    # Home, Explore, WishlistRoute, Dashboard, Project, Settings,
-                              # About, Contact, FAQ, Pricing, Comparison, Pitch, Auth, Legal, 404
+  pages/ (~29, lazy-loaded)   # Home, Explore, Creators, /u/:username, WishlistRoute, Dashboard, Project, Settings,
+                              # About, Contact, FAQ, Pricing, Comparison, Pitch, Auth, Legal, 404, press, meetup, …
   contexts/
     AuthContext.tsx           # Email/password + full Nostr NIP-07 flows, profile sync
     LanguageContext.tsx       # 7 langs + pageStrings for page-specific copy

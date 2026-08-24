@@ -10,7 +10,7 @@ const slides = [
     eyebrowKey: 'pitch.slide0.eyebrow',
     titleKey: 'pitch.slide0.title',
     subtitleKey: 'pitch.slide0.subtitle',
-    body: 'Zero-fee creator support on Bitcoin Lightning. Instant. Borderless. Private. Open source.',
+    body: 'Zero-fee creator support on Bitcoin Lightning. Borderless. Private. Open source. You keep 100%.',
     stats: [
       { labelKey: 'pitch.slide0.statFee', value: '0%', color: 'text-bitcoin-orange-400' },
       { labelKey: 'pitch.slide0.statCost', value: '$0', color: 'text-neon-cyan-400' },
@@ -22,9 +22,9 @@ const slides = [
     titleKey: 'pitch.slide1.title',
     body: 'Creators do the work. Gatekeepers own the relationship, delay payouts, and skim forever.',
     cards: [
-      { big: '20%', title: 'OnlyFans', desc: '~$24k/year lost on $10k/mo. Bank + KYC required.' },
-      { big: '10%', title: 'Throne', desc: 'Limited countries for low fees. Currency conversion adds up.' },
-      { big: '9–10%', title: 'Linktree', desc: 'Or pay $480/year for 0% fees. Either way — rent.' },
+      { big: '20%', title: 'Large subscription apps', desc: '~$24k/year lost on $10k/mo. Bank + KYC required.' },
+      { big: '10%', title: 'Wishlist / gifting apps', desc: 'Limited countries for low fees. Currency conversion adds up.' },
+      { big: '9–10%', title: 'Link-in-bio', desc: 'Or pay $480/year for 0% fees. Either way — rent.' },
     ],
     quote: '"How much of your support actually reached them?"',
   },
@@ -33,9 +33,9 @@ const slides = [
     titleKey: 'pitch.slide2.title',
     bullets: [
       '0% platform fees — forever. Architectural invariant.',
-      'Instant Lightning settlement. Seconds, not 7–30 day cycles.',
+      'Lightning to wallets you control. Katoa never holds funds.',
       '195+ countries. No bank account. No KYC to start.',
-      'Nostr-native identity. Your keys. Your audience.',
+      'Nostr optional. Email + Google work today.',
       'MIT open source. Auditable. Forkable. FOSS forever.',
     ],
   },
@@ -44,18 +44,18 @@ const slides = [
     titleKey: 'pitch.slide3.title',
     body: 'Live fee calculator on katoa.org — supporters see exactly where sats go.',
     table: [
-      { platform: 'OnlyFans', fees: '~20%', countries: 'Limited', payout: '7 days' },
-      { platform: 'Throne', fees: '~10%', countries: '~10', payout: 'Slow' },
-      { platform: 'Linktree', fees: '9–10%', countries: '~50', payout: 'Varies' },
-      { platform: 'KATOA', fees: '0%', countries: '195+', payout: 'Seconds', highlight: true },
+      { platform: 'Large subscription apps', fees: '~20%', countries: 'Limited', payout: 'Days' },
+      { platform: 'Wishlist / gifting apps', fees: '~10%', countries: '~10', payout: 'Slow' },
+      { platform: 'Link-in-bio', fees: '9–10%', countries: '~50', payout: 'Varies' },
+      { platform: 'KATOA', fees: '0%', countries: '195+', payout: 'Lightning', highlight: true },
     ],
   },
   {
     eyebrowKey: 'pitch.slide4.eyebrow',
     titleKey: 'pitch.slide4.title',
     features: [
-      '0% Platform Fees', 'Instant Lightning', 'Global by Default', 'No Banking Required', 'On-Chain & Lightning',
-      'Unlimited Wishlists', 'Dashboard analytics (path)', 'Shareable Pages', 'Privacy First', 'BOLT 12 Recurring (planned)',
+      '0% Platform Fees', 'Bitcoin Lightning', 'Global by Default', 'No Banking Required', 'On-Chain & Lightning',
+      'Unlimited Wishlists', 'Shareable Pages', 'Privacy First', 'Open Source (MIT)', 'BOLT 12 path',
     ],
   },
   {
@@ -70,9 +70,9 @@ const slides = [
     eyebrowKey: 'pitch.slide6.eyebrow',
     titleKey: 'pitch.slide6.title',
     tech: [
-      { title: 'Frontend', desc: 'React 18 · TypeScript · Vite · Tailwind · Mobile-first glass UI' },
+      { title: 'Frontend', desc: 'React 18 · TypeScript · Vite · Tailwind · night-jewel glass UI' },
       { title: 'Backend', desc: 'Supabase Postgres · Auth · Storage · Row Level Security' },
-      { title: 'Bitcoin', desc: 'Lightning · Nostr · QR · BTC Map · BTCPay · BOLT12 path' },
+      { title: 'Bitcoin', desc: 'Lightning addresses · Nostr check · QR · MapLibre · BTCPay webhook code · BOLT12 path' },
     ],
   },
   {
@@ -120,7 +120,7 @@ export function PitchPage() {
   const slideTitle = t(slide.titleKey);
 
   return (
-    <div className="min-h-[100dvh] bg-charcoal-950 text-white overflow-hidden">
+    <div className="min-h-[100dvh] bg-[#0e0a18] text-white overflow-hidden">
       <PageMeta
         title={t('pitch.metaTitle')}
         description={t('pitch.metaDesc')}

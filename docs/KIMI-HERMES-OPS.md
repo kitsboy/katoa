@@ -1,6 +1,7 @@
 # Katoa — Kimi / HERMES Operations Guide
 
-**Machine:** M4 HERMES (Kimi) · **Coding:** M3 · **Live:** katoa.org (Cloudflare Pages) · **Repo:** `~/projects/katoa`
+**Machine:** M4 HERMES (Kimi) · **Coding:** M3 · **Live:** katoa.org (Cloudflare Pages) · **Repo:** `~/projects/katoa`  
+**Product HEAD to confirm on Pages:** `6f43b74` (2026-08-24) — gift/tip Lightning follows saved wallet; night-jewel chrome.
 
 This doc is the single runbook for keeping Katoa running after Cam provisions Supabase.
 

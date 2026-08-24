@@ -3,7 +3,7 @@ title: Diligence Pack Index
 project: Katoa
 version: 1.0.0
 audience: all
-last_updated: 2026-07-13
+last_updated: 2026-08-24
 owner: Kimi (Orchestrator) + Nova (Docs)
 self_evolving: true
 update_rule: >
@@ -40,6 +40,9 @@ tags: [diligence, pitch, mvp, giveabit]
 - Product: https://katoa.org
 - Repo: https://github.com/kitsboy/katoa
 - One-liner: Zero-fee Bitcoin Lightning creator support. Keep 100%.
+- Pitch deck: `docs/marketing/KATOA-Marketing-Presentation.pdf` (11 slides, night-jewel, August 2026)
+- Executive summary: `docs/EXECUTIVE-SUMMARY.md` (includes ELI16 investor/user pitch)
+- Product HEAD: `6f43b74` on `main`
 
 ---
 **Safe Harbour:** Educational / informational only. Not financial, legal, or investment advice.
