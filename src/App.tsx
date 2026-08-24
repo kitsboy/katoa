@@ -58,10 +58,12 @@ function ProfileUsernameRedirect() {
 function PageLoader() {
   const { t } = useLanguage();
   return (
-    <div className="min-h-[60vh] flex items-center justify-center" role="status" aria-busy="true" aria-label={t('common.loading')}>
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-2 border-neon-cyan-500 border-t-transparent mx-auto mb-4" />
-        <p className="text-gray-400 text-sm font-medium">{t('common.loading')}</p>
+    <div className="min-h-[40vh] px-4 py-16" role="status" aria-busy="true" aria-label={t('common.loading')}>
+      <div className="max-w-3xl mx-auto space-y-3">
+        <div className="h-8 w-2/5 rounded-lg bg-white/10" />
+        <div className="h-4 w-full rounded-lg bg-white/[0.06]" />
+        <div className="h-4 w-4/5 rounded-lg bg-white/[0.06]" />
+        <div className="h-40 w-full rounded-2xl bg-white/[0.05] mt-6" />
       </div>
     </div>
   );

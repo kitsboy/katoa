@@ -1,27 +1,19 @@
 import { useLanguage } from '../contexts/LanguageContext';
-import { Shield, Lock, Eye, Database, Cookie, Globe, Mail, UserCheck } from 'lucide-react';
+import { Lock, Eye, Database, Cookie, Globe, Mail, UserCheck } from 'lucide-react';
 import { PageMeta } from '../components/PageMeta';
+import { PageShell } from '../components/PageShell';
 
 export function PrivacyPage() {
   const { t } = useLanguage();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 text-white pt-6 pb-16">
+    <div className="text-white">
       <PageMeta
         title={t('privacy.title')}
         description="KATOA Privacy Policy — how we protect your data on our privacy-first Bitcoin wishlist platform."
         path="/privacy"
       />
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-cyan-600 mb-4">
-            <Shield size={32} className="text-white" />
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-cyan-500 bg-clip-text text-transparent">
-            {t('privacy.title')}
-          </h1>
-          <p className="text-gray-400">{t('privacy.lastUpdated')}</p>
-        </div>
+      <PageShell title={t('privacy.title')} subtitle={t('privacy.lastUpdated')} crumbs={[{ label: t('footer.privacy') }]} wide>
 
         <div className="prose prose-invert prose-blue max-w-none">
           <div className="bg-blue-500/10 backdrop-blur-sm border border-blue-500/30 rounded-2xl p-8 mb-8">
@@ -433,7 +425,7 @@ export function PrivacyPage() {
             </p>
           </div>
         </div>
-      </div>
+      </PageShell>
     </div>
   );
 }

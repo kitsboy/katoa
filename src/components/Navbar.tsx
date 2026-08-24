@@ -207,7 +207,7 @@ export function Navbar() {
               <div className="relative" ref={langTriggerRef}>
                 <button
                   onClick={() => setShowLangMenu(!showLangMenu)}
-                  className="flex items-center justify-center w-9 h-9 rounded-full border transition-colors text-lg bg-white/[0.04] border-white/[0.08] hover:bg-white/[0.08]"
+                  className="flex items-center justify-center min-h-[44px] min-w-[44px] rounded-full border transition-colors text-lg bg-white/[0.04] border-white/[0.08] hover:bg-white/[0.08]"
                   aria-label={t('nav.changeLanguage')}
                   aria-expanded={showLangMenu}
                   aria-haspopup="listbox"
@@ -347,7 +347,7 @@ export function Navbar() {
       {showMenu && (
         <>
           <div
-            className="fixed inset-0 bg-black/85 backdrop-blur-md md:hidden"
+            className="fixed inset-0 bg-[#0e0a18]/80 backdrop-blur-md md:hidden"
             style={{ zIndex: 99998 }}
             onClick={() => setShowMenu(false)}
           />

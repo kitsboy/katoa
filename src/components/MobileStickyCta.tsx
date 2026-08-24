@@ -16,7 +16,7 @@ export function MobileStickyCta({
   return (
     <div
       className={`fixed inset-x-0 z-[60] md:hidden pointer-events-none ${
-        offsetForMobileNav ? 'bottom-[calc(3.5rem+env(safe-area-inset-bottom))]' : 'bottom-0 pb-safe'
+        offsetForMobileNav ? 'bottom-[calc(5.25rem+env(safe-area-inset-bottom,0px))]' : 'bottom-0 pb-safe'
       } ${className}`}
       role="region"
       aria-label="Quick actions"

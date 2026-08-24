@@ -15,7 +15,7 @@ interface BreadcrumbsProps {
 export function Breadcrumbs({ items, className = '' }: BreadcrumbsProps) {
   const { t } = useLanguage();
   return (
-    <nav aria-label="Breadcrumb" className={`text-xs sm:text-sm text-gray-500 overflow-x-auto scrollbar-hide ${className}`}>
+    <nav aria-label="Breadcrumb" className={`text-xs sm:text-sm text-gray-300 overflow-x-auto scrollbar-hide ${className}`}>
       <ol className="flex items-center gap-1 list-none m-0 p-0">
         <li className="flex items-center gap-1 shrink-0">
           <Link href="/" className="hover:text-neon-cyan-400 transition-colors flex items-center gap-1 touch-manipulation">

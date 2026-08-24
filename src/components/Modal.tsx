@@ -75,7 +75,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
 
   return (
     <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4" role="dialog" aria-modal="true" aria-labelledby={title ? 'modal-title' : undefined}>
-      <div className="absolute inset-0 bg-black/75 backdrop-blur-md animate-fade-in" onClick={onClose} aria-hidden="true" />
+      <div className="absolute inset-0 bg-[#0e0a18]/80 backdrop-blur-md animate-fade-in" onClick={onClose} aria-hidden="true" />
       <div
         ref={dialogRef}
         onClick={(e) => e.stopPropagation()}

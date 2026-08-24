@@ -1,27 +1,18 @@
 import { useLanguage } from '../contexts/LanguageContext';
-import { FileText, Shield, AlertCircle, Scale } from 'lucide-react';
+import { FileText, Shield, AlertCircle } from 'lucide-react';
 import { PageMeta } from '../components/PageMeta';
+import { PageShell } from '../components/PageShell';
 
 export function TermsPage() {
   const { t } = useLanguage();
   return (
-    <div className="min-h-screen bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 text-white pt-6 pb-16">
+    <div className="text-white">
       <PageMeta
         title={t('terms.metaTitle')}
         description={t('terms.metaDesc')}
         path="/terms"
       />
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-orange-500 to-yellow-600 mb-4">
-            <Scale size={32} className="text-white" />
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-orange-400 to-yellow-500 bg-clip-text text-transparent">
-            {t('footer.terms')}
-          </h1>
-          <p className="text-gray-400">{t('terms.lastUpdated')}</p>
-        </div>
-
+      <PageShell title={t('footer.terms')} subtitle={t('terms.lastUpdated')} crumbs={[{ label: t('footer.terms') }]} wide>
         <div className="prose prose-invert prose-orange max-w-none">
           <div className="bg-white/[0.03] backdrop-blur-md border border-white/10 rounded-2xl p-8 mb-8">
             <div className="flex items-start gap-4 mb-6">
@@ -324,7 +315,7 @@ export function TermsPage() {
             </p>
           </div>
         </div>
-      </div>
+      </PageShell>
     </div>
   );
 }
