@@ -19,31 +19,7 @@
 **Do not regress:** likes/comments/PPV/seen stay local seams.
 
 **Git State:**
-- Pushed: `bae5b57` … `01c581d` (this i18n commit) plus later handoff stamp
-- SHA: `673db6daa2bd03e55055e5d5ba8b51f00c342d74`
-- Unpushed: not committed this session
-
----
-
-## Session — 2026-08-24 (Grok M3) — Night-jewel knowledge docs
-
-**Role:** M3 docs + OG honesty. **Not committed** (Cam: do not commit).
-
-### Done
-- Knowledge docs updated for night-jewel product era (plum `#12081c` / ember `#080510`, violet `#a78bfa` product, orange money, cyan interactive). Beige and all-black retired.
-- `docs/EXECUTIVE-SUMMARY.md` dated 2026-08-24, v1.1.7, ~29 routes, MapLibre, sample metrics (11 creators, `demo: true`), OF-parity local seams, no invented live Lightning.
-- `docs/MARKETING.md` / `MISSION.md` — no Pulse/widgets; BOLT12 as path; no thousands.
-- `DESIGN.md` + `docs/DESIGN.md` — night-jewel tokens, highlight trim + violet rings, contrast rules (body near-white, muted ≥ `#c4b8d4`, never gray-600 on dark).
-- SEO locale titles filled (es/pt/fr/de/zh); created `docs/SEO-ja.md`; `SEO-sw.md` marked N/A (no sw locale).
-- README Leaflet → MapLibre; `llms.txt` missing routes + demo metrics; `humans.txt` date bump.
-- `PageMeta` + `index.html` default OG is `og-share.svg` 1200×630 (no longer claim 1200×630 on the 512 logo).
-- Sitemap adds `/creators/guidelines`; `/pitch` stays noindex.
-
-**Decisions:** Document the night-jewel **target** (parent landing CSS in parallel). Stay honest: metrics are sample; likes/comments/PPV/subscribe are client seams.
-
-**Git State:**
-- SHA: `bae5b5739c8d1bf8482a7d48efaeeb2a0b95858d` (HEAD before this docs pass)
-- Unpushed: not committed per request
+- Tip: `ae53d98` on `origin/main` (handoff stamp). Night-jewel YOLO is fully pushed.
 
 ---
 
