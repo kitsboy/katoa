@@ -237,6 +237,13 @@ html[data-katoa-build="2026-08-24-night-jewel"] {
   box-shadow: 0 -1px 0 rgba(247, 147, 26, 0.35);
 }
 
+/* Clear the fixed mobile dock (bar + home indicator). Footer lives outside <main>. */
+@media (max-width: 767px) {
+  .site-footer {
+    padding-bottom: calc(5.75rem + env(safe-area-inset-bottom, 0px));
+  }
+}
+
 .site-footer-break {
   position: relative;
   z-index: 2;

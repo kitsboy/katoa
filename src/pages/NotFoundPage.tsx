@@ -8,13 +8,13 @@ export function NotFoundPage() {
   const { t } = useLanguage();
 
   return (
-    <div className="min-h-[100dvh] bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 flex items-center justify-center px-4 pt-24 pb-20">
+    <div className="min-h-[70vh] flex items-center justify-center px-4 pt-8 pb-8">
       <PageMeta title={t('notfound.metaTitle')} description={t('notfound.metaDesc')} path="/404" noindex />
       <div className="text-center max-w-md animate-slide-up">
-        <p className="text-8xl font-display font-black text-neon-cyan-500/30 mb-4">404</p>
+        <p className="text-8xl font-display font-black text-katoa-violet-400/40 mb-4">404</p>
         <h1 className="text-2xl sm:text-3xl font-display font-bold text-white mb-3">{t('notfound.title')}</h1>
-        <p className="text-gray-400 mb-4">{t('notfound.subtitle')}</p>
-        <p className="text-xs text-gray-600 mb-8">0% fees · non-custodial · open source</p>
+        <p className="text-gray-200 mb-4">{t('notfound.subtitle')}</p>
+        <p className="text-sm text-gray-200 mb-8">0% fees · non-custodial · open source</p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link href="/">
             <Button variant="primary" size="lg" className="w-full sm:w-auto min-w-[180px] min-h-[48px]">

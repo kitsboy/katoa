@@ -104,10 +104,10 @@ export function MobileNav() {
       )}
 
       <nav
-        className="md:hidden fixed bottom-0 inset-x-0 z-50 border-t border-white/15 bg-[#1a1428]/95 backdrop-blur-xl safe-area-bottom"
+        className="md:hidden fixed bottom-0 inset-x-0 z-50 border-t border-white/15 bg-[#160e24] pb-[env(safe-area-inset-bottom,0px)]"
         aria-label="Mobile navigation"
       >
-        <div className="flex items-stretch justify-around px-1 pt-1 pb-safe">
+        <div className="flex items-stretch justify-around px-1 pt-1">
           {items.map((item) => {
             const active = item.match(location.pathname);
             const Icon = item.icon;

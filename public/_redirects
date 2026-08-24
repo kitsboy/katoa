@@ -4,3 +4,6 @@
 # Hard-404 missing build assets (never serve SPA index.html for /assets/*).
 # Use a dedicated asset 404 so responses are not the app shell.
 /assets/*  /asset-404.txt  404
+
+# SPA fallback — unknown routes render the in-app NotFoundPage (`path="*"`).
+/*    /index.html   200

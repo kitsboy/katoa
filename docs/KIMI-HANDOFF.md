@@ -1,3 +1,14 @@
+## Session — 2026-08-24 (Grok M3) — Mobile dock clearance + 404
+
+**Role:** M3 code only. Pushed `main`.
+
+### Done
+- Footer sat *outside* `<main>` padding, so copyright peeked through the translucent bottom nav. Dock is now opaque plum; footer gets `5.75rem + safe-area` clearance on small screens.
+- Confirmed in-app 404 (`NotFoundPage` on `/404` and `path="*"`). Added SPA fallback `/* /index.html 200` in `public/_redirects` so unknown URLs on CF Pages hit the app, not a blank CDN 404.
+- Playwright: footer vs mobile nav boxes; `/this-page-does-not-exist` shows Page not found.
+
+---
+
 ## Session — 2026-08-24 (Grok M3) — Night-jewel YOLO: contrast, chrome, product, i18n
 
 **Role:** M3 code only. Pushed `main`. Cam in meetings — completed without him.

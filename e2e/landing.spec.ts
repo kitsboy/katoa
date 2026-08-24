@@ -39,4 +39,28 @@ test.describe('landing page', () => {
     await expect(page.locator('.lp-headline-accent')).toBeVisible({ timeout: 30_000 });
     await page.screenshot({ path: 'test-results/landing-mobile.png', fullPage: true });
   });
+
+  test('footer copy is not hidden under the mobile nav', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/');
+    await expect(page.locator('.lp-headline-accent')).toBeVisible({ timeout: 30_000 });
+
+    const nav = page.getByRole('navigation', { name: 'Mobile navigation' });
+    await expect(nav).toBeVisible();
+
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    const copy = page.locator('footer').getByText(/katoa\.org/i).last();
+    await expect(copy).toBeVisible();
+
+    const navBox = await nav.boundingBox();
+    const copyBox = await copy.boundingBox();
+    expect(navBox).toBeTruthy();
+    expect(copyBox).toBeTruthy();
+    if (!navBox || !copyBox) return;
+
+    expect(copyBox.y + copyBox.height).toBeLessThanOrEqual(navBox.y + 1);
+
+    const bg = await nav.evaluate((el) => getComputedStyle(el).backgroundColor);
+    expect(bg).toMatch(/rgb\(22,\s*14,\s*36\)/);
+  });
 });

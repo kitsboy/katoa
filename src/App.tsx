@@ -152,7 +152,7 @@ function AppShell() {
       {isDemoUser && <DemoBanner />}
       <ExplorePreload />
       <RouteAnnouncer />
-      <main id="main" tabIndex={-1} className="pb-20 md:pb-0 outline-none">
+      <main id="main" tabIndex={-1} className="outline-none">
         <ErrorBoundary>
           <Suspense fallback={<PageLoader />}>
             <Routes>
