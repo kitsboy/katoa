@@ -1,34 +1,66 @@
-## Session — 2026-08-24 (Grok M3) — Desktop nav + page-change hiccups
+## MEGA HANDOFF — 2026-08-24 (Grok M3 → Kimi THOR)
 
-**Role:** M3 code only. Pushed `main`.
+**From:** Grok on M3 (`~/projects/katoa`)  
+**To:** Kimi on THOR  
+**Git:** `main` pushed through `57782b2` plus this stamp.  
+**Live:** https://katoa.org · CF Pages project `katoa`
 
-### Done
-- Desktop island: Explore always; Why Katoa from `lg`; FAQ/Messages from `xl` so mid-width stops crowding.
-- One `<main>` landmark (inner page mains → divs).
-- Faster route fade (0.18s) + idle prefetch of Explore/Comparison/FAQ/Dashboard.
+Cam was in meetings. Grok shipped night-jewel + honesty + i18n + mobile clearance **without Cam**. **Security: never fake Lightning settlement. No secrets in git.**
+
+### Kimi — please answer (ops only you can see)
+
+1. Did Cloudflare Pages build `main` after `57782b2`? Hard-refresh katoa.org: header island **opaque plum**, footer clears the mobile dock, no beige hero.
+2. Which Lightning rail is on THOR (BTCPay Greenfield / LNbits / LND REST)? Is `supabase/functions/btcpay-webhook` **deployed** with `BTCPAY_WEBHOOK_SECRET` in the vault only?
+3. Platform **nsec** in THOR vault? Local `.nostr-platform-secret.local.json` gone?
+4. NIP-05: process to merge claims into `public/.well-known/nostr.json`? (UI only copies a request.)
+5. NIP-07 **challenge login** Edge Function — still a stub. Status?
+6. Keep `metrics.json` labeled **sample** (`raw.demo: true`) until you confirm live counters.
+
+Reply at the top of this file so M3 sees it next session.
 
 ---
 
-## Session — 2026-08-24 (Grok M3) — Header island no longer covers page copy
+### Product truth (do not regress)
 
-**Role:** M3 code only. Pushed `main`.
+| Surface | Truth |
+|---|---|
+| 0% fees | **Platform** fee. Lightning routing fees still exist. |
+| Stats | `public/metrics.json` is a labeled sample (11 creators) until live counters. |
+| Subscribe / PPV / likes / comments / seen | **localStorage seams**. Unlock ≠ paid. |
+| Live gifts | Intent only. Browser never sets `sats_raised` / `confirmed`. |
+| Auth Nostr CTA | Extension **check**, not a session. |
+| Changelog | Does **not** auto-open (stole first taps). Marks version seen. |
+| Visual | Night-jewel `#0e0a18` / `#160e24`. Violet product, orange money, cyan interactive. Beige `#dfd4c8` retired. Not `#000` slop. |
 
-### Done
-- Opaque plum header island (no more see-through text).
-- `.app-below-nav` offsets banners + pages by island height + `safe-area-inset-top`.
-- Dropped redundant `pt-16`/`pt-24` on inner pages so we don't double-pad.
-- Playwright: first home copy sits below the header box.
+### Security (paramount)
 
----
+- No `VITE_` payment secrets.
+- Dummy bitcoin.org addresses rejected (`isDummyPaymentTarget`).
+- Gift close ≠ thank-you.
+- JSON-LD escaped (`toJsonLdScript`).
+- CSP: no `unsafe-eval`. Google Charts still used for QR (`chart.googleapis.com`). `connect-src` ends with `https:` (wide) — **consider tightening after first-party QR**.
+- SPA `/* /index.html 200`; `/assets/*` hard-404.
+- NIP-05 CORS `*` on `/.well-known/nostr.json` (required).
+- Live account delete = email `hello@giveabit.io` only. No fake wipe.
 
-## Session — 2026-08-24 (Grok M3) — Mobile dock clearance + 404
+### Shipped this YOLO (after `5415902`)
 
-**Role:** M3 code only. Pushed `main`.
+Night-jewel CSS; opaque header/footer + safe-area; donate drawer unmounts; desktop nav uncrowded; one `<main>`; skeleton loader; PageShell on terms/privacy; NIP-07 chip + one receive QR; live dashboard wishlists; empty live dashboard = 3 actions (create uses **modal**, not `/project` no-slug); honest gifts; 7-lang `src/i18n/remaining.*.ts`; BreadcrumbList JSON-LD; `og:locale:alternate`.
 
-### Done
-- Footer sat *outside* `<main>` padding, so copyright peeked through the translucent bottom nav. Dock is now opaque plum; footer gets `5.75rem + safe-area` clearance on small screens.
-- Confirmed in-app 404 (`NotFoundPage` on `/404` and `path="*"`). Added SPA fallback `/* /index.html 200` in `public/_redirects` so unknown URLs on CF Pages hit the app, not a blank CDN 404.
-- Playwright: footer vs mobile nav boxes; `/this-page-does-not-exist` shows Page not found.
+**Tests:** 216 unit. Playwright landing (header/footer clearance), FAQ, dashboard, 404.
+
+### Code leftovers (next M3, not blocking you)
+
+- Pitch slide **bodies** still EN (`noindex`).
+- QR still Google Charts.
+- PageShell not on every inner page.
+- First-wishlist one-screen wizard / draft autosave.
+
+### Do not
+
+- Code from THOR. M3 pushes; you do Docker/LND/vault.
+- Fake “thousands of creators” or paid unlocks.
+- Re-introduce beige or auto changelog modal.
 
 ---
 
