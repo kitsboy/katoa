@@ -16,7 +16,8 @@ import { isSubscribed, subscribeLocal, unsubscribe } from '../lib/subscriptions'
 import { getStorage, setStorage, removeStorage, STORAGE_KEYS } from '../lib/storage';
 import { copyToClipboard } from '../lib/clipboard';
 import { bitcoinQrData, getQrImageUrl, isBolt11Invoice, isDummyPaymentTarget, lightningQrData } from '../lib/qr';
-import { fetchCreatorOnchainAddress } from '../lib/creatorProfile';
+import { usablePaymentAddress } from '../lib/validateAddress';
+import { fetchCreatorReceiveDestinations } from '../lib/creatorProfile';
 import { toJsonLdScript } from '../lib/jsonLd';
 import { Breadcrumbs, BreadcrumbItem } from '../components/Breadcrumbs';
 import { PageMeta } from '../components/PageMeta';
@@ -349,10 +350,15 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
       }
 
       if (isCancelled()) return;
-      setWishlist(wishlistRow as unknown as Wishlist);
       const creatorId = wishlistRow.creator_id as string | undefined;
-      const addr = await fetchCreatorOnchainAddress(creatorId);
-      if (!isCancelled()) setOnchainAddress(addr);
+      const creator = wishlistRow.creator as Wishlist['creator'] | undefined;
+      const dest = await fetchCreatorReceiveDestinations(creatorId, creator?.lightning_address);
+      if (creator) {
+        wishlistRow = { ...wishlistRow, creator: { ...creator, lightning_address: dest.lightning } };
+      }
+      if (isCancelled()) return;
+      setWishlist(wishlistRow as unknown as Wishlist);
+      if (!isCancelled()) setOnchainAddress(dest.onchain);
 
       const { data: itemsData, error: itemsError } = await supabase
         .from('wishlist_items')
@@ -462,7 +468,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
   ): Promise<boolean> {
     if (!wishlist) return false;
 
-    const lightningAddr = wishlist.creator?.lightning_address?.trim() || null;
+    const lightningAddr = usablePaymentAddress(wishlist.creator?.lightning_address);
     const npubOrHex = wishlist.creator?.nostr_pubkey?.trim();
     const onchain = onchainAddress?.trim() || null;
     const hasLightning = Boolean(lightningAddr && !isDummyPaymentTarget(lightningAddr));

@@ -260,30 +260,59 @@ async function fetchCreatorWishlists(creatorId: string): Promise<ProfileWishlist
   return [];
 }
 
-type WalletAddressRow = {
+export type WalletReceiveRow = {
   address_value: string | null;
   address_type: string;
-  is_active: boolean | null;
+  is_active?: boolean | null;
 };
+
+/**
+ * Gift/tip destinations: active wallet_addresses win over a stale profiles.lightning_address.
+ * Dummy/placeholder values never win.
+ */
+export function pickReceiveDestinations(
+  profileLightning: string | null | undefined,
+  wallets: WalletReceiveRow[]
+): { lightning: string | null; onchain: string | null } {
+  const active = wallets.filter((w) => w.is_active !== false);
+  const lnWallet = active.find((w) => w.address_type === 'lightning');
+  const onWallet = active.find((w) => w.address_type === 'onchain');
+  return {
+    lightning:
+      usablePaymentAddress(lnWallet?.address_value) ?? usablePaymentAddress(profileLightning),
+    onchain: usablePaymentAddress(onWallet?.address_value),
+  };
+}
+
+async function fetchCreatorWalletRows(userId: string): Promise<WalletReceiveRow[]> {
+  const { data, error } = await supabase
+    .from('wallet_addresses')
+    .select('address_value, address_type, is_active')
+    .eq('user_id', userId);
+  if (error || !data) return [];
+  return asRows<WalletReceiveRow>(data);
+}
+
+/** Lightning + on-chain a supporter should pay. Wallet Lightning overrides profile lud16. */
+export async function fetchCreatorReceiveDestinations(
+  userId: string | null | undefined,
+  profileLightning?: string | null
+): Promise<{ lightning: string | null; onchain: string | null }> {
+  if (!userId || !isSupabaseConfigured()) {
+    return { lightning: usablePaymentAddress(profileLightning), onchain: null };
+  }
+  try {
+    const rows = await fetchCreatorWalletRows(userId);
+    return pickReceiveDestinations(profileLightning, rows);
+  } catch {
+    return { lightning: usablePaymentAddress(profileLightning), onchain: null };
+  }
+}
 
 /** Public on-chain receive address, if the creator published one. Never invents a placeholder. */
 export async function fetchCreatorOnchainAddress(userId: string | null | undefined): Promise<string | null> {
-  if (!userId || !isSupabaseConfigured()) return null;
-  try {
-    const { data, error } = await supabase
-      .from('wallet_addresses')
-      .select('address_value, address_type, is_active')
-      .eq('user_id', userId);
-
-    if (error || !data) return null;
-    const match = asRows<WalletAddressRow>(data).find(
-      (row) => row.is_active !== false && row.address_type === 'onchain' && Boolean(row.address_value?.trim())
-    );
-    const value = match?.address_value?.trim();
-    return usablePaymentAddress(value);
-  } catch {
-    return null;
-  }
+  const dest = await fetchCreatorReceiveDestinations(userId, null);
+  return dest.onchain;
 }
 
 /**
@@ -299,11 +328,14 @@ export async function loadCreatorProfile(username: string): Promise<CreatorProfi
     try {
       const row = await fetchLiveProfileRow(cleaned);
       if (row) {
-        const [wishlists, bitcoin_address] = await Promise.all([
+        const [wishlists, dest] = await Promise.all([
           fetchCreatorWishlists(row.id),
-          fetchCreatorOnchainAddress(row.id),
+          fetchCreatorReceiveDestinations(row.id, row.lightning_address),
         ]);
-        live = liveProfileFromRow(row, wishlists, bitcoin_address);
+        live = {
+          ...liveProfileFromRow(row, wishlists, dest.onchain),
+          lightning_address: dest.lightning,
+        };
       }
     } catch {
       live = null;

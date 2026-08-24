@@ -7,6 +7,7 @@ import {
   liveProfileFromRow,
   loadCreatorProfile,
   mockProfileForUsername,
+  pickReceiveDestinations,
   sanitizeUsername,
   selectCreatorProfileSource,
   type CreatorProfile,
@@ -163,6 +164,31 @@ describe('mockProfileForUsername', () => {
 
   it('returns null when there is no mock creator', () => {
     expect(mockProfileForUsername('not_a_real_mock')).toBeNull();
+  });
+});
+
+describe('pickReceiveDestinations', () => {
+  it('uses the saved active Lightning wallet for gifts, not a stale profile lud16', () => {
+    const dest = pickReceiveDestinations('old@getalby.com', [
+      { address_type: 'lightning', address_value: 'new@getalby.com', is_active: true },
+      { address_type: 'onchain', address_value: 'bc1qhm5ndfjhqxdk3cx0pngyps4f5nnwdckulmge6c8keyf2pk0neqtshjn8ad', is_active: true },
+    ]);
+    expect(dest.lightning).toBe('new@getalby.com');
+    expect(dest.onchain).toBe('bc1qhm5ndfjhqxdk3cx0pngyps4f5nnwdckulmge6c8keyf2pk0neqtshjn8ad');
+  });
+
+  it('ignores dummy wallet Lightning and falls back to a real profile address', () => {
+    const dest = pickReceiveDestinations('alice@getalby.com', [
+      { address_type: 'lightning', address_value: 'tips@example.com', is_active: true },
+    ]);
+    expect(dest.lightning).toBe('alice@getalby.com');
+  });
+
+  it('skips inactive Lightning wallets', () => {
+    const dest = pickReceiveDestinations('keep@getalby.com', [
+      { address_type: 'lightning', address_value: 'stale@getalby.com', is_active: false },
+    ]);
+    expect(dest.lightning).toBe('keep@getalby.com');
   });
 });
 

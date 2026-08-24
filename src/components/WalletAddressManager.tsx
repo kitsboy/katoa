@@ -210,6 +210,13 @@ export function WalletAddressManager() {
 
       if (!useLocal) await loadAddresses();
 
+      if (payload.address_type === 'lightning') {
+        const { error: profileErr } = await updateProfile({ lightning_address: payload.address_value });
+        if (profileErr) {
+          toast('Wallet saved. Profile Lightning was not updated — tap Set as profile Lightning.', 'info');
+        }
+      }
+
       setFormData({ address_type: 'lightning', address_value: '', label: '' });
       setShowAddForm(false);
       setReplacingId(null);
@@ -230,6 +237,9 @@ export function WalletAddressManager() {
       setFormData({ address_type: 'lightning', address_value: '', label: '' });
       setShowAddForm(false);
       setReplacingId(null);
+      if (payload.address_type === 'lightning') {
+        void updateProfile({ lightning_address: payload.address_value });
+      }
       toast('Saved on this device (live wallet table unavailable)', 'info');
     } finally {
       setAdding(false);
