@@ -91,6 +91,7 @@ export function WalletAddressManager() {
   const [showScanner, setShowScanner] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [replacingId, setReplacingId] = useState<string | null>(null);
   const [formData, setFormData] = useState<{
     address_type: WalletAddressType;
     address_value: string;
@@ -179,24 +180,56 @@ export function WalletAddressManager() {
     };
 
     try {
-      if (!useLocal) {
+      if (replacingId) {
+        if (!useLocal) {
+          const { error } = await supabase
+            .from('wallet_addresses')
+            .update({
+              address_type: payload.address_type,
+              address_value: payload.address_value,
+              label: payload.label,
+            })
+            .eq('id', replacingId);
+          if (error) throw error;
+        } else {
+          persistLocal(
+            addresses.map((a) =>
+              a.id === replacingId
+                ? { ...a, address_type: payload.address_type, address_value: payload.address_value, label: payload.label }
+                : a
+            )
+          );
+        }
+        toast('Address updated', 'success');
+      } else if (!useLocal) {
         const { error } = await supabase.from('wallet_addresses').insert(payload);
         if (error) throw error;
-        setFormData({ address_type: 'lightning', address_value: '', label: '' });
-        setShowAddForm(false);
-        await loadAddresses();
-        return;
+      } else {
+        persistLocal([newLocalWallet(user.id, payload.address_type, payload.address_value, payload.label), ...addresses]);
       }
 
-      persistLocal([newLocalWallet(user.id, payload.address_type, payload.address_value, payload.label), ...addresses]);
+      if (!useLocal) await loadAddresses();
+
       setFormData({ address_type: 'lightning', address_value: '', label: '' });
       setShowAddForm(false);
+      setReplacingId(null);
     } catch (error) {
       console.error('Error adding address:', error);
-      persistLocal([newLocalWallet(user.id, payload.address_type, payload.address_value, payload.label), ...addresses]);
+      if (replacingId) {
+        persistLocal(
+          addresses.map((a) =>
+            a.id === replacingId
+              ? { ...a, address_type: payload.address_type, address_value: payload.address_value, label: payload.label }
+              : a
+          )
+        );
+      } else {
+        persistLocal([newLocalWallet(user.id, payload.address_type, payload.address_value, payload.label), ...addresses]);
+      }
       setUseLocal(true);
       setFormData({ address_type: 'lightning', address_value: '', label: '' });
       setShowAddForm(false);
+      setReplacingId(null);
       toast('Saved on this device (live wallet table unavailable)', 'info');
     } finally {
       setAdding(false);
@@ -366,7 +399,12 @@ export function WalletAddressManager() {
           </div>
           {!showAddForm && (
             <Button
-              onClick={() => setShowAddForm(true)}
+              onClick={() => {
+                setReplacingId(null);
+                setShowAddForm(true);
+                setFormError(null);
+                setFormData({ address_type: 'lightning', address_value: '', label: '' });
+              }}
               className="bg-gradient-to-r from-emerald-500 to-cyan-600 min-h-[44px]"
             >
               <Plus size={20} className="mr-2" />
@@ -480,12 +518,13 @@ export function WalletAddressManager() {
                   className="flex-1 bg-gradient-to-r from-emerald-500 to-cyan-600 min-h-[44px]"
                 >
                   <Check size={20} className="mr-2" />
-                  Add Address
+                  {replacingId ? 'Save address' : 'Add Address'}
                 </Button>
                 <Button
                   type="button"
                   onClick={() => {
                     setShowAddForm(false);
+                    setReplacingId(null);
                     setFormError(null);
                     setFormData({ address_type: 'lightning', address_value: '', label: '' });
                   }}
@@ -578,9 +617,18 @@ export function WalletAddressManager() {
                     <div className="flex gap-1">
                       <button
                         type="button"
-                        onClick={() => setEditingId(address.id)}
+                        onClick={() => {
+                          setReplacingId(address.id);
+                          setShowAddForm(true);
+                          setFormError(null);
+                          setFormData({
+                            address_type: address.address_type,
+                            address_value: address.address_value,
+                            label: address.label || '',
+                          });
+                        }}
                         className="p-2 text-gray-400 hover:text-white transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center touch-manipulation"
-                        aria-label="Edit label"
+                        aria-label="Edit address"
                       >
                         <Edit2 size={16} />
                       </button>

@@ -30,6 +30,7 @@ import {
   type CreatorProfile,
   type ProfileWishlist,
 } from '../lib/creatorProfile';
+import { usablePaymentAddress } from '../lib/validateAddress';
 import { isSubscribed, subscribeLocal, unsubscribe } from '../lib/subscriptions';
 import { followLocal, isFollowing, unfollowLocal } from '../lib/follows';
 import { toJsonLdScript } from '../lib/jsonLd';
@@ -81,7 +82,7 @@ export function CreatorProfilePage() {
   const username = decodeUsername(rawUsername);
   const { t } = useLanguage();
   const { toast } = useToast();
-  const { user, isDemoUser } = useAuth();
+  const { user, isDemoUser, profile: sessionProfile } = useAuth();
   const [profile, setProfile] = useState<CreatorProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [subscribed, setSubscribed] = useState(false);
@@ -162,8 +163,14 @@ export function CreatorProfilePage() {
   const creatorInitial = (profile?.username?.[0] || '?').toUpperCase();
   const path = username ? `/u/${encodeURIComponent(profile?.username || username)}` : '/explore';
   const npub = displayNpub(profile?.nostr_pubkey);
-  const lightning = profile?.lightning_address?.trim() || null;
-  const onchain = profile?.bitcoin_address?.trim() || null;
+  const lightning = usablePaymentAddress(profile?.lightning_address);
+  const onchain = usablePaymentAddress(profile?.bitcoin_address);
+  const isOwner = Boolean(
+    profile &&
+      ((profile.id && user?.id && profile.id === user.id) ||
+        (sessionProfile?.username &&
+          profile.username.toLowerCase() === sessionProfile.username.toLowerCase()))
+  );
   const messageHref = `/messages?to=${encodeURIComponent(npub || profile?.username || '')}`;
 
   const handleSubscribe = (tierId = 'supporter') => {
@@ -502,25 +509,37 @@ export function CreatorProfilePage() {
                 <MessageCircle size={18} className="mr-2" />
                 Message
               </Link>
+              {isOwner && (
+                <Link
+                  href="/settings"
+                  className="inline-flex items-center justify-center min-h-[44px] px-4 rounded-xl border border-white/15 text-sm font-semibold text-gray-200 hover:text-white"
+                >
+                  Edit addresses
+                </Link>
+              )}
             </div>
           </div>
+          <p className="mt-4 text-xs text-gray-200 leading-relaxed">
+            Follow is free on this device. Subscribe is a local demo until Lightning webhooks exist. Tips go to this
+            creator&apos;s wallet — Katoa does not KYC you and never holds sats.
+          </p>
 
           <div className="mt-6 pt-5 border-t border-white/10 grid grid-cols-2 sm:grid-cols-3 gap-4">
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-gray-300 mb-1">
                 {t('creator.wishlists')}
               </p>
               <p className="text-2xl font-black text-white">{formatNumber(profile.wishlists.length)}</p>
             </div>
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-gray-300 mb-1">
                 {t('creator.satsRaised')}
               </p>
               <SatsDisplay sats={satsRaised} size="sm" />
             </div>
             {typeof subscriberCount === 'number' && (
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-gray-300 mb-1">
                   {t('creator.subscribers')}
                 </p>
                 <p className="text-2xl font-black text-white">{formatCompactCount(subscriberCount)}</p>

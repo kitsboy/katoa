@@ -1,5 +1,6 @@
 import { mockWishlists } from '../data/mockWishlists';
 import { asRow, asRows, isSupabaseConfigured, supabase } from './supabase';
+import { usablePaymentAddress } from './validateAddress';
 
 export interface ProfileWishlist {
   id: string;
@@ -130,9 +131,9 @@ export function liveProfileFromRow(
     username: row.username,
     avatar_url: row.avatar_url,
     bio: row.bio || undefined,
-    lightning_address: row.lightning_address,
+    lightning_address: usablePaymentAddress(row.lightning_address),
     nostr_pubkey: row.nostr_pubkey,
-    bitcoin_address,
+    bitcoin_address: usablePaymentAddress(bitcoin_address),
     banner_url: row.banner_url,
     wishlists,
     fromMock: false,
@@ -164,9 +165,9 @@ export function mockProfileForUsername(username: string): CreatorProfile | null 
     username: first.creator.username,
     avatar_url: first.creator.avatar_url,
     bio: withBio?.bio,
-    lightning_address: withLn?.lightning_address ?? null,
+    lightning_address: usablePaymentAddress(withLn?.lightning_address ?? null),
     nostr_pubkey: creators.find((c) => c.nostr_pubkey)?.nostr_pubkey ?? null,
-    bitcoin_address: withOnchain?.bitcoin_address ?? null,
+    bitcoin_address: usablePaymentAddress(withOnchain?.bitcoin_address ?? null),
     banner_url: null,
     wishlists: lists.map((w) => {
       const extra = w as typeof w & MockListExtras;
@@ -279,7 +280,7 @@ export async function fetchCreatorOnchainAddress(userId: string | null | undefin
       (row) => row.is_active !== false && row.address_type === 'onchain' && Boolean(row.address_value?.trim())
     );
     const value = match?.address_value?.trim();
-    return value || null;
+    return usablePaymentAddress(value);
   } catch {
     return null;
   }

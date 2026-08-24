@@ -1,5 +1,24 @@
 /** Payment address validation helpers for Lightning, on-chain Bitcoin, and related identifiers. */
 
+/** Placeholder / donate-page strings that must never be saved or encoded as payable. */
+export function isDummyPaymentTarget(value: string): boolean {
+  const v = value.trim().toLowerCase();
+  if (!v) return true;
+  return (
+    v.includes('bitcoin.org') ||
+    v.includes('example.com') ||
+    v.includes('example.org') ||
+    v.includes('bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh')
+  );
+}
+
+/** Trimmed address if it is a real destination; otherwise null. */
+export function usablePaymentAddress(value: string | null | undefined): string | null {
+  const trimmed = (value ?? '').trim();
+  if (!trimmed || isDummyPaymentTarget(trimmed)) return null;
+  return trimmed;
+}
+
 /** Strip bitcoin: / lightning: URI wrappers (QR paste) before validate/save. */
 export function decodePaymentUri(raw: string): string {
   const trimmed = raw.trim();
@@ -17,6 +36,7 @@ export function decodePaymentUri(raw: string): string {
 export function validateLightningAddress(address: string): string | null {
   const trimmed = decodePaymentUri(address);
   if (!trimmed) return 'Address is required';
+  if (isDummyPaymentTarget(trimmed)) return 'That looks like a placeholder, not a real Lightning destination';
 
   const lower = trimmed.toLowerCase();
   if (trimmed.includes('@')) {
@@ -33,6 +53,7 @@ export function validateLightningAddress(address: string): string | null {
 export function validateBitcoinAddress(address: string): string | null {
   const trimmed = decodePaymentUri(address);
   if (!trimmed) return 'Address is required';
+  if (isDummyPaymentTarget(trimmed)) return 'That looks like a placeholder, not a real Bitcoin address';
   if (!/^(bc1|tb1|[13])/.test(trimmed)) {
     return 'Bitcoin address must start with bc1, tb1, 1, or 3';
   }

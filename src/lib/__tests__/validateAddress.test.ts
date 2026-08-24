@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import {
   decodePaymentUri,
+  isDummyPaymentTarget,
+  usablePaymentAddress,
   validateBitcoinAddress,
   validateLightningAddress,
   validateNpub,
@@ -91,5 +93,23 @@ describe('validateXpub / npub / pynym / wallet', () => {
     expect(validateWalletAddress('onchain', 'bc1qhm5ndfjhqxdk3cx0pngyps4f5nnwdckulmge6c8keyf2pk0neqtshjn8ad')).toBeNull();
     expect(validateWalletAddress('lightning', 'ln')).toMatch(/lnbc/);
     expect(validateWalletAddress('lightning', 'lightning:user@getalby.com')).toBeNull();
+  });
+});
+
+describe('dummy payment targets', () => {
+  it('rejects bitcoin.org and example placeholders on save', () => {
+    expect(isDummyPaymentTarget('https://bitcoin.org/donate')).toBe(true);
+    expect(validateBitcoinAddress('https://bitcoin.org/donate')).toMatch(/placeholder/);
+    expect(validateLightningAddress('tips@example.com')).toMatch(/placeholder/);
+    expect(validateWalletAddress('onchain', 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh')).toMatch(/placeholder/);
+  });
+
+  it('usablePaymentAddress returns null for dummies and real strings for wallets', () => {
+    expect(usablePaymentAddress('')).toBeNull();
+    expect(usablePaymentAddress('donate.bitcoin.org')).toBeNull();
+    expect(usablePaymentAddress('alice@getalby.com')).toBe('alice@getalby.com');
+    expect(
+      usablePaymentAddress('bc1qhm5ndfjhqxdk3cx0pngyps4f5nnwdckulmge6c8keyf2pk0neqtshjn8ad')
+    ).toBe('bc1qhm5ndfjhqxdk3cx0pngyps4f5nnwdckulmge6c8keyf2pk0neqtshjn8ad');
   });
 });

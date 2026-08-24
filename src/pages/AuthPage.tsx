@@ -228,13 +228,15 @@ export function AuthPage() {
               <Gift size={32} className="text-white" />
             </div>
             <h1 className="text-3xl font-bold text-white mb-2">
-              {isSignUp ? 'Create Account' : 'Welcome Back'}
+              {isSignUp ? 'Create your creator account' : 'Welcome back'}
             </h1>
-            <p className="text-gray-400">
-              {isSignUp ? 'Start creating your wishlists today' : 'Sign in to continue to your dashboard'}
+            <p className="text-gray-200">
+              {isSignUp
+                ? 'Email or Google. Optional Nostr. We do not KYC you.'
+                : 'Sign in with email or Google. Link Nostr in Settings after.'}
             </p>
-            <p className="mt-3 text-[11px] text-gray-500 leading-relaxed">
-              0% platform fees · non-custodial · we never hold your sats
+            <p className="mt-3 text-xs text-gray-200 leading-relaxed">
+              0% platform fees · non-custodial · no KYC by Katoa
             </p>
           </div>
 
@@ -476,6 +478,21 @@ export function AuthPage() {
               </div>
             )}
 
+            {isSignUp && (
+              <p className="text-xs text-gray-200 leading-relaxed">
+                By creating an account you agree to the{' '}
+                <Link href="/terms" className="text-emerald-400 hover:underline">
+                  Terms
+                </Link>{' '}
+                and{' '}
+                <Link href="/privacy" className="text-emerald-400 hover:underline">
+                  Privacy
+                </Link>
+                . Katoa does not KYC you. Liquid Bitcoin and zero-knowledge proofs are on the roadmap — not required
+                to start.
+              </p>
+            )}
+
             <Button
               type="submit"
               loading={loading}
@@ -512,9 +529,9 @@ export function AuthPage() {
             <div className="mt-8 pt-6 border-t border-white/10">
               <div className="flex items-start gap-3 text-sm text-gray-400">
                 <Zap size={20} className="text-emerald-400 flex-shrink-0 mt-0.5" />
-                <p>
-                  With Katoa, you can receive instant Bitcoin donations via Lightning Network.
-                  Fast, private, and global.
+                <p className="text-gray-200">
+                  Add your own Lightning or on-chain address in Settings. Supporters pay your wallet — Katoa never
+                  holds sats.
                 </p>
               </div>
             </div>
@@ -523,7 +540,7 @@ export function AuthPage() {
           <div className="mt-6 text-center">
             <Link
               href="/explore?videos=1"
-              className="text-sm text-[#00aff0] hover:text-cyan-300 font-medium transition-colors"
+              className="text-sm text-neon-cyan-400 hover:text-neon-cyan-300 font-medium transition-colors"
             >
               Browse video creators →
             </Link>

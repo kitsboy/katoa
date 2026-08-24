@@ -166,6 +166,18 @@ describe('mockProfileForUsername', () => {
   });
 });
 
+describe('liveProfileFromRow', () => {
+  it('drops dummy lightning and on-chain destinations', () => {
+    const live = liveProfileFromRow(
+      liveRow({ lightning_address: 'tips@example.com' }),
+      [],
+      'https://bitcoin.org/donate'
+    );
+    expect(live.lightning_address).toBeNull();
+    expect(live.bitcoin_address).toBeNull();
+  });
+});
+
 describe('selectCreatorProfileSource', () => {
   it('lets a live row win even with 0 wishlists — never mixes mock lists', () => {
     const live = liveProfileFromRow(liveRow({ username: 'luna_vip', bio: 'Real Luna' }), []);

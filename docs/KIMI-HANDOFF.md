@@ -1,3 +1,15 @@
+## Session — 2026-08-24 (Grok M3) — MVP flow: auth, wallets, profile, legal
+
+**Done:**
+- Auth: email + Google register/sign-in; Nostr is **check/link only**; signup agrees to Terms/Privacy; no-KYC copy.
+- Wallets: add **and edit** Lightning/on-chain; dummy bitcoin.org/example addresses rejected on save (`validateAddress.isDummyPaymentTarget`).
+- Profile `/u/:username`: Tip/Follow/Message; owner “Edit addresses”; dummy destinations stripped; subscribe still demo-labeled.
+- Legal: `/terms` `/privacy` + 404 SPA; KYC-not-us + Liquid/ZKP as roadmap copy.
+
+**Do not regress:** local seams; no client `confirmed`; no fake Nostr session.
+
+---
+
 ## MEGA HANDOFF — 2026-08-24 (Grok M3 → Kimi THOR)
 
 **From:** Grok on M3 (`~/projects/katoa`)  

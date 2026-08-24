@@ -21,7 +21,8 @@ export function TermsPage() {
                 <h3 className="text-xl font-semibold mb-2 text-white">Important Notice</h3>
                 <p className="text-gray-400 leading-relaxed">
                   By accessing or using Katoa (katoa.org), you agree to be bound by these Terms of Service.
-                  If you do not agree to these terms, please do not use our platform.
+                  If you do not agree to these terms, please do not use our platform. Katoa does not KYC you
+                  to create an account or receive Bitcoin. We never hold your keys or sats.
                 </p>
               </div>
             </div>

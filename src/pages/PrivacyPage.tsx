@@ -23,7 +23,9 @@ export function PrivacyPage() {
                 <h3 className="text-xl font-semibold mb-2 text-white">Your Privacy Matters</h3>
                 <p className="text-gray-400 leading-relaxed">
                   Katoa is committed to protecting your privacy and giving you control over your personal information.
-                  This Privacy Policy explains how we collect, use, share, and protect your data.
+                  This Privacy Policy explains how we collect, use, share, and protect your data. Katoa does not KYC
+                  you to create an account or receive sats. Zero-knowledge proofs and Liquid Bitcoin are on the
+                  product roadmap — they are not required to use Katoa today.
                 </p>
               </div>
             </div>
