@@ -10,7 +10,7 @@ const FAMILY = [
 export function FamilyLinks({ className = '' }: { className?: string }) {
   return (
     <div className={className}>
-      <p className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-3">Give A Bit family</p>
+      <p className="text-xs font-bold uppercase tracking-wider text-gray-200 mb-3">Give A Bit family</p>
       <ul className="grid grid-cols-1 sm:grid-cols-3 gap-2">
         {FAMILY.map((item) => (
           <li key={item.name}>
@@ -25,7 +25,7 @@ export function FamilyLinks({ className = '' }: { className?: string }) {
                   {item.name}
                   <ExternalLink size={12} className="opacity-40 shrink-0" aria-hidden />
                 </p>
-                <p className="text-[11px] text-gray-500 leading-snug">{item.blurb}</p>
+                <p className="text-xs text-gray-200 leading-snug">{item.blurb}</p>
               </div>
             </a>
           </li>

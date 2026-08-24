@@ -65,7 +65,7 @@ export function MobileNav() {
                 <button
                   type="button"
                   onClick={() => setShowMore(false)}
-                  className="p-2 rounded-lg bg-white/5 text-gray-400"
+                  className="p-2 rounded-lg bg-white/10 text-gray-100 min-h-[44px] min-w-[44px]"
                   aria-label="Close"
                 >
                   <X size={18} />
@@ -104,7 +104,7 @@ export function MobileNav() {
       )}
 
       <nav
-        className="md:hidden fixed bottom-0 inset-x-0 z-50 border-t border-white/10 bg-charcoal-950/95 backdrop-blur-xl safe-area-bottom"
+        className="md:hidden fixed bottom-0 inset-x-0 z-50 border-t border-white/15 bg-[#1a1428]/95 backdrop-blur-xl safe-area-bottom"
         aria-label="Mobile navigation"
       >
         <div className="flex items-stretch justify-around px-1 pt-1 pb-safe">
@@ -118,12 +118,12 @@ export function MobileNav() {
                 key={item.href}
                 href={item.href}
                 className={`relative flex flex-1 flex-col items-center justify-center gap-0.5 py-2 min-h-[56px] rounded-xl transition-colors touch-manipulation ${
-                  active ? 'text-neon-cyan-500' : 'text-gray-500 hover:text-gray-300'
+                  active ? 'text-neon-cyan-400' : 'text-gray-200 hover:text-white'
                 }`}
                 aria-current={active ? 'page' : undefined}
               >
                 <Icon size={22} strokeWidth={active ? 2.5 : 2} />
-                <span className="text-[10px] font-semibold tracking-wide">{label}</span>
+                <span className="text-[11px] font-semibold tracking-wide">{label}</span>
                 {active && (
                   <span className="absolute bottom-1 w-8 h-0.5 rounded-full bg-neon-cyan-500" aria-hidden />
                 )}
@@ -135,7 +135,7 @@ export function MobileNav() {
             type="button"
             onClick={() => setShowMore(true)}
             className={`relative flex flex-1 flex-col items-center justify-center gap-0.5 py-2 min-h-[56px] rounded-xl transition-colors touch-manipulation ${
-              moreActive || showMore ? 'text-neon-cyan-500' : 'text-gray-500 hover:text-gray-300'
+              moreActive || showMore ? 'text-neon-cyan-400' : 'text-gray-200 hover:text-white'
             }`}
             aria-expanded={showMore}
             aria-haspopup="dialog"

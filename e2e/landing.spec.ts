@@ -15,8 +15,15 @@ test.describe('landing page', () => {
     await expect(root).toBeVisible({ timeout: 30_000 });
 
     const bg = await root.evaluate((el) => getComputedStyle(el).backgroundColor);
-    // Dark ember, not beige #dfd4c8 (rgb 223, 212, 200)
+    // Dark night-jewel, not beige #dfd4c8 (rgb 223, 212, 200)
     expect(bg).not.toContain('223, 212, 200');
+    const heroBg = await page.locator('.lp-hero-gradient').evaluate((el) => getComputedStyle(el).backgroundImage);
+    expect(heroBg.toLowerCase()).not.toContain('223, 212, 200');
+    expect(heroBg.toLowerCase()).not.toContain('#dfd4c8');
+
+    const leadColor = await page.locator('.lp-lead').first().evaluate((el) => getComputedStyle(el).color);
+    // Lead text must stay light on the dark hero (not dark-violet-on-beige)
+    expect(leadColor).not.toContain('109, 40, 217');
 
     const card = page.locator('.lp-bento-card').first();
     await expect(card).toBeVisible();

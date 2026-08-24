@@ -102,6 +102,13 @@ function RouteAnnouncer() {
       project: t('nav.route.project'),
       security: t('security.title'),
       roadmap: t('roadmap.inApp.title'),
+      templates: t('nav.templates'),
+      press: t('footer.press'),
+      meetup: t('footer.meetup'),
+      'case-studies': t('footer.caseStudies'),
+      creators: t('footer.creators'),
+      messages: t('nav.messages'),
+      nip05: t('footer.nip05'),
     };
     return labels[segment] ?? segment;
   })();

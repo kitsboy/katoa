@@ -230,21 +230,24 @@ export function Navbar() {
                   <NotificationCenter />
 
                   <div className="flex items-center gap-3">
-                    <Link href="/settings" className="flex items-center gap-2 hover:opacity-90 transition-opacity">
+                    <Link
+                      href={profile?.username ? `/u/${encodeURIComponent(profile.username)}` : '/settings'}
+                      className="flex items-center gap-2 hover:opacity-90 transition-opacity"
+                    >
                       {profile?.avatar_url ? (
                         <img
                           src={profile.avatar_url}
                           alt={profile.username}
                           width={32}
                           height={32}
-                          className="w-8 h-8 rounded-full object-cover border-2 border-neon-cyan/40"
+                          className="w-8 h-8 rounded-full object-cover border-2 border-katoa-violet-400/50"
                         />
                       ) : (
                         <div className="w-8 h-8 rounded-full bg-white/5 border-2 border-white/10 flex items-center justify-center">
-                          <User size={16} className="text-gray-200" />
+                          <User size={16} className="text-gray-100" />
                         </div>
                       )}
-                      <span className="text-sm text-gray-200">{profile?.username}</span>
+                      <span className="text-sm text-white">{profile?.username}</span>
                     </Link>
                     <Button
                       variant="ghost"
@@ -282,7 +285,7 @@ export function Navbar() {
 
             <div className="md:hidden flex items-center gap-2">
               {btcPrice !== null && (
-                <span className="text-[10px] font-mono text-bitcoin-orange-400 px-2 py-1 rounded-full bg-bitcoin-orange-500/10 border border-bitcoin-orange-500/15" aria-label={`BTC ${formatUsd(btcPrice)}`}>
+                <span className="text-xs font-mono text-bitcoin-orange-300 px-2 py-1 rounded-full bg-bitcoin-orange-500/10 border border-bitcoin-orange-500/15" aria-label={`BTC ${formatUsd(btcPrice)}`}>
                   ₿ {btcPrice >= 1000 ? `${(btcPrice / 1000).toFixed(1)}k` : btcPrice}
                 </span>
               )}

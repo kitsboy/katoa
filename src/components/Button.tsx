@@ -28,9 +28,9 @@ export function Button({
       'bg-white/10 text-white border border-white/15 hover:bg-white/15 hover:border-white/25',
     outline:
       'border-2 border-neon-cyan-500/60 text-neon-cyan-500 hover:bg-neon-cyan-500/10 backdrop-blur-sm',
-    ghost: 'text-gray-300 hover:bg-white/10 hover:text-white',
+    ghost: 'text-gray-100 hover:bg-white/10 hover:text-white',
     bitcoin:
-      'bg-gradient-to-r from-bitcoin-orange-500 to-amber-600 text-white hover:from-bitcoin-orange-600 hover:to-amber-700 shadow-[0_0_24px_rgba(247,147,26,0.3)]',
+      'bg-gradient-to-r from-bitcoin-orange-400 to-bitcoin-orange-500 text-charcoal-950 hover:from-bitcoin-orange-300 hover:to-bitcoin-orange-400 shadow-[0_0_24px_rgba(247,147,26,0.35)]',
     danger:
       'bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 border border-red-400/30',
   };

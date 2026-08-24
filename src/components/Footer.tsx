@@ -29,7 +29,7 @@ const bitcoinAddress = 'bc1qhm5ndfjhqxdk3cx0pngyps4f5nnwdckulmge6c8keyf2pk0neqts
 
 const apiLinks = [
   { label: 'Supabase API', href: 'https://supabase.com/docs/guides/api', icon: DatabaseIcon },
-  { label: 'BTC Map API', href: 'https://api.btcmap.org/v2/areas', icon: Globe },
+  { label: 'BTC Map API', href: 'https://api.btcmap.org/v4', icon: Globe },
   { label: 'Mempool.space', href: 'https://mempool.space/api', icon: BlocksIcon },
   { label: 'Nostr NIPs', href: 'https://github.com/nostr-protocol/nips', icon: BookOpen },
 ];
@@ -63,10 +63,10 @@ export function Footer() {
 
   return (
     <>
-      <footer className="relative mt-auto overflow-hidden">
+      <footer className="site-footer relative mt-auto overflow-hidden">
+        <div className="site-footer-break" aria-hidden />
         {/* Ambient glow */}
-        <div className="absolute inset-0 bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 pointer-events-none" />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] h-px bg-gradient-to-r from-transparent via-neon-cyan-500/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#160e24] via-[#1c1230] to-[#0e0a18] pointer-events-none" />
         <div className="absolute -top-32 left-1/4 w-96 h-96 bg-bitcoin-orange-500/5 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -top-20 right-1/4 w-72 h-72 bg-neon-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
 
@@ -127,7 +127,7 @@ export function Footer() {
                   className="flex items-center gap-2 px-4 h-11 rounded-xl bg-gradient-to-r from-bitcoin-orange-500/20 to-amber-600/20 border border-bitcoin-orange-500/30 hover:border-bitcoin-orange-500/60 text-bitcoin-orange-400 text-sm font-semibold transition-all"
                 >
                   <Bitcoin size={18} />
-                  Donate sats
+                  {t('footer.donateSats')}
                 </button>
               </div>
 
@@ -158,45 +158,45 @@ export function Footer() {
             {/* Nav */}
             <div className="lg:col-span-2 grid grid-cols-2 gap-6">
               <div>
-                <h3 className="text-white font-display font-bold mb-4 text-xs uppercase tracking-widest text-gray-300">
+                <h3 className="text-white font-display font-bold mb-4 text-xs uppercase tracking-widest">
                   {t('footer.company')}
                 </h3>
                 <ul className="space-y-2.5">
                   <FooterLink href="/about">{t('footer.about')}</FooterLink>
                   <FooterLink href="/pricing">{t('footer.pricing')}</FooterLink>
                   <FooterLink href="/contact">{t('footer.contact')}</FooterLink>
-                  <FooterLink href="/comparison">Why Katoa</FooterLink>
-                  <FooterLink href="/pitch">Pitch</FooterLink>
-                  <FooterLink href="/press">Press kit</FooterLink>
-                  <FooterLink href="/meetup">Meetup kit</FooterLink>
-                  <FooterLink href="/creators">For creators</FooterLink>
-                  <FooterLink href="/creators/guidelines">Guidelines</FooterLink>
-                  <FooterLink href="/case-studies">Case studies</FooterLink>
-                  <FooterLink href="/messages">Messages</FooterLink>
-                  <FooterLink href="/nip05">NIP-05 claim</FooterLink>
+                  <FooterLink href="/comparison">{t('nav.comparison')}</FooterLink>
+                  <FooterLink href="/pitch">{t('nav.route.pitch')}</FooterLink>
+                  <FooterLink href="/press">{t('footer.press')}</FooterLink>
+                  <FooterLink href="/meetup">{t('footer.meetup')}</FooterLink>
+                  <FooterLink href="/creators">{t('footer.creators')}</FooterLink>
+                  <FooterLink href="/creators/guidelines">{t('footer.guidelines')}</FooterLink>
+                  <FooterLink href="/case-studies">{t('footer.caseStudies')}</FooterLink>
+                  <FooterLink href="/messages">{t('nav.messages')}</FooterLink>
+                  <FooterLink href="/nip05">{t('footer.nip05')}</FooterLink>
                 </ul>
               </div>
               <div>
-                <h3 className="text-white font-display font-bold mb-4 text-xs uppercase tracking-widest text-gray-300">
+                <h3 className="text-white font-display font-bold mb-4 text-xs uppercase tracking-widest">
                   {t('footer.product')}
                 </h3>
                 <ul className="space-y-2.5">
-                  <FooterLink href="/explore">Explore</FooterLink>
-                  <FooterLink href="/explore?videos=1">Video Creators</FooterLink>
-                  <FooterLink href="/templates">Templates</FooterLink>
-                  <FooterLink href="/dashboard">Dashboard</FooterLink>
-                  <FooterLink href="/faq">FAQ</FooterLink>
-                  <FooterLink href="/roadmap">Roadmap</FooterLink>
-                  <FooterLink href="/auth">Sign In</FooterLink>
+                  <FooterLink href="/explore">{t('nav.explore')}</FooterLink>
+                  <FooterLink href="/explore?videos=1">{t('footer.videoCreators')}</FooterLink>
+                  <FooterLink href="/templates">{t('nav.templates')}</FooterLink>
+                  <FooterLink href="/dashboard">{t('nav.dashboard')}</FooterLink>
+                  <FooterLink href="/faq">{t('nav.faq')}</FooterLink>
+                  <FooterLink href="/roadmap">{t('nav.roadmap')}</FooterLink>
+                  <FooterLink href="/auth">{t('common.signIn')}</FooterLink>
                 </ul>
               </div>
               <div className="col-span-2">
-                <h3 className="text-white font-display font-bold mb-4 text-xs uppercase tracking-widest text-gray-300">
+                <h3 className="text-white font-display font-bold mb-4 text-xs uppercase tracking-widest">
                   {t('footer.legal')}
                 </h3>
                 <ul className="space-y-2.5 sm:flex sm:flex-wrap sm:gap-x-6 sm:gap-y-2.5 sm:space-y-0">
-                  <FooterLink href="/security">Security</FooterLink>
-                  <FooterLink href="/security/bounty">Bug bounty</FooterLink>
+                  <FooterLink href="/security">{t('nav.security')}</FooterLink>
+                  <FooterLink href="/security/bounty">{t('footer.bounty')}</FooterLink>
                   <FooterLink href="/terms">{t('footer.terms')}</FooterLink>
                   <FooterLink href="/privacy">{t('footer.privacy')}</FooterLink>
                 </ul>
@@ -289,7 +289,7 @@ export function Footer() {
 
       {/* Donation drawer — preserved */}
       <div
-        className={`fixed bottom-0 left-0 right-0 z-50 transition-transform duration-500 ease-out ${
+        className={`fixed bottom-0 left-0 right-0 z-[70] transition-transform duration-500 ease-out ${
           showDonation ? 'translate-y-0' : 'translate-y-full'
         }`}
       >
@@ -370,7 +370,7 @@ function FooterLink({ href, children }: { href: string; children: React.ReactNod
     <li>
       <Link
         href={href}
-        className="text-gray-400 hover:text-neon-cyan-400 text-sm transition-colors duration-200 inline-flex items-center gap-1 group"
+        className="text-gray-200 hover:text-neon-cyan-300 text-sm transition-colors duration-200 inline-flex items-center gap-1 group min-h-[44px] sm:min-h-0"
       >
         <span className="w-0 group-hover:w-1.5 h-px bg-neon-cyan-500 transition-all duration-200" />
         {children}
