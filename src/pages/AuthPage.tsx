@@ -179,7 +179,7 @@ export function AuthPage() {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 flex items-center justify-center px-4 py-12 pt-24 pb-20 md:pb-12">
+    <div className="min-h-[100dvh] bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 flex items-center justify-center px-4 py-12 pt-8 pb-20 md:pb-12">
       <PageMeta
         title={t('auth.metaTitle')}
         description={t('auth.metaDesc')}

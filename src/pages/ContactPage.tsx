@@ -50,7 +50,7 @@ export function ContactPage() {
   return (
     <div className="min-h-[100dvh] bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 pb-20 md:pb-16">
       <PageMeta title={t('contact.metaTitle')} description={t('contact.metaDesc')} path="/contact" />
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <PageHero title={t('contact.title')} subtitle={t('contact.subtitle')} />
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">

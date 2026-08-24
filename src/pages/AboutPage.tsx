@@ -44,14 +44,14 @@ export function AboutPage() {
   const promises = ['about.team.promise1', 'about.team.promise2', 'about.team.promise3', 'about.team.promise4'];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 text-white pt-16">
+    <div className="min-h-screen bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 text-white">
       <PageMeta
         title={t('about.title')}
         description="Learn about KATOA's mission — zero-fee, privacy-first Bitcoin commerce built by creators for creators."
         path="/about"
       />
 
-      <section className="relative pt-32 pb-20 px-6 overflow-hidden">
+      <section className="relative pt-10 pb-20 px-6 overflow-hidden">
         <div className="absolute inset-0 overflow-hidden opacity-20">
           <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-emerald-500/30 rounded-full blur-3xl animate-pulse" />
         </div>

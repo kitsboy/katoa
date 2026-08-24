@@ -273,7 +273,7 @@ export function CreatorProfilePage() {
 
   if (!profile) {
     return (
-      <div className="min-h-screen bg-charcoal-950 pt-24 pb-20">
+      <div className="min-h-screen bg-charcoal-950 pt-6 pb-20">
         <PageMeta
           title={t('creator.profileNotFound')}
           description={t('creator.profileNotFoundDesc')}

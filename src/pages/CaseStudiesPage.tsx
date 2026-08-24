@@ -29,13 +29,13 @@ const STORIES = [
 
 export function CaseStudiesPage() {
   return (
-    <div className="min-h-[100dvh] bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 pt-16 pb-24">
+    <div className="min-h-[100dvh] bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 pb-24">
       <PageMeta
         title="Case studies"
         description="How creators use KATOA — zero-fee wishlists and Lightning support."
         path="/case-studies"
       />
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8 pt-24">
+      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
         <PageHero
           title="Case studies"
           subtitle="Patterns that work. Some stories use demo catalogs until live pilots publish."

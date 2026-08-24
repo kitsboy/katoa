@@ -699,14 +699,14 @@ export function ExplorePage() {
   const mapStatusLabel = showMap ? t('explore.mapOpened') : t('explore.mapClosed');
 
   return (
-    <div className="min-h-screen bg-charcoal-950 pt-16 pb-20 md:pb-8">
+    <div className="min-h-screen bg-charcoal-950 pb-20 md:pb-8">
       <PageMeta title={t('explore.metaTitle')} description={t('explore.metaDesc')} path="/explore" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: toJsonLdScript(itemListSchema) }} />
       {usingMockData && (
         <DemoBanner message={t('explore.demoBanner')} />
       )}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pt-20 sm:pt-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <Card className="mb-8 overflow-hidden border-2 border-bitcoin-orange-500/40 shadow-[0_0_40px_rgba(255,135,0,0.2)] hover:shadow-[0_0_60px_rgba(255,135,0,0.35)] transition-all duration-300 animate-slide-up group">
           <div className="grid md:grid-cols-2 gap-0">
             <MediaCard

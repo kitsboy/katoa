@@ -5,7 +5,7 @@ import { PageMeta } from '../components/PageMeta';
 export function TermsPage() {
   const { t } = useLanguage();
   return (
-    <div className="min-h-screen bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 text-white pt-24 pb-16">
+    <div className="min-h-screen bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 text-white pt-6 pb-16">
       <PageMeta
         title={t('terms.metaTitle')}
         description={t('terms.metaDesc')}

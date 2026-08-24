@@ -33,6 +33,28 @@ test.describe('landing page', () => {
     await page.screenshot({ path: 'test-results/landing-desktop.png', fullPage: true });
   });
 
+  test('home copy is not hidden under the header island', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto('/');
+    await expect(page.locator('.lp-headline-accent')).toBeVisible({ timeout: 30_000 });
+
+    const header = page.locator('header').first();
+    const firstCopy = page.locator('.lp-page [role="status"], .lp-eyebrow').first();
+    await expect(firstCopy).toBeVisible();
+
+    const headerBox = await header.boundingBox();
+    const copyBox = await firstCopy.boundingBox();
+    expect(headerBox).toBeTruthy();
+    expect(copyBox).toBeTruthy();
+    if (!headerBox || !copyBox) return;
+
+    expect(copyBox.y).toBeGreaterThanOrEqual(headerBox.y + headerBox.height - 2);
+
+    const island = page.locator('.nav-island');
+    const bg = await island.evaluate((el) => getComputedStyle(el).backgroundColor);
+    expect(bg).toMatch(/rgb\(22,\s*14,\s*36\)/);
+  });
+
   test('home is readable on a phone', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/');

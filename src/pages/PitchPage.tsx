@@ -128,7 +128,7 @@ export function PitchPage() {
       />
 
       <div
-        className="min-h-[100dvh] flex flex-col pt-16 pb-safe"
+        className="min-h-[100dvh] flex flex-col pt-6 pb-safe"
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
         role="region"

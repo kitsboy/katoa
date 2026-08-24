@@ -136,7 +136,7 @@ export function Navbar() {
 
   return (
     <>
-      <header className="fixed top-0 inset-x-0 z-50 px-3 sm:px-4 pt-3 sm:pt-4 pointer-events-none">
+      <header className="fixed top-0 inset-x-0 z-50 px-3 sm:px-4 pt-[max(0.75rem,env(safe-area-inset-top,0px))] sm:pt-[max(1rem,env(safe-area-inset-top,0px))] pointer-events-none">
         <nav
           className={`nav-island pointer-events-auto max-w-7xl mx-auto rounded-2xl transition-all duration-500 ${
             scrolled ? 'nav-island-scrolled' : isHomeHero ? 'nav-island-hero' : ''

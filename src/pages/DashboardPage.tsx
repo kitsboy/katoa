@@ -673,7 +673,7 @@ export function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-charcoal-950 pt-24 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-charcoal-950 pt-6 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto space-y-6" role="status" aria-label={t('dashboard.loading')}>
           <CardSkeleton />
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -700,7 +700,7 @@ export function DashboardPage() {
         path="/dashboard"
         noindex
       />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-10">
         <Breadcrumbs items={[{ label: t('dashboard.title') }]} className="mb-6" />
 
         <header className="mb-8">

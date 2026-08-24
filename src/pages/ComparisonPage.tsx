@@ -178,13 +178,13 @@ export function ComparisonPage() {
     .replace('${linktree}', savings.vsLinktree.toLocaleString());
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 pt-16">
+    <div className="min-h-screen bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950">
       <PageMeta
         title={t('comparison.metaTitle')}
         description={t('comparison.metaDesc')}
         path="/comparison"
       />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumbs
           items={[
             { label: t('footer.pricing'), href: '/pricing' },

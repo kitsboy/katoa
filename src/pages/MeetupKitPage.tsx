@@ -22,13 +22,13 @@ export function MeetupKitPage() {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 pt-16 pb-24">
+    <div className="min-h-[100dvh] bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 pb-24">
       <PageMeta
         title="Meetup kit"
         description="Talk track, QR, and demo script for KATOA at Bitcoin meetups."
         path="/meetup"
       />
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8 pt-24">
+      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
         <PageHero title="Meetup kit" subtitle="Run a clear 60-second demo at any Bitcoin or mutual-aid meetup." />
 
         <div className="space-y-4">

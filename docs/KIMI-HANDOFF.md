@@ -1,3 +1,15 @@
+## Session — 2026-08-24 (Grok M3) — Header island no longer covers page copy
+
+**Role:** M3 code only. Pushed `main`.
+
+### Done
+- Opaque plum header island (no more see-through text).
+- `.app-below-nav` offsets banners + pages by island height + `safe-area-inset-top`.
+- Dropped redundant `pt-16`/`pt-24` on inner pages so we don't double-pad.
+- Playwright: first home copy sits below the header box.
+
+---
+
 ## Session — 2026-08-24 (Grok M3) — Mobile dock clearance + 404
 
 **Role:** M3 code only. Pushed `main`.

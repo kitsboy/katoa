@@ -148,6 +148,7 @@ function AppShell() {
         {t('a11y.skipToContent')}
       </a>
       <Navbar />
+      <div className="app-below-nav">
       <SupabaseStatusBanner />
       {isDemoUser && <DemoBanner />}
       <ExplorePreload />
@@ -193,6 +194,7 @@ function AppShell() {
           </Suspense>
         </ErrorBoundary>
       </main>
+      </div>
       <Footer />
       <MobileNav />
       <PwaInstallPrompt />

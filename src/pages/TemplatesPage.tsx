@@ -103,13 +103,13 @@ export function TemplatesPage() {
   }, [focus]);
 
   return (
-    <div className="min-h-[100dvh] bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 pt-16 pb-24">
+    <div className="min-h-[100dvh] bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 pb-24">
       <PageMeta
         title="Wishlist templates"
         description="Start faster with KATOA templates — models, fitness, meals, golf, music, mutual aid, and more. Zero platform fees."
         path="/templates"
       />
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 pt-24">
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
         <PageHero
           title="Wishlist templates"
           subtitle={

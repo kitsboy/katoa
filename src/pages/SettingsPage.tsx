@@ -439,9 +439,9 @@ export function SettingsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-charcoal-950 pt-16">
+    <div className="min-h-screen bg-charcoal-950">
       <PageMeta title="Settings" description="Manage your KATOA profile, wallet, and preferences." path="/settings" noindex />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Breadcrumbs items={[{ label: 'Dashboard', href: '/dashboard' }, { label: 'Settings' }]} className="mb-6" />
 
         <div className="mb-12">

@@ -225,7 +225,7 @@ export function PricingPage() {
         description={t('pricing.metaDesc')}
         path="/pricing"
       />
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-20">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-6">
         <Breadcrumbs items={[{ label: t('pricing.title') }]} />
       </div>
       {/* Hero */}

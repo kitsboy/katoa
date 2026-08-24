@@ -585,7 +585,7 @@ export function ProjectPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-charcoal-950 pt-24 px-4 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-charcoal-950 pt-6 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto space-y-6" role="status" aria-label={t('common.loading')}>
           <CardSkeleton variant="tall" />
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -599,7 +599,7 @@ export function ProjectPage() {
 
   if (!project) {
     return (
-      <div className="min-h-screen bg-charcoal-950 pt-24 px-4">
+      <div className="min-h-screen bg-charcoal-950 pt-6 px-4">
         <PageMeta title="Project not found" description="This project is missing or you don't have access." path="/project" noindex />
         <EmptyState
           icon={<FolderOpen size={32} />}
