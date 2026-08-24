@@ -1,3 +1,52 @@
+## Session — 2026-08-24 (Grok M3) — Night-jewel YOLO: contrast, chrome, product, i18n
+
+**Role:** M3 code only. Pushed `main`. Cam in meetings — completed without him.
+
+### Done
+- **Contrast:** killed beige `#dfd4c8` overlay that put cream text on light surfaces. Night-jewel: deep plum `#0e0a18`, aurora violet, near-white type, bitcoin-orange money CTAs. Not `#000` slop.
+- **Chrome:** Navbar, footer, mobile dock, Button, Card, landing sections share one system. Donate drawer unmounts when closed (was covering the first viewport). Mobile CTAs full-width.
+- **Honesty:** no 2.5K fallback, no “makes money when you succeed”, ZK/BOLT12/subscriptions are planned/demo, OF-alternative language out of public copy.
+- **Dashboard:** live wishlists for signed-in creators; `/u/{username}` links; demo inbox no longer seeds live users; `/project` no-slug → dashboard.
+- **Account:** on-chain wallets, validation, demo persist, kind-0 import, shipping list, honest Nostr (extension check, not login), `?next=`, forgot password.
+- **Profile/commerce:** Tip/Follow/Message; dummy bitcoin.org address gone; gift close no longer fakes thank-you; PPV/subscribe stay local seams, labeled demo.
+- **Docs/SEO:** exec, marketing, DESIGN, SEO-es/pt/fr/de/zh + new SEO-ja; SEO-sw N/A; OG 1200×630 `og-share.svg`.
+- **i18n:** pillars, footer, FAQ (first 8), pricing features, comparison cells, landing meta in 7 langs. Parity test.
+
+**Tests:** 209 unit. Playwright landing (desktop+phone), dashboard, creator-profile, creator-feed, wishlist-template green vs Vite.
+
+**Still blocked (Cam/THOR):** Lightning invoice → webhook → `subscriptions` row; production nsec/NIP-05 merge; confirm CF Pages on this `main`.
+
+**Do not regress:** likes/comments/PPV/seen stay local seams.
+
+**Git State:**
+- Pushed: `bae5b57` … `01c581d` (this i18n commit) plus later handoff stamp
+- SHA: `673db6daa2bd03e55055e5d5ba8b51f00c342d74`
+- Unpushed: not committed this session
+
+---
+
+## Session — 2026-08-24 (Grok M3) — Night-jewel knowledge docs
+
+**Role:** M3 docs + OG honesty. **Not committed** (Cam: do not commit).
+
+### Done
+- Knowledge docs updated for night-jewel product era (plum `#12081c` / ember `#080510`, violet `#a78bfa` product, orange money, cyan interactive). Beige and all-black retired.
+- `docs/EXECUTIVE-SUMMARY.md` dated 2026-08-24, v1.1.7, ~29 routes, MapLibre, sample metrics (11 creators, `demo: true`), OF-parity local seams, no invented live Lightning.
+- `docs/MARKETING.md` / `MISSION.md` — no Pulse/widgets; BOLT12 as path; no thousands.
+- `DESIGN.md` + `docs/DESIGN.md` — night-jewel tokens, highlight trim + violet rings, contrast rules (body near-white, muted ≥ `#c4b8d4`, never gray-600 on dark).
+- SEO locale titles filled (es/pt/fr/de/zh); created `docs/SEO-ja.md`; `SEO-sw.md` marked N/A (no sw locale).
+- README Leaflet → MapLibre; `llms.txt` missing routes + demo metrics; `humans.txt` date bump.
+- `PageMeta` + `index.html` default OG is `og-share.svg` 1200×630 (no longer claim 1200×630 on the 512 logo).
+- Sitemap adds `/creators/guidelines`; `/pitch` stays noindex.
+
+**Decisions:** Document the night-jewel **target** (parent landing CSS in parallel). Stay honest: metrics are sample; likes/comments/PPV/subscribe are client seams.
+
+**Git State:**
+- SHA: `bae5b5739c8d1bf8482a7d48efaeeb2a0b95858d` (HEAD before this docs pass)
+- Unpushed: not committed per request
+
+---
+
 ## Session — 2026-08-20 (Grok M3) — Landing page ember + highlight trim
 
 **Role:** M3 code only. Pushed `main`.
