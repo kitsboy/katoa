@@ -6,7 +6,7 @@ import { Modal } from '../components/Modal';
 import { Input } from '../components/Input';
 import { Link } from '../components/Link';
 import { supabase, asRows } from '../lib/supabase';
-import type { Project as DbProject, Profile } from '../types/database';
+import type { Project as DbProject } from '../types/database';
 import {
   Plus,
   Edit,
@@ -16,7 +16,6 @@ import {
   Users,
   FolderOpen,
   ExternalLink,
-  Heart,
   Zap,
   MessageCircle,
   LayoutTemplate,
@@ -50,18 +49,11 @@ import { mockWishlists } from '../data/mockWishlists';
 
 type Project = DbProject & { wishlist_count?: number };
 
-type FollowedProject = Pick<DbProject, 'id' | 'title' | 'description' | 'slug' | 'background_url' | 'visibility'>;
-type FollowedWishlist = {
+type SupportedFavorite = {
   id: string;
   title: string;
-  description: string;
   slug: string;
-  cover_image: string | null;
-  total_sats_goal: number;
-  total_sats_raised: number;
-  visibility: string;
 };
-type FollowedCreator = Pick<Profile, 'id' | 'username' | 'avatar_url' | 'bio'>;
 
 const DEMO_PROJECTS: Project[] = [
   {
@@ -149,29 +141,26 @@ function demoOwnedWishlists(): OwnedWishlist[] {
     }));
 }
 
-function demoFollowing() {
-  const featured = mockWishlists.filter((w) =>
-    ['medellin-skate-park', 'luna-exclusive-videos', 'sasha-vip-content'].includes(w.slug)
-  );
-  return {
-    projects: [] as FollowedProject[],
-    wishlists: featured.map((w) => ({
-      id: w.id,
-      title: w.title,
-      description: w.description,
-      slug: w.slug,
-      cover_image: w.cover_image,
-      total_sats_goal: w.total_sats_goal,
-      total_sats_raised: w.total_sats_raised,
-      visibility: 'public',
-    })),
-    creators: featured.map((w) => ({
-      id: w.id,
-      username: w.creator.username,
-      avatar_url: w.creator.avatar_url,
-      bio: w.creator.bio || '',
-    })),
-  };
+function visibilitySentence(visibility: string | null | undefined): string {
+  const key = (visibility || 'draft').toLowerCase();
+  if (key === 'public') return 'Anyone with the link can view this.';
+  if (key === 'private' || key === 'unlisted') return 'Not listed in Explore.';
+  return 'Only you can see this.';
+}
+
+function resolveStoredFavorites(owned: OwnedWishlist[]): SupportedFavorite[] {
+  const ids = getStorage<string[]>(STORAGE_KEYS.exploreFavorites, []);
+  if (ids.length === 0) return [];
+
+  const byId = new Map<string, SupportedFavorite>();
+  for (const w of owned) {
+    byId.set(w.id, { id: w.id, title: w.title, slug: w.slug });
+  }
+  for (const w of mockWishlists) {
+    if (!byId.has(w.id)) byId.set(w.id, { id: w.id, title: w.title, slug: w.slug });
+  }
+
+  return ids.map((id) => byId.get(id) ?? { id, title: id, slug: '' });
 }
 
 function slugify(value: string) {
@@ -214,82 +203,14 @@ export function DashboardPage() {
     totalRaised: 0,
   });
   const [deleteProjectId, setDeleteProjectId] = useState<string | null>(null);
-  const [followFilter, setFollowFilter] = useState<'all' | 'projects' | 'wishlists' | 'creators'>('all');
   const [mainTab, setMainTab] = useState<'projects' | 'wishlists' | 'earnings'>('projects');
   const [projectQuery, setProjectQuery] = useState('');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [following, setFollowing] = useState<{
-    projects: FollowedProject[];
-    wishlists: FollowedWishlist[];
-    creators: FollowedCreator[];
-  }>({
-    projects: [],
-    wishlists: [],
-    creators: [],
-  });
   const [liveOwnedWishlists, setLiveOwnedWishlists] = useState<OwnedWishlist[]>([]);
 
   const persistDemoProjects = useCallback((next: Project[]) => {
     setStorage(STORAGE_KEYS.demoDashboardProjects, next);
   }, []);
-
-  const loadFollowing = useCallback(async () => {
-    if (!user) return;
-    if (isDemoUser) {
-      setFollowing(demoFollowing());
-      return;
-    }
-
-    try {
-      const { data: projectFollows } = await supabase
-        .from('project_follows')
-        .select('project_id')
-        .eq('user_id', user.id);
-
-      const { data: wishlistFollows } = await supabase
-        .from('wishlist_follows')
-        .select('wishlist_id')
-        .eq('user_id', user.id);
-
-      const { data: creatorFollows } = await supabase
-        .from('follows')
-        .select('following_id')
-        .eq('follower_id', user.id);
-
-      const creatorIds = (creatorFollows || []).map((f) => f.following_id);
-      const projectIds = (projectFollows || []).map((f) => f.project_id);
-      const wishlistIds = (wishlistFollows || []).map((f) => f.wishlist_id);
-
-      const [creatorProfiles, followedProjects, followedWishlists] = await Promise.all([
-        creatorIds.length > 0
-          ? supabase.from('profiles').select('id, username, avatar_url, bio').in('id', creatorIds).then((r) => r.data || [])
-          : Promise.resolve([] as FollowedCreator[]),
-        projectIds.length > 0
-          ? supabase
-              .from('projects')
-              .select('id, title, description, slug, background_url, visibility')
-              .in('id', projectIds)
-              .then((r) => r.data || [])
-          : Promise.resolve([] as FollowedProject[]),
-        wishlistIds.length > 0
-          ? supabase
-              .from('wishlists')
-              .select('id, title, description, slug, cover_image, total_sats_goal, total_sats_raised, visibility')
-              .in('id', wishlistIds)
-              .then((r) => r.data || [])
-          : Promise.resolve([] as FollowedWishlist[]),
-      ]);
-
-      setFollowing({
-        projects: followedProjects,
-        wishlists: followedWishlists,
-        creators: creatorProfiles,
-      });
-    } catch (error) {
-      console.error('Error loading following:', error);
-      toast(t('error.loadDashboard'), 'error');
-    }
-  }, [user, isDemoUser, toast, t]);
 
   const loadProjects = useCallback(async () => {
     if (!user) return;
@@ -414,9 +335,8 @@ export function DashboardPage() {
     if (user) {
       void loadProjects();
       void loadStats();
-      void loadFollowing();
     }
-  }, [user, loadProjects, loadStats, loadFollowing]);
+  }, [user, loadProjects, loadStats]);
 
   async function handleCreateProject(e: React.FormEvent) {
     e.preventDefault();
@@ -638,27 +558,12 @@ export function DashboardPage() {
     }
   }
 
-  const followingCount = following.projects.length + following.wishlists.length + following.creators.length;
   const displayName = profile?.username || user?.email?.split('@')[0] || 'creator';
   const publicProfileHref = `/u/${displayName}`;
   const initial = displayName[0]?.toUpperCase() || 'K';
   const missingLightning = !profile?.lightning_address;
   const publicProject = projects.find((p) => p.visibility === 'public');
   const embedPath = publicProject ? `/project/${publicProject.slug}` : publicProfileHref;
-
-  const filteredFollows = useMemo(() => {
-    const showP = followFilter === 'all' || followFilter === 'projects';
-    const showW = followFilter === 'all' || followFilter === 'wishlists';
-    const showC = followFilter === 'all' || followFilter === 'creators';
-    return {
-      projects: showP ? following.projects : [],
-      wishlists: showW ? following.wishlists : [],
-      creators: showC ? following.creators : [],
-    };
-  }, [followFilter, following]);
-
-  const filteredFollowCount =
-    filteredFollows.projects.length + filteredFollows.wishlists.length + filteredFollows.creators.length;
 
   const q = projectQuery.trim().toLowerCase();
   const visibleProjects = q
@@ -670,6 +575,11 @@ export function DashboardPage() {
       )
     : projects;
   const ownedWishlists = isDemoUser ? demoOwnedWishlists() : liveOwnedWishlists;
+  const supportedFavorites = useMemo(
+    () => resolveStoredFavorites(isDemoUser ? demoOwnedWishlists() : liveOwnedWishlists),
+    [isDemoUser, liveOwnedWishlists],
+  );
+  const isLiveEmpty = !isDemoUser && projects.length === 0 && ownedWishlists.length === 0;
 
   if (loading) {
     return (
@@ -732,31 +642,43 @@ export function DashboardPage() {
                       {profile.lightning_address}
                     </p>
                   )}
-                  <Link
-                    href={publicProfileHref}
-                    className="text-sm text-bitcoin-orange-300 hover:text-bitcoin-orange-200 inline-flex items-center gap-1.5 min-h-[36px]"
-                  >
-                    <ExternalLink size={14} />
-                    View public profile
-                  </Link>
+                  {!isLiveEmpty && (
+                    <Link
+                      href={publicProfileHref}
+                      className="text-sm text-bitcoin-orange-300 hover:text-bitcoin-orange-200 inline-flex items-center gap-1.5 min-h-[36px]"
+                    >
+                      <ExternalLink size={14} />
+                      View public profile
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>
-            <div className="flex flex-wrap gap-2 shrink-0">
-              <Link href="/settings">
-                <Button variant="outline">
-                  <Settings size={16} className="mr-2" />
-                  {t('dashboard.quick.settings')}
+            {!isLiveEmpty && (
+              <div className="flex flex-wrap gap-2 shrink-0">
+                <Link href="/settings">
+                  <Button variant="outline">
+                    <Settings size={16} className="mr-2" />
+                    {t('dashboard.quick.settings')}
+                  </Button>
+                </Link>
+                <Button variant="bitcoin" onClick={() => setShowCreateModal(true)}>
+                  <Plus size={16} className="mr-2" />
+                  {t('dashboard.newProject')}
                 </Button>
-              </Link>
-              <Button variant="bitcoin" onClick={() => setShowCreateModal(true)}>
-                <Plus size={16} className="mr-2" />
-                {t('dashboard.newProject')}
-              </Button>
-            </div>
+              </div>
+            )}
           </div>
         </header>
 
+        {isLiveEmpty ? (
+          <LiveEmptyStart
+            publicProfileHref={publicProfileHref}
+            favorites={supportedFavorites}
+            onCreate={() => setShowCreateModal(true)}
+          />
+        ) : (
+          <>
         {missingLightning && (
           <GlassCallout variant="bitcoin" className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <p className="text-sm">{t('dashboard.lightningMissing')}</p>
@@ -779,7 +701,7 @@ export function DashboardPage() {
           <QuickLink href="/settings" icon={Wallet} label="Wallet" />
         </nav>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-10">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mb-10">
           <StatsCard
             title={t('dashboard.projects')}
             value={stats.totalProjects}
@@ -800,13 +722,6 @@ export function DashboardPage() {
             icon={Zap}
             gradient="from-emerald-500 to-teal-600"
             delay={120}
-          />
-          <StatsCard
-            title={t('dashboard.stats.following')}
-            value={followingCount}
-            icon={Heart}
-            gradient="from-rose-500 to-orange-500"
-            delay={180}
           />
         </div>
 
@@ -917,6 +832,7 @@ export function DashboardPage() {
                       editing={editingProject === project.id}
                       editFormData={editFormData}
                       processing={processing}
+                      previewHref={publicProfileHref}
                       t={t}
                       onImageUrl={(url) => {
                         if (url === '') void handleBackgroundUpload(null, project.id);
@@ -954,21 +870,26 @@ export function DashboardPage() {
                   ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {ownedWishlists.map((w) => (
-                        <Link key={w.id} href={`/wishlist/${w.slug}`}>
-                          <Card variant="glass" hover className="overflow-hidden h-full">
-                            <FollowCover src={w.cover_image} fallback={<Gift size={28} className="text-gray-600" />} />
-                            <div className="p-4">
-                              <VisibilityBadge visibility={w.visibility} />
-                              <h3 className="text-base font-bold text-white mt-2 line-clamp-1">{w.title}</h3>
-                              {w.projectSlug ? <p className="text-sm text-gray-500 mt-1">/{w.projectSlug}</p> : null}
-                              {w.total_sats_goal > 0 && (
-                                <p className="text-xs text-gray-400 mt-2">
-                                  {Math.round((w.total_sats_raised / w.total_sats_goal) * 100)}% funded
-                                </p>
-                              )}
-                            </div>
-                          </Card>
-                        </Link>
+                        <Card key={w.id} variant="glass" className="overflow-hidden h-full">
+                          <FollowCover src={w.cover_image} fallback={<Gift size={28} className="text-gray-600" />} />
+                          <div className="p-4">
+                            <VisibilityBadge visibility={w.visibility} />
+                            <p className="text-xs text-gray-500 mt-1.5">{visibilitySentence(w.visibility)}</p>
+                            <h3 className="text-base font-bold text-white mt-2 line-clamp-1">{w.title}</h3>
+                            {w.projectSlug ? <p className="text-sm text-gray-500 mt-1">/{w.projectSlug}</p> : null}
+                            {w.total_sats_goal > 0 && (
+                              <p className="text-xs text-gray-400 mt-2">
+                                {Math.round((w.total_sats_raised / w.total_sats_goal) * 100)}% funded
+                              </p>
+                            )}
+                            <Link href={`/wishlist/${w.slug}`} className="mt-4 block">
+                              <Button variant="outline" size="sm" className="w-full">
+                                <ExternalLink size={14} className="mr-1.5" />
+                                Preview as public
+                              </Button>
+                            </Link>
+                          </div>
+                        </Card>
                       ))}
                     </div>
                   )}
@@ -983,123 +904,7 @@ export function DashboardPage() {
               )}
             </section>
 
-            <section>
-              <div className="mb-5">
-                <h2 className="font-display text-2xl font-bold text-white">{t('dashboard.following')}</h2>
-                <p className="text-gray-400 text-sm">{t('dashboard.followingSub')}</p>
-              </div>
-
-              <div className="flex gap-2 mb-5 overflow-x-auto pb-1" role="tablist" aria-label={t('dashboard.following')}>
-                {(
-                  [
-                    ['all', t('dashboard.filterAll'), followingCount],
-                    ['projects', t('dashboard.projects'), following.projects.length],
-                    ['wishlists', t('dashboard.wishlists'), following.wishlists.length],
-                    ['creators', t('dashboard.creators'), following.creators.length],
-                  ] as const
-                ).map(([id, label, count]) => (
-                  <button
-                    key={id}
-                    type="button"
-                    role="tab"
-                    aria-selected={followFilter === id}
-                    onClick={() => setFollowFilter(id)}
-                    className={`shrink-0 min-h-[40px] px-3.5 rounded-full text-sm font-semibold border transition-colors ${
-                      followFilter === id
-                        ? 'bg-bitcoin-orange-500/15 border-bitcoin-orange-500/40 text-bitcoin-orange-200'
-                        : 'bg-white/[0.03] border-white/10 text-gray-400 hover:text-white hover:border-white/20'
-                    }`}
-                  >
-                    {label} · {count}
-                  </button>
-                ))}
-              </div>
-
-              {followingCount === 0 ? (
-                <Card variant="glass">
-                  <EmptyState
-                    icon={<Heart size={28} />}
-                    title={t('dashboard.followingEmpty.title')}
-                    description={t('dashboard.followingEmpty.description')}
-                    actionLabel={t('dashboard.followingEmpty.action')}
-                    actionHref="/explore"
-                  />
-                </Card>
-              ) : filteredFollowCount === 0 ? (
-                <p className="text-sm text-gray-500 py-8 text-center">{t('dashboard.noFollowsFilter')}</p>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {filteredFollows.projects.map((project) => (
-                    <Link key={project.id} href={`/project/${project.slug}`}>
-                      <Card variant="glass" hover className="overflow-hidden h-full">
-                        <FollowCover src={project.background_url} fallback={<FolderOpen size={28} className="text-gray-600" />} />
-                        <div className="p-4">
-                          <p className="text-[10px] font-bold uppercase tracking-wider text-bitcoin-orange-400 mb-1">
-                            {t('dashboard.projects')}
-                          </p>
-                          <h3 className="text-base font-bold text-white line-clamp-1">{project.title}</h3>
-                          <p className="text-gray-400 text-sm line-clamp-2 mt-1">
-                            {project.description || t('dashboard.noDescription')}
-                          </p>
-                        </div>
-                      </Card>
-                    </Link>
-                  ))}
-                  {filteredFollows.wishlists.map((wishlist) => (
-                    <Link key={wishlist.id} href={`/wishlist/${wishlist.slug}`}>
-                      <Card variant="glass" hover className="overflow-hidden h-full">
-                        <FollowCover src={wishlist.cover_image} fallback={<Gift size={28} className="text-gray-600" />} />
-                        <div className="p-4">
-                          <p className="text-[10px] font-bold uppercase tracking-wider text-neon-cyan-400 mb-1">
-                            {t('dashboard.wishlists')}
-                          </p>
-                          <h3 className="text-base font-bold text-white line-clamp-1">{wishlist.title}</h3>
-                          {wishlist.total_sats_goal > 0 && (
-                            <div className="mt-3">
-                              <div className="flex justify-between text-[10px] text-gray-500 mb-1">
-                                <span>{Math.round((wishlist.total_sats_raised / wishlist.total_sats_goal) * 100)}%</span>
-                              </div>
-                              <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
-                                <div
-                                  className="h-full rounded-full bg-gradient-to-r from-bitcoin-orange-500 to-amber-400"
-                                  style={{
-                                    width: `${Math.min((wishlist.total_sats_raised / wishlist.total_sats_goal) * 100, 100)}%`,
-                                  }}
-                                />
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </Card>
-                    </Link>
-                  ))}
-                  {filteredFollows.creators.map((creator) => (
-                    <Link key={creator.id} href={`/u/${creator.username}`}>
-                      <Card variant="glass" hover className="p-4 h-full">
-                        <div className="flex items-center gap-3">
-                          {creator.avatar_url ? (
-                            <img
-                              src={creator.avatar_url}
-                              alt=""
-                              className="w-12 h-12 rounded-xl object-cover border border-white/10"
-                            />
-                          ) : (
-                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-bitcoin-orange-500 to-amber-600 flex items-center justify-center text-white font-bold">
-                              {creator.username[0]?.toUpperCase()}
-                            </div>
-                          )}
-                          <div className="min-w-0">
-                            <p className="text-[10px] font-bold uppercase tracking-wider text-gray-500">Creator</p>
-                            <h3 className="text-base font-bold text-white truncate">@{creator.username}</h3>
-                          </div>
-                        </div>
-                        {creator.bio && <p className="text-gray-400 text-sm line-clamp-2 mt-3">{creator.bio}</p>}
-                      </Card>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </section>
+            <YouSupportList favorites={supportedFavorites} />
           </div>
 
           <aside className="lg:col-span-4 space-y-5 lg:sticky lg:top-24 lg:self-start">
@@ -1134,6 +939,8 @@ export function DashboardPage() {
             </div>
           </aside>
         </div>
+          </>
+        )}
       </div>
 
       <Modal isOpen={showCreateModal} onClose={() => setShowCreateModal(false)} title={t('dashboard.createTitle')}>
@@ -1206,6 +1013,66 @@ function QuickLink({ href, icon: Icon, label }: { href: string; icon: LucideIcon
   );
 }
 
+function YouSupportList({ favorites, className = '' }: { favorites: SupportedFavorite[]; className?: string }) {
+  return (
+    <section className={className}>
+      <h2 className="font-display text-lg font-bold text-white">You support</h2>
+      {favorites.length === 0 ? (
+        <p className="text-sm text-gray-500 mt-1">None yet.</p>
+      ) : (
+        <ul className="mt-3 space-y-2">
+          {favorites.map((item) => (
+            <li key={item.id}>
+              {item.slug ? (
+                <Link
+                  href={`/wishlist/${item.slug}`}
+                  className="text-sm text-bitcoin-orange-300 hover:text-bitcoin-orange-200 min-h-[36px] inline-flex items-center"
+                >
+                  {item.title}
+                </Link>
+              ) : (
+                <span className="text-sm text-gray-300">{item.title}</span>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  );
+}
+
+function LiveEmptyStart({
+  publicProfileHref,
+  favorites,
+  onCreate,
+}: {
+  publicProfileHref: string;
+  favorites: SupportedFavorite[];
+  onCreate: () => void;
+}) {
+  return (
+    <div className="max-w-md">
+      <p className="text-sm text-gray-400 mb-5">Set up Lightning, add a wishlist, then preview how fans see you.</p>
+      <div className="flex flex-col gap-3">
+        <Link href="/settings" className="w-full">
+          <Button variant="bitcoin" className="w-full">
+            Add Lightning
+          </Button>
+        </Link>
+        <Button variant="outline" className="w-full" onClick={onCreate}>
+          Create wishlist
+        </Button>
+        <Link href={publicProfileHref} className="w-full">
+          <Button variant="outline" className="w-full">
+            View public profile
+          </Button>
+        </Link>
+      </div>
+      <YouSupportList favorites={favorites} className="mt-8" />
+    </div>
+  );
+}
+
 function FollowCover({ src, fallback }: { src: string | null; fallback: ReactNode }) {
   if (src) {
     return <div className="w-full h-28 bg-cover bg-center" style={{ backgroundImage: `url(${src})` }} />;
@@ -1218,6 +1085,7 @@ function ProjectCard({
   editing,
   editFormData,
   processing,
+  previewHref,
   t,
   onImageUrl,
   onFile,
@@ -1231,6 +1099,7 @@ function ProjectCard({
   editing: boolean;
   editFormData: { title: string; description: string; visibility: 'public' | 'private' | 'draft' } | null;
   processing: boolean;
+  previewHref: string;
   t: (key: string) => string;
   onImageUrl: (url: string) => void;
   onFile: (file: File | null) => void;
@@ -1282,6 +1151,7 @@ function ProjectCard({
               <option value="private">Private — link only</option>
               <option value="public">Public — listed on Explore</option>
             </select>
+            <p className="text-xs text-gray-500">{visibilitySentence(editFormData.visibility)}</p>
             <div className="flex gap-2 pt-1">
               <Button onClick={onSaveEdit} variant="bitcoin" className="flex-1" loading={processing}>
                 Save
@@ -1293,6 +1163,7 @@ function ProjectCard({
           </div>
         ) : (
           <>
+            <p className="text-xs text-gray-500 mb-3">{visibilitySentence(project.visibility)}</p>
             <h3 className="text-lg font-bold text-white mb-1 line-clamp-1">{project.title}</h3>
             <p className="text-gray-400 text-sm line-clamp-2 leading-relaxed min-h-[2.5rem]">
               {project.description || t('dashboard.noDescription')}
@@ -1300,11 +1171,17 @@ function ProjectCard({
             <p className="text-xs text-gray-500 mt-3 mb-4">
               {project.wishlist_count ?? 0} {t('dashboard.wishlistsCount')}
             </p>
-            <div className="flex gap-2">
-              <Link href={`/project/${project.slug}`} className="flex-1">
+            <div className="flex flex-wrap gap-2">
+              <Link href={`/project/${project.slug}`} className="flex-1 min-w-[8rem]">
                 <Button variant="bitcoin" className="w-full">
                   <Settings size={16} className="mr-1.5" />
                   {t('dashboard.manage')}
+                </Button>
+              </Link>
+              <Link href={previewHref} className="flex-1 min-w-[8rem]">
+                <Button variant="outline" className="w-full">
+                  <ExternalLink size={16} className="mr-1.5" />
+                  Preview as public
                 </Button>
               </Link>
               <Button variant="outline" onClick={onEdit} aria-label={t('dashboard.editAria')} className="min-w-[44px] px-3">
@@ -1319,15 +1196,6 @@ function ProjectCard({
                 <Trash2 size={16} />
               </Button>
             </div>
-            {project.visibility === 'public' && (
-              <Link
-                href={`/project/${project.slug}`}
-                className="mt-3 inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-bitcoin-orange-300"
-              >
-                <ExternalLink size={12} />
-                {t('dashboard.viewPublic')}
-              </Link>
-            )}
           </>
         )}
       </div>

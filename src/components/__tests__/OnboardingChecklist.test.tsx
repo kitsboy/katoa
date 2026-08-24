@@ -49,6 +49,7 @@ describe('OnboardingChecklist', () => {
     expect(firstSatRow?.querySelector('a')).toHaveAttribute('href', '/settings');
     const hrefs = screen.getAllByRole('link').map((el) => el.getAttribute('href'));
     expect(hrefs).not.toContain('/explore');
+    expect(hrefs).toContain('/project');
     expect(screen.getByRole('button', { name: /share/i })).toBeInTheDocument();
   });
 

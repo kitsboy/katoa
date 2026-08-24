@@ -24,6 +24,11 @@ export function GiftSuccess({
 }) {
   const methodLabel =
     method === 'onchain' ? 'On-chain' : method === 'nostr' ? 'Nostr zap' : method === 'lightning' ? 'Lightning' : null;
+  const amountLabel =
+    typeof amountSats === 'number' && Number.isFinite(amountSats) && amountSats > 0
+      ? `${amountSats.toLocaleString()} sats`
+      : null;
+  const isDemo = status === 'demo';
 
   return (
     <div className="text-center py-6 px-2" role="status">
@@ -33,19 +38,17 @@ export function GiftSuccess({
       <div className="flex items-center justify-center gap-2 mb-2">
         <h3 className="text-xl font-display font-bold text-white">Thank you</h3>
         <DemoBadge
-          label={status === 'demo' ? 'Demo' : 'Pending'}
+          label={isDemo ? 'Demo' : 'Pending'}
           title={
-            status === 'demo'
+            isDemo
               ? 'Sample gift — not a live settlement'
               : 'Waiting for wallet + server confirmation. Totals do not update in the browser.'
           }
         />
       </div>
-      {(amountSats || methodLabel) && (
+      {(amountLabel || methodLabel) && (
         <p className="text-sm text-gray-300 font-semibold mb-2 tabular-nums">
-          {amountSats ? `${amountSats.toLocaleString()} sats` : null}
-          {amountSats && methodLabel ? ' · ' : null}
-          {methodLabel}
+          {[amountLabel, methodLabel].filter(Boolean).join(' · ')}
         </p>
       )}
       <p className="text-sm text-gray-400 leading-relaxed mb-6 max-w-sm mx-auto">{message}</p>
@@ -60,13 +63,13 @@ export function GiftSuccess({
             {buyLabel}
           </a>
         )}
-        {onShare && (
-          <Button variant="secondary" onClick={onShare} className="min-h-[48px]">
+        {onShare ? (
+          <Button type="button" variant="secondary" onClick={onShare} className="min-h-[48px]">
             <Share2 size={16} className="mr-2" />
             Share this wishlist
           </Button>
-        )}
-        <Button variant="primary" onClick={onClose} className="min-h-[48px]">
+        ) : null}
+        <Button type="button" variant="primary" onClick={onClose} className="min-h-[48px]">
           Done
         </Button>
       </div>

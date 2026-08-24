@@ -13,9 +13,9 @@ import { supabase } from '../lib/supabase';
 import { mockWishlists, mockWishlistItems } from '../data/mockWishlists';
 import { mockCreatorPosts } from '../data/mockCreatorPosts';
 import { isSubscribed, subscribeLocal, unsubscribe } from '../lib/subscriptions';
-import { getStorage, setStorage, STORAGE_KEYS } from '../lib/storage';
+import { getStorage, setStorage, removeStorage, STORAGE_KEYS } from '../lib/storage';
 import { copyToClipboard } from '../lib/clipboard';
-import { bitcoinQrData, getQrImageUrl, isBolt11Invoice, lightningQrData } from '../lib/qr';
+import { bitcoinQrData, getQrImageUrl, isBolt11Invoice, isDummyPaymentTarget, lightningQrData } from '../lib/qr';
 import { fetchCreatorOnchainAddress } from '../lib/creatorProfile';
 import { toJsonLdScript } from '../lib/jsonLd';
 import { Breadcrumbs, BreadcrumbItem } from '../components/Breadcrumbs';
@@ -24,13 +24,14 @@ import { useToast } from '../components/Toast';
 import { PaymentMethodTabs, PaymentTab } from '../components/PaymentMethodTabs';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
-import { Gift, ExternalLink, Zap, Bitcoin, Check, Copy, QrCode, ArrowLeft, Heart, TrendingUp, Package, ChevronUp, ChevronDown, ShoppingBag, Loader2, MessageCircle, BadgeCheck } from 'lucide-react';
+import { Gift, ExternalLink, Zap, Bitcoin, Check, Copy, QrCode, ArrowLeft, Heart, TrendingUp, Package, ChevronUp, ChevronDown, ShoppingBag, Loader2, MessageCircle, BadgeCheck, X } from 'lucide-react';
 import { MilestoneBanner } from '../components/MilestoneBanner';
 import { ProgressBar } from '../components/ProgressBar';
 import { ActivityFeed } from '../components/ActivityFeed';
 import { TrustProofStrip } from '../components/TrustProofStrip';
 import { EmbedSnippet } from '../components/EmbedSnippet';
 import { GiftSuccess } from '../components/GiftSuccess';
+import { MobileStickyCta } from '../components/MobileStickyCta';
 import { buyLabel, type ParsedProduct } from '../lib/productParser';
 import { WalletDeepLinks } from '../components/WalletDeepLinks';
 import { hasNip07, nip07UserMessage, nostrService } from '../lib/nostr';
@@ -152,6 +153,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
   const [onchainAddress, setOnchainAddress] = useState<string | null>(null);
   const [paymentUri, setPaymentUri] = useState('');
   const [giftIntent, setGiftIntent] = useState<{ amount: number; method: PaymentTab } | null>(null);
+  const [showDraftBanner, setShowDraftBanner] = useState(false);
 
   useEffect(() => {
     setThemeColor(getStorage<string>(STORAGE_KEYS.wishlistTheme(slug), '#f97316'));
@@ -197,6 +199,8 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
         );
       }
       setShowPaymentModal(false);
+      removeStorage(STORAGE_KEYS.giftDraft);
+      setShowDraftBanner(false);
       setShowGiftSuccess(true);
       toast('Demo gift complete — live sites confirm via wallet + server only', 'success');
     }, 3000);
@@ -217,10 +221,15 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
   useEffect(() => {
     if (!slug) return;
     const draft = getStorage<GiftDraft | null>(STORAGE_KEYS.giftDraft, null);
-    if (draft?.slug === slug) {
+    const hasDraft =
+      draft?.slug === slug && Boolean(draft.amount?.trim() || draft.name?.trim() || draft.message?.trim());
+    if (hasDraft && draft) {
       setGiftForm({ amount: draft.amount, name: draft.name, message: draft.message });
       const preset = SAT_PRESETS.find((p) => String(p.value) === draft.amount);
       setAmountPreset(preset ? preset.value : 'custom');
+      setShowDraftBanner(true);
+    } else {
+      setShowDraftBanner(false);
     }
   }, [slug]);
 
@@ -420,7 +429,191 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
 
   function persistGiftDraft(form: typeof giftForm) {
     if (!slug) return;
+    if (!form.amount.trim() && !form.name.trim() && !form.message.trim()) {
+      removeStorage(STORAGE_KEYS.giftDraft);
+      return;
+    }
     setStorage(STORAGE_KEYS.giftDraft, { slug, ...form });
+  }
+
+  function draftHasContent(draft: GiftDraft | null): boolean {
+    return Boolean(draft && (draft.amount?.trim() || draft.name?.trim() || draft.message?.trim()));
+  }
+
+  function dismissDraftBanner() {
+    removeStorage(STORAGE_KEYS.giftDraft);
+    setShowDraftBanner(false);
+  }
+
+  function continueLastGift() {
+    setSelectedItem(null);
+    setShowDraftBanner(false);
+    setShowGiftModal(true);
+  }
+
+  function clearGiftDraft() {
+    removeStorage(STORAGE_KEYS.giftDraft);
+    setShowDraftBanner(false);
+  }
+
+  async function buildPayment(
+    amountSats: number,
+    method: PaymentTab
+  ): Promise<boolean> {
+    if (!wishlist) return false;
+
+    const lightningAddr = wishlist.creator?.lightning_address?.trim() || null;
+    const npubOrHex = wishlist.creator?.nostr_pubkey?.trim();
+    const onchain = onchainAddress?.trim() || null;
+    const hasLightning = Boolean(lightningAddr && !isDummyPaymentTarget(lightningAddr));
+    const hasOnchain = Boolean(onchain && !isDummyPaymentTarget(onchain));
+
+    if (!isDemoWishlist && !hasLightning && !hasOnchain && !(method === 'nostr' && npubOrHex)) {
+      toast('This creator has no Lightning or on-chain address yet.', 'error');
+      return false;
+    }
+
+    setZapError(null);
+    setZapInvoice(null);
+    setPaymentUri('');
+    setPaymentQrUrl('');
+
+    if (method === 'onchain') {
+      if (!hasOnchain || !onchain) {
+        toast('This creator has no on-chain address. Use Lightning or buy the product.', 'error');
+        return false;
+      }
+      const uri = bitcoinQrData(onchain, amountSats);
+      if (!uri) {
+        toast('This creator has no on-chain address. Use Lightning or buy the product.', 'error');
+        return false;
+      }
+      setMockInvoice(onchain);
+      setPaymentUri(uri);
+      setPaymentQrUrl(getQrImageUrl(uri, 280));
+      setPaymentCountdown(180);
+      return true;
+    }
+
+    if (method === 'nostr') {
+      const lud16 =
+        lightningAddr ||
+        (npubOrHex
+          ? await (async () => {
+              try {
+                const hex = nostrService.normalizePubkey(npubOrHex);
+                return (await nostrService.getLightningAddress(hex)) || null;
+              } catch {
+                return null;
+              }
+            })()
+          : null);
+
+      if (!lud16) {
+        toast('Creator has no Lightning address (lud16) for zaps. Use Lightning tab or buy product.', 'error');
+        return false;
+      }
+
+      setZapBusy(true);
+      try {
+        let zapRequestJson: string | undefined;
+        if (hasNip07() && npubOrHex) {
+          try {
+            const recipient = nostrService.normalizePubkey(npubOrHex);
+            zapRequestJson = await nostrService.createZapRequest({
+              recipientPubkey: recipient,
+              amountSats,
+              comment: giftForm.message || `KATOA gift for ${wishlist.title}`,
+            });
+          } catch (err) {
+            toast(nip07UserMessage(err), 'error');
+          }
+        } else if (!hasNip07()) {
+          toast('Optional: install Alby/nos2x for signed NIP-57 zaps. Fetching LN invoice…', 'info');
+        }
+
+        const inv = await nostrService.fetchZapInvoice({
+          lud16,
+          amountSats,
+          comment: giftForm.message || undefined,
+          zapRequestJson,
+        });
+        if (inv.error || !inv.bolt11) {
+          toast(inv.error || 'Could not fetch zap invoice', 'error');
+          setZapError(inv.error || 'No invoice');
+          return false;
+        }
+        const bolt11Uri = lightningQrData(inv.bolt11);
+        if (!bolt11Uri) {
+          toast('Could not build a payable invoice', 'error');
+          return false;
+        }
+        setZapInvoice(inv.bolt11);
+        setMockInvoice(inv.bolt11);
+        setPaymentUri(bolt11Uri);
+        setPaymentQrUrl(getQrImageUrl(bolt11Uri, 280));
+        setPaymentCountdown(180);
+        toast(zapRequestJson ? 'Zap invoice ready (NIP-57)' : 'Lightning invoice ready', 'success');
+        return true;
+      } finally {
+        setZapBusy(false);
+      }
+    }
+
+    if (lightningAddr?.includes('@') && !isDummyPaymentTarget(lightningAddr)) {
+      setZapBusy(true);
+      try {
+        const inv = await nostrService.fetchZapInvoice({
+          lud16: lightningAddr,
+          amountSats,
+          comment: giftForm.message || undefined,
+        });
+        if (inv.bolt11) {
+          const bolt11Uri = lightningQrData(inv.bolt11);
+          if (!bolt11Uri) {
+            toast('Could not build a payable invoice', 'error');
+            return false;
+          }
+          setZapInvoice(inv.bolt11);
+          setMockInvoice(inv.bolt11);
+          setPaymentUri(bolt11Uri);
+          setPaymentQrUrl(getQrImageUrl(bolt11Uri, 280));
+          toast('Lightning invoice ready — pay in your wallet. Totals update after confirmation.', 'info');
+        } else {
+          const lnUri = lightningQrData(lightningAddr);
+          if (!lnUri) {
+            toast('This creator has no Lightning address. Try on-chain if available, or buy the product.', 'error');
+            return false;
+          }
+          setMockInvoice(lightningAddr);
+          setPaymentUri(lnUri);
+          setPaymentQrUrl(getQrImageUrl(lnUri, 280));
+          toast(inv.error || 'Could not fetch bolt11 — QR is the Lightning address, not an invoice.', 'info');
+        }
+      } finally {
+        setZapBusy(false);
+      }
+    } else if (lightningAddr && !isDummyPaymentTarget(lightningAddr)) {
+      const lnUri = lightningQrData(lightningAddr);
+      if (!lnUri) {
+        toast('This creator has no Lightning address. Try on-chain if available, or buy the product.', 'error');
+        return false;
+      }
+      setMockInvoice(lightningAddr);
+      setPaymentUri(lnUri);
+      setPaymentQrUrl(getQrImageUrl(lnUri, 280));
+    } else if (isDemoWishlist) {
+      const demoRef = `demo:pending:${wishlist.id}:${amountSats}:${Date.now()}`;
+      setMockInvoice(demoRef);
+      setPaymentUri('');
+      setPaymentQrUrl(getQrImageUrl(`Demo invoice — pay ${amountSats} sats to support ${wishlist.title}`, 280));
+    } else {
+      toast('This creator has no Lightning address. Try on-chain if available, or buy the product.', 'error');
+      return false;
+    }
+
+    setPaymentCountdown(180);
+    return true;
   }
 
   async function handleGiftSubmit(e: React.FormEvent) {
@@ -437,163 +630,51 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
       return;
     }
 
+    const lightningAddr = wishlist.creator?.lightning_address?.trim() || '';
+    const onchain = onchainAddress?.trim() || '';
+    const hasLightning = Boolean(lightningAddr) && !isDummyPaymentTarget(lightningAddr);
+    const hasOnchain = Boolean(onchain) && !isDummyPaymentTarget(onchain);
+    const hasNostrKey = Boolean(wishlist.creator?.nostr_pubkey?.trim());
+    if (!isDemoWishlist && !hasLightning && !hasOnchain && !(paymentTab === 'nostr' && hasNostrKey)) {
+      toast('This creator has no Lightning or on-chain address yet.', 'error');
+      return;
+    }
+
     setProcessing(true);
-    setZapError(null);
-    setZapInvoice(null);
-    setPaymentUri('');
     setGiftIntent({ amount: amountSats, method: paymentTab });
 
     try {
-      if (paymentTab === 'onchain') {
-        const addr = onchainAddress?.trim();
-        if (!addr) {
-          toast('This creator has no on-chain address. Use Lightning or buy the product.', 'error');
-          setProcessing(false);
-          return;
-        }
-        const uri = bitcoinQrData(addr, amountSats);
-        setMockInvoice(addr);
-        setPaymentUri(uri);
-        setPaymentQrUrl(getQrImageUrl(uri, 280));
-        setPaymentCountdown(180);
-        persistGiftDraft(giftForm);
-        setShowGiftModal(false);
-        setShowGiftSuccess(false);
-        setShowPaymentModal(true);
-        if (!isDemoWishlist) {
-          await recordGiftIntent(amountSats, 'onchain');
-        }
-        setProcessing(false);
-        return;
-      }
-
-      const lud16FromProfile = wishlist.creator?.lightning_address?.trim() || null;
-      const npubOrHex = wishlist.creator?.nostr_pubkey?.trim();
-
-      // Nostr Zap tab: NIP-57 request + LNURL-pay invoice when possible
-      if (paymentTab === 'nostr') {
-        const lud16 =
-          lud16FromProfile ||
-          (npubOrHex
-            ? await (async () => {
-                try {
-                  const hex = nostrService.normalizePubkey(npubOrHex);
-                  return (await nostrService.getLightningAddress(hex)) || null;
-                } catch {
-                  return null;
-                }
-              })()
-            : null);
-
-        if (!lud16) {
-          toast('Creator has no Lightning address (lud16) for zaps. Use Lightning tab or buy product.', 'error');
-          setProcessing(false);
-          return;
-        }
-
-        setZapBusy(true);
-        try {
-          let zapRequestJson: string | undefined;
-          if (hasNip07() && npubOrHex) {
-            try {
-              const recipient = nostrService.normalizePubkey(npubOrHex);
-              zapRequestJson = await nostrService.createZapRequest({
-                recipientPubkey: recipient,
-                amountSats,
-                comment: giftForm.message || `KATOA gift for ${wishlist.title}`,
-              });
-            } catch (err) {
-              toast(nip07UserMessage(err), 'error');
-            }
-          } else if (!hasNip07()) {
-            toast('Optional: install Alby/nos2x for signed NIP-57 zaps. Fetching LN invoice…', 'info');
-          }
-
-          const inv = await nostrService.fetchZapInvoice({
-            lud16,
-            amountSats,
-            comment: giftForm.message || undefined,
-            zapRequestJson,
-          });
-          if (inv.error || !inv.bolt11) {
-            toast(inv.error || 'Could not fetch zap invoice', 'error');
-            setZapError(inv.error || 'No invoice');
-            setProcessing(false);
-            setZapBusy(false);
-            return;
-          }
-          const bolt11Uri = lightningQrData(inv.bolt11);
-          setZapInvoice(inv.bolt11);
-          setMockInvoice(inv.bolt11);
-          setPaymentUri(bolt11Uri);
-          setPaymentQrUrl(getQrImageUrl(bolt11Uri, 280));
-          setPaymentCountdown(180);
-          persistGiftDraft(giftForm);
-          setShowGiftModal(false);
-          setShowPaymentModal(true);
-          toast(zapRequestJson ? 'Zap invoice ready (NIP-57)' : 'Lightning invoice ready', 'success');
-        } finally {
-          setZapBusy(false);
-        }
-        setProcessing(false);
-        return;
-      }
-
-      // Lightning tab: prefer a real bolt11 from lud16, never QR a fake address
-      const lightningAddr = lud16FromProfile;
-      if (lightningAddr?.includes('@')) {
-        setZapBusy(true);
-        try {
-          const inv = await nostrService.fetchZapInvoice({
-            lud16: lightningAddr,
-            amountSats,
-            comment: giftForm.message || undefined,
-          });
-          if (inv.bolt11) {
-            const bolt11Uri = lightningQrData(inv.bolt11);
-            setZapInvoice(inv.bolt11);
-            setMockInvoice(inv.bolt11);
-            setPaymentUri(bolt11Uri);
-            setPaymentQrUrl(getQrImageUrl(bolt11Uri, 280));
-            toast('Lightning invoice ready — pay in your wallet. Totals update after confirmation.', 'info');
-          } else {
-            const lnUri = lightningQrData(lightningAddr);
-            setMockInvoice(lightningAddr);
-            setPaymentUri(lnUri);
-            setPaymentQrUrl(getQrImageUrl(lnUri, 280));
-            toast(inv.error || 'Could not fetch bolt11 — QR is the Lightning address, not an invoice.', 'info');
-          }
-        } finally {
-          setZapBusy(false);
-        }
-      } else if (lightningAddr) {
-        const lnUri = lightningQrData(lightningAddr);
-        setMockInvoice(lightningAddr);
-        setPaymentUri(lnUri);
-        setPaymentQrUrl(getQrImageUrl(lnUri, 280));
-      } else if (isDemoWishlist) {
-        const demoRef = `demo:pending:${wishlist.id}:${amountSats}:${Date.now()}`;
-        setMockInvoice(demoRef);
-        setPaymentUri('');
-        setPaymentQrUrl(getQrImageUrl(`Demo invoice — pay ${amountSats} sats to support ${wishlist.title}`, 280));
-      } else {
-        toast('This creator has no Lightning address. Try on-chain if available, or buy the product.', 'error');
-        setProcessing(false);
-        return;
-      }
-
-      setPaymentCountdown(180);
+      const ok = await buildPayment(amountSats, paymentTab);
+      if (!ok) return;
       persistGiftDraft(giftForm);
       setShowGiftModal(false);
       setShowGiftSuccess(false);
       setShowPaymentModal(true);
-
       if (!isDemoWishlist) {
-        await recordGiftIntent(amountSats, 'lightning');
+        await recordGiftIntent(amountSats, paymentTab === 'onchain' ? 'onchain' : paymentTab === 'nostr' ? 'nostr' : 'lightning');
       }
     } catch (error) {
       console.error('Error processing gift:', error);
       toast(error instanceof Error ? error.message : 'Could not start gift', 'error');
+    } finally {
+      setProcessing(false);
+    }
+  }
+
+  async function handleGenerateNew() {
+    if (processing || !wishlist) return;
+    const amountSats = giftIntent?.amount ?? Number.parseInt(giftForm.amount, 10);
+    const method = giftIntent?.method ?? paymentTab;
+    if (!Number.isFinite(amountSats) || amountSats <= 0) {
+      toast(t('gift.invalidAmount'), 'error');
+      return;
+    }
+    setProcessing(true);
+    try {
+      const ok = await buildPayment(amountSats, method);
+      if (!ok) return;
+    } catch (error) {
+      toast(error instanceof Error ? error.message : 'Could not generate payment', 'error');
     } finally {
       setProcessing(false);
     }
@@ -629,13 +710,20 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
     setShowPaymentModal(false);
     setProcessing(false);
     if (mode === 'paid') {
+      clearGiftDraft();
       setShowGiftSuccess(true);
       return;
     }
     setShowGiftSuccess(false);
+    if (mode === 'later') {
+      const draft = getStorage<GiftDraft | null>(STORAGE_KEYS.giftDraft, null);
+      setShowDraftBanner(draftHasContent(draft) && draft?.slug === slug);
+    }
     if (mode === 'cancel') {
       setZapInvoice(null);
       setPaymentUri('');
+      const draft = getStorage<GiftDraft | null>(STORAGE_KEYS.giftDraft, null);
+      setShowDraftBanner(draftHasContent(draft) && draft?.slug === slug);
     }
   }
 
@@ -744,6 +832,18 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
   const creatorPosts = mockCreatorPosts[wishlist.slug] || [];
   const showSubscribe = isCreatorSurface || isDemoWishlist;
   const creatorInitial = (wishlist.creator.username?.[0] || '?').toUpperCase();
+  const lightningAddr = wishlist.creator.lightning_address?.trim() || '';
+  const hasLightning = Boolean(lightningAddr) && !isDummyPaymentTarget(lightningAddr);
+  const hasOnchain = Boolean(onchainAddress?.trim()) && !isDummyPaymentTarget(onchainAddress || '');
+  const hasNostrKey = Boolean(wishlist.creator.nostr_pubkey?.trim());
+  const noPayDestinations = !isDemoWishlist && !hasLightning && !hasOnchain;
+  const methodBlocked =
+    !isDemoWishlist &&
+    ((paymentTab === 'onchain' && !hasOnchain) ||
+      (paymentTab === 'lightning' && !hasLightning) ||
+      (paymentTab === 'nostr' && !hasLightning && !hasNostrKey));
+  const submitBlocked = noPayDestinations || methodBlocked;
+  const invoiceExpired = paymentCountdown === 0 && !isDemoWishlist && showPaymentModal;
 
   const handleUnsubscribe = () => {
     if (!wishlist) return;
@@ -830,6 +930,25 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             Demo
           </span>
           <span>Sample wishlist for preview — payments auto-complete after 3s. Not a live creator account.</span>
+        </div>
+      )}
+      {showDraftBanner && !showGiftModal && !showPaymentModal && !showGiftSuccess && (
+        <div className="flex items-center justify-center gap-3 px-4 py-1.5 text-sm text-gray-400 border-b border-white/10 bg-white/[0.03]">
+          <button
+            type="button"
+            onClick={continueLastGift}
+            className="hover:text-white transition-colors min-h-[36px]"
+          >
+            Continue last gift
+          </button>
+          <button
+            type="button"
+            onClick={dismissDraftBanner}
+            className="p-1.5 rounded-md text-gray-500 hover:text-white min-h-[36px] min-w-[36px] inline-flex items-center justify-center"
+            aria-label="Dismiss draft"
+          >
+            <X size={14} />
+          </button>
         </div>
       )}
       <header className="relative">
@@ -1322,7 +1441,11 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
 
       <Modal
         isOpen={showGiftModal}
-        onClose={() => setShowGiftModal(false)}
+        onClose={() => {
+          setShowGiftModal(false);
+          const draft = getStorage<GiftDraft | null>(STORAGE_KEYS.giftDraft, null);
+          setShowDraftBanner(draftHasContent(draft) && draft?.slug === slug);
+        }}
         title={selectedItem ? `Fund ${selectedItem.title}` : 'Send a Gift'}
       >
         <form onSubmit={handleGiftSubmit} className="space-y-4">
@@ -1364,6 +1487,12 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
           {zapError && (
             <p className="text-sm text-amber-400" role="alert">
               {zapError}
+            </p>
+          )}
+          {noPayDestinations && (
+            <p className="text-sm text-amber-300" role="alert">
+              This creator has no Lightning or on-chain address yet.
+              {selectedItem?.merchant_link ? ' You can still buy the product for them.' : ''}
             </p>
           )}
           <div id="payment-method-panel" role="tabpanel" aria-labelledby={`payment-tab-${paymentTab}`}>
@@ -1450,7 +1579,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             type="submit"
             className="w-full bg-gradient-to-r from-orange-500 to-amber-600 hover:from-orange-600 hover:to-amber-700 font-bold text-lg py-4 shadow-[0_0_20px_rgba(255,135,0,0.3)]"
             loading={processing || zapBusy}
-            disabled={processing || zapBusy}
+            disabled={processing || zapBusy || submitBlocked}
           >
             <Bitcoin size={20} className="mr-2" />
             {paymentTab === 'nostr'
@@ -1487,7 +1616,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             </div>
           )}
 
-          <div className="bg-white p-3 sm:p-4 rounded-xl mx-auto w-full max-w-[min(100%,280px)]">
+          <div className={`bg-white p-3 sm:p-4 rounded-xl mx-auto w-full max-w-[min(100%,280px)] ${invoiceExpired ? 'opacity-40' : ''}`}>
             {paymentQrUrl ? (
               <img
                 src={paymentQrUrl}
@@ -1527,7 +1656,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             </div>
           </div>
 
-          {paymentUri && !isDemoWishlist && <WalletDeepLinks paymentUri={paymentUri} />}
+          {paymentUri && !isDemoWishlist && !invoiceExpired && <WalletDeepLinks paymentUri={paymentUri} />}
 
           {selectedItem?.merchant_link && (
             <a
@@ -1546,35 +1675,48 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
               Session {formatCountdown(paymentCountdown)}
             </span>
           </div>
-          {paymentCountdown === 0 && !isDemoWishlist && (
-            <p className="text-center text-amber-400 text-sm" role="alert">
-              Session expired — close and generate a new payment.
+
+          {!invoiceExpired && (
+            <p className="text-xs text-gray-500 text-center leading-relaxed">
+              {isDemoWishlist
+                ? 'Demo mode simulates a gift. Real pages never mark funded from the browser alone.'
+                : 'Pay from your wallet. Funding totals update only after payment is confirmed on the server — this page will not bump sats raised.'}
             </p>
           )}
 
-          <p className="text-xs text-gray-500 text-center leading-relaxed">
-            {isDemoWishlist
-              ? 'Demo mode simulates a gift. Real pages never mark funded from the browser alone.'
-              : 'Pay from your wallet. Funding totals update only after payment is confirmed on the server — this page will not bump sats raised.'}
-          </p>
-
           <div className="flex flex-col gap-2">
-            <Button
-              type="button"
-              variant="bitcoin"
-              className="w-full min-h-[48px]"
-              onClick={() => dismissPaymentModal('paid')}
-            >
-              I paid (waiting)
-            </Button>
-            <Button
-              type="button"
-              variant="secondary"
-              className="w-full min-h-[48px]"
-              onClick={() => dismissPaymentModal('later')}
-            >
-              I&apos;ll pay later
-            </Button>
+            {invoiceExpired ? (
+              <Button
+                type="button"
+                variant="bitcoin"
+                className="w-full min-h-[48px]"
+                onClick={() => void handleGenerateNew()}
+                loading={processing || zapBusy}
+                disabled={processing || zapBusy}
+              >
+                Generate new
+              </Button>
+            ) : (
+              <>
+                <Button
+                  type="button"
+                  variant="bitcoin"
+                  className="w-full min-h-[48px]"
+                  onClick={() => dismissPaymentModal('paid')}
+                  disabled={invoiceExpired}
+                >
+                  I paid (waiting)
+                </Button>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  className="w-full min-h-[48px]"
+                  onClick={() => dismissPaymentModal('later')}
+                >
+                  I&apos;ll pay later
+                </Button>
+              </>
+            )}
             <Button
               type="button"
               variant="ghost"
@@ -1589,11 +1731,17 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
 
       <Modal
         isOpen={showGiftSuccess}
-        onClose={() => setShowGiftSuccess(false)}
+        onClose={() => {
+          clearGiftDraft();
+          setShowGiftSuccess(false);
+        }}
         title="Thank you"
       >
         <GiftSuccess
-          onClose={() => setShowGiftSuccess(false)}
+          onClose={() => {
+            clearGiftDraft();
+            setShowGiftSuccess(false);
+          }}
           onShare={() => void handleShareWishlist()}
           amountSats={giftIntent?.amount}
           method={giftIntent?.method}
@@ -1620,32 +1768,17 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
         title={wishlist ? `Send to ${wishlist.title}` : 'Send Bitcoin'}
       />
 
-      {/* Sticky mobile CTA — above bottom nav, safe-area aware */}
-      <div className="md:hidden fixed bottom-[calc(3.5rem+env(safe-area-inset-bottom))] inset-x-0 z-40 px-3 pb-2 pointer-events-none">
-        <div className="pointer-events-auto max-w-lg mx-auto flex gap-2 p-2 rounded-2xl bg-charcoal-950/95 backdrop-blur-xl border border-white/10 shadow-[0_-8px_32px_rgba(0,0,0,0.55)]">
+      {!showGiftModal && !showPaymentModal && !showGiftSuccess && (
+        <MobileStickyCta>
           <Button
-            className="flex-1 bg-gradient-to-r from-bitcoin-orange-500 to-amber-600 font-bold min-h-[48px] text-sm"
+            className="w-full bg-gradient-to-r from-bitcoin-orange-500 to-amber-600 font-bold min-h-[48px] text-sm"
             onClick={() => handleGiftClick()}
           >
             <Gift size={18} className="mr-1.5 shrink-0" />
             {t('wishlist.sendGift')}
           </Button>
-          {onchainAddress && (
-            <Button
-              variant="outline"
-              className="min-h-[48px] min-w-[48px] px-3 border-white/15"
-              onClick={() => {
-                setQrAddress(onchainAddress);
-                setQrAmount(undefined);
-                setShowQRModal(true);
-              }}
-              aria-label="Show on-chain QR code"
-            >
-              <QrCode size={20} />
-            </Button>
-          )}
-        </div>
-      </div>
+        </MobileStickyCta>
+      )}
     </div>
   );
 }

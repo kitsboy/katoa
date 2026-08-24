@@ -38,7 +38,7 @@ export function OnboardingChecklist({ variant = 'landing' }: { variant?: 'landin
   const items: ChecklistItem[] = [
     { id: 'account', labelKey: 'onboarding.item.account', href: '/auth' },
     { id: 'wallet', labelKey: 'onboarding.item.wallet', href: '/settings' },
-    { id: 'wishlist', labelKey: 'onboarding.item.wishlist', href: '/dashboard' },
+    { id: 'wishlist', labelKey: 'onboarding.item.wishlist', href: '/project' },
     { id: 'share', labelKey: 'onboarding.item.share', href: publicHref },
     {
       id: 'firstsat',

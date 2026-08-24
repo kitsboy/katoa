@@ -1,12 +1,22 @@
 /** Client-side QR via Google Charts API (no extra npm dependency). */
 export function getQrImageUrl(data: string, size = 300): string {
-  const encoded = encodeURIComponent(data);
+  const payload = data.trim();
+  if (!payload || isDummyPaymentTarget(payload)) return '';
+  const encoded = encodeURIComponent(payload);
   return `https://chart.googleapis.com/chart?cht=qr&chs=${size}x${size}&chl=${encoded}&choe=UTF-8&chld=H|1`;
 }
 
-/** BIP-21 `bitcoin:` URI. `amount` is BTC (not sats). */
+/** Placeholder / donate-page strings that must never be encoded as a payable QR. */
+export function isDummyPaymentTarget(value: string): boolean {
+  const v = value.trim().toLowerCase();
+  if (!v) return true;
+  return v.includes('bitcoin.org') || v.includes('example.com') || v.includes('example.org');
+}
+
+/** BIP-21 `bitcoin:` URI. `amount` is BTC (not sats). Empty if the address is dummy/missing. */
 export function bitcoinQrData(address: string, amountSats?: number): string {
   const trimmed = address.trim();
+  if (!trimmed || isDummyPaymentTarget(trimmed)) return '';
   if (amountSats != null && amountSats > 0) {
     const btc = amountSats / 100_000_000;
     const amount = btc.toFixed(8).replace(/\.?0+$/, '');
@@ -17,6 +27,7 @@ export function bitcoinQrData(address: string, amountSats?: number): string {
 
 export function lightningQrData(invoice: string): string {
   const trimmed = invoice.trim();
+  if (!trimmed || isDummyPaymentTarget(trimmed)) return '';
   if (
     trimmed.startsWith('lightning:') ||
     trimmed.startsWith('bitcoin:') ||

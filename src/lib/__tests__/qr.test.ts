@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { bitcoinQrData, getQrImageUrl, isBolt11Invoice, lightningQrData } from '../qr';
+import { bitcoinQrData, getQrImageUrl, isBolt11Invoice, isDummyPaymentTarget, lightningQrData } from '../qr';
 
 describe('bitcoinQrData', () => {
   it('returns bare address without amount', () => {
@@ -39,5 +39,22 @@ describe('getQrImageUrl', () => {
     expect(url).toContain('cht=qr');
     expect(url).toContain('200x200');
     expect(url).toContain(encodeURIComponent('bitcoin:addr'));
+  });
+
+  it('does not encode dummy bitcoin.org targets', () => {
+    expect(getQrImageUrl('https://bitcoin.org/donate')).toBe('');
+  });
+});
+
+describe('isDummyPaymentTarget', () => {
+  it('blocks bitcoin.org placeholders and empty strings', () => {
+    expect(isDummyPaymentTarget('')).toBe(true);
+    expect(isDummyPaymentTarget('https://bitcoin.org')).toBe(true);
+    expect(isDummyPaymentTarget('bc1qtest')).toBe(false);
+  });
+
+  it('refuses to build BIP-21 for dummy addresses', () => {
+    expect(bitcoinQrData('https://bitcoin.org/donate', 1000)).toBe('');
+    expect(lightningQrData('https://bitcoin.org')).toBe('');
   });
 });
