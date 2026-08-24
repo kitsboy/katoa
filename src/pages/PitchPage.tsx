@@ -51,11 +51,11 @@ const slides = [
     ],
   },
   {
-    eyebrow: 'Everything included',
-    title: 'Ten features. Zero extra cost.',
+    eyebrow: 'Product path',
+    title: 'Zero platform fee. Honest feature status.',
     features: [
       '0% Platform Fees', 'Instant Lightning', 'Global by Default', 'No Banking Required', 'On-Chain & Lightning',
-      'Unlimited Wishlists', 'Live Analytics', 'Shareable Pages', 'Privacy First', 'BOLT 12 Recurring',
+      'Unlimited Wishlists', 'Dashboard analytics (path)', 'Shareable Pages', 'Privacy First', 'BOLT 12 Recurring (planned)',
     ],
   },
   {
@@ -84,7 +84,7 @@ const slides = [
   {
     eyebrow: 'Next step',
     title: 'Ready to keep 100%?',
-    body: 'Join creators who stopped paying platform taxes and started building on Bitcoin.',
+    body: 'Keep 100% of what supporters send (0% platform fee). Build on Bitcoin Lightning — early.',
     cta: true,
   },
 ];

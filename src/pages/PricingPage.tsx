@@ -74,8 +74,8 @@ const features = [
   },
   {
     icon: BarChart3,
-    title: 'Live Analytics',
-    description: 'Track contributions, followers, and goals in real time on your dashboard.',
+    title: 'Creator dashboard',
+    description: 'Track gifts, followers, and goals on your dashboard. Honest numbers — demo labeled until live counters exist.',
     accent: 'text-pink-400',
     glow: 'from-pink-500/20',
   },
@@ -95,8 +95,8 @@ const features = [
   },
   {
     icon: RefreshCw,
-    title: 'BOLT 12 Recurring',
-    description: 'Offer subscription tiers with reusable Lightning invoices for supporters.',
+    title: 'Subscription tiers (path)',
+    description: 'Show supporter / patron / champion tiers today. Recurring Lightning (BOLT 12) is planned — not live settlement yet.',
     accent: 'text-orange-400',
     glow: 'from-orange-500/20',
   },

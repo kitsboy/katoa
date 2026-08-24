@@ -7,22 +7,22 @@ export function LandingTrustBar() {
     {
       value: '0%',
       labelKey: 'trust.fees',
-      tip: "Platform fees forever: zero. Katoa never takes a cut of your earnings — no subscriptions, no hidden processing fees. 100% of what supporters send lands with you, instantly, over Bitcoin Lightning.",
+      tip: "Platform fee is 0% forever — Katoa takes no cut. Lightning network routing fees still exist and are not paid to Katoa.",
     },
     {
       value: '<3s',
       labelKey: 'trust.payout',
-      tip: "Payouts settle on the Bitcoin Lightning Network in under 3 seconds — worldwide, around the clock, no banking hours, no middlemen. Your money is yours the moment it's sent.",
+      tip: "Katoa does not run a payout queue. When a supporter pays your Lightning invoice, sats settle to your wallet — typically in seconds, not banking days.",
     },
     {
       value: '195+',
       labelKey: 'trust.countries',
-      tip: "Anyone, anywhere with an internet connection can support you — no bank account, no credit card, no KYC gate. That's true global access for creators and supporters alike.",
+      tip: "Bitcoin is global wherever the internet reaches. Katoa does not geo-block creators. Follow the law where you operate. No fake traction — 195+ is the Bitcoin map, not a Katoa user count.",
     },
     {
       value: '100%',
       labelKey: 'trust.earnings',
-      tip: "You keep 100% of your earnings. Non-custodial by design: sats flow straight to your wallet. Katoa never holds your funds, so there's nothing to freeze, seize, or go bankrupt.",
+      tip: "0% platform fee, non-custodial: sats go to your wallet, not Katoa's. You still pay whatever your wallet or Lightning path charges.",
     },
   ];
 

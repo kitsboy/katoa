@@ -11,12 +11,12 @@ const STEPS = [
   {
     icon: Video,
     title: 'Show up as you',
-    body: 'Profile, cover video, story. SFW or spicy — you set the boundaries. Fans follow your link.',
+    body: 'Profile, cover video, story. You set the boundaries. Supporters follow your link.',
   },
   {
     icon: ShoppingBag,
     title: 'Wishlist anything',
-    body: 'Paste Amazon, fashion, gear, or travel links. Fans fund in sats or buy the product for you.',
+    body: 'Paste Amazon, fashion, gear, or travel links. Supporters fund in sats or buy the product for you.',
   },
   {
     icon: Crown,
@@ -26,11 +26,11 @@ const STEPS = [
   {
     icon: Zap,
     title: 'Get paid directly',
-    body: 'Sats to your Lightning address. No 20% platform tax. No bank required to start.',
+    body: 'Sats to your Lightning address. 0% platform fee. No bank required to start.',
   },
 ];
 
-/** Positioning page: OF-style creator economy without the fee cut or KYC theater. */
+/** Sovereign creator support: 0% platform fee, non-custodial Lightning, you own the relationship. */
 export function CreatorsPage() {
   const { t } = useLanguage();
 

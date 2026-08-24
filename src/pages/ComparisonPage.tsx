@@ -29,8 +29,8 @@ const FEATURE_SECTIONS = [
     icon: 'dollar' as const,
     items: [
       { featureKey: 'comparison.feat.platformFees', katoa: '0%', throne: '2.9% + 0-7%', linktree: '9-10%', onlyfans: '20%', kickstarter: '5%', indiegogo: '5%' },
-      { featureKey: 'comparison.feat.paymentProcessing', katoa: '0%', throne: '2.9% + $0.30', linktree: 'Included', onlyfans: 'Included', kickstarter: '3-5%', indiegogo: '2.9% + $0.30' },
-      { featureKey: 'comparison.feat.totalFee10k', katoa: '$0', throne: '~$1,000', linktree: '$900-1,000', onlyfans: '$2,000', kickstarter: '$800-1,000', indiegogo: '$1,000-1,500' },
+      { featureKey: 'comparison.feat.paymentProcessing', katoa: '0% platform', throne: '2.9% + $0.30', linktree: 'Included', onlyfans: 'Included', kickstarter: '3–5%', indiegogo: '2.9% + $0.30' },
+      { featureKey: 'comparison.feat.totalFee10k', katoa: '$0 platform', throne: '~$1,000', linktree: '$900-1,000', onlyfans: '$2,000', kickstarter: '~$800–1,000', indiegogo: '$1,000-1,500' },
       { featureKey: 'comparison.feat.monthlySub', katoa: '$0', throne: '$0', linktree: '$8-$40', onlyfans: '$0', kickstarter: '$0', indiegogo: '$0' },
       { featureKey: 'comparison.feat.withdrawalFees', katoa: '0%', throne: '2.9% + $0.30', linktree: 'Varies', onlyfans: 'Included', kickstarter: 'Varies', indiegogo: 'Varies' },
       { featureKey: 'comparison.feat.hiddenCosts', katoa: 'None', throne: 'Currency conversion', linktree: 'Payment fees', onlyfans: 'None', kickstarter: 'Fulfillment $5K-25K+', indiegogo: '5% holdback on flexible' },
@@ -51,7 +51,7 @@ const FEATURE_SECTIONS = [
     icon: 'globe' as const,
     items: [
       { featureKey: 'comparison.feat.countries', katoa: '195+', throne: '~10 (for 0% fees)', linktree: '~50', onlyfans: 'Limited', kickstarter: '~50', indiegogo: '~50' },
-      { featureKey: 'comparison.feat.sanctioned', katoa: true, throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: false },
+      { featureKey: 'comparison.feat.sanctioned', katoa: 'Follow the law', throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: false },
       { featureKey: 'comparison.feat.instantIntl', katoa: true, throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: false },
       { featureKey: 'comparison.feat.conversion', katoa: '0%', throne: '3-5%', linktree: '3-5%', onlyfans: '3-5%', kickstarter: '3-5%', indiegogo: '3-5%' },
     ],
@@ -70,7 +70,7 @@ const FEATURE_SECTIONS = [
     icon: null,
     items: [
       { featureKey: 'comparison.feat.crowdfunding', katoa: true, throne: true, linktree: false, onlyfans: false, kickstarter: true, indiegogo: true },
-      { featureKey: 'comparison.feat.subscriptions', katoa: true, throne: false, linktree: true, onlyfans: true, kickstarter: false, indiegogo: false },
+      { featureKey: 'comparison.feat.subscriptions', katoa: 'Demo', throne: false, linktree: true, onlyfans: true, kickstarter: false, indiegogo: false },
       { featureKey: 'comparison.feat.tips', katoa: true, throne: true, linktree: true, onlyfans: true, kickstarter: false, indiegogo: false },
       { featureKey: 'comparison.feat.digital', katoa: true, throne: false, linktree: true, onlyfans: true, kickstarter: false, indiegogo: false },
       { featureKey: 'comparison.feat.fulfillment', katoa: false, throne: false, linktree: false, onlyfans: false, kickstarter: true, indiegogo: true },
@@ -80,8 +80,8 @@ const FEATURE_SECTIONS = [
     categoryKey: 'comparison.cat.privacy',
     icon: 'lock' as const,
     items: [
-      { featureKey: 'comparison.feat.zk', katoa: true, throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: false },
-      { featureKey: 'comparison.feat.encrypted', katoa: true, throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: false },
+      { featureKey: 'comparison.feat.zk', katoa: 'Roadmap', throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: false },
+      { featureKey: 'comparison.feat.encrypted', katoa: 'Opt-in NIP-17', throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: false },
       { featureKey: 'comparison.feat.decentralized', katoa: true, throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: false },
       { featureKey: 'comparison.feat.censorship', katoa: true, throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: false },
     ],
@@ -91,7 +91,7 @@ const FEATURE_SECTIONS = [
     icon: 'zap' as const,
     items: [
       { featureKey: 'comparison.feat.micro', katoa: true, throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: false },
-      { featureKey: 'comparison.feat.bolt12', katoa: true, throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: false },
+      { featureKey: 'comparison.feat.bolt12', katoa: 'Planned', throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: false },
       { featureKey: 'comparison.feat.lightning', katoa: true, throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: false },
       { featureKey: 'comparison.feat.multiRevenue', katoa: true, throne: true, linktree: true, onlyfans: true, kickstarter: false, indiegogo: false },
     ],
@@ -169,7 +169,7 @@ export function ComparisonPage() {
     <div className="min-h-screen bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 pt-16">
       <PageMeta
         title="Platform Comparison"
-        description="Compare KATOA vs OnlyFans, Patreon, Kickstarter, and more. 0% fees, instant Lightning, no KYC."
+        description="Compare KATOA vs OnlyFans, Throne, Kickstarter, and more. 0% platform fees, Lightning settlement, no KYC to start."
         path="/comparison"
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">

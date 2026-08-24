@@ -78,7 +78,7 @@ function ProductScreenshot() {
               <span className="lp-shot-live" title="Sample product preview">Demo</span>
             </div>
 
-            <div className="lp-shot-progress" data-tip="Real progress bar from the live wishlist page — this sample wishlist shows 65% of a 5,000,000 sats goal. On Katoa, every bar you see on a real wishlist updates live as supporters zap in.">
+            <div className="lp-shot-progress" data-tip="Demo catalog sample — 65% of a 5,000,000 sats goal. Same progress UI as a real wishlist. Katoa does not custody or process the sats; they go to the creator's Lightning wallet.">
               <div className="lp-shot-progress-head">
                 <span>{formatSats(FEATURED.raised)} sats raised</span>
                 <strong>{progress}%</strong>
@@ -124,9 +124,9 @@ export function LandingHero({
   stats,
 }: LandingHeroProps) {
   const metricItems = [
-    { value: stats.volume, label: stats.processedLabel, accent: 'orange' as const, tip: 'Sats processed on the Katoa network. This is a labeled sample until live counters exist — the honest number is always shown, never padded.' },
-    { value: stats.countries, label: stats.countriesLabel, accent: 'cyan' as const, tip: 'Countries where anyone can support a creator over Bitcoin Lightning — no bank account, no KYC, no borders.' },
-    { value: '0%', label: stats.feesLabel, accent: 'emerald' as const, tip: 'Platform fees forever: zero. Not a promo, not a trial — it is the product. Katoa makes money only when you succeed.' },
+    { value: stats.volume, label: stats.processedLabel, accent: 'orange' as const, tip: 'Labeled product metrics — not sats Katoa custodies or processes. Payments go peer-to-peer on Lightning. Sample figures are marked Demo until live counters exist.' },
+    { value: stats.countries, label: stats.countriesLabel, accent: 'cyan' as const, tip: 'Bitcoin Lightning works wherever the internet does. Katoa does not require a bank or KYC to start. Follow the law where you operate.' },
+    { value: '0%', label: stats.feesLabel, accent: 'emerald' as const, tip: 'Platform fee is 0% forever — not a promo. Lightning network routing fees still apply and are not paid to Katoa.' },
   ];
 
   return (
@@ -163,7 +163,7 @@ export function LandingHero({
 
             <div className="lp-hero-proof">
               <span className="lp-proof-chip lp-proof-chip--warm">
-                <strong>{stats.creators ?? '2.5K+'}</strong> creators
+                <strong>{stats.creators ?? '—'}</strong> creators
               </span>
               <span className="lp-proof-chip lp-proof-chip--orange">0% fees</span>
               <span className="lp-proof-chip lp-proof-chip--cyan">

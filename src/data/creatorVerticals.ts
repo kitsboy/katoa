@@ -1,7 +1,7 @@
 /**
- * Creator verticals — "OnlyFans-style" positioning for any creator:
- * models, athletes, meal planners, golf, moms, musicians, etc.
- * Zero platform fees; Bitcoin-native tips + wishlists + tiers.
+ * Creator verticals for sovereign support: models, athletes, meal planners,
+ * golf, moms, musicians, and anyone who creates. Zero platform fees;
+ * Bitcoin-native tips + wishlists + tiers. Not an OnlyFans alternative in UI copy.
  */
 export type CreatorVertical = {
   id: string;

@@ -12,7 +12,7 @@ const PROBLEM_PLATFORMS = [
   { id: 'onlyfans', fee: '20%', name: 'OnlyFans', cardClass: 'bg-red-900/20 border-red-500/30', feeClass: 'text-red-400', reqClass: 'text-red-300', borderClass: 'border-red-500/20', bodyKey: 'about.problem.onlyfans.body', requiresKey: 'about.problem.onlyfans.requires' },
   { id: 'throne', fee: '10%', name: 'Throne', cardClass: 'bg-orange-900/20 border-orange-500/30', feeClass: 'text-orange-400', reqClass: 'text-orange-300', borderClass: 'border-orange-500/20', bodyKey: 'about.problem.throne.body', requiresKey: 'about.problem.throne.requires' },
   { id: 'linktree', fee: '9%', name: 'Linktree', cardClass: 'bg-yellow-900/20 border-yellow-500/30', feeClass: 'text-yellow-400', reqClass: 'text-yellow-300', borderClass: 'border-yellow-500/20', bodyKey: 'about.problem.linktree.body', requiresKey: 'about.problem.linktree.requires' },
-  { id: 'kickstarter', fee: '8-10%', name: 'Kickstarter', cardClass: 'bg-blue-900/20 border-blue-500/30', feeClass: 'text-blue-400', reqClass: 'text-blue-300', borderClass: 'border-blue-500/20', bodyKey: 'about.problem.kickstarter.body', requiresKey: 'about.problem.kickstarter.requires' },
+  { id: 'kickstarter', fee: '~5% + processing', name: 'Kickstarter', cardClass: 'bg-blue-900/20 border-blue-500/30', feeClass: 'text-blue-400', reqClass: 'text-blue-300', borderClass: 'border-blue-500/20', bodyKey: 'about.problem.kickstarter.body', requiresKey: 'about.problem.kickstarter.requires' },
   { id: 'indiegogo', fee: '8-15%', name: 'Indiegogo', cardClass: 'bg-cyan-900/20 border-cyan-500/30', feeClass: 'text-cyan-400', reqClass: 'text-cyan-300', borderClass: 'border-cyan-500/20', bodyKey: 'about.problem.indiegogo.body', requiresKey: 'about.problem.indiegogo.requires' },
 ];
 
