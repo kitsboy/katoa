@@ -8,6 +8,7 @@ import { Breadcrumbs } from '../components/Breadcrumbs';
 import { SectionHeader } from '../components/SectionHeader';
 import { GlassCallout } from '../components/GlassCallout';
 import { useLanguage } from '../contexts/LanguageContext';
+import { breadcrumbList, toJsonLdScript } from '../lib/jsonLd';
 import { TrustProofStrip } from '../components/TrustProofStrip';
 import {
   Check,
@@ -224,6 +225,17 @@ export function PricingPage() {
         title={t('pricing.metaTitle')}
         description={t('pricing.metaDesc')}
         path="/pricing"
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: toJsonLdScript(
+            breadcrumbList([
+              { name: t('breadcrumb.home'), item: '/' },
+              { name: t('pricing.title'), item: '/pricing' },
+            ])
+          ),
+        }}
       />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-6">
         <Breadcrumbs items={[{ label: t('pricing.title') }]} />

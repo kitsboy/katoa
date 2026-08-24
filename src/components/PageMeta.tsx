@@ -38,6 +38,18 @@ function toAbsoluteUrl(image: string): string {
   return `${SITE_URL}${imgPath}`;
 }
 
+/** og:locale is the current language; og:locale:alternate is the other six. */
+function setOgLocaleAlternates(current: Language) {
+  document.querySelectorAll('meta[property="og:locale:alternate"]').forEach((el) => el.remove());
+  (Object.keys(OG_LOCALE) as Language[]).forEach((lang) => {
+    if (lang === current) return;
+    const el = document.createElement('meta');
+    el.setAttribute('property', 'og:locale:alternate');
+    el.setAttribute('content', OG_LOCALE[lang]);
+    document.head.appendChild(el);
+  });
+}
+
 export function PageMeta({
   title,
   description,
@@ -90,6 +102,7 @@ export function PageMeta({
     setMeta('og:type', ogVideo ? 'video.other' : 'website', 'property');
     setMeta('og:site_name', 'KATOA', 'property');
     setMeta('og:locale', OG_LOCALE[language], 'property');
+    setOgLocaleAlternates(language);
     // Creator-economy positioning for share previews
     setMeta('twitter:site', '@give_bit');
     if (ogVideo) {
@@ -143,6 +156,7 @@ export function PageMeta({
       setMeta('twitter:title', DEFAULT_TITLE);
       setMeta('og:url', `${SITE_URL}/`, 'property');
       setMeta('og:locale', 'en_US', 'property');
+      setOgLocaleAlternates('en');
       setMeta('robots', 'index, follow');
       if (canonical) canonical.href = `${SITE_URL}/`;
       hreflangs.forEach((lang) => {

@@ -68,8 +68,8 @@ export const PRERENDER_ROUTES = [
       'Browse creator wishlists funded with Bitcoin Lightning. Filter by category, country, and funding progress.',
     ],
     breadcrumbs: [
-      { name: 'Home', item: 'https://katoa.org/' },
-      { name: 'Explore', item: 'https://katoa.org/explore' },
+      { name: 'Home', item: `${SITE_URL}/` },
+      { name: 'Explore', item: `${SITE_URL}/explore` },
     ],
   },
   {
@@ -83,8 +83,8 @@ export const PRERENDER_ROUTES = [
       'Built on Lightning Network and Nostr for instant settlements, global reach, and creator-owned identity.',
     ],
     breadcrumbs: [
-      { name: 'Home', item: 'https://katoa.org/' },
-      { name: 'About', item: 'https://katoa.org/about' },
+      { name: 'Home', item: `${SITE_URL}/` },
+      { name: 'About', item: `${SITE_URL}/about` },
     ],
   },
   {
@@ -97,8 +97,8 @@ export const PRERENDER_ROUTES = [
       'Honest side-by-side comparison: 0% fees, instant Lightning payouts, no bank account, 195+ countries.',
     ],
     breadcrumbs: [
-      { name: 'Home', item: 'https://katoa.org/' },
-      { name: 'Comparison', item: 'https://katoa.org/comparison' },
+      { name: 'Home', item: `${SITE_URL}/` },
+      { name: 'Comparison', item: `${SITE_URL}/comparison` },
     ],
   },
   {
@@ -108,8 +108,8 @@ export const PRERENDER_ROUTES = [
     h1: 'Zero Platform Fees Forever',
     paragraphs: ['No subscriptions. No hidden fees. Bitcoin Lightning payments go directly to your wallet.'],
     breadcrumbs: [
-      { name: 'Home', item: 'https://katoa.org/' },
-      { name: 'Pricing', item: 'https://katoa.org/pricing' },
+      { name: 'Home', item: `${SITE_URL}/` },
+      { name: 'Pricing', item: `${SITE_URL}/pricing` },
     ],
   },
   {
@@ -134,8 +134,8 @@ export const PRERENDER_ROUTES = [
     h1: 'Contact Us',
     paragraphs: ['Reach the KATOA team for creator support and general inquiries.'],
     breadcrumbs: [
-      { name: 'Home', item: 'https://katoa.org/' },
-      { name: 'Contact', item: 'https://katoa.org/contact' },
+      { name: 'Home', item: `${SITE_URL}/` },
+      { name: 'Contact', item: `${SITE_URL}/contact` },
     ],
   },
   {
@@ -162,9 +162,9 @@ export const PRERENDER_ROUTES = [
       'Public creator profile for Luna. Exclusive video wishlists funded with Bitcoin Lightning on KATOA.',
     ],
     breadcrumbs: [
-      { name: 'Home', item: 'https://katoa.org/' },
-      { name: 'Explore', item: 'https://katoa.org/explore' },
-      { name: '@luna_vip', item: 'https://katoa.org/u/luna_vip' },
+      { name: 'Home', item: `${SITE_URL}/` },
+      { name: 'Explore', item: `${SITE_URL}/explore` },
+      { name: '@luna_vip', item: `${SITE_URL}/u/luna_vip` },
     ],
     schema: {
       '@context': 'https://schema.org',
@@ -184,9 +184,9 @@ export const PRERENDER_ROUTES = [
       'Public creator profile for Sasha. VIP video wishlists funded with Bitcoin Lightning on KATOA.',
     ],
     breadcrumbs: [
-      { name: 'Home', item: 'https://katoa.org/' },
-      { name: 'Explore', item: 'https://katoa.org/explore' },
-      { name: '@sasha_vip', item: 'https://katoa.org/u/sasha_vip' },
+      { name: 'Home', item: `${SITE_URL}/` },
+      { name: 'Explore', item: `${SITE_URL}/explore` },
+      { name: '@sasha_vip', item: `${SITE_URL}/u/sasha_vip` },
     ],
     schema: {
       '@context': 'https://schema.org',
@@ -206,9 +206,9 @@ export const PRERENDER_ROUTES = [
       'Public creator profile for Skate Colombia. Community skatepark wishlists funded with Bitcoin Lightning on KATOA.',
     ],
     breadcrumbs: [
-      { name: 'Home', item: 'https://katoa.org/' },
-      { name: 'Explore', item: 'https://katoa.org/explore' },
-      { name: '@skate_colombia', item: 'https://katoa.org/u/skate_colombia' },
+      { name: 'Home', item: `${SITE_URL}/` },
+      { name: 'Explore', item: `${SITE_URL}/explore` },
+      { name: '@skate_colombia', item: `${SITE_URL}/u/skate_colombia` },
     ],
     schema: {
       '@context': 'https://schema.org',
@@ -225,10 +225,10 @@ export const PRERENDER_ROUTES = [
     h1: 'Luna — Exclusive Video Collection',
     paragraphs: ['Support independent video creators with instant Lightning tips on KATOA.'],
     breadcrumbs: [
-      { name: 'Home', item: 'https://katoa.org/' },
-      { name: 'Explore', item: 'https://katoa.org/explore' },
-      { name: 'Video Creators', item: 'https://katoa.org/explore?videos=1' },
-      { name: 'Luna — Exclusive Video Collection', item: 'https://katoa.org/wishlist/luna-exclusive-videos' },
+      { name: 'Home', item: `${SITE_URL}/` },
+      { name: 'Explore', item: `${SITE_URL}/explore` },
+      { name: 'Video Creators', item: `${SITE_URL}/explore?videos=1` },
+      { name: 'Luna — Exclusive Video Collection', item: `${SITE_URL}/wishlist/luna-exclusive-videos` },
     ],
   },
   {
@@ -238,10 +238,10 @@ export const PRERENDER_ROUTES = [
     h1: 'Sasha — VIP Video Wishlist',
     paragraphs: ['Direct-to-fan video monetization without platform cuts.'],
     breadcrumbs: [
-      { name: 'Home', item: 'https://katoa.org/' },
-      { name: 'Explore', item: 'https://katoa.org/explore' },
-      { name: 'Video Creators', item: 'https://katoa.org/explore?videos=1' },
-      { name: 'Sasha — VIP Video Wishlist', item: 'https://katoa.org/wishlist/sasha-vip-content' },
+      { name: 'Home', item: `${SITE_URL}/` },
+      { name: 'Explore', item: `${SITE_URL}/explore` },
+      { name: 'Video Creators', item: `${SITE_URL}/explore?videos=1` },
+      { name: 'Sasha — VIP Video Wishlist', item: `${SITE_URL}/wishlist/sasha-vip-content` },
     ],
   },
   {
@@ -320,6 +320,7 @@ export const PRERENDER_ROUTES = [
 /** Total static prerender routes (marketing pages + featured wishlists). */
 export const PRERENDER_ROUTE_COUNT = PRERENDER_ROUTES.length;
 
+/** Mirrors src/lib/jsonLd.ts breadcrumbList — keep item URLs absolute. */
 export function breadcrumbSchema(items) {
   return {
     '@context': 'https://schema.org',
@@ -331,4 +332,9 @@ export function breadcrumbSchema(items) {
       item: item.item,
     })),
   };
+}
+
+/** Same `<` escape as src/lib/jsonLd.ts toJsonLdScript. */
+export function toJsonLdScript(data) {
+  return JSON.stringify(data).replace(/</g, '\\u003c');
 }

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from '../components/Link';
 import { PageMeta } from '../components/PageMeta';
 import { PageHero } from '../components/PageHero';
@@ -44,6 +44,8 @@ export function MessagesPage() {
   const [myPub, setMyPub] = useState<string | null>(null);
   const [activePeer, setActivePeer] = useState<string | null>(null);
   const [blocked, setBlocked] = useState<string[]>(() => getBlockedPubkeys());
+  const [kind0Names, setKind0Names] = useState<Record<string, string>>({});
+  const fetchedKind0 = useRef(new Set<string>());
 
   const refresh = useCallback(async () => {
     if (!hasNip07() || !optIn) {
@@ -76,6 +78,36 @@ export function MessagesPage() {
     }
     return [...set];
   }, [messages, myPub, blocked]);
+
+  useEffect(() => {
+    const missing = threads.filter((hex) => !fetchedKind0.current.has(hex)).slice(0, 16);
+    if (missing.length === 0) return;
+    let cancelled = false;
+    void Promise.all(
+      missing.map(async (hex) => {
+        const p = await nostrService.getProfile(hex);
+        const name = (p?.display_name || p?.name || '').trim();
+        return [hex, name] as const;
+      })
+    ).then((entries) => {
+      if (cancelled) return;
+      missing.forEach((hex) => fetchedKind0.current.add(hex));
+      setKind0Names((prev) => {
+        const next = { ...prev };
+        for (const [hex, name] of entries) {
+          if (name) next[hex] = name;
+        }
+        return next;
+      });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [threads]);
+
+  function threadTitle(hex: string): string {
+    return kind0Names[hex] || shortNpub(hex);
+  }
 
   const threadMessages = useMemo(() => {
     if (!activePeer || !myPub) return [];
@@ -262,14 +294,17 @@ export function MessagesPage() {
                         setActivePeer(hex);
                         setPeer(nostrService.encodeNpub(hex));
                       }}
-                      className={`w-full text-left px-2 py-2.5 rounded-lg text-xs font-mono min-h-[44px] touch-manipulation ${
+                      className={`w-full text-left px-2 py-2.5 rounded-lg text-xs min-h-[44px] touch-manipulation ${
+                        kind0Names[hex] ? 'font-semibold' : 'font-mono'
+                      } ${
                         activePeer === hex
                           ? 'bg-neon-cyan-500/15 text-neon-cyan-300 border border-neon-cyan-500/30'
                           : 'text-gray-400 hover:bg-white/5'
                       }`}
                       aria-current={activePeer === hex ? 'true' : undefined}
+                      title={shortNpub(hex)}
                     >
-                      {shortNpub(hex)}
+                      {threadTitle(hex)}
                     </button>
                   </li>
                 ))}
@@ -282,12 +317,17 @@ export function MessagesPage() {
             >
               {activePeer && (
                 <div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-white/10">
-                  <p className="text-xs font-mono text-gray-400 truncate">{shortNpub(activePeer)}</p>
+                  <p
+                    className={`text-xs text-gray-300 truncate ${kind0Names[activePeer] ? 'font-semibold' : 'font-mono'}`}
+                    title={shortNpub(activePeer)}
+                  >
+                    {threadTitle(activePeer)}
+                  </p>
                   <button
                     type="button"
                     onClick={() => handleBlock(activePeer)}
                     className="inline-flex items-center gap-1.5 text-xs text-rose-300 hover:text-rose-200 min-h-[40px] px-2 touch-manipulation"
-                    aria-label={`${t('messages.block')} ${shortNpub(activePeer)}`}
+                    aria-label={`${t('messages.block')} ${threadTitle(activePeer)}`}
                   >
                     <Ban size={14} aria-hidden />
                     {t('messages.block')}

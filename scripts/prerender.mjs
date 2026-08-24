@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
-import { PRERENDER_ROUTES, PRERENDER_ROUTE_COUNT, breadcrumbSchema } from './prerender-routes.mjs';
+import { PRERENDER_ROUTES, PRERENDER_ROUTE_COUNT, breadcrumbSchema, toJsonLdScript } from './prerender-routes.mjs';
 import { SITE_URL } from './site-config.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -36,7 +36,7 @@ function buildSchemas(route) {
   if (route.schema) schemas.push(route.schema);
   if (route.breadcrumbs?.length) schemas.push(breadcrumbSchema(route.breadcrumbs));
   return schemas
-    .map((s) => `<script type="application/ld+json">${JSON.stringify(s)}</script>`)
+    .map((s) => `<script type="application/ld+json">${toJsonLdScript(s)}</script>`)
     .join('\n    ');
 }
 

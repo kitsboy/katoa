@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { supabase, asRows, isSupabaseConfigured } from '../lib/supabase';
@@ -16,6 +16,7 @@ import {
   validateLightningAddress,
   validateWalletAddress,
 } from '../lib/validateAddress';
+import { bitcoinQrData, getQrImageUrl, lightningQrData } from '../lib/qr';
 import { getStorage, setStorage, STORAGE_KEYS } from '../lib/storage';
 
 type WalletAddress = DbWalletAddress;
@@ -52,8 +53,37 @@ function newLocalWallet(
   };
 }
 
+type PrimaryReceiveQr = {
+  kind: 'lightning' | 'onchain';
+  value: string;
+  uri: string;
+};
+
+function primaryReceiveQr(
+  addresses: WalletAddress[],
+  profileLightning?: string | null
+): PrimaryReceiveQr | null {
+  const active = addresses.filter((a) => a.is_active);
+  const ln = active.find((a) => a.address_type === 'lightning');
+  if (ln) {
+    const value = decodePaymentUri(ln.address_value);
+    return { kind: 'lightning', value, uri: lightningQrData(value) };
+  }
+  const on = active.find((a) => a.address_type === 'onchain');
+  if (on) {
+    const value = decodePaymentUri(on.address_value);
+    return { kind: 'onchain', value, uri: bitcoinQrData(value) };
+  }
+  const profileLn = profileLightning?.trim();
+  if (profileLn) {
+    const value = decodePaymentUri(profileLn);
+    return { kind: 'lightning', value, uri: lightningQrData(value) };
+  }
+  return null;
+}
+
 export function WalletAddressManager() {
-  const { user, isDemoUser, updateProfile } = useAuth();
+  const { user, isDemoUser, updateProfile, profile } = useAuth();
   const { t } = useLanguage();
   const { toast } = useToast();
   const [addresses, setAddresses] = useState<WalletAddress[]>([]);
@@ -120,6 +150,11 @@ export function WalletAddressManager() {
       loadAddresses();
     }
   }, [user, loadAddresses]);
+
+  const receiveQr = useMemo(
+    () => primaryReceiveQr(addresses, profile?.lightning_address),
+    [addresses, profile?.lightning_address]
+  );
 
   async function handleAddAddress() {
     if (adding || !user?.id) return;
@@ -339,6 +374,30 @@ export function WalletAddressManager() {
             </Button>
           )}
         </div>
+
+        {receiveQr && (
+          <div className="mb-6 p-4 rounded-xl border border-white/10 bg-black/40 flex flex-col sm:flex-row items-center gap-4">
+            <div className="bg-white p-3 rounded-lg shrink-0">
+              <img
+                src={getQrImageUrl(receiveQr.uri, 180)}
+                alt={receiveQr.kind === 'onchain' ? 'BIP-21 Bitcoin receive QR' : 'Lightning receive QR'}
+                className="w-36 h-36"
+                width={144}
+                height={144}
+              />
+            </div>
+            <div className="min-w-0 text-center sm:text-left">
+              <p className="text-sm font-bold text-white">
+                {receiveQr.kind === 'onchain' ? 'BIP-21 receive QR' : 'Lightning receive QR'}
+              </p>
+              <p className="text-xs text-gray-300 mt-1 leading-relaxed">
+                Primary {receiveQr.kind === 'onchain' ? 'on-chain' : 'Lightning'} address.
+                Katoa never settles Lightning for you — scan pays this address in your wallet.
+              </p>
+              <code className="mt-2 block text-[11px] text-gray-200 break-all">{receiveQr.uri}</code>
+            </div>
+          </div>
+        )}
 
         {showAddForm && (
           <div className="mb-6 p-4 bg-charcoal-900 rounded-lg border border-white/20">

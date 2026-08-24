@@ -9,6 +9,19 @@ import { Gift, Mail, Lock, User, Zap, ArrowLeft, Eye, EyeOff } from 'lucide-reac
 import { PageMeta } from '../components/PageMeta';
 import { STORAGE_KEYS } from '../lib/storage';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { hasNip07, nip07UserMessage } from '../lib/nostr';
+
+type Nip07ChipStatus = 'detected' | 'missing' | 'denied';
+
+function initialNip07Status(): Nip07ChipStatus {
+  return hasNip07() ? 'detected' : 'missing';
+}
+
+function nip07StatusFromError(err: unknown): Nip07ChipStatus {
+  if (!hasNip07()) return 'missing';
+  if (/denied|cancelled/i.test(nip07UserMessage(err))) return 'denied';
+  return 'detected';
+}
 
 function getPasswordStrength(password: string): 'weak' | 'medium' | 'strong' | null {
   if (!password) return null;
@@ -37,6 +50,7 @@ export function AuthPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [resetSent, setResetSent] = useState(false);
   const [nostrNote, setNostrNote] = useState('');
+  const [nip07Status, setNip07Status] = useState<Nip07ChipStatus>(initialNip07Status);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -134,16 +148,24 @@ export function AuthPage() {
     setLoading(true);
 
     try {
+      if (!hasNip07()) {
+        setNip07Status('missing');
+        setNostrNote(nip07UserMessage(new Error('Nostr extension not found')));
+        return;
+      }
       const result = await signInWithNostr();
       if (result.error) {
+        setNip07Status(nip07StatusFromError(result.error));
         setNostrNote(result.error.message);
       } else {
+        setNip07Status('detected');
         setNostrNote(
-          'Extension connected. Sign in with email or Google, then link your npub in Settings. Continue with Nostr cannot create a session until the server challenge is live.'
+          'Extension connected. Sign in with email or Google, then link your npub in Settings. Nostr cannot create a session until the server challenge is live.'
         );
       }
     } catch (err: unknown) {
-      setNostrNote(err instanceof Error ? err.message : 'Could not reach the Nostr extension');
+      setNip07Status(nip07StatusFromError(err));
+      setNostrNote(nip07UserMessage(err));
     } finally {
       setLoading(false);
     }
@@ -298,6 +320,30 @@ export function AuthPage() {
 
           {/* Nostr is not a login — challenge Edge Function is not deployed. */}
           <div className="mb-6 p-4 rounded-xl border border-purple-500/30 bg-purple-500/5">
+            <div className="flex flex-wrap items-center gap-2 mb-3">
+              <span
+                className={`inline-flex items-center px-2.5 py-1 rounded-full border text-[11px] font-bold uppercase tracking-wider ${
+                  nip07Status === 'detected'
+                    ? 'border-emerald-500/40 bg-emerald-500/15 text-emerald-200'
+                    : nip07Status === 'denied'
+                      ? 'border-red-500/40 bg-red-500/15 text-red-200'
+                      : 'border-amber-500/40 bg-amber-500/15 text-amber-200'
+                }`}
+                title={
+                  nip07Status === 'detected'
+                    ? 'Nostr browser extension found'
+                    : nip07UserMessage(
+                        new Error(
+                          nip07Status === 'denied'
+                            ? 'Nostr extension denied permission'
+                            : 'Nostr extension not found'
+                        )
+                      )
+                }
+              >
+                NIP-07 {nip07Status === 'detected' ? 'Detected' : nip07Status === 'denied' ? 'Denied' : 'Missing'}
+              </span>
+            </div>
             <p className="text-sm text-purple-200/90 mb-3 leading-relaxed">
               Nostr cannot create a session here (server challenge missing). Check your extension, then
               sign in with email or Google and link your npub in Settings.

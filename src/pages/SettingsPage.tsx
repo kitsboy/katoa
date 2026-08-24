@@ -71,6 +71,54 @@ const EMPTY_SHIPPING: Omit<ShippingAddress, 'id'> = {
   notes: '',
 };
 
+type Nip07ChipStatus = 'detected' | 'missing' | 'denied';
+
+function initialNip07Status(): Nip07ChipStatus {
+  return hasNip07() ? 'detected' : 'missing';
+}
+
+function nip07StatusFromError(err: unknown): Nip07ChipStatus {
+  if (!hasNip07()) return 'missing';
+  if (/denied|cancelled/i.test(nip07UserMessage(err))) return 'denied';
+  return 'detected';
+}
+
+function Nip07StatusChip({
+  status,
+  onRecheck,
+}: {
+  status: Nip07ChipStatus;
+  onRecheck: () => void;
+}) {
+  const tone =
+    status === 'detected'
+      ? 'border-emerald-500/40 bg-emerald-500/15 text-emerald-200'
+      : status === 'denied'
+        ? 'border-red-500/40 bg-red-500/15 text-red-200'
+        : 'border-amber-500/40 bg-amber-500/15 text-amber-200';
+  const label = status === 'detected' ? 'Detected' : status === 'denied' ? 'Denied' : 'Missing';
+  const hint =
+    status === 'detected'
+      ? 'Nostr browser extension found. Tap to re-check.'
+      : nip07UserMessage(
+          new Error(status === 'denied' ? 'Nostr extension denied permission' : 'Nostr extension not found')
+        );
+  return (
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+      <button
+        type="button"
+        onClick={onRecheck}
+        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-[11px] font-bold uppercase tracking-wider min-h-[32px] touch-manipulation ${tone}`}
+        title={hint}
+        aria-label={`NIP-07 ${label}. ${hint}`}
+      >
+        NIP-07 {label}
+      </button>
+      <p className="text-xs text-gray-300">Uses public relays</p>
+    </div>
+  );
+}
+
 function loadShipping(userId: string): ShippingAddress[] {
   const all = getStorage<Record<string, ShippingAddress[]>>(STORAGE_KEYS.shippingAddresses, {});
   return all[userId] ?? [];
@@ -112,6 +160,7 @@ export function SettingsPage() {
   const [satohashHealth, setSatohashHealth] = useState<'unknown' | 'ok' | 'down'>('unknown');
   const [lastStamp, setLastStamp] = useState<StampResult | null>(null);
   const [nostrBusy, setNostrBusy] = useState(false);
+  const [nip07Status, setNip07Status] = useState<Nip07ChipStatus>(initialNip07Status);
   const [profileForm, setProfileForm] = useState({
     username: '',
     bio: '',
@@ -358,6 +407,22 @@ export function SettingsPage() {
     setShippingForm(EMPTY_SHIPPING);
     setShowShippingModal(false);
     toast('Address saved on this device', 'success');
+  }
+
+  async function recheckNip07() {
+    if (!hasNip07()) {
+      setNip07Status('missing');
+      toast(nip07UserMessage(new Error('Nostr extension not found')), 'error');
+      return;
+    }
+    try {
+      await window.nostr!.getPublicKey();
+      setNip07Status('detected');
+    } catch (e) {
+      const next = nip07StatusFromError(e);
+      setNip07Status(next);
+      toast(nip07UserMessage(e), 'error');
+    }
   }
 
   async function handleDeleteDemoAccount() {
@@ -621,7 +686,7 @@ export function SettingsPage() {
                         <div className="h-48 rounded-xl bg-charcoal-900 border-2 border-dashed border-white/10 flex items-center justify-center hover:border-orange-500 transition-colors">
                           <div className="text-center">
                             <Upload size={64} className="mx-auto text-gray-600 mb-3 group-hover:text-orange-500 transition-colors" />
-                            <p className="text-gray-500 font-bold group-hover:text-white transition-colors">Click to upload banner</p>
+                            <p className="text-gray-300 font-bold group-hover:text-white transition-colors">Click to upload banner</p>
                             <p className="text-gray-600 text-sm mt-1">1500x500px recommended</p>
                           </div>
                         </div>
@@ -666,7 +731,7 @@ export function SettingsPage() {
                       </button>
                       <div className="flex-1">
                         <p className="text-white font-bold mb-2">Click on the image to upload</p>
-                        <p className="text-xs text-gray-500">JPG, PNG or GIF. Max 5MB.</p>
+                        <p className="text-xs text-gray-300">JPG, PNG or GIF. Max 5MB.</p>
                         {processing && (
                           <div className="mt-3 p-2 bg-orange-500/20 border border-orange-500/50 rounded-lg flex items-center gap-2">
                             <div className="animate-spin rounded-full h-3 w-3 border-2 border-orange-500 border-t-transparent"></div>
@@ -722,7 +787,7 @@ export function SettingsPage() {
                         </label>
                         <div className="px-4 py-4 bg-black border border-white/10 rounded-xl">
                           <CurrencySelector />
-                          <p className="text-xs text-gray-500 mt-2">All amounts stored in sats — display preference only</p>
+                          <p className="text-xs text-gray-300 mt-2">All amounts stored in sats — display preference only</p>
                         </div>
                       </div>
                     </div>
@@ -734,7 +799,7 @@ export function SettingsPage() {
                       placeholder={t('settings.placeholder.nostr')}
                       className="bg-black border-white/10 text-white font-mono"
                     />
-                    <p className="text-xs text-gray-500 -mt-2">{t('settings.nostrHint')}</p>
+                    <p className="text-xs text-gray-300 -mt-2">{t('settings.nostrHint')}</p>
                     <div className="flex flex-col sm:flex-row flex-wrap gap-2 -mt-1">
                       <Button
                         type="button"
@@ -745,6 +810,7 @@ export function SettingsPage() {
                           setNostrBusy(true);
                           try {
                             if (!hasNip07()) {
+                              setNip07Status('missing');
                               toast(nip07UserMessage(new Error('Nostr extension not found')), 'error');
                               return;
                             }
@@ -752,8 +818,10 @@ export function SettingsPage() {
                             const npub = nostrService.encodeNpub(pk);
                             setProfileForm((f) => ({ ...f, nostr_pubkey: npub }));
                             await updateProfile({ nostr_pubkey: npub });
+                            setNip07Status('detected');
                             toast('Linked NIP-07 public key (we never see your private key)', 'success');
                           } catch (e) {
+                            setNip07Status(nip07StatusFromError(e));
                             toast(nip07UserMessage(e), 'error');
                           } finally {
                             setNostrBusy(false);
@@ -806,7 +874,7 @@ export function SettingsPage() {
                     <p className="text-[11px] text-gray-600">
                       Platform NIP-05: <span className="text-gray-400">{PLATFORM_NIP05}</span>
                       {' · '}
-                      <span className="font-mono text-gray-500 break-all">{PLATFORM_NPUB.slice(0, 16)}…</span>
+                      <span className="font-mono text-gray-300 break-all">{PLATFORM_NPUB.slice(0, 16)}…</span>
                       {' · '}
                       Creator handles (you@katoa.org) — see docs/NOSTR-NIP05.md
                     </p>
@@ -815,7 +883,7 @@ export function SettingsPage() {
                       <label className="block text-sm font-bold text-gray-200 mb-2 uppercase tracking-wider">
                         {t('tipMenu.presetsLabel')}
                       </label>
-                      <p className="text-xs text-gray-500 mb-3">{t('tipMenu.help')}</p>
+                      <p className="text-xs text-gray-300 mb-3">{t('tipMenu.help')}</p>
                       <div className="flex flex-wrap gap-2" role="group" aria-label={t('tipMenu.presetsLabel')}>
                         {TIP_PRESET_OPTIONS.map((sats) => {
                           const active = tipPresets.includes(sats);
@@ -898,10 +966,10 @@ export function SettingsPage() {
                         />
                         <div>
                           <p className="text-white font-bold mb-1">Choose Your Color</p>
-                          <p className="text-sm text-gray-500">
+                          <p className="text-sm text-gray-300">
                             Saved on this device as <code className="text-gray-400">--theme-accent</code>
                           </p>
-                          <p className="text-xs font-mono text-gray-500 mt-1">{themeAccent}</p>
+                          <p className="text-xs font-mono text-gray-300 mt-1">{themeAccent}</p>
                         </div>
                       </div>
                     </div>
@@ -933,6 +1001,9 @@ export function SettingsPage() {
                     <h2 className="text-3xl font-black text-white">Bitcoin Wallets</h2>
                     <p className="text-gray-400">Manage your payment addresses and methods</p>
                   </div>
+                </div>
+                <div className="mb-6">
+                  <Nip07StatusChip status={nip07Status} onRecheck={() => void recheckNip07()} />
                 </div>
                 <WalletAddressManager />
               </Card>
@@ -1095,7 +1166,7 @@ export function SettingsPage() {
                           <p className="text-gray-400 text-sm">
                             {[addr.city, addr.country].filter(Boolean).join(', ')}
                           </p>
-                          {addr.notes && <p className="text-gray-500 text-xs mt-1">{addr.notes}</p>}
+                          {addr.notes && <p className="text-gray-300 text-xs mt-1">{addr.notes}</p>}
                         </div>
                         <button
                           type="button"
@@ -1122,6 +1193,9 @@ export function SettingsPage() {
                     <h2 className="text-3xl font-black text-white">Advanced Settings</h2>
                     <p className="text-gray-400">Account details and security options</p>
                   </div>
+                </div>
+                <div className="mb-6">
+                  <Nip07StatusChip status={nip07Status} onRecheck={() => void recheckNip07()} />
                 </div>
 
                 <div className="space-y-6">
