@@ -175,4 +175,16 @@ export const aboutComparisonZh = {
   'comparison.feat.contentCensor': '内容审查',
   'comparison.feat.ownData': '拥有你的数据',
   'comparison.feat.ownKeys': '拥有你的密钥',
+
+  'comparison.cell.instant': '即时',
+  'comparison.cell.none': '无',
+  'comparison.cell.varies': '视情况',
+  'comparison.cell.included': '已包含',
+  'comparison.cell.limited': '有限',
+  'comparison.cell.demo': '演示',
+  'comparison.cell.planned': '计划中',
+  'comparison.cell.roadmap': '路线图',
+
+  'comparison.metaTitle': '平台对比',
+  'comparison.metaDesc': '对比 KATOA 与 OnlyFans、Throne、Kickstarter 等。平台抽成 0%、闪电网络结算、开始无需 KYC。',
 } as const;

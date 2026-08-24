@@ -175,4 +175,16 @@ export const aboutComparisonJa = {
   'comparison.feat.contentCensor': 'コンテンツ検閲',
   'comparison.feat.ownData': 'データを所有',
   'comparison.feat.ownKeys': '鍵を所有',
+
+  'comparison.cell.instant': '即時',
+  'comparison.cell.none': 'なし',
+  'comparison.cell.varies': '場合による',
+  'comparison.cell.included': '含まれる',
+  'comparison.cell.limited': '限定',
+  'comparison.cell.demo': 'デモ',
+  'comparison.cell.planned': '予定',
+  'comparison.cell.roadmap': 'ロードマップ',
+
+  'comparison.metaTitle': 'プラットフォーム比較',
+  'comparison.metaDesc': 'KATOAとOnlyFans、Throne、Kickstarterなどを比較。プラットフォーム手数料0%、Lightning着金、開始時にKYCなし。',
 } as const;

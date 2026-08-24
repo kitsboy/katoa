@@ -1,6 +1,7 @@
 import { Link } from './Link';
 import { ArrowRight, Gift, MapPin, Zap } from 'lucide-react';
 import { mockWishlistItems } from '../data/mockWishlists';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const FEATURED = {
   title: 'Skateboard Park for Medellín Youth',
@@ -38,6 +39,7 @@ function formatSats(n: number) {
 }
 
 function ProductScreenshot() {
+  const { t } = useLanguage();
   const progress = Math.round((FEATURED.raised / FEATURED.goal) * 100);
   const items = mockWishlistItems['mock-featured'].slice(0, 2);
 
@@ -75,10 +77,10 @@ function ProductScreenshot() {
                 <p className="lp-shot-creator-name">@{FEATURED.creator}</p>
                 <p className="lp-shot-creator-meta">carlos@getalby.com</p>
               </div>
-              <span className="lp-shot-live" title="Sample product preview">Demo</span>
+              <span className="lp-shot-live" title={t('home.shot.demoTitle')}>{t('demo.badge')}</span>
             </div>
 
-            <div className="lp-shot-progress" data-tip="Demo catalog sample — 65% of a 5,000,000 sats goal. Same progress UI as a real wishlist. Katoa does not custody or process the sats; they go to the creator's Lightning wallet.">
+            <div className="lp-shot-progress" data-tip={t('home.shot.progressTip')}>
               <div className="lp-shot-progress-head">
                 <span>{formatSats(FEATURED.raised)} sats raised</span>
                 <strong>{progress}%</strong>
@@ -123,10 +125,11 @@ export function LandingHero({
   ctaCompare,
   stats,
 }: LandingHeroProps) {
+  const { t } = useLanguage();
   const metricItems = [
-    { value: stats.volume, label: stats.processedLabel, accent: 'orange' as const, tip: 'Labeled product metrics — not sats Katoa custodies or processes. Payments go peer-to-peer on Lightning. Sample figures are marked Demo until live counters exist.' },
-    { value: stats.countries, label: stats.countriesLabel, accent: 'cyan' as const, tip: 'Bitcoin Lightning works wherever the internet does. Katoa does not require a bank or KYC to start. Follow the law where you operate.' },
-    { value: '0%', label: stats.feesLabel, accent: 'emerald' as const, tip: 'Platform fee is 0% forever — not a promo. Lightning network routing fees still apply and are not paid to Katoa.' },
+    { value: stats.volume, label: stats.processedLabel, accent: 'orange' as const, tip: t('home.tip.volume') },
+    { value: stats.countries, label: stats.countriesLabel, accent: 'cyan' as const, tip: t('home.tip.countries') },
+    { value: '0%', label: stats.feesLabel, accent: 'emerald' as const, tip: t('home.tip.fees') },
   ];
 
   return (
@@ -138,7 +141,7 @@ export function LandingHero({
       <div className="lp-hero-inner">
         <div className="lp-hero-grid">
           <div className="lp-hero-copy">
-            <p className="lp-eyebrow" data-tip="Katoa — the zero-fee, non-custodial, Bitcoin-native creator platform. Part of the Give A Bit family.">{badge}</p>
+            <p className="lp-eyebrow" data-tip={t('home.tip.eyebrow')}>{badge}</p>
 
             <h1 className="lp-headline">
               <span className="lp-headline-pre">{keepLabel}</span>
@@ -163,12 +166,12 @@ export function LandingHero({
 
             <div className="lp-hero-proof">
               <span className="lp-proof-chip lp-proof-chip--warm">
-                <strong>{stats.creators ?? '—'}</strong> creators
+                <strong>{stats.creators ?? '—'}</strong> {t('home.chip.creators')}
               </span>
-              <span className="lp-proof-chip lp-proof-chip--orange">0% fees</span>
+              <span className="lp-proof-chip lp-proof-chip--orange">{t('home.chip.zeroFees')}</span>
               <span className="lp-proof-chip lp-proof-chip--cyan">
                 <Zap size={12} />
-                Lightning
+                {t('home.chip.lightning')}
               </span>
             </div>
           </div>

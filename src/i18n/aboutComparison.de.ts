@@ -175,4 +175,16 @@ export const aboutComparisonDe = {
   'comparison.feat.contentCensor': 'Inhaltszensur',
   'comparison.feat.ownData': 'Besitze deine Daten',
   'comparison.feat.ownKeys': 'Besitze deine Schlüssel',
+
+  'comparison.cell.instant': 'Sofort',
+  'comparison.cell.none': 'Keine',
+  'comparison.cell.varies': 'Variiert',
+  'comparison.cell.included': 'Enthalten',
+  'comparison.cell.limited': 'Begrenzt',
+  'comparison.cell.demo': 'Demo',
+  'comparison.cell.planned': 'Geplant',
+  'comparison.cell.roadmap': 'Roadmap',
+
+  'comparison.metaTitle': 'Plattformvergleich',
+  'comparison.metaDesc': 'Vergleiche KATOA mit OnlyFans, Throne, Kickstarter und mehr. 0 % Plattformgebühr, Lightning-Abrechnung, kein KYC zum Start.',
 } as const;

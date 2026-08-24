@@ -32,71 +32,71 @@ import {
 const features = [
   {
     icon: Infinity,
-    title: '0% Platform Fees',
-    description: 'Keep every sat you earn. No tiers, no upsells, no surprises—ever.',
+    titleKey: 'pricing.feat.zeroFees.title',
+    descKey: 'pricing.feat.zeroFees.desc',
     accent: 'text-bitcoin-orange-400',
     glow: 'from-bitcoin-orange-500/20',
   },
   {
     icon: Zap,
-    title: 'Instant Lightning',
-    description: 'Donations settle in seconds over Bitcoin Lightning. No 7-day holds.',
+    titleKey: 'pricing.feat.lightning.title',
+    descKey: 'pricing.feat.lightning.desc',
     accent: 'text-neon-cyan-400',
     glow: 'from-neon-cyan-500/20',
   },
   {
     icon: Globe,
-    title: 'Global by Default',
-    description: 'Accept support from 195+ countries without currency conversion fees.',
+    titleKey: 'pricing.feat.global.title',
+    descKey: 'pricing.feat.global.desc',
     accent: 'text-emerald-400',
     glow: 'from-emerald-500/20',
   },
   {
     icon: Lock,
-    title: 'No Banking Required',
-    description: 'Start without a bank account, KYC, or payment processor approval.',
+    titleKey: 'pricing.feat.noBank.title',
+    descKey: 'pricing.feat.noBank.desc',
     accent: 'text-violet-400',
     glow: 'from-violet-500/20',
   },
   {
     icon: Bitcoin,
-    title: 'On-Chain & Lightning',
-    description: 'Supporters pay however their wallet works—main chain or L2.',
+    titleKey: 'pricing.feat.onchain.title',
+    descKey: 'pricing.feat.onchain.desc',
     accent: 'text-amber-400',
     glow: 'from-amber-500/20',
   },
   {
     icon: Users,
-    title: 'Unlimited Wishlists',
-    description: 'Create as many wishlists and projects as you need, all included.',
+    titleKey: 'pricing.feat.unlimited.title',
+    descKey: 'pricing.feat.unlimited.desc',
     accent: 'text-sky-400',
     glow: 'from-sky-500/20',
   },
   {
     icon: BarChart3,
-    title: 'Creator dashboard',
-    description: 'Track gifts, followers, and goals on your dashboard. Honest numbers — demo labeled until live counters exist.',
+    titleKey: 'pricing.feat.dashboard.title',
+    descKey: 'pricing.feat.dashboard.desc',
     accent: 'text-pink-400',
     glow: 'from-pink-500/20',
   },
   {
     icon: Share2,
-    title: 'Shareable Pages',
-    description: 'Beautiful public wishlist pages with QR codes and social-ready links.',
+    titleKey: 'pricing.feat.shareable.title',
+    descKey: 'pricing.feat.shareable.desc',
     accent: 'text-teal-400',
     glow: 'from-teal-500/20',
   },
   {
     icon: Shield,
-    title: 'Privacy First',
-    description: 'Decentralized infrastructure. You own your keys, data, and audience.',
+    titleKey: 'pricing.feat.privacy.title',
+    descKey: 'pricing.feat.privacy.desc',
     accent: 'text-emerald-400',
     glow: 'from-emerald-500/20',
   },
   {
     icon: RefreshCw,
-    title: 'Subscription tiers (path)',
-    description: 'Show supporter / patron / champion tiers today. Recurring Lightning (BOLT 12) is planned — not live settlement yet.',
+    titleKey: 'pricing.feat.subscriptions.title',
+    descKey: 'pricing.feat.subscriptions.desc',
     accent: 'text-orange-400',
     glow: 'from-orange-500/20',
   },
@@ -221,8 +221,8 @@ export function PricingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 text-white">
       <PageMeta
-        title="Pricing"
-        description="KATOA pricing: $0/month, 0% platform fees forever. Keep 100% of your Bitcoin earnings on Lightning."
+        title={t('pricing.metaTitle')}
+        description={t('pricing.metaDesc')}
         path="/pricing"
       />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-20">
@@ -371,7 +371,7 @@ export function PricingPage() {
               const Icon = feature.icon;
               return (
                 <Card
-                  key={feature.title}
+                  key={feature.titleKey}
                   variant="glass"
                   hover
                   className="p-5 sm:p-6 group"
@@ -381,8 +381,8 @@ export function PricingPage() {
                   >
                     <Icon size={20} className={feature.accent} />
                   </div>
-                  <h3 className="text-sm font-bold text-white mb-2 leading-snug">{feature.title}</h3>
-                  <p className="text-xs text-gray-500 leading-relaxed">{feature.description}</p>
+                  <h3 className="text-sm font-bold text-white mb-2 leading-snug">{t(feature.titleKey)}</h3>
+                  <p className="text-xs text-gray-500 leading-relaxed">{t(feature.descKey)}</p>
                 </Card>
               );
             })}

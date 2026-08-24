@@ -10,6 +10,17 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { formatNumber } from '../lib/i18nFormat';
 import { TrustProofStrip } from '../components/TrustProofStrip';
 
+const COMPARISON_CELL_I18N: Record<string, string> = {
+  Instant: 'comparison.cell.instant',
+  None: 'comparison.cell.none',
+  Varies: 'comparison.cell.varies',
+  Included: 'comparison.cell.included',
+  Limited: 'comparison.cell.limited',
+  Demo: 'comparison.cell.demo',
+  Planned: 'comparison.cell.planned',
+  Roadmap: 'comparison.cell.roadmap',
+};
+
 function calculateSavings(amount: number) {
   const onlyfans = amount * 0.20;
   const throne = amount * 0.10;
@@ -153,7 +164,8 @@ export function ComparisonPage() {
         <X size={24} className="text-red-400 mx-auto" />
       );
     }
-    return <span className="text-white font-medium">{value}</span>;
+    const key = COMPARISON_CELL_I18N[value];
+    return <span className="text-white font-medium">{key ? t(key) : value}</span>;
   };
 
   const yearlyText = t('comparison.savingsYearly')
@@ -168,8 +180,8 @@ export function ComparisonPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 pt-16">
       <PageMeta
-        title="Platform Comparison"
-        description="Compare KATOA vs OnlyFans, Throne, Kickstarter, and more. 0% platform fees, Lightning settlement, no KYC to start."
+        title={t('comparison.metaTitle')}
+        description={t('comparison.metaDesc')}
         path="/comparison"
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">

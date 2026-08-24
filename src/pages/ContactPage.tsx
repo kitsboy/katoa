@@ -49,7 +49,7 @@ export function ContactPage() {
 
   return (
     <div className="min-h-[100dvh] bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 pb-20 md:pb-16">
-      <PageMeta title="Contact" description="Get in touch with the KATOA team." path="/contact" />
+      <PageMeta title={t('contact.metaTitle')} description={t('contact.metaDesc')} path="/contact" />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
         <PageHero title={t('contact.title')} subtitle={t('contact.subtitle')} />
 
