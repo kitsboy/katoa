@@ -35,7 +35,7 @@ export function CreatorVerticalsGrid({ className = '' }: { className?: string })
             <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-bitcoin-orange-300 transition-colors leading-snug">
               {v.label}
             </h3>
-            <p className="text-[11px] sm:text-xs text-gray-500 mt-1 leading-relaxed line-clamp-3 flex-1">
+            <p className="text-xs sm:text-sm text-gray-200 mt-1 leading-relaxed line-clamp-3 flex-1">
               {v.blurb}
             </p>
           </Link>

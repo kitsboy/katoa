@@ -86,13 +86,13 @@ export const CreatorVideoCard = memo(function CreatorVideoCard({
                     e.stopPropagation();
                     onToggleFavorite(wishlist.id);
                   }}
-                  className="p-2 rounded-full bg-black/50 backdrop-blur-sm border border-white/10 hover:border-[#00aff0]/50 transition-colors touch-manipulation"
+                  className="p-2 rounded-full bg-black/50 backdrop-blur-sm border border-white/10 hover:border-[#14E6FF]/50 transition-colors touch-manipulation"
                   aria-label={isFavorite ? t('explore.removeFavorite') : t('explore.addFavorite')}
                   aria-pressed={isFavorite}
                 >
                   <Heart
                     size={18}
-                    className={isFavorite ? 'fill-[#00aff0] text-[#00aff0]' : 'text-white'}
+                    className={isFavorite ? 'fill-[#14E6FF] text-[#14E6FF]' : 'text-white'}
                   />
                 </button>
               )}
@@ -107,17 +107,17 @@ export const CreatorVideoCard = memo(function CreatorVideoCard({
           />
         </div>
 
-        <div className="p-4 pb-5 flex flex-col flex-1 min-h-0 bg-gradient-to-b from-charcoal-900 to-charcoal-950 border-t border-[#00aff0]/20">
+        <div className="p-4 pb-5 flex flex-col flex-1 min-h-0 bg-gradient-to-b from-[#1a1428] to-[#160e24] border-t border-[#14E6FF]/20">
           <div className="flex items-center gap-3 mb-3">
             <div className="relative shrink-0">
               {wishlist.creator.avatar_url ? (
                 <img
                   src={wishlist.creator.avatar_url}
                   alt=""
-                  className="w-10 h-10 rounded-full object-cover border-2 border-[#00aff0]/60"
+                  className="w-10 h-10 rounded-full object-cover border-2 border-[#14E6FF]/60"
                 />
               ) : (
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#00aff0]/40 to-rose-500/40 border-2 border-[#00aff0]/50 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#14E6FF]/40 to-rose-500/40 border-2 border-[#14E6FF]/50 flex items-center justify-center">
                   <User size={18} className="text-white" />
                 </div>
               )}
@@ -125,14 +125,14 @@ export const CreatorVideoCard = memo(function CreatorVideoCard({
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-white font-bold text-sm truncate">@{wishlist.creator.username}</p>
-              <p className="text-[#00aff0] text-xs font-medium">
+              <p className="text-[#14E6FF] text-xs font-medium">
                 {subscribers.toLocaleString()} {t('explore.supporters')}
               </p>
             </div>
             <Lock size={14} className="text-gray-500 shrink-0" aria-hidden />
           </div>
 
-          <h3 className="text-white font-bold text-base sm:text-lg mb-1 line-clamp-2 group-hover:text-[#00aff0] transition-colors">
+          <h3 className="text-white font-bold text-base sm:text-lg mb-1 line-clamp-2 group-hover:text-[#14E6FF] transition-colors">
             {wishlist.title}
           </h3>
           {!compact && (
@@ -146,11 +146,11 @@ export const CreatorVideoCard = memo(function CreatorVideoCard({
               showPercentage={false}
               showValues={false}
               height="sm"
-              gradient="from-[#00aff0] to-cyan-400"
+              gradient="from-[#14E6FF] to-cyan-400"
             />
             <div className="flex items-center justify-between mt-2 text-xs text-gray-400">
               <span>{Math.round(progress)}% {t('explore.raised')}</span>
-              <SatsDisplay sats={wishlist.total_sats_raised} size="sm" className="text-[#00aff0]" />
+              <SatsDisplay sats={wishlist.total_sats_raised} size="sm" className="text-[#14E6FF]" />
             </div>
           </div>
         </div>

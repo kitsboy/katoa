@@ -87,12 +87,12 @@ export function HomePage() {
       />
 
       {stats.source === 'unavailable' && (
-        <p className="text-center text-xs text-gray-500 py-2 px-4" role="status">
+        <p className="text-center text-sm text-gray-200 py-2 px-4" role="status">
           {t('home.statsUnavailable')}
         </p>
       )}
       {stats.isDemoSample && stats.source === 'metrics' && (
-        <p className="text-center text-xs text-bitcoin-orange-400/90 py-2 px-4" role="status">
+        <p className="text-center text-sm text-bitcoin-orange-300 py-2 px-4" role="status">
           {t('home.statsSample')}
         </p>
       )}
@@ -231,7 +231,7 @@ export function HomePage() {
             </div>
             <p className="lp-cta-note">{t('home.cta.note')}</p>
             <div className="lp-cta-stats">
-              <div><strong>2024</strong><span>{t('home.cta.launch')}</span></div>
+              <div><strong>Live</strong><span>{t('home.cta.launch')}</span></div>
               <div><strong>{stats.volume}</strong><span>{t('home.cta.processed')}</span></div>
               <div><strong>0%</strong><span>{t('home.cta.fees')}</span></div>
             </div>

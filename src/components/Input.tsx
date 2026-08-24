@@ -26,7 +26,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
         <div className="relative">
           {icon && (
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-300">
               {icon}
             </div>
           )}
@@ -37,7 +37,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             required={required}
             aria-required={required || undefined}
             inputMode={type === 'email' ? 'email' : props.inputMode}
-            className={`w-full px-4 py-3 min-h-[44px] bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-neon-cyan-500/50 focus:border-neon-cyan-500/30 transition-all text-base sm:text-sm ${
+            className={`w-full px-4 py-3 min-h-[44px] bg-white/[0.08] border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-neon-cyan-500/50 focus:border-neon-cyan-500/30 transition-all text-base sm:text-sm ${
               error ? 'border-red-500/50 focus:ring-red-500/50' : ''
             } ${icon ? 'pl-10' : ''} ${className}`}
             aria-invalid={error ? true : undefined}

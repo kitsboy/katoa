@@ -64,7 +64,7 @@ export function CreatorDiscoveryGrid({ creators, t }: CreatorDiscoveryGridProps)
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <label className="relative flex-1">
           <span className="sr-only">{t('creator.searchPlaceholder')}</span>
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" aria-hidden />
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300" aria-hidden />
           <input
             type="search"
             value={query}
@@ -105,7 +105,7 @@ export function CreatorDiscoveryGrid({ creators, t }: CreatorDiscoveryGridProps)
       </div>
 
       {results.length === 0 ? (
-        <p className="text-center text-gray-500 text-sm py-10">{t('creator.noResults')}</p>
+        <p className="text-center text-gray-200 text-sm py-10">{t('creator.noResults')}</p>
       ) : (
         <div className="space-y-8">
           <div>
