@@ -1,0 +1,283 @@
+export const remainingZh = {
+  'nav.templates': '模板',
+  'nav.security': '安全',
+  'nav.roadmap': '路线图',
+  'nav.beta': 'Beta',
+  'nav.betaTitle': 'KATOA 正在积极开发中',
+  'nav.route.home': '首页',
+  'nav.route.explore': '探索',
+  'nav.route.wishlist': '心愿单',
+  'nav.route.settings': '设置',
+  'nav.route.about': '关于',
+  'nav.route.contact': '联系',
+  'nav.route.faq': '常见问题',
+  'nav.route.pricing': '定价',
+  'nav.route.comparison': '对比',
+  'nav.route.pitch': '推介',
+  'nav.route.terms': '条款',
+  'nav.route.privacy': '隐私',
+  'nav.route.project': '项目',
+  'errorBoundary.title': '出了点问题',
+  'errorBoundary.message': '请刷新页面。若问题仍在，请返回首页。',
+  'errorBoundary.tryAgain': '再试一次',
+  'errorBoundary.goHome': '返回首页',
+
+  'faq.q.wishlists': '心愿单怎么用？',
+  'faq.a.wishlists':
+    '添加物品、设定聪价格、分享链接。支持者用闪电网络资助 — 或在你附上商品链接后，从亚马逊等商店购买。',
+  'faq.q.productLinks': '可以添加亚马逊或服装商品链接吗？',
+  'faq.a.productLinks':
+    '可以。在项目中打开心愿单，点“从链接添加商品”，粘贴任意商品网址（亚马逊、Nike、Etsy、Shopify 等）。KATOA 会尽量读取标题/图片；支持者会看到购买并寄给你的按钮，以及用聪资助。',
+  'faq.q.anonymousGifts': '可以匿名收礼吗？',
+  'faq.a.anonymousGifts':
+    '可以。闪电支付可以是化名的。公开心愿单只显示你选择分享的内容。',
+  'faq.q.p2p': '什么是点对点交易？',
+  'faq.a.p2p': '资金从支持者钱包直接到创作者钱包 — KATOA 从不托管资金。',
+  'faq.q.zkp': '什么是零知识证明？',
+  'faq.a.zkp':
+    '在不泄露底层数据的情况下验证事实的密码学证明 — 属于我们的隐私路线图。',
+  'faq.q.lightningWallet': '如何设置闪电钱包？',
+  'faq.a.lightningWallet':
+    '使用 Phoenix、Wallet of Satoshi、Muun，或自托管 LND/CLN。在设置中添加你的闪电地址。',
+  'faq.q.openSource': 'KATOA 是开源的吗？',
+  'faq.a.openSource': '是 — MIT 许可。可审计、分叉或自行托管前端。',
+  'faq.q.howSecure': 'KATOA 有多安全？',
+  'faq.a.howSecure':
+    '我们从不持有你的密钥或资金。账户数据使用行业标准加密。完整模型见安全页。',
+  'faq.q.loseAccess': '如果我失去访问权限？',
+  'faq.a.loseAccess':
+    '邮箱账户可以使用密码找回。若在设置中绑定了 Nostr，扩展里的密钥仍控制 Nostr 身份 — 在安全的 Nostr 登录上线前，应用登录仍用邮箱/Google。',
+  'faq.q.whoHoldsSats': '送礼过程中谁拿着聪？',
+  'faq.a.whoHoldsSats':
+    '没有中间人。你付给创作者的闪电地址或链上钱包。KATOA 不为用户资金运行热钱包。',
+  'faq.q.verifyFees': '如何核实 0% 费用？',
+  'faq.a.verifyFees':
+    '产品设计里没有平台抽成。在“为什么选 KATOA”对比传统费用计算，审计开源前端，并看聪落入你控制的创作者钱包。',
+  'faq.q.exploreReal': '探索里的项目是真的吗？',
+  'faq.a.exploreReal':
+    '部分目录条目标为 Demo，用于产品预览。真实创作者账户在配置钱包后使用真实支付目的地。示例内容会显示 Demo 徽章。',
+  'faq.q.roadmap': '公开路线图上有什么？',
+  'faq.a.roadmap':
+    '已上线内容与下一步优先事项列在应用内路线图和 GitHub 的 docs/ROADMAP.md。',
+
+  'press.metaTitle': '媒体资料',
+  'press.metaDesc': 'KATOA 媒体资料 — 一句话、标准简介、标志与链接，供记者和合作方使用。',
+  'press.title': '媒体资料',
+  'press.subtitle': '供媒体、合作方和线下活动主办方使用的素材与文案。',
+  'press.onelinerHeading': '一句话',
+  'press.oneliner':
+    'KATOA 是零平台费、非托管的比特币创作者平台 — 心愿单与闪电礼物，让创作者留下 100%。',
+  'press.boilerplateHeading': '标准简介',
+  'press.boilerplate':
+    'KATOA（Keep All That’s Owed Always）是建立在比特币闪电网络与 Nostr 上的开源、零平台费创作者平台。创作者发布心愿单，支持直接进入他们自己控制的钱包。KATOA 不抽成、不托管用户资金。属于 Give A Bit 家族。',
+  'press.logos': '标志',
+  'press.links': '链接',
+  'press.copy': '复制',
+  'press.copied': '已复制',
+  'press.copyFailed': '复制失败',
+  'press.pitchPage': '推介页',
+  'press.security': '安全与托管',
+  'press.logoAlt': 'KATOA 标志',
+
+  'meetup.metaTitle': '线下活动包',
+  'meetup.metaDesc': '在比特币聚会讲解 KATOA 的话术、二维码和演示脚本。',
+  'meetup.title': '线下活动包',
+  'meetup.subtitle': '在任何比特币或互助聚会，用 60 秒把演示讲清楚。',
+  'meetup.scriptHeading': '演示脚本',
+  'meetup.script':
+    'KATOA 60 秒演示\n1. 打开 katoa.org — 零费用、非托管。\n2. 探索 → 打开标有 Demo 的心愿单。\n3. 展示发送礼物 → 二维码 / 闪电流程。\n4. 强调：聪进入创作者钱包；KATOA 抽成 0%。\n5. 行动号召：创建账户、添加闪电地址、分享链接。',
+  'meetup.copyScript': '复制脚本',
+  'meetup.copied': '已复制',
+  'meetup.copyFailed': '复制失败',
+  'meetup.pointPhones': '把手机对准这里',
+  'meetup.qrAlt': '指向 katoa.org 的二维码',
+  'meetup.pressKit': '媒体资料',
+  'meetup.pitchPage': '推介页',
+
+  'cases.metaTitle': '案例',
+  'cases.metaDesc': '创作者如何使用 KATOA — 零平台费心愿单与闪电支持。',
+  'cases.title': '案例',
+  'cases.subtitle': '行之有效的模式。在真实试点发布前，部分故事使用演示目录。',
+  'cases.viewExample': '查看示例',
+  'cases.1.title': '社区滑板场（演示）',
+  'cases.1.vertical': '运动 / 青少年',
+  'cases.1.result': '心愿单 + 闪电礼物 · 0% 平台费',
+  'cases.1.body':
+    '一份公开演示心愿单展示粉丝如何资助装备与施工 — 或通过亚马逊链接购买商品 — 而没有 10–20% 抽成。',
+  'cases.2.title': '独立创作者小费罐',
+  'cases.2.vertical': '模特 / 生活方式',
+  'cases.2.result': '直接聪 · 心愿单上的服装与装备',
+  'cases.2.body':
+    '创作者列出商品链接与目标。支持者用比特币资助或购买物品。起步不需要银行中间人。',
+  'cases.3.title': '教练 / 膳食规划师上线',
+  'cases.3.vertical': '教育与美食',
+  'cases.3.result': '模板驱动的心愿单',
+  'cases.3.body':
+    '模板预先填入相机、印刷和课程上线。粉丝托底这份工作；创作者留下每一聪。',
+
+  'creators.guidelinesMetaDesc': '如何作为创作者使用 KATOA — 打赏、心愿单、私信与安全。',
+  'creators.guidelinesSubtitle': '留下 100% 收入。保持主权。保持为人。',
+  'creators.guidelinesRelated': '相关链接',
+  'guidelines.1.title': '关系归你所有',
+  'guidelines.1.body':
+    '粉丝付给你 — 闪电地址、zap 或商品购买。KATOA 从不托管资金、也不抽成。',
+  'guidelines.2.title': '内容边界由你设定',
+  'guidelines.2.body':
+    '全年龄或成人向 — 在简介里写清楚。遵守你与受众所在地的法律。禁止 CSAM、未经同意的影像、诈骗。',
+  'guidelines.3.title': '心愿单是你要兑现的承诺',
+  'guidelines.3.body':
+    '粉丝购买商品或资助目标时，请沟通。更新进度。在合适时把项目标为已资助。',
+  'guidelines.4.title': '私信默认关闭，需主动开启',
+  'guidelines.4.body':
+    '只有想收私信时才开启消息。随时可以关掉。永远不要向粉丝索要助记词或远程钱包权限。',
+  'guidelines.5.title': '禁止冒充',
+  'guidelines.5.body':
+    '使用你自己的身份。绑定 Nostr（NIP-07）能增强信任。不要冒充品牌或他人。',
+
+  'security.nonCustodial.title': '设计上就是非托管',
+  'security.nonCustodial.body':
+    'KATOA 从不持有你的比特币。支持者把聪发到你控制的地址和闪电目的地。即便我们的服务器离线，钱仍在你的钱包里。',
+  'security.keys.title': '密钥留在你这边',
+  'security.keys.body':
+    '登录使用邮箱/OAuth（或演示模式）。可选的 Nostr 密钥留在浏览器扩展或设备上。我们不存储助记词或私钥。',
+  'security.minimalData.title': '最少数据',
+  'security.minimalData.body':
+    '我们只保存运行心愿单和登录所需的内容。详见隐私。可以的话，优先用闪电地址和公开 npub，而不是个人标识。',
+  'security.host.title': '我们托管什么',
+  'security.host.body':
+    '网页应用（Cloudflare Pages）、可选的 Supabase（资料/心愿单），以及不需要银行级监控的分析。结算发生在比特币 / 闪电网络上。',
+  'security.openSource.title': '开源与可核验',
+  'security.openSource.body':
+    '前端以 MIT 许可发布在 GitHub。架构与费用主张公开。通过 GitHub 报告安全问题；在有赏金时，关键发现可能获得聪。',
+  'security.safeHarbour.title': '免责声明',
+  'security.safeHarbour.body':
+    'KATOA 是教育软件。此处内容不是法律、税务或投资建议。你需自行遵守所在司法辖区的规定。',
+  'security.privacyPolicy': '隐私政策',
+  'security.viewSource': '在 GitHub 查看源码',
+
+  'pitch.aria': 'KATOA 推介幻灯',
+  'pitch.slide0.eyebrow': 'Give A Bit · 比特币主权 · FOSS',
+  'pitch.slide0.title': 'KATOA',
+  'pitch.slide0.subtitle': 'Keep All That’s Owed Always',
+  'pitch.slide0.statFee': '平台费',
+  'pitch.slide0.statCost': '月费',
+  'pitch.slide0.statKeep': '你留下',
+  'pitch.slide1.eyebrow': '失灵的创作者经济',
+  'pitch.slide1.title': '平台拿走 5–20% — 还有你的自由',
+  'pitch.slide2.eyebrow': 'KATOA 的回答',
+  'pitch.slide2.title': '基础设施，不是抽租',
+  'pitch.slide3.eyebrow': '彻底透明',
+  'pitch.slide3.title': '让数字把交易谈成',
+  'pitch.slide3.platform': '平台',
+  'pitch.slide3.fees': '费用',
+  'pitch.slide3.payout': '到账',
+  'pitch.slide4.eyebrow': '产品路径',
+  'pitch.slide4.title': '零平台费。功能状态如实说明。',
+  'pitch.slide5.eyebrow': '受众',
+  'pitch.slide5.title': '为拒绝交租的创作者而建',
+  'pitch.slide6.eyebrow': '底层',
+  'pitch.slide6.title': '真实产品。真实技术栈。',
+  'pitch.slide7.eyebrow': 'Give A Bit 生态',
+  'pitch.slide7.title': '私人的钱。让人安心的给予。',
+  'pitch.slide8.eyebrow': '下一步',
+  'pitch.slide8.title': '准备好留下 100% 了吗？',
+
+  'home.shot.title': '麦德林青少年滑板公园',
+  'home.shot.description':
+    '用滑板改变人生。建造一个安全的社区空间，让 500 多名青少年可以滑板、学习和成长。',
+  'home.shot.satsRaised': '已筹集 ${n} 聪',
+  'home.shot.ofGoal': '目标 ${n} 聪',
+  'home.shot.sendGift': '发送礼物',
+  'home.shot.fundedPct': '已达成 ${pct}%',
+  'home.shot.coverAlt': '${title} 封面',
+
+  'verticals.model.label': '模特 / 影响者',
+  'verticals.model.blurb': '打赏、限定掉落、拍摄经费和粉丝心愿单 — 留下 100%。',
+  'verticals.fitness.label': '健身与身心',
+  'verticals.fitness.blurb': '课程上线、健身器材、静修。支持者资助你的下一个个人纪录。',
+  'verticals.meals.label': '膳食规划 / 主厨',
+  'verticals.meals.blurb': '食谱印刷、厨房工具、食谱拍摄日。',
+  'verticals.golf.label': '高尔夫与运动',
+  'verticals.golf.blurb': '赛事报名、球杆、差旅。粉丝撑起球包 — 不是平台。',
+  'verticals.lifestyle.label': '生活方式与妈妈',
+  'verticals.lifestyle.blurb': '家庭内容、家居项目、日常创作者打赏，带着尊严。',
+  'verticals.music.label': '音乐与演出',
+  'verticals.music.blurb': '专辑、周边、巡演路段 — 赞助人资助艺术，而不是费用。',
+  'verticals.education.label': '教练与教育者',
+  'verticals.education.blurb': '课程、工作坊、教室用品。自由教学，全额收入。',
+  'verticals.creator.label': '任何创作者',
+  'verticals.creator.blurb': '只要你创造价值，KATOA 就是小费罐 + 心愿单。零抽成。永远。',
+
+  'fee.bestValue': '最超值',
+  'fee.monthlyFees': '月度费用',
+  'fee.youKeep': '你留下',
+  'fee.lostPct': '-${pct}% 损失',
+  'fee.yours': '100% 归你',
+  'fee.trueCost': '平台费的真实代价',
+  'fee.trueCostSub': '看看你在竞品费用上丢掉多少。KATOA 很简单：永远 0%。',
+  'fee.monthlyGoal': '你的每月项目目标是多少？',
+  'fee.currency': '货币',
+  'fee.convertedUsd': '金额已换算为美元以便比较',
+  'fee.earningsAria': '月收入金额',
+  'fee.saveMonth': '每月节省 ${amount}',
+  'fee.saveYear': '用 KATOA，每年多拿回 ${amount}。',
+  'fee.whatWouldYouDo': '你会用这笔钱做什么？',
+  'fee.startKeeping': '从今天开始留下 100%',
+  'fee.countries': '195+ 个国家',
+  'fee.throneCountries': 'Throne：约 10 个国家有 0% 费用',
+  'fee.katoaCountries': 'KATOA：所有国家，始终 0%',
+  'fee.instant': '即时结算',
+  'fee.onlyfansPayout': 'OnlyFans：7 天滚动打款',
+  'fee.katoaLightning': 'KATOA：即时闪电网络',
+  'fee.privacy': '真正的隐私',
+  'fee.competitorsData': '竞品：服务器端收集数据',
+  'fee.katoaZk': 'KATOA：零知识证明',
+  'fee.tableCaption': '月收入的平台费对比',
+  'fee.colPlatform': '平台',
+  'fee.colFees': '月度费用',
+  'fee.colKeep': '你留下',
+  'fee.graphAria':
+    '每一美元你留下多少，按平台：KATOA 100%，Linktree 91%，Throne 90%，OnlyFans 80%',
+  'fee.graphTip':
+    '悬停柱状图，比较每一美元真正到你手里的比例。只有 KATOA 是 100% 归你 — 其他平台在你看到钱之前就抽走一部分。',
+  'fee.barTip': '${platform}：每一美元你留下 ${pct}%。',
+  'fee.barTipKatoa': '${platform}：每一美元你留下 ${pct}% — 永远零费用。',
+  'fee.tipKatoa':
+    '永远 0% 费用。建立在比特币闪电网络上。你赚到的每一美元都归你。没有隐藏成本、没有平台税、没有突然收费。',
+  'fee.tipOnlyFans':
+    'OnlyFans 对所有收入收取 20% 平台费。若你赚 10,000 美元，他们拿走 2,000 美元。另加支付处理费和换汇成本。',
+  'fee.tipThrone':
+    'Throne 收取 10% 平台费，外加 2.9% + $0.30 处理费。0% 促销价仅约 10 个国家。需要银行账户和 KYC。',
+  'fee.tipLinktree':
+    'Linktree 收取 9–10% 费用，外加每月 40 美元的 Commerce 订阅。处理费因地区而异。需要银行账户。',
+  'fee.feesTipKatoa':
+    '永远零费用。KATOA 从不抽成。没有月费、没有交易费、没有支付处理费。你赚多少就留多少。',
+  'fee.feesTipOnlyFans':
+    'OnlyFans 拿走你所赚一切的 20%。从 ${earned} 中抽出 ${fees}。适用于订阅、打赏、PPV 及其他收入。',
+  'fee.feesTipThrone':
+    'Throne 对所有交易收取 10% 平台费。从 ${earned} 中拿走 ${fees}。另有支付处理费。',
+  'fee.feesTipLinktree':
+    'Linktree 大约 9% 外加每月 40 美元订阅。从 ${earned} 计，总成本为 ${fees}。处理商费用因地而异。',
+  'fee.keepTipKatoa':
+    '实际到手：从赚到的 ${earned} 中留下 ${net}。那是收入的 100%。经比特币闪电网络即时结算。',
+  'fee.keepTipOther':
+    '${platform} 抽成后的到手：从赚到的 ${earned} 中留下 ${net}。你因平台费损失 ${fees}。打款需要 7–14 天。',
+
+  'footer.movement':
+    '一场用比特币让给予民主化的运动 — 只要有一部智能手机，任何人都能即时、私密、直接地支持世界各地的事业。零平台费。永远。',
+  'footer.acronym': 'Keep All That’s Owed Always',
+  'footer.openRoles': '开放职位',
+  'footer.giveABit': 'Give A Bit 项目',
+  'footer.madeWith': '用',
+  'footer.and': '和',
+  'footer.donateTitle': '支持开源开发',
+  'footer.donateSubtitle': '帮助 KATOA 保持免费与开源',
+  'footer.mainChain': '比特币主链',
+  'footer.copy': '复制',
+  'footer.copied': '已复制',
+  'footer.tapEnlarge': '点按放大',
+  'footer.donateClose': '关闭捐赠抽屉',
+  'footer.donateExpand': '放大捐赠二维码',
+  'footer.donateQrAlt': '捐赠二维码',
+  'footer.donateFund': '你的聪资助比特币社区的免费工具。',
+};

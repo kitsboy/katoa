@@ -7,19 +7,19 @@ import { ChevronLeft, ChevronRight, Zap } from 'lucide-react';
 
 const slides = [
   {
-    eyebrow: 'Give A Bit · Bitcoin Sovereignty · FOSS',
-    title: 'KATOA',
-    subtitle: 'Keep All That\'s Owed Always',
+    eyebrowKey: 'pitch.slide0.eyebrow',
+    titleKey: 'pitch.slide0.title',
+    subtitleKey: 'pitch.slide0.subtitle',
     body: 'Zero-fee creator support on Bitcoin Lightning. Instant. Borderless. Private. Open source.',
     stats: [
-      { label: 'Platform fee', value: '0%', color: 'text-bitcoin-orange-400' },
-      { label: 'Monthly cost', value: '$0', color: 'text-neon-cyan-400' },
-      { label: 'You keep', value: '100%', color: 'text-emerald-400' },
+      { labelKey: 'pitch.slide0.statFee', value: '0%', color: 'text-bitcoin-orange-400' },
+      { labelKey: 'pitch.slide0.statCost', value: '$0', color: 'text-neon-cyan-400' },
+      { labelKey: 'pitch.slide0.statKeep', value: '100%', color: 'text-emerald-400' },
     ],
   },
   {
-    eyebrow: 'The broken creator economy',
-    title: 'Platforms take 5–20% — and your freedom',
+    eyebrowKey: 'pitch.slide1.eyebrow',
+    titleKey: 'pitch.slide1.title',
     body: 'Creators do the work. Gatekeepers own the relationship, delay payouts, and skim forever.',
     cards: [
       { big: '20%', title: 'OnlyFans', desc: '~$24k/year lost on $10k/mo. Bank + KYC required.' },
@@ -29,8 +29,8 @@ const slides = [
     quote: '"How much of your support actually reached them?"',
   },
   {
-    eyebrow: 'The KATOA answer',
-    title: 'Infrastructure, not rent extraction',
+    eyebrowKey: 'pitch.slide2.eyebrow',
+    titleKey: 'pitch.slide2.title',
     bullets: [
       '0% platform fees — forever. Architectural invariant.',
       'Instant Lightning settlement. Seconds, not 7–30 day cycles.',
@@ -40,8 +40,8 @@ const slides = [
     ],
   },
   {
-    eyebrow: 'Radical transparency',
-    title: 'Let the math close the deal',
+    eyebrowKey: 'pitch.slide3.eyebrow',
+    titleKey: 'pitch.slide3.title',
     body: 'Live fee calculator on katoa.org — supporters see exactly where sats go.',
     table: [
       { platform: 'OnlyFans', fees: '~20%', countries: 'Limited', payout: '7 days' },
@@ -51,24 +51,24 @@ const slides = [
     ],
   },
   {
-    eyebrow: 'Product path',
-    title: 'Zero platform fee. Honest feature status.',
+    eyebrowKey: 'pitch.slide4.eyebrow',
+    titleKey: 'pitch.slide4.title',
     features: [
       '0% Platform Fees', 'Instant Lightning', 'Global by Default', 'No Banking Required', 'On-Chain & Lightning',
       'Unlimited Wishlists', 'Dashboard analytics (path)', 'Shareable Pages', 'Privacy First', 'BOLT 12 Recurring (planned)',
     ],
   },
   {
-    eyebrow: 'Audience',
-    title: 'Built for creators who refuse to pay rent',
+    eyebrowKey: 'pitch.slide5.eyebrow',
+    titleKey: 'pitch.slide5.title',
     columns: [
       { title: 'Primary', items: ['Independent creators', 'Mutual aid projects', 'Unbanked builders', 'Bitcoin & Nostr natives'] },
       { title: 'Supporters', items: ['Private, low-fee giving', 'QR + share links', 'Sats reach the cause', 'Future: Nostr campaigns'] },
     ],
   },
   {
-    eyebrow: 'Under the hood',
-    title: 'Real product. Real stack.',
+    eyebrowKey: 'pitch.slide6.eyebrow',
+    titleKey: 'pitch.slide6.title',
     tech: [
       { title: 'Frontend', desc: 'React 18 · TypeScript · Vite · Tailwind · Mobile-first glass UI' },
       { title: 'Backend', desc: 'Supabase Postgres · Auth · Storage · Row Level Security' },
@@ -76,14 +76,14 @@ const slides = [
     ],
   },
   {
-    eyebrow: 'Give A Bit ecosystem',
-    title: 'Private money. Feel-good giving.',
+    eyebrowKey: 'pitch.slide7.eyebrow',
+    titleKey: 'pitch.slide7.title',
     body: 'KATOA is the wishlist arm of Give A Bit — Bitcoin education, services, and hope for normal people.',
     quote: 'We will never charge platform fees. Creators keep what they\'re owed — always.',
   },
   {
-    eyebrow: 'Next step',
-    title: 'Ready to keep 100%?',
+    eyebrowKey: 'pitch.slide8.eyebrow',
+    titleKey: 'pitch.slide8.title',
     body: 'Keep 100% of what supporters send (0% platform fee). Build on Bitcoin Lightning — early.',
     cta: true,
   },
@@ -117,6 +117,7 @@ export function PitchPage() {
   };
 
   const slide = slides[current];
+  const slideTitle = t(slide.titleKey);
 
   return (
     <div className="min-h-[100dvh] bg-charcoal-950 text-white overflow-hidden">
@@ -133,33 +134,33 @@ export function PitchPage() {
         onTouchEnd={onTouchEnd}
         role="region"
         aria-roledescription="carousel"
-        aria-label="KATOA pitch deck"
+        aria-label={t('pitch.aria')}
       >
         <p className="sr-only" aria-live="polite">
           {t('pitch.slideAnnouncement')
             .replace('${current}', String(current + 1))
             .replace('${total}', String(slides.length))
-            .replace('${title}', slide.title)}
+            .replace('${title}', slideTitle)}
         </p>
         <p className="hidden sm:block text-center text-xs text-gray-500 px-4 pt-2">
           {t('pitch.navHint')}
         </p>
         <div className="flex-1 flex flex-col justify-center px-4 sm:px-8 py-8 max-w-2xl mx-auto w-full">
           <p className="text-[10px] uppercase tracking-[0.2em] text-neon-cyan-400 font-semibold mb-3">
-            {slide.eyebrow}
+            {t(slide.eyebrowKey)}
           </p>
 
           {current === 0 ? (
             <>
               <h1 className="font-display text-5xl sm:text-6xl font-black bg-gradient-to-r from-bitcoin-orange-400 via-amber-300 to-neon-cyan-400 bg-clip-text text-transparent mb-2">
-                {slide.title}
+                {slideTitle}
               </h1>
-              <p className="font-mono text-sm text-neon-cyan-400 mb-4">{slide.subtitle}</p>
+              <p className="font-mono text-sm text-neon-cyan-400 mb-4">{slide.subtitleKey ? t(slide.subtitleKey) : ''}</p>
               <p className="text-gray-300 text-lg mb-8">{slide.body}</p>
               <div className="grid grid-cols-3 gap-4">
                 {slide.stats?.map((s) => (
-                  <div key={s.label} className="text-center p-3 rounded-xl bg-white/[0.04] border border-white/10">
-                    <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">{s.label}</p>
+                  <div key={s.labelKey} className="text-center p-3 rounded-xl bg-white/[0.04] border border-white/10">
+                    <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">{t(s.labelKey)}</p>
                     <p className={`text-2xl font-black ${s.color}`}>{s.value}</p>
                   </div>
                 ))}
@@ -167,7 +168,7 @@ export function PitchPage() {
             </>
           ) : (
             <>
-              <h2 className="font-display text-3xl sm:text-4xl font-bold mb-4 leading-tight">{slide.title}</h2>
+              <h2 className="font-display text-3xl sm:text-4xl font-bold mb-4 leading-tight">{slideTitle}</h2>
               {slide.body && <p className="text-gray-300 mb-6 leading-relaxed">{slide.body}</p>}
 
               {slide.cards && (
@@ -198,9 +199,9 @@ export function PitchPage() {
                   <table className="w-full text-sm min-w-[320px]">
                     <thead>
                       <tr className="text-gray-500 text-xs uppercase">
-                        <th className="text-left py-2">Platform</th>
-                        <th className="text-left py-2">Fees</th>
-                        <th className="text-left py-2">Payout</th>
+                        <th className="text-left py-2">{t('pitch.slide3.platform')}</th>
+                        <th className="text-left py-2">{t('pitch.slide3.fees')}</th>
+                        <th className="text-left py-2">{t('pitch.slide3.payout')}</th>
                       </tr>
                     </thead>
                     <tbody>

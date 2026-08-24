@@ -1,8 +1,10 @@
 import { Link } from './Link';
 import { CREATOR_VERTICALS } from '../data/creatorVerticals';
+import { useLanguage } from '../contexts/LanguageContext';
 
 /** Homepage / marketing grid — who KATOA is for (bold creator positioning). */
 export function CreatorVerticalsGrid({ className = '' }: { className?: string }) {
+  const { t } = useLanguage();
   return (
     <section className={className} aria-labelledby="creator-verticals-heading">
       <div className="text-center mb-8 sm:mb-10 px-2">
@@ -33,10 +35,10 @@ export function CreatorVerticalsGrid({ className = '' }: { className?: string })
               {v.emoji}
             </span>
             <h3 className="text-sm sm:text-base font-bold text-white group-hover:text-bitcoin-orange-300 transition-colors leading-snug">
-              {v.label}
+              {t(`verticals.${v.id}.label`)}
             </h3>
             <p className="text-xs sm:text-sm text-gray-200 mt-1 leading-relaxed line-clamp-3 flex-1">
-              {v.blurb}
+              {t(`verticals.${v.id}.blurb`)}
             </p>
           </Link>
         ))}

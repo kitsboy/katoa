@@ -1,0 +1,283 @@
+export const remainingJa = {
+  'nav.templates': 'テンプレート',
+  'nav.security': 'セキュリティ',
+  'nav.roadmap': 'ロードマップ',
+  'nav.beta': 'ベータ',
+  'nav.betaTitle': 'KATOAは現在開発中です',
+  'nav.route.home': 'ホーム',
+  'nav.route.explore': '探索',
+  'nav.route.wishlist': 'ウィッシュリスト',
+  'nav.route.settings': '設定',
+  'nav.route.about': '私たちについて',
+  'nav.route.contact': 'お問い合わせ',
+  'nav.route.faq': 'FAQ',
+  'nav.route.pricing': '料金',
+  'nav.route.comparison': '比較',
+  'nav.route.pitch': 'ピッチ',
+  'nav.route.terms': '利用規約',
+  'nav.route.privacy': 'プライバシー',
+  'nav.route.project': 'プロジェクト',
+  'errorBoundary.title': '問題が発生しました',
+  'errorBoundary.message': 'ページを再読み込みしてください。続く場合はホームへ戻ってください。',
+  'errorBoundary.tryAgain': '再試行',
+  'errorBoundary.goHome': 'ホームへ',
+
+  'faq.q.wishlists': 'ウィッシュリストはどう動きますか？',
+  'faq.a.wishlists':
+    'アイテムを追加し、sats価格を設定してリンクを共有します。サポーターはLightningで支援するか、商品URLを付けていればAmazonなどから購入できます。',
+  'faq.q.productLinks': 'Amazonや洋服の商品リンクは追加できますか？',
+  'faq.a.productLinks':
+    'できます。プロジェクトでウィッシュリストを開き、「リンクから商品を追加」をタップ。任意の商品URL（Amazon、Nike、Etsy、Shopifyなど）を貼り付けます。可能な範囲でタイトル/画像を読み取り、サポーターには購入ボタンとsatsで支援する導線が出ます。',
+  'faq.q.anonymousGifts': '匿名でギフトを受け取れますか？',
+  'faq.a.anonymousGifts':
+    'はい。Lightning決済は仮名になり得ます。公開ウィッシュリストに出るのは、あなたが共有すると決めた情報だけです。',
+  'faq.q.p2p': 'ピアツーピア取引とは？',
+  'faq.a.p2p': 'お金はサポーターからクリエイターのウォレットへ直接流れます。KATOAが資金を預かりません。',
+  'faq.q.zkp': 'ゼロ知識証明とは？',
+  'faq.a.zkp':
+    '元データを明かさずに事実を検証する暗号証明です。プライバシーロードマップの一部です。',
+  'faq.q.lightningWallet': 'Lightningウォレットはどう用意しますか？',
+  'faq.a.lightningWallet':
+    'Phoenix、Wallet of Satoshi、Muun、または自前のLND/CLNを使います。設定でLightningアドレスを追加してください。',
+  'faq.q.openSource': 'KATOAはオープンソースですか？',
+  'faq.a.openSource': 'はい — MITライセンスです。フロントエンドの監査、フォーク、セルフホストが可能です。',
+  'faq.q.howSecure': 'KATOAの安全性は？',
+  'faq.a.howSecure':
+    '鍵も資金も預かりません。アカウントデータは一般的な暗号化です。モデルの全体はセキュリティページにあります。',
+  'faq.q.loseAccess': 'アクセスを失ったら？',
+  'faq.a.loseAccess':
+    'メールアカウントはパスワード再設定が使えます。設定でNostrを連携していれば、拡張機能の鍵がNostr身元を引き続き制御します。アプリのログインは、安全なNostr認証が届くまでメール/Googleです。',
+  'faq.q.whoHoldsSats': 'ギフト中にsatsを持つのは誰？',
+  'faq.a.whoHoldsSats':
+    '中間者はいません。クリエイターのLightningアドレスかオンチェーンウォレットへ直接払います。KATOAはユーザー資金のホットウォレットを運用しません。',
+  'faq.q.verifyFees': '手数料0%はどう確認しますか？',
+  'faq.a.verifyFees':
+    'プロダクト設計にプラットフォーム手数料はありません。「なぜKATOA」で従来の手数料計算を比べ、オープンソースのフロントエンドを監査し、あなたが管理するウォレットにsatsが着くのを見てください。',
+  'faq.q.exploreReal': '探索のプロジェクトは本物ですか？',
+  'faq.a.exploreReal':
+    'カタログの一部はプレビュー用にDemoと表示されます。本番のクリエイターアカウントは、ウォレット設定後に実際の支払い先を使います。サンプルにはDemoバッジが付きます。',
+  'faq.q.roadmap': '公開ロードマップには何がありますか？',
+  'faq.a.roadmap':
+    '出荷済みと次の優先事項はアプリ内ロードマップとGitHubのdocs/ROADMAP.mdにあります。',
+
+  'press.metaTitle': 'プレスキット',
+  'press.metaDesc': 'KATOAプレスキット — 一言、定型文、ロゴ、リンク。記者とパートナー向け。',
+  'press.title': 'プレスキット',
+  'press.subtitle': 'メディア、パートナー、ミートアップ主催者向けの素材と文言。',
+  'press.onelinerHeading': '一言',
+  'press.oneliner':
+    'KATOAは手数料ゼロ・ノンカストディアルのBitcoinクリエイター基盤です。ウィッシュリストとLightningギフトで、クリエイターが100%手元に残せます。',
+  'press.boilerplateHeading': '定型文',
+  'press.boilerplate':
+    'KATOA（Keep All That’s Owed Always）は、Bitcoin LightningとNostr上に作られたオープンソース・手数料ゼロのクリエイター基盤です。クリエイターはウィッシュリストを公開し、自分で管理するウォレットへ直接支援を受け取ります。KATOAはプラットフォーム手数料を取らず、ユーザー資金を預かりません。Give A Bitファミリーの一員です。',
+  'press.logos': 'ロゴ',
+  'press.links': 'リンク',
+  'press.copy': 'コピー',
+  'press.copied': 'コピーしました',
+  'press.copyFailed': 'コピーに失敗しました',
+  'press.pitchPage': 'ピッチページ',
+  'press.security': 'セキュリティとカストディ',
+  'press.logoAlt': 'KATOAロゴ',
+
+  'meetup.metaTitle': 'ミートアップキット',
+  'meetup.metaDesc': 'Bitcoinミートアップ向けのトーク、QR、60秒デモ原稿。',
+  'meetup.title': 'ミートアップキット',
+  'meetup.subtitle': 'Bitcoinや相互扶助のミートアップで、60秒のデモをはっきり回す。',
+  'meetup.scriptHeading': 'デモ原稿',
+  'meetup.script':
+    'KATOA 60秒デモ\n1. katoa.orgを開く — 手数料ゼロ、ノンカストディアル。\n2. 探索 → Demoウィッシュリスト（表示あり）を開く。\n3. ギフトを送る → QR / Lightningの流れを見せる。\n4. 強調: satsはクリエイターのウォレットへ。KATOAの取り分は0%。\n5. CTA: アカウント作成、Lightningアドレス追加、リンク共有。',
+  'meetup.copyScript': '原稿をコピー',
+  'meetup.copied': 'コピーしました',
+  'meetup.copyFailed': 'コピーに失敗しました',
+  'meetup.pointPhones': 'ここにスマホを向けて',
+  'meetup.qrAlt': 'katoa.orgへのQRコード',
+  'meetup.pressKit': 'プレスキット',
+  'meetup.pitchPage': 'ピッチページ',
+
+  'cases.metaTitle': '事例',
+  'cases.metaDesc': 'クリエイターがKATOAを使う方法 — 手数料ゼロのウィッシュリストとLightning支援。',
+  'cases.title': '事例',
+  'cases.subtitle': 'うまくいく型。ライブパイロットが出るまでは、デモカタログを使う話もあります。',
+  'cases.viewExample': '例を見る',
+  'cases.1.title': 'コミュニティスケートパーク（デモ）',
+  'cases.1.vertical': 'スポーツ / ユース',
+  'cases.1.result': 'ウィッシュリスト + Lightningギフト · プラットフォーム手数料0%',
+  'cases.1.body':
+    '公開デモのウィッシュリストで、ファンがギアや工事を支援する様子、またはAmazonリンクで商品を買う流れを示します。10–20%の手数料はありません。',
+  'cases.2.title': '独立クリエイターのチップ箱',
+  'cases.2.vertical': 'モデル / ライフスタイル',
+  'cases.2.result': '直接sats · 衣装とギアのリスト',
+  'cases.2.body':
+    'クリエイターは商品リンクと目標を並べます。サポーターはBitcoinで支援するか、商品を買います。始めるのに銀行の仲介は不要です。',
+  'cases.3.title': 'コーチ / ミールプランナーのローンチ',
+  'cases.3.vertical': '教育と食',
+  'cases.3.result': 'テンプレート駆動のウィッシュリスト',
+  'cases.3.body':
+    'テンプレートがカメラ、印刷、プログラム公開の種になります。ファンが仕事を支え、クリエイターはすべてのsatを手元に残します。',
+
+  'creators.guidelinesMetaDesc': 'クリエイターとしてKATOAを使う方法 — チップ、リスト、DM、安全。',
+  'creators.guidelinesSubtitle': '収益の100%を手元に。主権を保つ。人として振る舞う。',
+  'creators.guidelinesRelated': '関連リンク',
+  'guidelines.1.title': '関係はあなたのものです',
+  'guidelines.1.body':
+    'ファンはあなたに払います — Lightningアドレス、zap、商品購入。KATOAは資金を預からず、取り分も取りません。',
+  'guidelines.2.title': 'コンテンツの境界はあなたが決める',
+  'guidelines.2.body':
+    'SFWでもアダルトでも、プロフィールで明確に。あなたと視聴者が住む場所の法に従う。CSAM、同意のない画像、詐欺は禁止。',
+  'guidelines.3.title': 'ウィッシュリストは守る約束',
+  'guidelines.3.body':
+    'ファンが商品を買う、目標を支援するなら、連絡する。進捗を更新する。適切なときに資金済みにする。',
+  'guidelines.4.title': 'プライベートメッセージはオプトイン',
+  'guidelines.4.body':
+    'DMが欲しいときだけメッセージを有効に。いつでもオフにできます。シードフレーズやウォレットの遠隔操作をファンに求めない。',
+  'guidelines.5.title': 'なりすまし禁止',
+  'guidelines.5.body':
+    '自分の身元を使う。Nostr（NIP-07）連携は信頼を強めます。ブランドや他人になりすまさない。',
+
+  'security.nonCustodial.title': '設計からノンカストディアル',
+  'security.nonCustodial.body':
+    'KATOAはBitcoinを預かりません。サポーターは、あなたが管理するアドレスとLightning宛先へsatsを送ります。サーバーが落ちても、お金はあなたのウォレットにあります。',
+  'security.keys.title': '鍵はあなたのもと',
+  'security.keys.body':
+    'ログインはメール/OAuth（またはデモ）です。任意のNostr鍵はブラウザ拡張か端末に残ります。シードフレーズも秘密鍵も保存しません。',
+  'security.minimalData.title': '最小限のデータ',
+  'security.minimalData.body':
+    'ウィッシュリストと認証に必要なものだけ保存します。詳細はプライバシー。できるときは個人識別子よりLightningアドレスと公開npubを使ってください。',
+  'security.host.title': '私たちがホストするもの',
+  'security.host.body':
+    'ウェブアプリ（Cloudflare Pages）、任意のSupabase（プロフィール/リスト）、銀行級の監視を要しない分析。決済の清算はBitcoin / Lightning上です。',
+  'security.openSource.title': 'オープンソースと根拠',
+  'security.openSource.body':
+    'フロントエンドはGitHub上のMIT。アーキテクチャと手数料の主張は公開です。セキュリティ問題はGitHubへ。重大な発見は、バウンティがある場合satsになることがあります。',
+  'security.safeHarbour.title': '免責',
+  'security.safeHarbour.body':
+    'KATOAは教育用ソフトウェアです。法律・税・投資の助言ではありません。管轄でのコンプライアンスはあなたが担います。',
+  'security.privacyPolicy': 'プライバシーポリシー',
+  'security.viewSource': 'GitHubでソースを見る',
+
+  'pitch.aria': 'KATOAピッチデッキ',
+  'pitch.slide0.eyebrow': 'Give A Bit · Bitcoin主権 · FOSS',
+  'pitch.slide0.title': 'KATOA',
+  'pitch.slide0.subtitle': 'Keep All That’s Owed Always',
+  'pitch.slide0.statFee': 'プラットフォーム手数料',
+  'pitch.slide0.statCost': '月額コスト',
+  'pitch.slide0.statKeep': '手元に残る',
+  'pitch.slide1.eyebrow': '壊れたクリエイター経済',
+  'pitch.slide1.title': 'プラットフォームは5–20%を取る — 自由も一緒に',
+  'pitch.slide2.eyebrow': 'KATOAの答え',
+  'pitch.slide2.title': 'インフラであり、地代の抽出ではない',
+  'pitch.slide3.eyebrow': '徹底した透明性',
+  'pitch.slide3.title': '数字に決着をつけさせる',
+  'pitch.slide3.platform': 'プラットフォーム',
+  'pitch.slide3.fees': '手数料',
+  'pitch.slide3.payout': '支払い',
+  'pitch.slide4.eyebrow': 'プロダクトの道',
+  'pitch.slide4.title': 'プラットフォーム手数料ゼロ。機能の現状は正直に。',
+  'pitch.slide5.eyebrow': '対象',
+  'pitch.slide5.title': '地代を払いたくないクリエイターのために',
+  'pitch.slide6.eyebrow': '内部',
+  'pitch.slide6.title': '本物のプロダクト。本物のスタック。',
+  'pitch.slide7.eyebrow': 'Give A Bitエコシステム',
+  'pitch.slide7.title': 'プライベートなお金。気持ちのいい支援。',
+  'pitch.slide8.eyebrow': '次の一歩',
+  'pitch.slide8.title': '100%を手元に残す準備は？',
+
+  'home.shot.title': 'メデジンの若者のためのスケートパーク',
+  'home.shot.description':
+    'スケートボードで人生を変える。500人以上の若者が滑り、学び、成長できる安全なコミュニティ空間をつくる。',
+  'home.shot.satsRaised': '${n} sats 達成',
+  'home.shot.ofGoal': '目標 ${n} sats のうち',
+  'home.shot.sendGift': 'ギフトを送る',
+  'home.shot.fundedPct': '${pct}% 達成',
+  'home.shot.coverAlt': '${title}のカバー',
+
+  'verticals.model.label': 'モデル / インフルエンサー',
+  'verticals.model.blurb': 'チップ、限定ドロップ、撮影資金、ファンのリスト — 100%手元に。',
+  'verticals.fitness.label': 'フィットネスとウェルネス',
+  'verticals.fitness.blurb': 'プログラム公開、ジム機材、リトリート。次の自己ベストをファンが支える。',
+  'verticals.meals.label': 'ミールプランナー / シェフ',
+  'verticals.meals.blurb': 'レシピ本の印刷、キッチン道具、レシピ動画の日。',
+  'verticals.golf.label': 'ゴルフとスポーツ',
+  'verticals.golf.blurb': '大会エントリー、クラブ、移動。ファンがバッグを支える — プラットフォームではない。',
+  'verticals.lifestyle.label': 'ライフスタイルとママ',
+  'verticals.lifestyle.blurb': '家族コンテンツ、家のプロジェクト、日常のクリエイターチップを尊厳とともに。',
+  'verticals.music.label': '音楽とパフォーマンス',
+  'verticals.music.blurb': 'アルバム、グッズ、ツアー区間 — パトロンが芸術を支え、手数料ではない。',
+  'verticals.education.label': 'コーチと教育者',
+  'verticals.education.blurb': '講座、ワークショップ、教材。自由に教え、満額を得る。',
+  'verticals.creator.label': 'あらゆるクリエイター',
+  'verticals.creator.blurb': '価値を生むなら、KATOAはチップ箱＋リスト。取り分ゼロ。ずっと。',
+
+  'fee.bestValue': '最もお得',
+  'fee.monthlyFees': '月額手数料',
+  'fee.youKeep': '手元に残る額',
+  'fee.lostPct': '-${pct}% の損失',
+  'fee.yours': '100%あなたのもの',
+  'fee.trueCost': 'プラットフォーム手数料の本当のコスト',
+  'fee.trueCostSub': '競合の手数料でいくら失うかを見てください。KATOAは単純です。ずっと0%。',
+  'fee.monthlyGoal': '毎月のプロジェクト目標は？',
+  'fee.currency': '通貨',
+  'fee.convertedUsd': '比較のため金額はUSD換算です',
+  'fee.earningsAria': '月間収益額',
+  'fee.saveMonth': '毎月 ${amount} を節約',
+  'fee.saveYear': 'KATOAなら年間 ${amount} が手元に戻ります。',
+  'fee.whatWouldYouDo': 'そのお金で何をしますか？',
+  'fee.startKeeping': '今日から100%を手元に',
+  'fee.countries': '195か国以上',
+  'fee.throneCountries': 'Throne: 手数料0%は約10か国',
+  'fee.katoaCountries': 'KATOA: すべての国で常に0%',
+  'fee.instant': '即時決済',
+  'fee.onlyfansPayout': 'OnlyFans: 7日ローリング払い出し',
+  'fee.katoaLightning': 'KATOA: 即時Lightning Network',
+  'fee.privacy': '本当のプライバシー',
+  'fee.competitorsData': '競合: サーバー側でのデータ収集',
+  'fee.katoaZk': 'KATOA: ゼロ知識証明',
+  'fee.tableCaption': '月間収益に対するプラットフォーム手数料の比較',
+  'fee.colPlatform': 'プラットフォーム',
+  'fee.colFees': '月額手数料',
+  'fee.colKeep': '手元に残る額',
+  'fee.graphAria':
+    '1ドルのうち手元に残る割合: KATOA 100%、Linktree 91%、Throne 90%、OnlyFans 80%',
+  'fee.graphTip':
+    'バーにカーソルを合わせて、1ドルのうち実際に手元へ来る額を比べてください。100%があなたのものなのはKATOAだけです。他社は見る前に取り分を取ります。',
+  'fee.barTip': '${platform}: 1ドルのうち ${pct}% が手元に残ります。',
+  'fee.barTipKatoa': '${platform}: 1ドルのうち ${pct}% が手元に残ります — 手数料は常にゼロ。',
+  'fee.tipKatoa':
+    '手数料はずっと0%。Bitcoin Lightning上に構築。稼いだドルはすべてあなたのもの。隠れたコストもプラットフォーム税もサプライズ課金もありません。',
+  'fee.tipOnlyFans':
+    'OnlyFansは全収益に20%のプラットフォーム手数料を取ります。1万ドル稼ぐと2,000ドル持っていきます。さらに決済手数料と為替コスト。',
+  'fee.tipThrone':
+    'Throneは10%の手数料に加え、2.9% + $0.30の決済手数料。0%プロモは約10か国のみ。銀行口座とKYCが必要です。',
+  'fee.tipLinktree':
+    'Linktreeは9–10%の手数料に加え、Commerce機能で月40ドル。決済手数料は地域で異なります。銀行口座が必要です。',
+  'fee.feesTipKatoa':
+    '手数料はずっとゼロ。KATOAは取り分を取りません。月額課金も、取引手数料も、決済手数料もありません。稼いだ額が手元に残ります。',
+  'fee.feesTipOnlyFans':
+    'OnlyFansは稼いだすべての20%を取ります。${earned}から${fees}を抜き取ります。サブスク、チップ、PPV、その他すべてに適用。',
+  'fee.feesTipThrone':
+    'Throneは全取引に10%のプラットフォーム手数料。${earned}から${fees}を取ります。追加の決済手数料がかかります。',
+  'fee.feesTipLinktree':
+    'Linktreeは約9%に加え月40ドル。${earned}に対する総コストは${fees}。決済代行の手数料は場所で異なります。',
+  'fee.keepTipKatoa':
+    '実際の手取り: 稼いだ${earned}のうち${net}。収益の100%です。Bitcoin Lightningで即時決済。',
+  'fee.keepTipOther':
+    '${platform}が取り分を取ったあとの手取り: 稼いだ${earned}のうち${net}。プラットフォーム手数料で${fees}失います。払い出しは7–14日。',
+
+  'footer.movement':
+    'Bitcoinで「与える」を民主化する動きです。スマホがあれば、世界中の活動を、すぐ、私的に、直接支えられます。プラットフォーム手数料はゼロ。ずっと。',
+  'footer.acronym': 'Keep All That’s Owed Always',
+  'footer.openRoles': '募集中の役割',
+  'footer.giveABit': 'Give A Bitプロジェクト',
+  'footer.madeWith': '愛情を込めて',
+  'footer.and': 'と',
+  'footer.donateTitle': 'FOSS開発を支える',
+  'footer.donateSubtitle': 'KATOAを自由でオープンソースのままに',
+  'footer.mainChain': 'Bitcoinメインチェーン',
+  'footer.copy': 'コピー',
+  'footer.copied': 'コピーしました',
+  'footer.tapEnlarge': 'タップして拡大',
+  'footer.donateClose': '寄付ドロワーを閉じる',
+  'footer.donateExpand': '寄付QRを拡大',
+  'footer.donateQrAlt': '寄付QR',
+  'footer.donateFund': 'あなたのsatsが、Bitcoinコミュニティ向けの無料ツールを支えます。',
+};

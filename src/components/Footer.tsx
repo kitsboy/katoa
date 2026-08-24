@@ -86,13 +86,12 @@ export function Footer() {
                   <span className="text-xl font-display font-black bg-gradient-to-r from-bitcoin-orange-400 via-amber-300 to-neon-cyan-400 bg-clip-text text-transparent">
                     KATOA
                   </span>
-                  <p className="text-[10px] font-mono text-gray-500 tracking-widest uppercase">Keep All That's Owed Always</p>
+                  <p className="text-[10px] font-mono text-gray-500 tracking-widest uppercase">{t('footer.acronym')}</p>
                 </div>
               </Link>
 
               <p className="text-gray-400 text-sm leading-relaxed mb-6">
-                {t('footer.tagline')}. A movement to democratize giving using Bitcoin—anyone with a smartphone can support
-                causes worldwide, instantly, privately, and directly. Zero platform fees. Forever.
+                {t('footer.tagline')}. {t('footer.movement')}
               </p>
 
               <div className="flex flex-wrap gap-2 mb-6">
@@ -212,7 +211,7 @@ export function Footer() {
                 aria-expanded={jobsExpanded}
               >
                 <span className="flex items-center gap-2">
-                  Open Roles
+                  {t('footer.openRoles')}
                   <Sparkles size={16} className="text-neon-cyan-500" />
                 </span>
                 <ChevronDown size={18} className={`transition-transform ${jobsExpanded ? 'rotate-180' : ''}`} />
@@ -226,7 +225,7 @@ export function Footer() {
           {/* Contributors */}
           <div className="mb-12">
             <h3 className="text-white font-display font-bold mb-4 text-xs uppercase tracking-widest text-gray-300">
-              Contributors
+              {t('footer.contributors')}
             </h3>
             <ContributorsWall />
           </div>
@@ -250,7 +249,7 @@ export function Footer() {
                   rel="noopener noreferrer"
                   className="text-gray-500 hover:text-neon-cyan-400 transition-colors"
                 >
-                  A Give A Bit project
+                  {t('footer.giveABit')}
                 </a>
                 <a
                   href="https://github.com/kitsboy/katoa"
@@ -269,9 +268,9 @@ export function Footer() {
                 onClick={() => setShowDonation(!showDonation)}
                 className="flex items-center gap-2 text-sm text-gray-400 hover:text-bitcoin-orange-400 transition-colors group"
               >
-                <span>Made with</span>
+                <span>{t('footer.madeWith')}</span>
                 <Heart size={18} className="text-bitcoin-orange-500 fill-bitcoin-orange-500 group-hover:animate-pulse" />
-                <span>and</span>
+                <span>{t('footer.and')}</span>
                 <Bitcoin size={18} className="text-bitcoin-orange-500" />
                 <span className="text-gray-600">·</span>
                 <span className="font-mono text-neon-cyan-500/80">₿ FOSS</span>
@@ -299,7 +298,7 @@ export function Footer() {
           <button
             type="button"
             onClick={() => setShowDonation(false)}
-            aria-label="Close donation drawer"
+            aria-label={t('footer.donateClose')}
             className="absolute top-4 right-4 w-11 h-11 rounded-full bg-white/10 hover:bg-white/15 border border-white/10 text-gray-100 hover:text-white flex items-center justify-center transition-all"
           >
             <ChevronDown size={20} />
@@ -310,8 +309,8 @@ export function Footer() {
               <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-bitcoin-orange-500 to-amber-600 mb-3">
                 <Heart size={24} className="text-white fill-white" />
               </div>
-              <h3 className="text-xl font-bold text-white mb-1">Support FOSS Development</h3>
-              <p className="text-gray-400 text-xs">Help keep KATOA free and open-source</p>
+              <h3 className="text-xl font-bold text-white mb-1">{t('footer.donateTitle')}</h3>
+              <p className="text-gray-400 text-xs">{t('footer.donateSubtitle')}</p>
             </div>
 
             <div className="flex flex-col sm:flex-row items-start gap-4">
@@ -320,35 +319,34 @@ export function Footer() {
                   type="button"
                   onClick={() => setQrExpanded(true)}
                   className="w-36 h-36 bg-white p-2 rounded-xl shadow-lg hover:opacity-90 active:scale-[0.98] transition-all touch-manipulation ring-2 ring-transparent hover:ring-bitcoin-orange-500/30"
-                  aria-label="Expand donation QR code"
+                  aria-label={t('footer.donateExpand')}
                   aria-expanded={qrExpanded}
                 >
                   <img
                     src="/donations-qr.png"
-                    alt="Donation QR"
+                    alt={t('footer.donateQrAlt')}
                     className="w-full h-full object-contain"
                     style={{ imageRendering: 'crisp-edges' }}
                   />
                 </button>
-                <p className="text-[10px] text-gray-500 sm:hidden">Tap to enlarge</p>
+                <p className="text-[10px] text-gray-500 sm:hidden">{t('footer.tapEnlarge')}</p>
               </div>
               <div className="flex-1 min-w-0 w-full">
                 <div className="bg-white/5 border border-white/10 rounded-xl p-3 mb-3">
                   <div className="flex items-center justify-between gap-2 mb-1">
-                    <span className="text-xs text-white uppercase tracking-wider font-semibold">Bitcoin Main Chain</span>
+                    <span className="text-xs text-white uppercase tracking-wider font-semibold">{t('footer.mainChain')}</span>
                     <button
                       type="button"
                       onClick={handleCopyAddress}
                       className="flex items-center gap-1 text-[10px] text-bitcoin-orange-400 hover:text-bitcoin-orange-300"
                     >
-                      {copied ? <><Check size={12} /> Copied</> : <><Copy size={12} /> Copy</>}
+                      {copied ? <><Check size={12} /> {t('footer.copied')}</> : <><Copy size={12} /> {t('footer.copy')}</>}
                     </button>
                   </div>
                   <code className="text-xs text-gray-400 break-all font-mono block leading-tight">{bitcoinAddress}</code>
                 </div>
                 <p className="text-xs text-gray-400 leading-relaxed">
-                  Your <span className="text-bitcoin-orange-500 font-semibold">sats</span> fund free tools for the Bitcoin
-                  community.
+                  {t('footer.donateFund')}
                 </p>
               </div>
             </div>

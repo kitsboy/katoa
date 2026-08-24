@@ -3,6 +3,7 @@ import { DollarSign, TrendingDown, AlertCircle } from 'lucide-react';
 import { Card } from './Card';
 import { Button } from './Button';
 import { Tooltip } from './Tooltip';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const currencies = [
   { code: 'USD', symbol: '$', name: 'US Dollar', rate: 1 },
@@ -26,6 +27,32 @@ const PlatformCard = memo(function PlatformCard({
   amountInUSD: number;
   formatCurrency: (amount: number) => string;
 }) {
+  const { t } = useLanguage();
+  const platformTip =
+    platform.platform === 'KATOA'
+      ? t('fee.tipKatoa')
+      : platform.platform === 'OnlyFans'
+      ? t('fee.tipOnlyFans')
+      : platform.platform === 'Throne'
+      ? t('fee.tipThrone')
+      : t('fee.tipLinktree');
+  const feesTip =
+    platform.platform === 'KATOA'
+      ? t('fee.feesTipKatoa')
+      : platform.platform === 'OnlyFans'
+      ? t('fee.feesTipOnlyFans').replace('${earned}', formatCurrency(amountInUSD)).replace('${fees}', formatCurrency(platform.fees))
+      : platform.platform === 'Throne'
+      ? t('fee.feesTipThrone').replace('${earned}', formatCurrency(amountInUSD)).replace('${fees}', formatCurrency(platform.fees))
+      : t('fee.feesTipLinktree').replace('${earned}', formatCurrency(amountInUSD)).replace('${fees}', formatCurrency(platform.fees));
+  const keepTip =
+    platform.platform === 'KATOA'
+      ? t('fee.keepTipKatoa').replace('${net}', formatCurrency(platform.net)).replace('${earned}', formatCurrency(amountInUSD))
+      : t('fee.keepTipOther')
+          .replace('${platform}', platform.platform)
+          .replace('${net}', formatCurrency(platform.net))
+          .replace('${earned}', formatCurrency(amountInUSD))
+          .replace('${fees}', formatCurrency(platform.fees));
+
   return (
     <div
       className={`relative p-6 rounded-xl bg-gradient-to-br ${platform.color} ${
@@ -35,7 +62,7 @@ const PlatformCard = memo(function PlatformCard({
       {platform.platform === 'KATOA' && (
         <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
           <span className="px-4 py-1 bg-yellow-400 text-charcoal-950 text-xs font-bold rounded-full shadow-lg">
-            BEST VALUE
+            {t('fee.bestValue')}
           </span>
         </div>
       )}
@@ -64,36 +91,14 @@ const PlatformCard = memo(function PlatformCard({
           )}
           {platform.platform}
         </span>
-        <Tooltip
-          content={
-            platform.platform === 'KATOA'
-              ? '0% fees forever. Built on Bitcoin Lightning Network. Every dollar you earn is yours to keep. No hidden costs, no platform taxes, no surprise charges.'
-              : platform.platform === 'OnlyFans'
-              ? 'OnlyFans charges 20% platform fee on all earnings. If you earn $10,000, they take $2,000. Plus payment processing fees and currency conversion costs.'
-              : platform.platform === 'Throne'
-              ? 'Throne charges 10% platform fee plus 2.9% + $0.30 payment processing. Only available in ~10 countries with 0% promotional rate. Requires bank account and KYC verification.'
-              : 'Linktree charges 9-10% in fees plus $40/month subscription for Commerce features. Payment processing fees vary by region. Requires bank account.'
-          }
-          icon
-        />
+        <Tooltip content={platformTip} icon />
       </h3>
 
       <div className="space-y-3">
         <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
           <p className="text-white/70 text-sm flex items-center justify-between">
-            <span>Monthly Fees</span>
-            <Tooltip
-              content={
-                platform.platform === 'KATOA'
-                  ? 'Zero fees forever. KATOA never takes a cut of your earnings. No monthly subscriptions. No transaction fees. No payment processing fees. What you earn is what you keep.'
-                  : platform.platform === 'OnlyFans'
-                  ? `OnlyFans takes 20% of everything you earn. From ${formatCurrency(amountInUSD)}, they extract ${formatCurrency(platform.fees)}. This applies to subscriptions, tips, PPV, and all other revenue.`
-                  : platform.platform === 'Throne'
-                  ? `Throne charges 10% platform fee on all transactions. From ${formatCurrency(amountInUSD)}, they take ${formatCurrency(platform.fees)}. Additional payment processing fees apply.`
-                  : `Linktree charges approximately 9% in fees plus $40/month subscription. From ${formatCurrency(amountInUSD)}, total cost is ${formatCurrency(platform.fees)}. Payment processor fees vary by location.`
-              }
-              icon
-            />
+            <span>{t('fee.monthlyFees')}</span>
+            <Tooltip content={feesTip} icon />
           </p>
           <p className={`text-2xl font-black ${platform.fees === 0 ? 'text-white' : 'text-red-100'}`}>
             {formatCurrency(platform.fees)}
@@ -102,15 +107,8 @@ const PlatformCard = memo(function PlatformCard({
 
         <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3">
           <p className="text-white/70 text-sm flex items-center justify-between">
-            <span>You Keep</span>
-            <Tooltip
-              content={
-                platform.platform === 'KATOA'
-                  ? `Your actual take-home: ${formatCurrency(platform.net)} from ${formatCurrency(amountInUSD)} earned. That's 100% of your earnings. Instant settlement via Bitcoin Lightning Network.`
-                  : `Your actual take-home after ${platform.platform} takes their cut: ${formatCurrency(platform.net)} from ${formatCurrency(amountInUSD)} earned. You lose ${formatCurrency(platform.fees)} to platform fees. Payouts take 7-14 days.`
-              }
-              icon
-            />
+            <span>{t('fee.youKeep')}</span>
+            <Tooltip content={keepTip} icon />
           </p>
           <p className="text-2xl font-black text-white">
             {formatCurrency(platform.net)}
@@ -121,7 +119,7 @@ const PlatformCard = memo(function PlatformCard({
           <div className="pt-3 border-t border-white/20">
             <div className="flex items-center gap-2 text-orange-200 text-sm font-bold">
               <TrendingDown size={16} />
-              <span>-{((platform.fees / amountInUSD) * 100).toFixed(1)}% lost</span>
+              <span>{t('fee.lostPct').replace('${pct}', ((platform.fees / amountInUSD) * 100).toFixed(1))}</span>
             </div>
           </div>
         )}
@@ -130,7 +128,7 @@ const PlatformCard = memo(function PlatformCard({
           <div className="pt-3 border-t border-white/20">
             <div className="flex items-center gap-2 text-white text-sm font-semibold">
               <AlertCircle size={16} />
-              <span>100% yours</span>
+              <span>{t('fee.yours')}</span>
             </div>
           </div>
         )}
@@ -148,6 +146,7 @@ export function FeeComparison({
   syncUrl?: boolean;
 }) {
   const isLanding = variant === 'landing';
+  const { t } = useLanguage();
   const [monthlyEarnings, setMonthlyEarnings] = useState(10000);
   const [currency, setCurrency] = useState(currencies[0]);
   const [displayValue, setDisplayValue] = useState('10,000');
@@ -251,10 +250,10 @@ export function FeeComparison({
       {!isLanding && (
         <div className="text-center mb-8 bg-white/[0.03] border border-white/10 py-8 px-4 rounded-2xl backdrop-blur-md">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-white mb-4">
-            The True Cost of Platform Fees
+            {t('fee.trueCost')}
           </h2>
           <p className="text-lg sm:text-xl md:text-2xl text-gray-300 font-medium max-w-3xl mx-auto">
-            See how much you're losing to competitors' fees. KATOA keeps it simple: 0% forever.
+            {t('fee.trueCostSub')}
           </p>
         </div>
       )}
@@ -262,7 +261,7 @@ export function FeeComparison({
       <Card variant="glass" padding="lg" className={isLanding ? 'lp-fee-panel' : ''}>
         <div className="mb-8">
           <label className={`block text-xl sm:text-2xl md:text-3xl font-bold mb-4 text-center ${isLanding ? 'lp-fee-label' : 'text-white'}`}>
-            What's your monthly project goal?
+            {t('fee.monthlyGoal')}
           </label>
 
           <div className="relative max-w-2xl mx-auto">
@@ -271,7 +270,7 @@ export function FeeComparison({
               {/* Mobile: vertical stack */}
               <div className="flex flex-col sm:flex-row sm:items-stretch sm:divide-x divide-white/10">
                 <div className="flex-shrink-0 border-b sm:border-b-0 border-white/10 bg-white/[0.03]">
-                  <label htmlFor="fee-currency" className="sr-only">Currency</label>
+                  <label htmlFor="fee-currency" className="sr-only">{t('fee.currency')}</label>
                   <select
                     id="fee-currency"
                     value={currency.code}
@@ -298,14 +297,14 @@ export function FeeComparison({
                     onChange={(e) => handleInputChange(e.target.value)}
                     className="flex-1 bg-transparent text-white text-2xl font-bold focus:outline-none focus:ring-2 focus:ring-neon-cyan-500/50 rounded-lg placeholder-gray-500 min-h-[44px]"
                     placeholder="10,000"
-                    aria-label="Monthly earnings amount"
+                    aria-label={t('fee.earningsAria')}
                   />
                 </div>
               </div>
             </div>
           </div>
 
-          <p className="text-xs text-gray-600 text-center mt-3">Amounts converted to USD for comparison</p>
+          <p className="text-xs text-gray-600 text-center mt-3">{t('fee.convertedUsd')}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -323,8 +322,8 @@ export function FeeComparison({
         <div
           className="katoa-keep-graph"
           role="img"
-          aria-label="How much of every dollar you keep, by platform: KATOA keeps 100%, Linktree 91%, Throne 90%, OnlyFans 80%"
-          data-tip="Hover a bar to compare how much of each dollar actually reaches you. KATOA is the only platform where 100% is yours — every other platform takes a cut before you ever see it."
+          aria-label={t('fee.graphAria')}
+          data-tip={t('fee.graphTip')}
         >
           {[results.onlyfans, results.throne, results.linktree, results.katoa].map((platform) => {
             const keepPct = platform.platform === 'KATOA' ? 100 : Math.round((platform.net / amountInUSD) * 100);
@@ -335,7 +334,7 @@ export function FeeComparison({
                   <div
                     className={`katoa-keep-graph__fill ${isKatoa ? 'katoa-keep-graph__fill--katoa' : 'katoa-keep-graph__fill--rival'}`}
                     style={{ height: `${keepPct}%` }}
-                    data-tip={`${platform.platform}: you keep ${keepPct}% of every dollar${isKatoa ? ' — zero fees, ever' : ''}.`}
+                    data-tip={(isKatoa ? t('fee.barTipKatoa') : t('fee.barTip')).replace('${platform}', platform.platform).replace('${pct}', String(keepPct))}
                   />
                 </div>
                 <span className="katoa-keep-graph__label">{keepPct}%</span>
@@ -346,12 +345,12 @@ export function FeeComparison({
         </div>
 
         <table className="sr-only mt-4 w-full">
-          <caption>Platform fee comparison for monthly earnings</caption>
+          <caption>{t('fee.tableCaption')}</caption>
           <thead>
             <tr>
-              <th scope="col">Platform</th>
-              <th scope="col">Monthly fees</th>
-              <th scope="col">You keep</th>
+              <th scope="col">{t('fee.colPlatform')}</th>
+              <th scope="col">{t('fee.colFees')}</th>
+              <th scope="col">{t('fee.colKeep')}</th>
             </tr>
           </thead>
           <tbody>
@@ -372,12 +371,12 @@ export function FeeComparison({
             </div>
             <div className="flex-1">
               <h4 className="text-xl sm:text-2xl font-bold text-[#111827] mb-2">
-                Save {formatCurrency(maxSavings)} per month
+                {t('fee.saveMonth').replace('${amount}', formatCurrency(maxSavings))}
               </h4>
               <p className="text-emerald-300 text-base sm:text-lg">
-                That's {formatCurrency(maxSavings * 12)} per year back in your pocket with KATOA.
+                {t('fee.saveYear').replace('${amount}', formatCurrency(maxSavings * 12))}
                 <br />
-                <span className="font-semibold">What would you do with that money?</span>
+                <span className="font-semibold">{t('fee.whatWouldYouDo')}</span>
               </p>
             </div>
           </div>
@@ -388,7 +387,7 @@ export function FeeComparison({
             size="lg"
             className="bg-gradient-to-r from-emerald-500 to-cyan-600 hover:from-emerald-600 hover:to-cyan-700 text-lg font-bold px-8 sm:px-12 w-full sm:w-auto"
           >
-            Start Keeping 100% Today
+            {t('fee.startKeeping')}
           </Button>
         </div>
       </Card>
@@ -398,13 +397,13 @@ export function FeeComparison({
           <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-6 bg-gradient-to-br from-blue-500 via-cyan-500 to-teal-500 rounded-full flex items-center justify-center shadow-2xl shadow-blue-500/40">
             <DollarSign size={48} className="text-white" strokeWidth={2.5} />
           </div>
-          <h3 className="text-2xl sm:text-3xl font-black text-white mb-4 tracking-tight">195+ Countries</h3>
+          <h3 className="text-2xl sm:text-3xl font-black text-white mb-4 tracking-tight">{t('fee.countries')}</h3>
           <div className="space-y-3">
             <p className="text-gray-300 text-base font-semibold">
-              Throne: ~10 countries with 0% fees
+              {t('fee.throneCountries')}
             </p>
             <div className="text-emerald-400 font-bold text-lg bg-emerald-500/10 py-3 px-5 rounded-xl border border-emerald-500/30">
-              KATOA: All countries, always 0%
+              {t('fee.katoaCountries')}
             </div>
           </div>
         </Card>
@@ -413,13 +412,13 @@ export function FeeComparison({
           <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-6 bg-gradient-to-br from-orange-500 via-amber-500 to-yellow-500 rounded-full flex items-center justify-center shadow-2xl shadow-orange-500/40">
             <TrendingDown size={48} className="text-white" strokeWidth={2.5} />
           </div>
-          <h3 className="text-2xl sm:text-3xl font-black text-white mb-4 tracking-tight">Instant Settlement</h3>
+          <h3 className="text-2xl sm:text-3xl font-black text-white mb-4 tracking-tight">{t('fee.instant')}</h3>
           <div className="space-y-3">
             <p className="text-gray-300 text-base font-semibold">
-              OnlyFans: 7-day rolling payout
+              {t('fee.onlyfansPayout')}
             </p>
             <div className="text-emerald-400 font-bold text-lg bg-emerald-500/10 py-3 px-5 rounded-xl border border-emerald-500/30">
-              KATOA: Instant Lightning Network
+              {t('fee.katoaLightning')}
             </div>
           </div>
         </Card>
@@ -428,13 +427,13 @@ export function FeeComparison({
           <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-6 bg-gradient-to-br from-purple-500 via-pink-500 to-rose-500 rounded-full flex items-center justify-center shadow-2xl shadow-purple-500/40">
             <AlertCircle size={48} className="text-white" strokeWidth={2.5} />
           </div>
-          <h3 className="text-2xl sm:text-3xl font-black text-white mb-4 tracking-tight">True Privacy</h3>
+          <h3 className="text-2xl sm:text-3xl font-black text-white mb-4 tracking-tight">{t('fee.privacy')}</h3>
           <div className="space-y-3">
             <p className="text-gray-300 text-base font-semibold">
-              Competitors: Server-based data collection
+              {t('fee.competitorsData')}
             </p>
             <div className="text-emerald-400 font-bold text-lg bg-emerald-500/10 py-3 px-5 rounded-xl border border-emerald-500/30">
-              KATOA: Zero-knowledge proofs
+              {t('fee.katoaZk')}
             </div>
           </div>
         </Card>

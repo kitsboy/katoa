@@ -1,0 +1,283 @@
+export const remainingDe = {
+  'nav.templates': 'Vorlagen',
+  'nav.security': 'Sicherheit',
+  'nav.roadmap': 'Roadmap',
+  'nav.beta': 'Beta',
+  'nav.betaTitle': 'KATOA ist in aktiver Entwicklung',
+  'nav.route.home': 'Start',
+  'nav.route.explore': 'Entdecken',
+  'nav.route.wishlist': 'Wunschliste',
+  'nav.route.settings': 'Einstellungen',
+  'nav.route.about': 'Über uns',
+  'nav.route.contact': 'Kontakt',
+  'nav.route.faq': 'FAQ',
+  'nav.route.pricing': 'Preise',
+  'nav.route.comparison': 'Vergleich',
+  'nav.route.pitch': 'Pitch',
+  'nav.route.terms': 'Nutzungsbedingungen',
+  'nav.route.privacy': 'Datenschutz',
+  'nav.route.project': 'Projekt',
+  'errorBoundary.title': 'Etwas ist schiefgelaufen',
+  'errorBoundary.message': 'Seite neu laden. Wenn das Problem bleibt, geh zur Startseite.',
+  'errorBoundary.tryAgain': 'Nochmal versuchen',
+  'errorBoundary.goHome': 'Zur Startseite',
+
+  'faq.q.wishlists': 'Wie funktionieren Wunschlisten?',
+  'faq.a.wishlists':
+    'Artikel hinzufügen, Sat-Preise setzen, Link teilen. Unterstützer finanzieren per Lightning — oder kaufen das Produkt bei Amazon/anderen Shops, wenn du eine Produkt-URL anhängst.',
+  'faq.q.productLinks': 'Kann ich Amazon- oder Kleidungslinks hinzufügen?',
+  'faq.a.productLinks':
+    'Ja. Im Projekt eine Wunschliste öffnen und „Produkt per Link hinzufügen“ tippen. Beliebige Produkt-URL einfügen (Amazon, Nike, Etsy, Shopify usw.). KATOA liest Titel/Bild, wenn möglich; Unterstützer bekommen einen Kaufen-Button zum Versand an dich plus Fund with sats.',
+  'faq.q.anonymousGifts': 'Kann ich Geschenke anonym empfangen?',
+  'faq.a.anonymousGifts':
+    'Ja. Lightning-Zahlungen können pseudonym sein. Öffentliche Wunschlisten zeigen nur, was du teilst.',
+  'faq.q.p2p': 'Was ist Peer-to-Peer-Handel?',
+  'faq.a.p2p': 'Geld fließt direkt vom Fan-Wallet zum Creator-Wallet — KATOA verwahrt nie Gelder.',
+  'faq.q.zkp': 'Was sind Zero-Knowledge-Beweise?',
+  'faq.a.zkp':
+    'Kryptografische Beweise, die Fakten prüfen, ohne die zugrunde liegenden Daten zu zeigen — Teil unserer Privacy-Roadmap.',
+  'faq.q.lightningWallet': 'Wie richte ich ein Lightning-Wallet ein?',
+  'faq.a.lightningWallet':
+    'Phoenix, Wallet of Satoshi, Muun oder selbst gehostetes LND/CLN. Lightning-Adresse in den Einstellungen hinterlegen.',
+  'faq.q.openSource': 'Ist KATOA Open Source?',
+  'faq.a.openSource': 'Ja — MIT-Lizenz. Frontend prüfen, forken oder selbst hosten.',
+  'faq.q.howSecure': 'Wie sicher ist KATOA?',
+  'faq.a.howSecure':
+    'Wir halten nie deine Schlüssel oder Gelder. Branchenübliche Verschlüsselung für Kontodaten. Das volle Modell steht auf der Sicherheitsseite.',
+  'faq.q.loseAccess': 'Was, wenn ich den Zugang verliere?',
+  'faq.a.loseAccess':
+    'E-Mail-Konten können das Passwort zurücksetzen. Wenn du Nostr in den Einstellungen verknüpft hast, steuern die Extension-Keys weiter die Nostr-Identität — der App-Login nutzt E-Mail/Google, bis sicheres Nostr-Auth kommt.',
+  'faq.q.whoHoldsSats': 'Wer hält die Sats während eines Geschenks?',
+  'faq.a.whoHoldsSats':
+    'Niemand dazwischen. Du zahlst an die Lightning-Adresse oder das On-Chain-Wallet des Creators. KATOA betreibt kein Hot-Wallet für Nutzerfonds.',
+  'faq.q.verifyFees': 'Wie prüfe ich die 0 % Gebühren?',
+  'faq.a.verifyFees':
+    'Im Produktdesign gibt es keine Plattformgebühr. Vergleiche die Legacy-Gebührenrechnung unter Warum KATOA, prüfe das Open-Source-Frontend und sieh, wie Sats im Wallet landen, das du kontrollierst.',
+  'faq.q.exploreReal': 'Sind Explore-Projekte echt?',
+  'faq.a.exploreReal':
+    'Einige Katalogeinträge sind als Demo für die Produktvorschau markiert. Live-Creator-Konten nutzen echte Zahlungsziele, sobald Wallets konfiguriert sind. Demo-Badges stehen auf Beispielen.',
+  'faq.q.roadmap': 'Was steht auf der öffentlichen Roadmap?',
+  'faq.a.roadmap':
+    'Geliefertes und nächste Prioritäten stehen in der In-App-Roadmap und in docs/ROADMAP.md auf GitHub.',
+
+  'press.metaTitle': 'Pressekit',
+  'press.metaDesc': 'KATOA-Pressekit — One-Liner, Boilerplate, Logos und Links für Journalisten und Partner.',
+  'press.title': 'Pressekit',
+  'press.subtitle': 'Assets und Texte für Medien, Partner und Meetup-Hosts.',
+  'press.onelinerHeading': 'One-Liner',
+  'press.oneliner':
+    'KATOA ist eine gebührenfreie, nicht-kustodiale Bitcoin-Creator-Plattform — Wunschlisten und Lightning-Geschenke, damit Creator 100 % behalten.',
+  'press.boilerplateHeading': 'Boilerplate',
+  'press.boilerplate':
+    'KATOA (Keep All That’s Owed Always) ist eine Open-Source-Creator-Plattform ohne Plattformgebühr, gebaut auf Bitcoin Lightning und Nostr. Creator veröffentlichen Wunschlisten und empfangen Support direkt in Wallets, die sie kontrollieren. KATOA nimmt keinen Plattform-Cut und hält keine Nutzerfonds. Teil der Give-A-Bit-Familie.',
+  'press.logos': 'Logos',
+  'press.links': 'Links',
+  'press.copy': 'Kopieren',
+  'press.copied': 'Kopiert',
+  'press.copyFailed': 'Kopieren fehlgeschlagen',
+  'press.pitchPage': 'Pitch-Seite',
+  'press.security': 'Sicherheit & Verwahrung',
+  'press.logoAlt': 'KATOA-Logo',
+
+  'meetup.metaTitle': 'Meetup-Kit',
+  'meetup.metaDesc': 'Talk-Track, QR und Demo-Skript für KATOA auf Bitcoin-Meetups.',
+  'meetup.title': 'Meetup-Kit',
+  'meetup.subtitle': 'Eine klare 60-Sekunden-Demo auf jedem Bitcoin- oder Mutual-Aid-Meetup.',
+  'meetup.scriptHeading': 'Demo-Skript',
+  'meetup.script':
+    '60-Sekunden-KATOA-Demo\n1. katoa.org öffnen — null Gebühren, nicht kustodial.\n2. Entdecken → eine Demo-Wunschliste öffnen (markiert).\n3. Geschenk senden zeigen → QR / Lightning-Flow.\n4. Betonen: Sats gehen an Creator-Wallets; KATOA nimmt 0 %.\n5. CTA: Konto anlegen, Lightning-Adresse hinzufügen, Link teilen.',
+  'meetup.copyScript': 'Skript kopieren',
+  'meetup.copied': 'Kopiert',
+  'meetup.copyFailed': 'Kopieren fehlgeschlagen',
+  'meetup.pointPhones': 'Handy hierhin richten',
+  'meetup.qrAlt': 'QR-Code zu katoa.org',
+  'meetup.pressKit': 'Pressekit',
+  'meetup.pitchPage': 'Pitch-Seite',
+
+  'cases.metaTitle': 'Fallstudien',
+  'cases.metaDesc': 'Wie Creator KATOA nutzen — gebührenfreie Wunschlisten und Lightning-Support.',
+  'cases.title': 'Fallstudien',
+  'cases.subtitle': 'Muster, die funktionieren. Manche Stories nutzen Demo-Kataloge, bis Live-Piloten live gehen.',
+  'cases.viewExample': 'Beispiel ansehen',
+  'cases.1.title': 'Community-Skatepark (Demo)',
+  'cases.1.vertical': 'Sport / Jugend',
+  'cases.1.result': 'Wunschliste + Lightning-Geschenke · 0 % Plattformgebühr',
+  'cases.1.body':
+    'Eine öffentliche Demo-Wunschliste zeigt, wie Fans Equipment und Bau finanzieren — oder Produkte über Amazon-Links kaufen — ohne 10–20 % Abzug.',
+  'cases.2.title': 'Trinkgeldglas unabhängiger Creator',
+  'cases.2.vertical': 'Model / Lifestyle',
+  'cases.2.result': 'Direkte Sats · Outfits & Gear auf der Liste',
+  'cases.2.body':
+    'Creator listen Produktlinks und Ziele. Fans finanzieren in Bitcoin oder kaufen Artikel. Kein Bank-Mittelsmann zum Start nötig.',
+  'cases.3.title': 'Launch für Coach / Meal Planner',
+  'cases.3.vertical': 'Bildung & Food',
+  'cases.3.result': 'Vorlagengetriebene Wunschliste',
+  'cases.3.body':
+    'Vorlagen säen Kamera, Printläufe und Program-Launches. Fans tragen die Arbeit; der Creator behält jeden Sat.',
+
+  'creators.guidelinesMetaDesc': 'KATOA als Creator nutzen — Tips, Wunschlisten, DMs und Sicherheit.',
+  'creators.guidelinesSubtitle': 'Behalte 100 % der Einnahmen. Bleib souverän. Bleib menschlich.',
+  'creators.guidelinesRelated': 'Verwandte Links',
+  'guidelines.1.title': 'Du besitzt die Beziehung',
+  'guidelines.1.body':
+    'Fans zahlen dich — Lightning-Adresse, Zaps oder Produktkäufe. KATOA hält nie Gelder und nimmt keinen Cut.',
+  'guidelines.2.title': 'Du setzt die Content-Grenzen',
+  'guidelines.2.body':
+    'SFW oder adult — sei klar in der Bio. Halte das Recht, wo du und dein Publikum leben. Kein CSAM, keine nicht-einvernehmlichen Bilder, keine Scams.',
+  'guidelines.3.title': 'Wunschlisten sind Versprechen, die du hältst',
+  'guidelines.3.body':
+    'Wenn Fans Produkte kaufen oder Ziele finanzieren, kommuniziere. Fortschritt aktualisieren. Artikel als finanziert markieren, wenn es passt.',
+  'guidelines.4.title': 'Private Nachrichten sind Opt-in',
+  'guidelines.4.body':
+    'Nachrichten nur aktivieren, wenn du DMs willst. Jederzeit abschaltbar. Niemals Seed-Phrasen oder Remote-Wallet-Zugang verlangen.',
+  'guidelines.5.title': 'Keine Impersonation',
+  'guidelines.5.body':
+    'Nutze deine Identität. Nostr (NIP-07) zu verknüpfen stärkt Vertrauen. Gib dich nicht als Marken oder andere Personen aus.',
+
+  'security.nonCustodial.title': 'Nicht kustodial by Design',
+  'security.nonCustodial.body':
+    'KATOA hält nie dein Bitcoin. Unterstützer senden Sats an Adressen und Lightning-Ziele, die du kontrollierst. Wenn unsere Server offline sind, liegt dein Geld weiter in deinem Wallet.',
+  'security.keys.title': 'Schlüssel bleiben bei dir',
+  'security.keys.body':
+    'Login per E-Mail/OAuth (oder Demo-Modus). Optionale Nostr-Keys bleiben in Extension oder Gerät. Wir speichern keine Seed-Phrasen und keine Private Keys.',
+  'security.minimalData.title': 'Minimale Daten',
+  'security.minimalData.body':
+    'Wir speichern, was für Wunschlisten und Auth nötig ist. Siehe Datenschutz. Bevorzuge Lightning-Adressen und öffentliche Npubs gegenüber persönlichen Identifikatoren, wenn du kannst.',
+  'security.host.title': 'Was wir hosten',
+  'security.host.body':
+    'Die Web-App (Cloudflare Pages), optionales Supabase für Profile/Wunschlisten und Analytics ohne bankartige Überwachung. Settlement läuft auf Bitcoin / Lightning.',
+  'security.openSource.title': 'Open Source & Nachweis',
+  'security.openSource.body':
+    'Frontend ist MIT-lizenziert auf GitHub. Architektur und Gebührenaussagen sind öffentlich. Sicherheitslücken über GitHub melden; kritische Findings können Sats bringen, wenn ein Bounty finanziert ist.',
+  'security.safeHarbour.title': 'Safe Harbour',
+  'security.safeHarbour.body':
+    'KATOA ist Bildungssoftware. Nichts hier ist Rechts-, Steuer- oder Anlageberatung. Du bist für Compliance in deiner Jurisdiktion verantwortlich.',
+  'security.privacyPolicy': 'Datenschutz',
+  'security.viewSource': 'Quellcode auf GitHub',
+
+  'pitch.aria': 'KATOA Pitch Deck',
+  'pitch.slide0.eyebrow': 'Give A Bit · Bitcoin-Souveränität · FOSS',
+  'pitch.slide0.title': 'KATOA',
+  'pitch.slide0.subtitle': 'Keep All That’s Owed Always',
+  'pitch.slide0.statFee': 'Plattformgebühr',
+  'pitch.slide0.statCost': 'Monatliche Kosten',
+  'pitch.slide0.statKeep': 'Du behältst',
+  'pitch.slide1.eyebrow': 'Die kaputte Creator-Ökonomie',
+  'pitch.slide1.title': 'Plattformen nehmen 5–20 % — und deine Freiheit',
+  'pitch.slide2.eyebrow': 'Die KATOA-Antwort',
+  'pitch.slide2.title': 'Infrastruktur, keine Rentenextraktion',
+  'pitch.slide3.eyebrow': 'Radikale Transparenz',
+  'pitch.slide3.title': 'Lass die Mathematik den Deal schließen',
+  'pitch.slide3.platform': 'Plattform',
+  'pitch.slide3.fees': 'Gebühren',
+  'pitch.slide3.payout': 'Auszahlung',
+  'pitch.slide4.eyebrow': 'Produktpfad',
+  'pitch.slide4.title': 'Null Plattformgebühr. Ehrlicher Feature-Status.',
+  'pitch.slide5.eyebrow': 'Zielgruppe',
+  'pitch.slide5.title': 'Für Creator, die keine Miete zahlen',
+  'pitch.slide6.eyebrow': 'Unter der Haube',
+  'pitch.slide6.title': 'Echtes Produkt. Echter Stack.',
+  'pitch.slide7.eyebrow': 'Give-A-Bit-Ökosystem',
+  'pitch.slide7.title': 'Privates Geld. Geben, das sich gut anfühlt.',
+  'pitch.slide8.eyebrow': 'Nächster Schritt',
+  'pitch.slide8.title': 'Bereit, 100 % zu behalten?',
+
+  'home.shot.title': 'Skatepark für Jugendliche in Medellín',
+  'home.shot.description':
+    'Leben durch Skateboard verändern. Ein sicherer Community-Raum, in dem 500+ Jugendliche skaten, lernen und wachsen können.',
+  'home.shot.satsRaised': '${n} Sats gesammelt',
+  'home.shot.ofGoal': 'von ${n} Sats Ziel',
+  'home.shot.sendGift': 'Geschenk senden',
+  'home.shot.fundedPct': '${pct} % finanziert',
+  'home.shot.coverAlt': 'Cover von ${title}',
+
+  'verticals.model.label': 'Model / Influencer',
+  'verticals.model.blurb': 'Tips, Exclusive Drops, Shoot-Fonds und Fan-Wunschlisten — behalte 100 %.',
+  'verticals.fitness.label': 'Fitness & Wellness',
+  'verticals.fitness.blurb': 'Program-Launches, Gym-Gear, Retreats. Fans finanzieren deinen nächsten PR.',
+  'verticals.meals.label': 'Meal Planner / Chef',
+  'verticals.meals.blurb': 'Kochbuch-Auflagen, Küchen-Tools, Rezept-Videotage.',
+  'verticals.golf.label': 'Golf & Sport',
+  'verticals.golf.blurb': 'Turniereinträge, Schläger, Reisen. Fans tragen die Tasche — nicht die Plattform.',
+  'verticals.lifestyle.label': 'Lifestyle & Mamas',
+  'verticals.lifestyle.blurb': 'Familien-Content, Home-Projekte, Alltagstips mit Würde.',
+  'verticals.music.label': 'Musik & Bühne',
+  'verticals.music.blurb': 'Alben, Merch, Tour-Legs — Patrons finanzieren Kunst, nicht Gebühren.',
+  'verticals.education.label': 'Coach & Educator',
+  'verticals.education.blurb': 'Kurse, Workshops, Klassenmaterial. Frei unterrichten, voll verdienen.',
+  'verticals.creator.label': 'Jeder Creator',
+  'verticals.creator.blurb': 'Wenn du Wert schaffst, ist KATOA dein Tip-Glas + Wunschliste. Null Cut. Für immer.',
+
+  'fee.bestValue': 'BESTER WERT',
+  'fee.monthlyFees': 'Monatliche Gebühren',
+  'fee.youKeep': 'Du behältst',
+  'fee.lostPct': '-${pct} % verloren',
+  'fee.yours': '100 % deins',
+  'fee.trueCost': 'Die wahren Kosten von Plattformgebühren',
+  'fee.trueCostSub': 'Sieh, wie viel du an Konkurrenzgebühren verlierst. KATOA bleibt simpel: 0 % für immer.',
+  'fee.monthlyGoal': 'Was ist das monatliche Projektziel?',
+  'fee.currency': 'Währung',
+  'fee.convertedUsd': 'Beträge zum Vergleich in USD umgerechnet',
+  'fee.earningsAria': 'Monatliche Einnahmen',
+  'fee.saveMonth': 'Spare ${amount} pro Monat',
+  'fee.saveYear': 'Das sind ${amount} pro Jahr zurück in deiner Tasche mit KATOA.',
+  'fee.whatWouldYouDo': 'Was würdest du mit dem Geld tun?',
+  'fee.startKeeping': 'Heute 100 % behalten',
+  'fee.countries': '195+ Länder',
+  'fee.throneCountries': 'Throne: ~10 Länder mit 0 % Gebühren',
+  'fee.katoaCountries': 'KATOA: alle Länder, immer 0 %',
+  'fee.instant': 'Sofort-Settlement',
+  'fee.onlyfansPayout': 'OnlyFans: 7-Tage-Rolling-Payout',
+  'fee.katoaLightning': 'KATOA: Instant Lightning Network',
+  'fee.privacy': 'Echte Privatsphäre',
+  'fee.competitorsData': 'Konkurrenz: serverseitige Datensammlung',
+  'fee.katoaZk': 'KATOA: Zero-Knowledge-Beweise',
+  'fee.tableCaption': 'Plattformgebühren-Vergleich für monatliche Einnahmen',
+  'fee.colPlatform': 'Plattform',
+  'fee.colFees': 'Monatliche Gebühren',
+  'fee.colKeep': 'Du behältst',
+  'fee.graphAria':
+    'Wie viel von jedem Dollar du behältst, nach Plattform: KATOA 100 %, Linktree 91 %, Throne 90 %, OnlyFans 80 %',
+  'fee.graphTip':
+    'Über einen Balken hovern, um zu vergleichen, wie viel von jedem Dollar wirklich bei dir ankommt. KATOA ist die einzige Plattform, bei der 100 % dir gehören — alle anderen nehmen einen Cut, bevor du ihn siehst.',
+  'fee.barTip': '${platform}: du behältst ${pct} % von jedem Dollar.',
+  'fee.barTipKatoa': '${platform}: du behältst ${pct} % von jedem Dollar — null Gebühren, immer.',
+  'fee.tipKatoa':
+    '0 % Gebühren für immer. Gebaut auf Bitcoin Lightning. Jeder verdiente Dollar bleibt deiner. Keine versteckten Kosten, keine Plattformsteuer, keine Überraschungen.',
+  'fee.tipOnlyFans':
+    'OnlyFans nimmt 20 % Plattformgebühr auf alle Einnahmen. Bei 10.000 $ nehmen sie 2.000 $. Plus Processing- und Wechselkursgebühren.',
+  'fee.tipThrone':
+    'Throne nimmt 10 % plus 2,9 % + 0,30 $ Processing. Nur ~10 Länder mit 0 %-Promo. Bankkonto und KYC nötig.',
+  'fee.tipLinktree':
+    'Linktree nimmt 9–10 % plus 40 $/Monat Commerce-Abo. Processing variiert je Region. Bankkonto nötig.',
+  'fee.feesTipKatoa':
+    'Null Gebühren für immer. KATOA nimmt nie einen Cut. Keine Monatsabos. Keine Transaktions- oder Processing-Gebühren. Was du verdienst, behältst du.',
+  'fee.feesTipOnlyFans':
+    'OnlyFans nimmt 20 % von allem, was du verdienst. Von ${earned} ziehen sie ${fees} ab. Gilt für Abos, Tips, PPV und den Rest.',
+  'fee.feesTipThrone':
+    'Throne nimmt 10 % Plattformgebühr auf alle Transaktionen. Von ${earned} nehmen sie ${fees}. Zusätzliche Processing-Gebühren fallen an.',
+  'fee.feesTipLinktree':
+    'Linktree nimmt etwa 9 % plus 40 $/Monat Abo. Von ${earned} ist die Gesamtkosten ${fees}. Processor-Gebühren variieren nach Standort.',
+  'fee.keepTipKatoa':
+    'Dein tatsächliches Netto: ${net} von ${earned} verdient. Das sind 100 % deiner Einnahmen. Sofort-Settlement über Bitcoin Lightning.',
+  'fee.keepTipOther':
+    'Dein Netto, nachdem ${platform} den Cut genommen hat: ${net} von ${earned} verdient. Du verlierst ${fees} an Plattformgebühren. Auszahlungen dauern 7–14 Tage.',
+
+  'footer.movement':
+    'Eine Bewegung, das Geben mit Bitcoin zu demokratisieren — jeder mit einem Smartphone kann weltweit Ursachen unterstützen, sofort, privat und direkt. Null Plattformgebühren. Für immer.',
+  'footer.acronym': 'Keep All That’s Owed Always',
+  'footer.openRoles': 'Offene Rollen',
+  'footer.giveABit': 'Ein Give-A-Bit-Projekt',
+  'footer.madeWith': 'Gemacht mit',
+  'footer.and': 'und',
+  'footer.donateTitle': 'FOSS-Entwicklung unterstützen',
+  'footer.donateSubtitle': 'Hilf, KATOA frei und Open Source zu halten',
+  'footer.mainChain': 'Bitcoin-Mainchain',
+  'footer.copy': 'Kopieren',
+  'footer.copied': 'Kopiert',
+  'footer.tapEnlarge': 'Tippen zum Vergrößern',
+  'footer.donateClose': 'Spenden-Drawer schließen',
+  'footer.donateExpand': 'Spenden-QR vergrößern',
+  'footer.donateQrAlt': 'Spenden-QR',
+  'footer.donateFund': 'Deine Sats finanzieren freie Tools für die Bitcoin-Community.',
+};

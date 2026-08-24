@@ -3,10 +3,11 @@ import { ChevronDown, ChevronUp, Search } from 'lucide-react';
 import { Link } from '../components/Link';
 import { PageMeta } from '../components/PageMeta';
 import { PageHero } from '../components/PageHero';
+import { Breadcrumbs } from '../components/Breadcrumbs';
 import { Input } from '../components/Input';
 import { Button } from '../components/Button';
 import { useLanguage } from '../contexts/LanguageContext';
-import { toJsonLdScript } from '../lib/jsonLd';
+import { breadcrumbList, toJsonLdScript } from '../lib/jsonLd';
 
 interface FAQItem {
   categoryKey: string;
@@ -26,19 +27,19 @@ const faqs: FAQItem[] = [
   { categoryKey: 'faq.cat.privacy', qKey: 'faq.q.privacy', aKey: 'faq.a.privacy', link: '/privacy' },
   { categoryKey: 'faq.cat.privacy', qKey: 'faq.q.nostr', aKey: 'faq.a.nostr', link: '/about' },
   { categoryKey: 'faq.cat.privacy', qKey: 'faq.q.kyc', aKey: 'faq.a.kyc' },
-  { categoryKey: 'faq.cat.features', question: 'How do wishlists work?', answer: 'Add items, set sat prices, share your link. Supporters fund items via Lightning — or buy the product from Amazon/other shops when you attach a product URL.', link: '/explore' },
-  { categoryKey: 'faq.cat.features', question: 'Can I add Amazon or clothing product links?', answer: 'Yes. On your project, open a wishlist and tap “Add product from link”. Paste any product URL (Amazon, Nike, Etsy, Shopify stores, etc.). KATOA reads the title/image when possible; supporters get a Buy button to purchase and ship to you, plus Fund with sats.', link: '/dashboard' },
-  { categoryKey: 'faq.cat.features', question: 'Can I receive gifts anonymously?', answer: 'Yes. Lightning payments can be pseudonymous. Public wishlists show only what you choose to share.' },
-  { categoryKey: 'faq.cat.features', question: 'What is peer-to-peer commerce?', answer: 'Money flows directly from supporter to creator wallet — KATOA never custodies funds.' },
-  { categoryKey: 'faq.cat.technical', question: 'What are zero-knowledge proofs?', answer: 'Cryptographic proofs that verify facts without revealing underlying data — part of our privacy roadmap.' },
-  { categoryKey: 'faq.cat.technical', question: 'How do I set up a Lightning wallet?', answer: 'Use Phoenix, Wallet of Satoshi, Muun, or self-hosted LND/CLN. Add your Lightning address in Settings.' },
-  { categoryKey: 'faq.cat.technical', question: 'Is KATOA open source?', answer: 'Yes — MIT licensed. Audit, fork, or self-host the frontend.', link: 'https://github.com/kitsboy/katoa' },
-  { categoryKey: 'faq.cat.security', question: 'How secure is KATOA?', answer: 'We never hold your keys or funds. Industry-standard encryption for account data. Read the full model on the Security page.', link: '/security' },
-  { categoryKey: 'faq.cat.security', question: 'What if I lose access?', answer: 'Email accounts can use password recovery. If you linked Nostr in Settings, your extension keys still control Nostr identity — app login uses email/Google until secure Nostr auth ships.' },
-  { categoryKey: 'faq.cat.trust', question: 'Who holds the sats during a gift?', answer: 'Nobody intermediate. You pay the creator’s Lightning address or on-chain wallet. KATOA does not operate a hot wallet for user funds.', link: '/security' },
-  { categoryKey: 'faq.cat.trust', question: 'How do I verify 0% fees?', answer: 'There is no platform take rate in product design. Compare legacy fee math on Why KATOA, audit the open-source frontend, and watch sats land in the creator wallet you control.', link: '/comparison' },
-  { categoryKey: 'faq.cat.trust', question: 'Are explore projects real?', answer: 'Some catalog entries are labeled Demo for product preview. Live creator accounts use real payment destinations once wallets are configured. Demo badges appear on sample content.', link: '/explore' },
-  { categoryKey: 'faq.cat.trust', question: 'What is on the public roadmap?', answer: 'Shipped work and next priorities are listed on the in-app roadmap and in docs/ROADMAP.md on GitHub.', link: '/roadmap' },
+  { categoryKey: 'faq.cat.features', qKey: 'faq.q.wishlists', aKey: 'faq.a.wishlists', link: '/explore' },
+  { categoryKey: 'faq.cat.features', qKey: 'faq.q.productLinks', aKey: 'faq.a.productLinks', link: '/dashboard' },
+  { categoryKey: 'faq.cat.features', qKey: 'faq.q.anonymousGifts', aKey: 'faq.a.anonymousGifts' },
+  { categoryKey: 'faq.cat.features', qKey: 'faq.q.p2p', aKey: 'faq.a.p2p' },
+  { categoryKey: 'faq.cat.technical', qKey: 'faq.q.zkp', aKey: 'faq.a.zkp' },
+  { categoryKey: 'faq.cat.technical', qKey: 'faq.q.lightningWallet', aKey: 'faq.a.lightningWallet' },
+  { categoryKey: 'faq.cat.technical', qKey: 'faq.q.openSource', aKey: 'faq.a.openSource', link: 'https://github.com/kitsboy/katoa' },
+  { categoryKey: 'faq.cat.security', qKey: 'faq.q.howSecure', aKey: 'faq.a.howSecure', link: '/security' },
+  { categoryKey: 'faq.cat.security', qKey: 'faq.q.loseAccess', aKey: 'faq.a.loseAccess' },
+  { categoryKey: 'faq.cat.trust', qKey: 'faq.q.whoHoldsSats', aKey: 'faq.a.whoHoldsSats', link: '/security' },
+  { categoryKey: 'faq.cat.trust', qKey: 'faq.q.verifyFees', aKey: 'faq.a.verifyFees', link: '/comparison' },
+  { categoryKey: 'faq.cat.trust', qKey: 'faq.q.exploreReal', aKey: 'faq.a.exploreReal', link: '/explore' },
+  { categoryKey: 'faq.cat.trust', qKey: 'faq.q.roadmap', aKey: 'faq.a.roadmap', link: '/roadmap' },
 ];
 
 const categories = Array.from(new Set(faqs.map((f) => f.categoryKey)));
@@ -78,12 +79,19 @@ export function FAQPage() {
     })),
   };
 
+  const crumbs = breadcrumbList([
+    { name: t('breadcrumb.home'), item: '/' },
+    { name: t('faq.title'), item: '/faq' },
+  ]);
+
   return (
     <div className="min-h-[100dvh] bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950 pb-20 md:pb-16">
       <PageMeta title={t('faq.metaTitle')} description={t('faq.metaDesc')} path="/faq" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: toJsonLdScript(faqSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: toJsonLdScript(crumbs) }} />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+        <Breadcrumbs items={[{ label: t('faq.title') }]} className="mb-6 text-left" />
         <PageHero title={t('faq.title')} subtitle={t('faq.subtitle')} />
 
         <div className="mb-6">

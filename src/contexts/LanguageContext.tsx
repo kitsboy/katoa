@@ -6,6 +6,13 @@ import { aboutComparisonFr } from '../i18n/aboutComparison.fr';
 import { aboutComparisonDe } from '../i18n/aboutComparison.de';
 import { aboutComparisonJa } from '../i18n/aboutComparison.ja';
 import { aboutComparisonZh } from '../i18n/aboutComparison.zh';
+import { remainingEn } from '../i18n/remaining.en';
+import { remainingEs } from '../i18n/remaining.es';
+import { remainingPt } from '../i18n/remaining.pt';
+import { remainingFr } from '../i18n/remaining.fr';
+import { remainingDe } from '../i18n/remaining.de';
+import { remainingJa } from '../i18n/remaining.ja';
+import { remainingZh } from '../i18n/remaining.zh';
 
 export type Language = 'en' | 'es' | 'pt' | 'fr' | 'de' | 'ja' | 'zh';
 
@@ -4107,6 +4114,7 @@ export const translations: Record<Language, Record<string, string>> = {
     ...pricingPageStrings.en,
     ...commonStrings.en,
     ...pageStrings.en,
+    ...remainingEn,
   },
   es: {
     'nav.explore': 'Explorar',
@@ -4147,6 +4155,7 @@ export const translations: Record<Language, Record<string, string>> = {
     ...pricingPageStrings.es,
     ...commonStrings.es,
     ...pageStrings.es,
+    ...remainingEs,
   },
   pt: {
     'nav.explore': 'Explorar',
@@ -4187,6 +4196,7 @@ export const translations: Record<Language, Record<string, string>> = {
     ...pricingPageStrings.pt,
     ...commonStrings.pt,
     ...pageStrings.pt,
+    ...remainingPt,
   },
   fr: {
     'nav.explore': 'Explorer',
@@ -4227,6 +4237,7 @@ export const translations: Record<Language, Record<string, string>> = {
     ...pricingPageStrings.fr,
     ...commonStrings.fr,
     ...pageStrings.fr,
+    ...remainingFr,
   },
   de: {
     'nav.explore': 'Entdecken',
@@ -4267,6 +4278,7 @@ export const translations: Record<Language, Record<string, string>> = {
     ...pricingPageStrings.de,
     ...commonStrings.de,
     ...pageStrings.de,
+    ...remainingDe,
   },
   ja: {
     'nav.explore': '探索',
@@ -4307,6 +4319,7 @@ export const translations: Record<Language, Record<string, string>> = {
     ...pricingPageStrings.ja,
     ...commonStrings.ja,
     ...pageStrings.ja,
+    ...remainingJa,
   },
   zh: {
     'nav.explore': '探索',
@@ -4347,6 +4360,7 @@ export const translations: Record<Language, Record<string, string>> = {
     ...pricingPageStrings.zh,
     ...commonStrings.zh,
     ...pageStrings.zh,
+    ...remainingZh,
   },
 };
 

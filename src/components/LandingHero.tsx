@@ -55,14 +55,14 @@ function ProductScreenshot() {
 
         <div className="lp-shot-screen">
           <div className="lp-shot-cover">
-            <img src={FEATURED.cover} alt={`${FEATURED.title} cover`} width={1260} height={750} loading="eager" fetchPriority="high" />
+            <img src={FEATURED.cover} alt={t('home.shot.coverAlt').replace('${title}', t('home.shot.title'))} width={1260} height={750} loading="eager" fetchPriority="high" />
             <div className="lp-shot-cover-overlay" />
             <div className="lp-shot-cover-copy">
               <div className="lp-shot-title-row">
-                <p className="lp-shot-title">{FEATURED.title}</p>
+                <p className="lp-shot-title">{t('home.shot.title')}</p>
                 <span aria-hidden>{FEATURED.flag}</span>
               </div>
-              <p>{FEATURED.description}</p>
+              <p>{t('home.shot.description')}</p>
               <div className="lp-shot-location">
                 <MapPin size={12} />
                 <span>{FEATURED.city}, {FEATURED.country}</span>
@@ -82,18 +82,18 @@ function ProductScreenshot() {
 
             <div className="lp-shot-progress" data-tip={t('home.shot.progressTip')}>
               <div className="lp-shot-progress-head">
-                <span>{formatSats(FEATURED.raised)} sats raised</span>
+                <span>{t('home.shot.satsRaised').replace('${n}', formatSats(FEATURED.raised))}</span>
                 <strong>{progress}%</strong>
               </div>
-              <div className="lp-shot-progress-bar" role="img" aria-label={`${progress}% funded`}>
+              <div className="lp-shot-progress-bar" role="img" aria-label={t('home.shot.fundedPct').replace('${pct}', String(progress))}>
                 <div style={{ width: `${progress}%` }} />
               </div>
-              <span className="lp-shot-progress-goal">of {formatSats(FEATURED.goal)} sats goal</span>
+              <span className="lp-shot-progress-goal">{t('home.shot.ofGoal').replace('${n}', formatSats(FEATURED.goal))}</span>
             </div>
 
             <button type="button" className="lp-shot-cta" tabIndex={-1} aria-hidden="true">
               <Gift size={15} />
-              Send a gift
+              {t('home.shot.sendGift')}
             </button>
 
             <div className="lp-shot-items">

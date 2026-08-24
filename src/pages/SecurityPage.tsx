@@ -6,36 +6,12 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { Shield, KeyRound, Wallet, EyeOff, Server, FileCheck } from 'lucide-react';
 
 const SECTIONS = [
-  {
-    icon: Wallet,
-    title: 'Non-custodial by design',
-    body: 'KATOA never holds your Bitcoin. Supporters send sats to addresses and Lightning destinations you control. If our servers go offline, your money is still in your wallet.',
-  },
-  {
-    icon: KeyRound,
-    title: 'Keys stay with you',
-    body: 'Account login uses email/OAuth (or demo mode). Optional Nostr keys stay in your browser extension or device. We do not store seed phrases or private keys.',
-  },
-  {
-    icon: EyeOff,
-    title: 'Minimal data',
-    body: 'We store what is needed to run wishlists and auth. See Privacy for details. Prefer Lightning addresses and public npubs over personal identifiers when you can.',
-  },
-  {
-    icon: Server,
-    title: 'What we host',
-    body: 'The web app (Cloudflare Pages), optional Supabase for profiles/wishlists, and analytics that do not require bank-grade surveillance. Payment settlement happens on Bitcoin / Lightning.',
-  },
-  {
-    icon: FileCheck,
-    title: 'Open source & proof',
-    body: 'Frontend is MIT-licensed on GitHub. Architecture and fee claims are public. Report security issues via GitHub; critical findings may earn sats when a bounty is funded.',
-  },
-  {
-    icon: Shield,
-    title: 'Safe harbour',
-    body: 'KATOA is educational software. Nothing here is legal, tax, or investment advice. You are responsible for compliance in your jurisdiction.',
-  },
+  { icon: Wallet, titleKey: 'security.nonCustodial.title', bodyKey: 'security.nonCustodial.body' },
+  { icon: KeyRound, titleKey: 'security.keys.title', bodyKey: 'security.keys.body' },
+  { icon: EyeOff, titleKey: 'security.minimalData.title', bodyKey: 'security.minimalData.body' },
+  { icon: Server, titleKey: 'security.host.title', bodyKey: 'security.host.body' },
+  { icon: FileCheck, titleKey: 'security.openSource.title', bodyKey: 'security.openSource.body' },
+  { icon: Shield, titleKey: 'security.safeHarbour.title', bodyKey: 'security.safeHarbour.body' },
 ] as const;
 
 export function SecurityPage() {
@@ -57,7 +33,7 @@ export function SecurityPage() {
             const Icon = s.icon;
             return (
               <article
-                key={s.title}
+                key={s.titleKey}
                 className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 sm:p-6"
               >
                 <div className="flex items-start gap-3 sm:gap-4">
@@ -65,8 +41,8 @@ export function SecurityPage() {
                     <Icon size={20} className="text-neon-cyan-400" aria-hidden />
                   </div>
                   <div className="min-w-0">
-                    <h2 className="text-lg font-display font-bold text-white mb-1.5">{s.title}</h2>
-                    <p className="text-sm sm:text-base text-gray-400 leading-relaxed">{s.body}</p>
+                    <h2 className="text-lg font-display font-bold text-white mb-1.5">{t(s.titleKey)}</h2>
+                    <p className="text-sm sm:text-base text-gray-400 leading-relaxed">{t(s.bodyKey)}</p>
                   </div>
                 </div>
               </article>
@@ -79,7 +55,7 @@ export function SecurityPage() {
             href="/privacy"
             className="flex-1 text-center min-h-[48px] inline-flex items-center justify-center rounded-xl border border-white/15 bg-white/5 text-white font-semibold hover:border-neon-cyan-500/40 transition-colors"
           >
-            Privacy policy
+            {t('security.privacyPolicy')}
           </Link>
           <a
             href="https://github.com/kitsboy/katoa"
@@ -87,7 +63,7 @@ export function SecurityPage() {
             rel="noopener noreferrer"
             className="flex-1 text-center min-h-[48px] inline-flex items-center justify-center rounded-xl bg-neon-cyan-500 text-charcoal-950 font-bold hover:bg-neon-cyan-400 transition-colors"
           >
-            View source on GitHub
+            {t('security.viewSource')}
           </a>
         </div>
       </div>
