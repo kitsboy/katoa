@@ -12,14 +12,6 @@ interface ChecklistItem {
   href: string;
 }
 
-const items: ChecklistItem[] = [
-  { id: 'account', labelKey: 'onboarding.item.account', href: '/auth' },
-  { id: 'wallet', labelKey: 'onboarding.item.wallet', href: '/settings' },
-  { id: 'wishlist', labelKey: 'onboarding.item.wishlist', href: '/dashboard' },
-  { id: 'share', labelKey: 'onboarding.item.share', href: '/explore' },
-  { id: 'firstsat', labelKey: 'onboarding.item.firstsat', href: '/explore' },
-];
-
 function loadProgress(): Record<string, boolean> {
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.onboardingChecklist);
@@ -41,6 +33,19 @@ export function OnboardingChecklist({ variant = 'landing' }: { variant?: 'landin
   const { user, profile, isDemoUser } = useAuth();
   const [checked, setChecked] = useState<Record<string, boolean>>(loadProgress);
   const dark = variant === 'dark';
+  const publicHref = profile?.username ? `/u/${profile.username}` : '/dashboard';
+
+  const items: ChecklistItem[] = [
+    { id: 'account', labelKey: 'onboarding.item.account', href: '/auth' },
+    { id: 'wallet', labelKey: 'onboarding.item.wallet', href: '/settings' },
+    { id: 'wishlist', labelKey: 'onboarding.item.wishlist', href: '/dashboard' },
+    { id: 'share', labelKey: 'onboarding.item.share', href: publicHref },
+    {
+      id: 'firstsat',
+      labelKey: 'onboarding.item.firstsat',
+      href: checked.wallet || profile?.lightning_address ? publicHref : '/settings',
+    },
+  ];
 
   useEffect(() => {
     setChecked((prev) => {
@@ -55,17 +60,24 @@ export function OnboardingChecklist({ variant = 'landing' }: { variant?: 'landin
 
     let cancelled = false;
     const userId = user.id;
+    const hasLightning = Boolean(profile?.lightning_address);
     void (async () => {
       try {
-        const { count } = await supabase
-          .from('wishlists')
-          .select('id', { count: 'exact', head: true })
-          .eq('creator_id', userId);
-        if (!cancelled && (count ?? 0) > 0) {
-          setChecked((prev) => (prev.wishlist ? prev : { ...prev, wishlist: true }));
-        }
+        const [wishlistRes, walletRes] = await Promise.all([
+          supabase.from('wishlists').select('id', { count: 'exact', head: true }).eq('creator_id', userId),
+          hasLightning
+            ? Promise.resolve({ count: 1 })
+            : supabase.from('wallet_addresses').select('id', { count: 'exact', head: true }).eq('user_id', userId),
+        ]);
+        if (cancelled) return;
+        setChecked((prev) => {
+          const next = { ...prev };
+          if ((wishlistRes.count ?? 0) > 0) next.wishlist = true;
+          if ((walletRes.count ?? 0) > 0) next.wallet = true;
+          return next;
+        });
       } catch {
-        /* live wishlist count is optional */
+        /* live wallet/wishlist counts are optional */
       }
     })();
 
@@ -83,6 +95,22 @@ export function OnboardingChecklist({ variant = 'landing' }: { variant?: 'landin
 
   function toggle(id: string) {
     setChecked((prev) => ({ ...prev, [id]: !prev[id] }));
+  }
+
+  async function handleShare() {
+    const url = `${window.location.origin}${publicHref}`;
+    const title = profile?.username ? `@${profile.username} on KATOA` : 'KATOA';
+    if (typeof navigator.share === 'function') {
+      try {
+        await navigator.share({ title, url });
+        setChecked((prev) => ({ ...prev, share: true }));
+      } catch (err) {
+        if ((err as Error).name === 'AbortError') return;
+        setChecked((prev) => ({ ...prev, share: true }));
+      }
+      return;
+    }
+    setChecked((prev) => ({ ...prev, share: true }));
   }
 
   if (allDone) return null;
@@ -148,14 +176,22 @@ export function OnboardingChecklist({ variant = 'landing' }: { variant?: 'landin
                 >
                   {t(item.labelKey)}
                 </span>
-                {!isChecked && (
+                {!isChecked && item.id === 'share' ? (
+                  <button
+                    type="button"
+                    onClick={() => void handleShare()}
+                    className={dark ? 'text-sm font-semibold text-neon-cyan-400 shrink-0 min-h-[36px]' : 'lp-onboarding-link shrink-0'}
+                  >
+                    {t('share.button')} →
+                  </button>
+                ) : !isChecked ? (
                   <Link
                     href={item.href}
-                    className={dark ? 'text-xs font-semibold text-neon-cyan-400 shrink-0' : 'lp-onboarding-link shrink-0'}
+                    className={dark ? 'text-sm font-semibold text-neon-cyan-400 shrink-0 min-h-[36px] inline-flex items-center' : 'lp-onboarding-link shrink-0'}
                   >
                     {t('common.go')} →
                   </Link>
-                )}
+                ) : null}
               </div>
             </li>
           );

@@ -25,7 +25,7 @@ const TYPE_ICON: Record<NotificationType, typeof Bell> = {
   system: Zap,
 };
 
-function refreshList(): Notification[] {
+function demoInbox(): Notification[] {
   const existing = getNotifications();
   if (existing.length > 0) return existing;
   return seedDemoNotifications();
@@ -136,8 +136,13 @@ export function NotificationCenter({
   useEffect(() => {
     const unsub = subscribeNotifications(sync);
 
-    if (!user || isDemoUser) {
-      setItems(refreshList());
+    if (isDemoUser) {
+      setItems(demoInbox());
+      return unsub;
+    }
+
+    if (!user) {
+      setItems(getNotifications());
       return unsub;
     }
 
@@ -145,7 +150,6 @@ export function NotificationCenter({
     const pull = async () => {
       await syncLiveInbox(user.id);
       if (cancelled) return;
-      if (getNotifications().length === 0) seedDemoNotifications();
       setItems(getNotifications());
     };
 

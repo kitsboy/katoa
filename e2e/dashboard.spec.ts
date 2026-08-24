@@ -15,6 +15,15 @@ test.describe('creator dashboard', () => {
     await expect(page.getByRole('heading', { name: /demo_creator/i })).toBeVisible({
       timeout: 30_000,
     });
+    await expect(page.getByRole('link', { name: /view public profile/i }).first()).toHaveAttribute(
+      'href',
+      '/u/demo_creator',
+    );
+    await expect(page.getByRole('navigation', { name: /dashboard shortcuts/i }).getByRole('link', { name: 'NIP-05' })).toBeVisible();
+    await expect(page.getByRole('navigation', { name: /dashboard shortcuts/i }).getByRole('link', { name: 'Wallet' })).toHaveAttribute(
+      'href',
+      '/settings',
+    );
     await expect(page.getByRole('heading', { name: /Your projects/i })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Skate Colombia' })).toBeVisible();
     await expect(page.getByRole('button', { name: /New project/i }).first()).toBeVisible();

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
@@ -578,6 +578,10 @@ export function ProjectPage() {
   }
 
   const coverVideoUrl = formData.cover_video_url || (project?.settings?.cover_video_url as string) || '';
+
+  if (!slug) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   if (loading) {
     return (

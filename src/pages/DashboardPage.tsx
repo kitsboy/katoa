@@ -23,6 +23,8 @@ import {
   Compass,
   Wallet,
   Search,
+  UserRound,
+  AtSign,
   type LucideIcon,
 } from 'lucide-react';
 import { PageMeta } from '../components/PageMeta';
@@ -102,6 +104,30 @@ type OwnedWishlist = {
   visibility: string;
   projectSlug: string;
 };
+
+type LiveWishlistRow = {
+  id: string;
+  title: string;
+  slug: string;
+  cover_image: string | null;
+  total_sats_goal: number | null;
+  total_sats_raised: number | null;
+  visibility: string | null;
+  project_id: string | null;
+};
+
+function toOwnedWishlists(rows: LiveWishlistRow[], slugByProjectId: Record<string, string>): OwnedWishlist[] {
+  return rows.map((w) => ({
+    id: w.id,
+    title: w.title,
+    slug: w.slug,
+    cover_image: w.cover_image,
+    total_sats_goal: w.total_sats_goal || 0,
+    total_sats_raised: w.total_sats_raised || 0,
+    visibility: w.visibility || 'public',
+    projectSlug: (w.project_id && slugByProjectId[w.project_id]) || '',
+  }));
+}
 
 function demoOwnedWishlists(): OwnedWishlist[] {
   const map: Record<string, string> = {
@@ -201,6 +227,7 @@ export function DashboardPage() {
     wishlists: [],
     creators: [],
   });
+  const [liveOwnedWishlists, setLiveOwnedWishlists] = useState<OwnedWishlist[]>([]);
 
   const persistDemoProjects = useCallback((next: Project[]) => {
     setStorage(STORAGE_KEYS.demoDashboardProjects, next);
@@ -272,6 +299,7 @@ export function DashboardPage() {
         const list = stored.length > 0 ? stored : DEMO_PROJECTS;
         if (stored.length === 0) persistDemoProjects(DEMO_PROJECTS);
         setProjects(list);
+        setLiveOwnedWishlists([]);
         return;
       }
 
@@ -284,21 +312,51 @@ export function DashboardPage() {
       if (error) throw error;
 
       const projectList = asRows<DbProject>(data);
-      const projectIds = projectList.map((p) => p.id);
-      const countByProject: Record<string, number> = {};
+      const slugByProjectId: Record<string, string> = {};
+      projectList.forEach((p) => {
+        slugByProjectId[p.id] = p.slug;
+      });
 
-      if (projectIds.length > 0) {
-        const { data: wishlistRows } = await supabase
+      let liveRows: LiveWishlistRow[] = [];
+      try {
+        const { data: wishlistRows, error: wishlistError } = await supabase
           .from('wishlists')
-          .select('project_id')
-          .in('project_id', projectIds);
+          .select('id, title, slug, cover_image, total_sats_goal, total_sats_raised, visibility, project_id')
+          .eq('creator_id', user.id)
+          .order('created_at', { ascending: false });
 
-        (wishlistRows || []).forEach((row) => {
-          if (row.project_id) {
-            countByProject[row.project_id] = (countByProject[row.project_id] || 0) + 1;
-          }
-        });
+        if (wishlistError) throw wishlistError;
+        liveRows = asRows<LiveWishlistRow>(wishlistRows);
+
+        const missingProjectIds = [
+          ...new Set(
+            liveRows
+              .map((w) => w.project_id)
+              .filter((id): id is string => typeof id === 'string' && id.length > 0 && !slugByProjectId[id])
+          ),
+        ];
+        if (missingProjectIds.length > 0) {
+          const { data: extraProjects } = await supabase
+            .from('projects')
+            .select('id, slug')
+            .in('id', missingProjectIds);
+          (extraProjects || []).forEach((p) => {
+            slugByProjectId[p.id] = p.slug;
+          });
+        }
+
+        setLiveOwnedWishlists(toOwnedWishlists(liveRows, slugByProjectId));
+      } catch (wishlistLoadError) {
+        console.error('Error loading owned wishlists:', wishlistLoadError);
+        setLiveOwnedWishlists([]);
       }
+
+      const countByProject: Record<string, number> = {};
+      liveRows.forEach((row) => {
+        if (row.project_id) {
+          countByProject[row.project_id] = (countByProject[row.project_id] || 0) + 1;
+        }
+      });
 
       setProjects(
         projectList.map((p) => ({
@@ -327,17 +385,15 @@ export function DashboardPage() {
     }
 
     try {
-      const { data: projectData, count: projectCount } = await supabase
+      const { count: projectCount } = await supabase
         .from('projects')
-        .select('id', { count: 'exact' })
+        .select('id', { count: 'exact', head: true })
         .eq('creator_id', user.id);
-
-      const projectIds = projectData?.map((p) => p.id) || [];
 
       const { data: wishlistData, count: wishlistCount } = await supabase
         .from('wishlists')
         .select('total_sats_raised', { count: 'exact' })
-        .in('project_id', projectIds.length ? projectIds : ['__none__']);
+        .eq('creator_id', user.id);
 
       const wishlistRaised = wishlistData?.reduce((sum, w) => sum + (w.total_sats_raised || 0), 0) || 0;
       const live = await fetchLiveEarnings(user.id);
@@ -584,10 +640,11 @@ export function DashboardPage() {
 
   const followingCount = following.projects.length + following.wishlists.length + following.creators.length;
   const displayName = profile?.username || user?.email?.split('@')[0] || 'creator';
+  const publicProfileHref = `/u/${displayName}`;
   const initial = displayName[0]?.toUpperCase() || 'K';
   const missingLightning = !profile?.lightning_address;
   const publicProject = projects.find((p) => p.visibility === 'public');
-  const embedPath = publicProject ? `/project/${publicProject.slug}` : '/explore';
+  const embedPath = publicProject ? `/project/${publicProject.slug}` : publicProfileHref;
 
   const filteredFollows = useMemo(() => {
     const showP = followFilter === 'all' || followFilter === 'projects';
@@ -612,7 +669,7 @@ export function DashboardPage() {
           p.slug.toLowerCase().includes(q)
       )
     : projects;
-  const ownedWishlists = isDemoUser ? demoOwnedWishlists() : [];
+  const ownedWishlists = isDemoUser ? demoOwnedWishlists() : liveOwnedWishlists;
 
   if (loading) {
     return (
@@ -668,12 +725,21 @@ export function DashboardPage() {
                   @{displayName}
                 </h1>
                 <p className="text-gray-400 text-sm mt-1">{t('dashboard.subtitle')}</p>
-                {profile?.lightning_address && (
-                  <p className="text-xs text-gray-500 mt-1.5 flex items-center gap-1.5 truncate">
-                    <Zap size={12} className="text-bitcoin-orange-400 shrink-0" />
-                    {profile.lightning_address}
-                  </p>
-                )}
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1.5">
+                  {profile?.lightning_address && (
+                    <p className="text-sm text-gray-500 flex items-center gap-1.5 truncate">
+                      <Zap size={12} className="text-bitcoin-orange-400 shrink-0" />
+                      {profile.lightning_address}
+                    </p>
+                  )}
+                  <Link
+                    href={publicProfileHref}
+                    className="text-sm text-bitcoin-orange-300 hover:text-bitcoin-orange-200 inline-flex items-center gap-1.5 min-h-[36px]"
+                  >
+                    <ExternalLink size={14} />
+                    View public profile
+                  </Link>
+                </div>
               </div>
             </div>
             <div className="flex flex-wrap gap-2 shrink-0">
@@ -708,6 +774,9 @@ export function DashboardPage() {
           <QuickLink href="/templates" icon={LayoutTemplate} label={t('dashboard.quick.templates')} />
           <QuickLink href="/explore" icon={Compass} label={t('dashboard.quick.explore')} />
           <QuickLink href="/creators" icon={Users} label="Creators" />
+          <QuickLink href={publicProfileHref} icon={UserRound} label={t('creator.profile')} />
+          <QuickLink href="/nip05" icon={AtSign} label="NIP-05" />
+          <QuickLink href="/settings" icon={Wallet} label="Wallet" />
         </nav>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-10">
@@ -748,7 +817,7 @@ export function DashboardPage() {
                 {(
                   [
                     ['projects', t('dashboard.yourProjects'), projects.length],
-                    ['wishlists', t('dashboard.wishlists'), isDemoUser ? demoOwnedWishlists().length : stats.totalWishlists],
+                    ['wishlists', t('dashboard.wishlists'), ownedWishlists.length],
                     ['earnings', t('dashboard.raised'), null],
                   ] as const
                 ).map(([id, label, count]) => (
@@ -891,7 +960,7 @@ export function DashboardPage() {
                             <div className="p-4">
                               <VisibilityBadge visibility={w.visibility} />
                               <h3 className="text-base font-bold text-white mt-2 line-clamp-1">{w.title}</h3>
-                              <p className="text-xs text-gray-500 mt-1">/{w.projectSlug}</p>
+                              {w.projectSlug ? <p className="text-sm text-gray-500 mt-1">/{w.projectSlug}</p> : null}
                               {w.total_sats_goal > 0 && (
                                 <p className="text-xs text-gray-400 mt-2">
                                   {Math.round((w.total_sats_raised / w.total_sats_goal) * 100)}% funded
