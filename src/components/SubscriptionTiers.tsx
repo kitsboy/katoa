@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Check, Zap, Crown, Rocket, Star, type LucideIcon } from 'lucide-react';
 import { Card } from './Card';
 import { Button } from './Button';
+import { DemoBadge } from './DemoBadge';
 
 interface Tier {
   id: string;
@@ -28,7 +29,6 @@ export function SubscriptionTiers({
   creatorName = 'Creator',
 }: SubscriptionTiersProps) {
   const [selectedTier, setSelectedTier] = useState<string | null>(null);
-  const [showBolt12, setShowBolt12] = useState(false);
 
   const defaultTiers: Tier[] = [
     {
@@ -86,10 +86,10 @@ export function SubscriptionTiers({
   ];
 
   const tiers = customTiers || defaultTiers;
+  const unlocked = selectedTier ? tiers.find((t) => t.id === selectedTier) : null;
 
   const handleSubscribe = (tierId: string) => {
     setSelectedTier(tierId);
-    setShowBolt12(true);
     onSubscribe?.(tierId);
   };
 
@@ -103,12 +103,15 @@ export function SubscriptionTiers({
           Support {creatorName}
         </h2>
         <p className="text-gray-400 text-sm sm:text-base leading-relaxed mb-4">
-          Choose a Lightning tier. Instant, private, and 0% platform fees — 100% goes to the creator.
+          Choose a Lightning tier. 0% platform fees — when invoices settle, 100% goes to the creator.
         </p>
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-500/10 border border-emerald-500/25 rounded-full">
-          <Zap size={14} className="text-emerald-400" aria-hidden />
-          <span className="text-emerald-300 font-semibold text-xs">
-            BOLT 12 · 100% to creator
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-bitcoin-orange-500/10 border border-bitcoin-orange-500/25 rounded-full">
+          <DemoBadge
+            label="Demo"
+            title="Local unlock on this device until Lightning webhooks exist"
+          />
+          <span className="text-bitcoin-orange-200 font-semibold text-xs">
+            Local seam · not a live invoice
           </span>
         </div>
       </div>
@@ -170,13 +173,13 @@ export function SubscriptionTiers({
 
                 <Button
                   variant={tier.popular ? 'bitcoin' : 'outline'}
-                  className="w-full"
+                  className="w-full min-h-[44px]"
                   onClick={() => handleSubscribe(tier.id)}
                 >
                   Subscribe with Lightning
                 </Button>
                 <p className="mt-3 text-center text-[11px] text-gray-500">
-                  Cancel anytime · Instant activation
+                  DEMO · Unlocks on this device until Lightning webhooks exist
                 </p>
               </Card>
             </div>
@@ -184,41 +187,27 @@ export function SubscriptionTiers({
         })}
       </div>
 
-      {showBolt12 && selectedTier && (
+      {unlocked && (
         <Card className="max-w-xl mx-auto p-6 sm:p-8" variant="glass">
           <div className="text-center">
             <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-bitcoin-orange-500/25 to-amber-600/10 border border-bitcoin-orange-500/30 flex items-center justify-center">
-              <Zap size={28} className="text-bitcoin-orange-400" />
+              <Check size={28} className="text-emerald-400" />
             </div>
 
-            <h3 className="text-xl font-bold text-white mb-1">BOLT 12 subscription</h3>
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <h3 className="text-xl font-bold text-white">{unlocked.name} unlocked on this device</h3>
+              <DemoBadge label="Demo" title="Local seam — not a Lightning payment" />
+            </div>
             <p className="text-gray-400 text-sm mb-6">
-              Scan with your Lightning wallet to set up recurring payments
+              Unlocks on this device until Lightning webhooks exist. This is not a live invoice or BOLT 12 offer.
             </p>
-
-            <div className="bg-white rounded-2xl p-6 mb-5 inline-block">
-              <div className="w-48 h-48 mx-auto bg-gray-100 rounded-xl flex items-center justify-center">
-                <div className="text-center text-gray-500">
-                  <Zap size={36} className="mx-auto mb-2 text-bitcoin-orange-500" />
-                  <p className="text-sm font-semibold">BOLT 12 Offer QR</p>
-                  <p className="text-xs">(Integration pending)</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-charcoal-900 rounded-xl p-3 mb-5 text-left">
-              <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">BOLT 12 offer</p>
-              <code className="text-emerald-400 text-xs break-all font-mono">
-                lno1pg257enxv4ezqcneype82um50ynhxgrwdajx293pqe7y75t...
-              </code>
-            </div>
 
             <ul className="space-y-2 text-sm text-gray-400 text-left mb-5">
               {[
-                'Recurring monthly payment automatically',
-                'Cancel anytime from your wallet',
-                '100% private — no personal info required',
-                '0% platform fees — all funds go to creator',
+                'Content unlock is stored in this browser only',
+                'No Lightning payment was sent',
+                'When webhooks ship, the same button will request a real invoice',
+                '0% platform fees — all settled funds go to the creator',
               ].map((line) => (
                 <li key={line} className="flex items-center gap-2">
                   <Check size={16} className="text-emerald-400 shrink-0" />
@@ -229,10 +218,8 @@ export function SubscriptionTiers({
 
             <Button
               variant="outline"
-              onClick={() => {
-                setShowBolt12(false);
-                setSelectedTier(null);
-              }}
+              className="min-h-[44px]"
+              onClick={() => setSelectedTier(null)}
             >
               Close
             </Button>
@@ -241,7 +228,7 @@ export function SubscriptionTiers({
       )}
 
       <p className="text-center text-gray-500 text-xs">
-        Powered by Bitcoin Lightning · BOLT 12 native · Zero-knowledge privacy
+        Local demo seam · Lightning subscribe requires invoice → webhook → subscriptions row
       </p>
     </section>
   );

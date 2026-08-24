@@ -15,7 +15,8 @@ import { mockCreatorPosts } from '../data/mockCreatorPosts';
 import { isSubscribed, subscribeLocal, unsubscribe } from '../lib/subscriptions';
 import { getStorage, setStorage, STORAGE_KEYS } from '../lib/storage';
 import { copyToClipboard } from '../lib/clipboard';
-import { getQrImageUrl, lightningQrData } from '../lib/qr';
+import { bitcoinQrData, getQrImageUrl, isBolt11Invoice, lightningQrData } from '../lib/qr';
+import { fetchCreatorOnchainAddress } from '../lib/creatorProfile';
 import { toJsonLdScript } from '../lib/jsonLd';
 import { Breadcrumbs, BreadcrumbItem } from '../components/Breadcrumbs';
 import { PageMeta } from '../components/PageMeta';
@@ -42,6 +43,7 @@ import { TipMenu } from '../components/TipMenu';
 import { VisibilityBadge } from '../components/VisibilityBadge';
 import { CreatorPostFeed } from '../components/CreatorPostFeed';
 import { ManageSubscriptionPanel } from '../components/ManageSubscriptionPanel';
+import { DemoBadge } from '../components/DemoBadge';
 
 const SAT_PRESETS = [
   { label: '1K', value: 1000 },
@@ -107,6 +109,7 @@ interface Wishlist {
     avatar_url: string | null;
     lightning_address?: string | null;
     nostr_pubkey?: string | null;
+    bitcoin_address?: string | null;
     bio?: string;
   };
 }
@@ -146,6 +149,9 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
   const [zapInvoice, setZapInvoice] = useState<string | null>(null);
   const [zapError, setZapError] = useState<string | null>(null);
   const [subscribed, setSubscribed] = useState(false);
+  const [onchainAddress, setOnchainAddress] = useState<string | null>(null);
+  const [paymentUri, setPaymentUri] = useState('');
+  const [giftIntent, setGiftIntent] = useState<{ amount: number; method: PaymentTab } | null>(null);
 
   useEffect(() => {
     setThemeColor(getStorage<string>(STORAGE_KEYS.wishlistTheme(slug), '#f97316'));
@@ -176,8 +182,8 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
     }, 100);
     const done = window.setTimeout(() => {
       setDemoAutoProgress(100);
-      // Local-only demo progress bump on selected item
-      if (selectedItem) {
+      // Demo lists only: local preview bump. Live lists never increment sats_raised in the browser.
+      if (isDemoWishlist && selectedItem) {
         setItems((prev) =>
           prev.map((it) => {
             if (it.id !== selectedItem.id) return it;
@@ -262,6 +268,9 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             slug
           )
         );
+        setOnchainAddress(
+          (mockWishlist.creator as { bitcoin_address?: string | null }).bitcoin_address?.trim() || null
+        );
         setLoading(false);
         return;
       }
@@ -332,6 +341,9 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
 
       if (isCancelled()) return;
       setWishlist(wishlistRow as unknown as Wishlist);
+      const creatorId = wishlistRow.creator_id as string | undefined;
+      const addr = await fetchCreatorOnchainAddress(creatorId);
+      if (!isCancelled()) setOnchainAddress(addr);
 
       const { data: itemsData, error: itemsError } = await supabase
         .from('wishlist_items')
@@ -428,21 +440,50 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
     setProcessing(true);
     setZapError(null);
     setZapInvoice(null);
+    setPaymentUri('');
+    setGiftIntent({ amount: amountSats, method: paymentTab });
 
     try {
+      if (paymentTab === 'onchain') {
+        const addr = onchainAddress?.trim();
+        if (!addr) {
+          toast('This creator has no on-chain address. Use Lightning or buy the product.', 'error');
+          setProcessing(false);
+          return;
+        }
+        const uri = bitcoinQrData(addr, amountSats);
+        setMockInvoice(addr);
+        setPaymentUri(uri);
+        setPaymentQrUrl(getQrImageUrl(uri, 280));
+        setPaymentCountdown(180);
+        persistGiftDraft(giftForm);
+        setShowGiftModal(false);
+        setShowGiftSuccess(false);
+        setShowPaymentModal(true);
+        if (!isDemoWishlist) {
+          await recordGiftIntent(amountSats, 'onchain');
+        }
+        setProcessing(false);
+        return;
+      }
+
+      const lud16FromProfile = wishlist.creator?.lightning_address?.trim() || null;
+      const npubOrHex = wishlist.creator?.nostr_pubkey?.trim();
+
       // Nostr Zap tab: NIP-57 request + LNURL-pay invoice when possible
       if (paymentTab === 'nostr') {
-        const npubOrHex = wishlist.creator?.nostr_pubkey?.trim();
         const lud16 =
-          wishlist.creator?.lightning_address?.trim() ||
-          (npubOrHex ? await (async () => {
-            try {
-              const hex = nostrService.normalizePubkey(npubOrHex);
-              return (await nostrService.getLightningAddress(hex)) || null;
-            } catch {
-              return null;
-            }
-          })() : null);
+          lud16FromProfile ||
+          (npubOrHex
+            ? await (async () => {
+                try {
+                  const hex = nostrService.normalizePubkey(npubOrHex);
+                  return (await nostrService.getLightningAddress(hex)) || null;
+                } catch {
+                  return null;
+                }
+              })()
+            : null);
 
         if (!lud16) {
           toast('Creator has no Lightning address (lud16) for zaps. Use Lightning tab or buy product.', 'error');
@@ -461,9 +502,8 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
                 amountSats,
                 comment: giftForm.message || `KATOA gift for ${wishlist.title}`,
               });
-            } catch (e) {
-              toast(nip07UserMessage(e), 'error');
-              // continue without signed zap request → still try LNURL invoice
+            } catch (err) {
+              toast(nip07UserMessage(err), 'error');
             }
           } else if (!hasNip07()) {
             toast('Optional: install Alby/nos2x for signed NIP-57 zaps. Fetching LN invoice…', 'info');
@@ -482,9 +522,11 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             setZapBusy(false);
             return;
           }
+          const bolt11Uri = lightningQrData(inv.bolt11);
           setZapInvoice(inv.bolt11);
           setMockInvoice(inv.bolt11);
-          setPaymentQrUrl(getQrImageUrl(inv.bolt11.startsWith('ln') ? inv.bolt11 : `lightning:${inv.bolt11}`, 280));
+          setPaymentUri(bolt11Uri);
+          setPaymentQrUrl(getQrImageUrl(bolt11Uri, 280));
           setPaymentCountdown(180);
           persistGiftDraft(giftForm);
           setShowGiftModal(false);
@@ -497,46 +539,57 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
         return;
       }
 
-      const lightningAddr = wishlist.creator?.lightning_address?.trim();
-      const invoicePayload = lightningAddr
-        ? lightningQrData(lightningAddr.includes('@') ? lightningAddr : lightningAddr)
-        : `Demo invoice — pay ${amountSats} sats to support ${wishlist.title}`;
+      // Lightning tab: prefer a real bolt11 from lud16, never QR a fake address
+      const lightningAddr = lud16FromProfile;
+      if (lightningAddr?.includes('@')) {
+        setZapBusy(true);
+        try {
+          const inv = await nostrService.fetchZapInvoice({
+            lud16: lightningAddr,
+            amountSats,
+            comment: giftForm.message || undefined,
+          });
+          if (inv.bolt11) {
+            const bolt11Uri = lightningQrData(inv.bolt11);
+            setZapInvoice(inv.bolt11);
+            setMockInvoice(inv.bolt11);
+            setPaymentUri(bolt11Uri);
+            setPaymentQrUrl(getQrImageUrl(bolt11Uri, 280));
+            toast('Lightning invoice ready — pay in your wallet. Totals update after confirmation.', 'info');
+          } else {
+            const lnUri = lightningQrData(lightningAddr);
+            setMockInvoice(lightningAddr);
+            setPaymentUri(lnUri);
+            setPaymentQrUrl(getQrImageUrl(lnUri, 280));
+            toast(inv.error || 'Could not fetch bolt11 — QR is the Lightning address, not an invoice.', 'info');
+          }
+        } finally {
+          setZapBusy(false);
+        }
+      } else if (lightningAddr) {
+        const lnUri = lightningQrData(lightningAddr);
+        setMockInvoice(lightningAddr);
+        setPaymentUri(lnUri);
+        setPaymentQrUrl(getQrImageUrl(lnUri, 280));
+      } else if (isDemoWishlist) {
+        const demoRef = `demo:pending:${wishlist.id}:${amountSats}:${Date.now()}`;
+        setMockInvoice(demoRef);
+        setPaymentUri('');
+        setPaymentQrUrl(getQrImageUrl(`Demo invoice — pay ${amountSats} sats to support ${wishlist.title}`, 280));
+      } else {
+        toast('This creator has no Lightning address. Try on-chain if available, or buy the product.', 'error');
+        setProcessing(false);
+        return;
+      }
 
-      setMockInvoice(
-        lightningAddr || `demo:pending:${wishlist.id}:${amountSats}:${Date.now()}`
-      );
-      setPaymentQrUrl(getQrImageUrl(invoicePayload, 280));
       setPaymentCountdown(180);
       persistGiftDraft(giftForm);
       setShowGiftModal(false);
       setShowGiftSuccess(false);
       setShowPaymentModal(true);
 
-      // Record intent only — never mark completed from the client (payment webhooks confirm)
       if (!isDemoWishlist) {
-        const { error } = await supabase.from('transactions').insert({
-          wishlist_id: wishlist.id,
-          item_id: selectedItem?.id || null,
-          contributor_name: (giftForm.name || 'Anonymous').slice(0, 120),
-          amount_sats: amountSats,
-          message: (giftForm.message || '').slice(0, 2000),
-          payment_method: 'lightning',
-          payment_hash: null,
-          status: 'pending',
-        });
-
-        if (error) {
-          // Anonymous users / RLS may reject; still show pay UI for LN address
-          console.warn('Could not record pending gift:', error.message);
-          const msg = error.message?.toLowerCase() ?? '';
-          if (msg.includes('row-level security') || msg.includes('permission') || msg.includes('policy')) {
-            toast('Sign in to log your gift, or pay the Lightning address directly.', 'info');
-          } else {
-            toast(error.message || 'Could not record gift intent', 'error');
-          }
-        } else {
-          toast('Gift intent recorded — complete payment in your wallet', 'info');
-        }
+        await recordGiftIntent(amountSats, 'lightning');
       }
     } catch (error) {
       console.error('Error processing gift:', error);
@@ -546,15 +599,63 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
     }
   }
 
-  function closePaymentModal() {
+  async function recordGiftIntent(amountSats: number, method: 'lightning' | 'onchain' | 'nostr') {
+    if (!wishlist) return;
+    const { error } = await supabase.from('transactions').insert({
+      wishlist_id: wishlist.id,
+      item_id: selectedItem?.id || null,
+      contributor_name: (giftForm.name || 'Anonymous').slice(0, 120),
+      amount_sats: amountSats,
+      message: (giftForm.message || '').slice(0, 2000),
+      payment_method: method,
+      payment_hash: null,
+      status: 'pending',
+    });
+
+    if (error) {
+      console.warn('Could not record pending gift:', error.message);
+      const msg = error.message?.toLowerCase() ?? '';
+      if (msg.includes('row-level security') || msg.includes('permission') || msg.includes('policy')) {
+        toast('Sign in to log your gift, or pay the address directly.', 'info');
+      } else {
+        toast(error.message || 'Could not record gift intent', 'error');
+      }
+    } else {
+      toast('Gift intent recorded — complete payment in your wallet', 'info');
+    }
+  }
+
+  function dismissPaymentModal(mode: 'paid' | 'later' | 'cancel') {
     setShowPaymentModal(false);
-    setShowGiftSuccess(true);
     setProcessing(false);
+    if (mode === 'paid') {
+      setShowGiftSuccess(true);
+      return;
+    }
+    setShowGiftSuccess(false);
+    if (mode === 'cancel') {
+      setZapInvoice(null);
+      setPaymentUri('');
+    }
   }
 
   async function handleCopyInvoice(text: string) {
     await copyToClipboard(text);
     toast('Copied', 'success');
+  }
+
+  async function handleShareWishlist() {
+    const url = `${window.location.origin}/wishlist/${slug}`;
+    if (typeof navigator.share === 'function') {
+      try {
+        await navigator.share({ title: wishlist?.title || 'KATOA wishlist', url });
+        return;
+      } catch {
+        /* user cancelled */
+      }
+    }
+    const result = await copyToClipboard(url);
+    toast(result === 'success' ? 'Link copied' : 'Could not copy', result === 'success' ? 'success' : 'error');
   }
 
   if (loading) {
@@ -636,7 +737,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
     if (!wishlist) return;
     subscribeLocal(wishlist.slug, tierId);
     setSubscribed(true);
-    toast(t('creator.subscribed'), 'success');
+    toast('Unlocks on this device until Lightning webhooks exist', 'info');
   };
 
   const isCreatorSurface = wishlist.card_style === 'creator';
@@ -987,19 +1088,25 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
                 <Gift size={20} className="mr-2" />
                 {t('wishlist.sendGift')}
               </Button>
-              <Button
-                variant="outline"
-                className="w-full"
-                onClick={() => {
-                  setQrAddress('bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh');
-                  setQrAmount(undefined);
-                  setShowQRModal(true);
-                }}
-                title="View Bitcoin QR code"
-              >
-                <QrCode size={18} className="mr-2" />
-                Show QR Code
-              </Button>
+              {onchainAddress ? (
+                <Button
+                  variant="outline"
+                  className="w-full min-h-[44px]"
+                  onClick={() => {
+                    setQrAddress(onchainAddress);
+                    setQrAmount(undefined);
+                    setShowQRModal(true);
+                  }}
+                  title="View Bitcoin QR code"
+                >
+                  <QrCode size={18} className="mr-2" />
+                  Show QR Code
+                </Button>
+              ) : (
+                <p className="text-[11px] text-center text-gray-500">
+                  No on-chain address published — Lightning QR appears after you continue to pay.
+                </p>
+              )}
               <EmbedSnippet path={`/wishlist/${wishlist.slug}`} title={`Support ${wishlist.title}`} />
               <details className="pt-1">
                 <summary className="text-[11px] font-semibold uppercase tracking-wider text-gray-500 cursor-pointer">
@@ -1241,6 +1348,19 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
               invoice from the creator’s lud16. No private keys leave your browser.
             </p>
           )}
+          {paymentTab === 'lightning' && (
+            <p className="text-xs text-gray-400 leading-relaxed">
+              If this creator has a Lightning address, we fetch a bolt11 invoice so the QR is payable — not a
+              lightning:email string.
+            </p>
+          )}
+          {paymentTab === 'onchain' && (
+            <p className="text-xs text-gray-400 leading-relaxed">
+              {onchainAddress
+                ? 'BIP-21 bitcoin: URI with amount. Funding still waits for on-chain confirmation — this page will not bump totals.'
+                : 'This creator has not published an on-chain address. Use Lightning or buy the product.'}
+            </p>
+          )}
           {zapError && (
             <p className="text-sm text-amber-400" role="alert">
               {zapError}
@@ -1333,15 +1453,19 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             disabled={processing || zapBusy}
           >
             <Bitcoin size={20} className="mr-2" />
-            {paymentTab === 'nostr' ? 'Request Zap Invoice' : 'Continue to Pay'}
+            {paymentTab === 'nostr'
+              ? 'Request Zap Invoice'
+              : paymentTab === 'onchain'
+                ? 'Show on-chain QR'
+                : 'Continue to Pay'}
           </Button>
         </form>
       </Modal>
 
       <Modal
         isOpen={showPaymentModal}
-        onClose={closePaymentModal}
-        title="Pay with Lightning"
+        onClose={() => dismissPaymentModal('cancel')}
+        title={giftIntent?.method === 'onchain' ? 'Pay on-chain' : 'Pay with Lightning'}
       >
         <div className="space-y-5">
           {isDemoWishlist && (
@@ -1349,6 +1473,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
               <div className="flex items-center gap-2 text-bitcoin-orange-300 text-sm font-semibold mb-2">
                 <Loader2 size={16} className={demoAutoProgress < 100 ? 'animate-spin' : ''} />
                 Demo gift auto-completing…
+                <DemoBadge label="Demo" />
               </div>
               <div className="w-full h-2 rounded-full bg-white/10 overflow-hidden">
                 <div
@@ -1364,7 +1489,11 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
 
           <div className="bg-white p-3 sm:p-4 rounded-xl mx-auto w-full max-w-[min(100%,280px)]">
             {paymentQrUrl ? (
-              <img src={paymentQrUrl} alt="Lightning invoice QR code" className="w-full aspect-square" />
+              <img
+                src={paymentQrUrl}
+                alt={giftIntent?.method === 'onchain' ? 'Bitcoin payment QR' : 'Lightning invoice QR code'}
+                className="w-full aspect-square"
+              />
             ) : (
               <div className="w-full aspect-square bg-gray-200 animate-pulse rounded-lg" aria-hidden />
             )}
@@ -1372,18 +1501,24 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
 
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-300">
-              {wishlist?.creator?.lightning_address ? 'Lightning address' : 'Payment reference'}
+              {giftIntent?.method === 'onchain'
+                ? 'Bitcoin address (BIP-21)'
+                : zapInvoice && isBolt11Invoice(zapInvoice)
+                  ? 'Lightning invoice (bolt11)'
+                  : wishlist?.creator?.lightning_address
+                    ? 'Lightning address'
+                    : 'Payment reference'}
             </label>
             <div className="flex gap-2">
               <input
-                value={mockInvoice}
+                value={paymentUri || mockInvoice}
                 readOnly
                 className="flex-1 min-w-0 px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white text-sm font-mono min-h-[48px]"
-                aria-label="Lightning payment address or reference"
+                aria-label="Payment URI or reference"
               />
               <Button
                 variant="outline"
-                onClick={() => handleCopyInvoice(mockInvoice)}
+                onClick={() => handleCopyInvoice(paymentUri || mockInvoice)}
                 aria-label="Copy payment details"
                 className="min-h-[48px] min-w-[48px]"
               >
@@ -1392,17 +1527,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             </div>
           </div>
 
-          {(zapInvoice || mockInvoice) && !isDemoWishlist && (
-            <WalletDeepLinks
-              paymentUri={
-                (zapInvoice || mockInvoice)!.startsWith('ln')
-                  ? (zapInvoice || mockInvoice)!
-                  : mockInvoice.includes('@')
-                    ? `lightning:${mockInvoice}`
-                    : mockInvoice
-              }
-            />
-          )}
+          {paymentUri && !isDemoWishlist && <WalletDeepLinks paymentUri={paymentUri} />}
 
           {selectedItem?.merchant_link && (
             <a
@@ -1430,12 +1555,35 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
           <p className="text-xs text-gray-500 text-center leading-relaxed">
             {isDemoWishlist
               ? 'Demo mode simulates a gift. Real pages never mark funded from the browser alone.'
-              : 'Pay from your Lightning wallet. Funding totals update only after payment is confirmed on the server.'}
+              : 'Pay from your wallet. Funding totals update only after payment is confirmed on the server — this page will not bump sats raised.'}
           </p>
 
-          <Button type="button" variant="secondary" className="w-full min-h-[48px]" onClick={closePaymentModal}>
-            {isDemoWishlist ? 'Skip demo wait' : 'Done / Close'}
-          </Button>
+          <div className="flex flex-col gap-2">
+            <Button
+              type="button"
+              variant="bitcoin"
+              className="w-full min-h-[48px]"
+              onClick={() => dismissPaymentModal('paid')}
+            >
+              I paid (waiting)
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              className="w-full min-h-[48px]"
+              onClick={() => dismissPaymentModal('later')}
+            >
+              I&apos;ll pay later
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              className="w-full min-h-[44px]"
+              onClick={() => dismissPaymentModal('cancel')}
+            >
+              Cancel
+            </Button>
+          </div>
         </div>
       </Modal>
 
@@ -1446,6 +1594,10 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
       >
         <GiftSuccess
           onClose={() => setShowGiftSuccess(false)}
+          onShare={() => void handleShareWishlist()}
+          amountSats={giftIntent?.amount}
+          method={giftIntent?.method}
+          status={isDemoWishlist ? 'demo' : 'pending'}
           buyUrl={selectedItem?.merchant_link}
           buyLabel={
             selectedItem?.merchant_link?.includes('amazon')
@@ -1454,8 +1606,8 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
           }
           message={
             isDemoWishlist
-              ? 'Demo gift complete. Try “Buy product” on an item with an Amazon link — or Fund with sats again.'
-              : 'If you completed payment in your wallet, the creator will see confirmed sats after the server records them.'
+              ? 'Demo gift complete. Not a live settlement. Try “Buy product” on an item with a merchant link — or fund with sats again.'
+              : 'If you paid in your wallet, confirmed sats appear after the server records them. This page does not mark the list funded.'
           }
         />
       </Modal>
@@ -1478,18 +1630,20 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             <Gift size={18} className="mr-1.5 shrink-0" />
             {t('wishlist.sendGift')}
           </Button>
-          <Button
-            variant="outline"
-            className="min-h-[48px] min-w-[48px] px-3 border-white/15"
-            onClick={() => {
-              setQrAddress('bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh');
-              setQrAmount(undefined);
-              setShowQRModal(true);
-            }}
-            aria-label="Show QR code"
-          >
-            <QrCode size={20} />
-          </Button>
+          {onchainAddress && (
+            <Button
+              variant="outline"
+              className="min-h-[48px] min-w-[48px] px-3 border-white/15"
+              onClick={() => {
+                setQrAddress(onchainAddress);
+                setQrAmount(undefined);
+                setShowQRModal(true);
+              }}
+              aria-label="Show on-chain QR code"
+            >
+              <QrCode size={20} />
+            </Button>
+          )}
         </div>
       </div>
     </div>

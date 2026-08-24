@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { bitcoinQrData, getQrImageUrl, lightningQrData } from '../qr';
+import { bitcoinQrData, getQrImageUrl, isBolt11Invoice, lightningQrData } from '../qr';
 
 describe('bitcoinQrData', () => {
   it('returns bare address without amount', () => {
@@ -8,6 +8,10 @@ describe('bitcoinQrData', () => {
 
   it('includes amount in BTC when sats provided', () => {
     expect(bitcoinQrData('bc1qtest', 100_000_000)).toBe('bitcoin:bc1qtest?amount=1');
+  });
+
+  it('formats fractional BTC for BIP-21', () => {
+    expect(bitcoinQrData('bc1qtest', 21_000)).toBe('bitcoin:bc1qtest?amount=0.00021');
   });
 });
 
@@ -18,6 +22,14 @@ describe('lightningQrData', () => {
 
   it('preserves existing lightning prefix', () => {
     expect(lightningQrData('lightning:lnbc1test')).toBe('lightning:lnbc1test');
+  });
+});
+
+describe('isBolt11Invoice', () => {
+  it('detects bolt11 with or without lightning prefix', () => {
+    expect(isBolt11Invoice('lnbc1test')).toBe(true);
+    expect(isBolt11Invoice('lightning:lnbc1test')).toBe(true);
+    expect(isBolt11Invoice('user@getalby.com')).toBe(false);
   });
 });
 

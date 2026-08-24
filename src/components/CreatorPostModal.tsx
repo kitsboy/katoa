@@ -92,9 +92,12 @@ export function CreatorPostModal({
                 <SatsDisplay sats={post.priceSats!} showBtc={false} size="sm" className="items-center" />
               )}
               {isPpv ? (
-                <Button size="sm" variant="bitcoin" onClick={handleUnlock}>
-                  {t('creator.unlock')}
-                </Button>
+                <div className="flex flex-col items-center gap-1.5">
+                  <Button size="sm" variant="bitcoin" onClick={handleUnlock} className="min-h-[44px]">
+                    {t('creator.unlock')}
+                  </Button>
+                  <p className="text-[10px] text-gray-400">Demo unlock — not a Lightning payment</p>
+                </div>
               ) : (
                 <Button size="sm" variant="bitcoin" onClick={onSubscribe}>
                   {t('creator.subscribe')}

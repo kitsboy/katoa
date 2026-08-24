@@ -35,7 +35,7 @@ test.describe('creator feed', () => {
     await expect(unlock).toBeVisible({ timeout: 30_000 });
     await unlock.click();
 
-    await expect(page.getByText('Post unlocked!')).toBeVisible();
+    await expect(page.getByText('Demo unlock — not a Lightning payment')).toBeVisible();
     // PPV posts that are not subscribed stay locked for others, but this one is
     // unlocked — the lock overlay count should drop.
     const lockCount = await page.locator('text=Subscribe to unlock').count();

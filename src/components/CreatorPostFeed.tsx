@@ -74,7 +74,7 @@ export function CreatorPostFeed({
     if (post.priceSats === undefined) return;
     unlockPpv(post.id);
     setPpvUnlockedIds((prev) => ({ ...prev, [post.id]: true }));
-    toast(t('creator.ppvUnlocked'), 'success');
+    toast('Demo unlock — not a Lightning payment', 'info');
   };
 
   const isPostVisible = (post: CreatorPost): boolean => {
@@ -185,16 +185,20 @@ export function CreatorPostFeed({
                       <SatsDisplay sats={post.priceSats!} showBtc={false} size="sm" className="items-center" />
                     )}
                     {isPpv ? (
-                      <Button
-                        size="sm"
-                        variant="bitcoin"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleUnlockPpv(post);
-                        }}
-                      >
-                        {t('creator.unlock')}
-                      </Button>
+                      <div className="flex flex-col items-center gap-1">
+                        <Button
+                          size="sm"
+                          variant="bitcoin"
+                          className="min-h-[44px]"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleUnlockPpv(post);
+                          }}
+                        >
+                          {t('creator.unlock')}
+                        </Button>
+                        <p className="text-[10px] text-gray-300">Demo unlock — not a Lightning payment</p>
+                      </div>
                     ) : (
                       <Button
                         size="sm"

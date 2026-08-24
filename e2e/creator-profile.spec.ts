@@ -15,5 +15,9 @@ test.describe('creator profile', () => {
       timeout: 30_000,
     });
     await expect(page.locator('a[href="/wishlist/luna-exclusive-videos"]')).toBeVisible();
+    await expect(page.getByRole('button', { name: /Tip/i }).first()).toBeVisible();
+    await expect(page.getByRole('button', { name: /Subscribe/i }).first()).toBeVisible();
+    await expect(page.getByRole('button', { name: /^Follow$/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /Message/i }).first()).toBeVisible();
   });
 });

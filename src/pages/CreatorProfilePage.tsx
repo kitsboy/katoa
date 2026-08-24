@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Gift, MapPin, Package, User, Zap } from 'lucide-react';
+import { Copy, Gift, MapPin, MessageCircle, Package, Play, QrCode, User, UserPlus, UserCheck, Zap } from 'lucide-react';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
 import { Breadcrumbs } from '../components/Breadcrumbs';
@@ -16,8 +16,14 @@ import { TipMenu } from '../components/TipMenu';
 import { CreatorPostFeed } from '../components/CreatorPostFeed';
 import { ManageSubscriptionPanel } from '../components/ManageSubscriptionPanel';
 import { SubscriptionTiers } from '../components/SubscriptionTiers';
+import { DonateQRModal } from '../components/DonateQRModal';
+import { ZapTotals } from '../components/ZapTotals';
+import { DemoBadge } from '../components/DemoBadge';
+import { MobileStickyCta } from '../components/MobileStickyCta';
+import { WalletDeepLinks } from '../components/WalletDeepLinks';
 import { useToast } from '../components/Toast';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useAuth } from '../contexts/AuthContext';
 import { mockCreatorPosts, type CreatorPost } from '../data/mockCreatorPosts';
 import {
   loadCreatorProfile,
@@ -25,9 +31,13 @@ import {
   type ProfileWishlist,
 } from '../lib/creatorProfile';
 import { isSubscribed, subscribeLocal, unsubscribe } from '../lib/subscriptions';
+import { followLocal, isFollowing, unfollowLocal } from '../lib/follows';
 import { toJsonLdScript } from '../lib/jsonLd';
 import { copyToClipboard } from '../lib/clipboard';
 import { formatCompactCount, formatNumber } from '../lib/i18nFormat';
+import { bitcoinQrData, getQrImageUrl, lightningQrData } from '../lib/qr';
+import { nostrService } from '../lib/nostr';
+import { isSupabaseConfigured, supabase } from '../lib/supabase';
 
 const SITE_URL = (import.meta.env.VITE_SITE_URL ?? 'https://katoa.org').replace(/\/$/, '');
 
@@ -55,15 +65,34 @@ function isProfileSubscribed(profile: CreatorProfile): boolean {
   return subscriptionKeys(profile).some((key) => isSubscribed(key));
 }
 
+function displayNpub(pubkey: string | null | undefined): string | null {
+  const v = pubkey?.trim();
+  if (!v) return null;
+  if (v.startsWith('npub1')) return v;
+  try {
+    return nostrService.encodeNpub(v);
+  } catch {
+    return v;
+  }
+}
+
 export function CreatorProfilePage() {
   const { username: rawUsername } = useParams();
   const username = decodeUsername(rawUsername);
   const { t } = useLanguage();
   const { toast } = useToast();
+  const { user, isDemoUser } = useAuth();
   const [profile, setProfile] = useState<CreatorProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [subscribed, setSubscribed] = useState(false);
+  const [following, setFollowing] = useState(false);
   const [showTip, setShowTip] = useState(false);
+  const [showDonateQr, setShowDonateQr] = useState(false);
+  const [showIdentityQr, setShowIdentityQr] = useState<'lightning' | 'onchain' | null>(null);
+  const [tipInvoice, setTipInvoice] = useState<string | null>(null);
+  const [tipQrUrl, setTipQrUrl] = useState('');
+  const [tipSats, setTipSats] = useState<number | null>(null);
+  const [tipBusy, setTipBusy] = useState(false);
 
   const loadProfile = useCallback(
     async (signal?: { cancelled: boolean }) => {
@@ -98,9 +127,11 @@ export function CreatorProfilePage() {
   useEffect(() => {
     if (!profile) {
       setSubscribed(false);
+      setFollowing(false);
       return;
     }
     setSubscribed(isProfileSubscribed(profile));
+    setFollowing(isFollowing(profile.username));
   }, [profile]);
 
   const posts: CreatorPost[] = useMemo(() => {
@@ -130,6 +161,10 @@ export function CreatorProfilePage() {
   const country = profile?.wishlists.find((w) => w.country)?.country;
   const creatorInitial = (profile?.username?.[0] || '?').toUpperCase();
   const path = username ? `/u/${encodeURIComponent(profile?.username || username)}` : '/explore';
+  const npub = displayNpub(profile?.nostr_pubkey);
+  const lightning = profile?.lightning_address?.trim() || null;
+  const onchain = profile?.bitcoin_address?.trim() || null;
+  const messageHref = `/messages?to=${encodeURIComponent(npub || profile?.username || '')}`;
 
   const handleSubscribe = (tierId = 'supporter') => {
     if (!profile) return;
@@ -137,7 +172,7 @@ export function CreatorProfilePage() {
       subscribeLocal(key, tierId);
     }
     setSubscribed(true);
-    toast(t('creator.subscribed'), 'success');
+    toast('Unlocks on this device until Lightning webhooks exist', 'info');
   };
 
   const handleUnsubscribe = () => {
@@ -149,19 +184,80 @@ export function CreatorProfilePage() {
     toast(t('creator.unsubscribed'), 'info');
   };
 
-  const handleTip = (sats: number) => {
+  const handleFollow = async () => {
     if (!profile) return;
-    const ln = profile.lightning_address?.trim();
-    if (ln) {
-      void copyToClipboard(ln);
-      toast(
-        `Lightning address copied — send ${formatNumber(sats)} sats from your wallet. This demo does not settle.`,
-        'info'
-      );
-    } else {
-      toast('No Lightning address on this profile yet. Open a wishlist to gift, or subscribe locally.', 'info');
+    if (following) {
+      unfollowLocal(profile.username);
+      setFollowing(false);
+      if (user && profile.id && isSupabaseConfigured() && !isDemoUser) {
+        void supabase.from('follows').delete().eq('follower_id', user.id).eq('following_id', profile.id);
+      }
+      toast('Unfollowed on this device', 'info');
+      return;
     }
+    followLocal(profile.username);
+    setFollowing(true);
+    if (user && profile.id && isSupabaseConfigured() && !isDemoUser) {
+      const { error } = await supabase.from('follows').insert({
+        follower_id: user.id,
+        following_id: profile.id,
+      });
+      if (error) {
+        /* local follow still stands — do not pretend kind-3 */
+      }
+    }
+    toast('Following on this device — not a Nostr kind-3 follow', 'success');
+  };
+
+  const handleCopy = async (value: string, label: string) => {
+    const result = await copyToClipboard(value);
+    toast(result === 'success' ? `${label} copied` : 'Could not copy', result === 'success' ? 'success' : 'error');
+  };
+
+  const resetTip = () => {
     setShowTip(false);
+    setTipInvoice(null);
+    setTipQrUrl('');
+    setTipSats(null);
+    setTipBusy(false);
+  };
+
+  const handleTip = async (sats: number) => {
+    if (!profile) return;
+    setTipSats(sats);
+    setTipInvoice(null);
+    setTipQrUrl('');
+    const ln = lightning;
+    if (ln?.includes('@')) {
+      setTipBusy(true);
+      try {
+        const inv = await nostrService.fetchZapInvoice({
+          lud16: ln,
+          amountSats: sats,
+          comment: `KATOA tip for @${profile.username}`,
+        });
+        if (inv.bolt11) {
+          setTipInvoice(inv.bolt11);
+          setTipQrUrl(getQrImageUrl(lightningQrData(inv.bolt11), 280));
+          toast('Lightning invoice ready — pay in your wallet. This page does not settle.', 'info');
+          return;
+        }
+        toast(inv.error || 'Could not fetch invoice — copy the Lightning address instead.', 'info');
+      } finally {
+        setTipBusy(false);
+      }
+    }
+    if (ln) {
+      setTipQrUrl(getQrImageUrl(lightningQrData(ln), 280));
+      void handleCopy(ln, 'Lightning address');
+      return;
+    }
+    if (onchain) {
+      setShowTip(false);
+      setShowDonateQr(true);
+      return;
+    }
+    toast('No Lightning or on-chain address on this profile yet.', 'info');
   };
 
   if (loading) {
@@ -206,7 +302,7 @@ export function CreatorProfilePage() {
     url: `${SITE_URL}${path}`,
     description: profile.bio || `Bitcoin creator @${profile.username} on KATOA.`,
     ...(cover.imageUrl ? { image: cover.imageUrl.startsWith('http') ? cover.imageUrl : `${SITE_URL}${cover.imageUrl}` } : {}),
-    ...(profile.lightning_address ? { identifier: profile.lightning_address } : {}),
+    ...(lightning ? { identifier: lightning } : {}),
   };
 
   const breadcrumbSchema = {
@@ -219,8 +315,15 @@ export function CreatorProfilePage() {
     ],
   };
 
+  const identityQrValue =
+    showIdentityQr === 'lightning' && lightning
+      ? lightningQrData(lightning)
+      : showIdentityQr === 'onchain' && onchain
+        ? bitcoinQrData(onchain)
+        : '';
+
   return (
-    <div className="min-h-screen bg-charcoal-950 pb-24 md:pb-0">
+    <div className="min-h-screen bg-charcoal-950 pb-28 md:pb-0">
       <PageMeta
         title={`@${profile.username}`}
         description={
@@ -305,12 +408,68 @@ export function CreatorProfilePage() {
                 {profile.bio && (
                   <p className="text-gray-300 text-sm sm:text-base leading-relaxed mt-3 max-w-2xl">{profile.bio}</p>
                 )}
-                {profile.lightning_address && (
-                  <p className="text-sm text-gray-400 flex items-center gap-1.5 mt-3 truncate">
-                    <Zap size={14} className="text-bitcoin-orange-400 shrink-0" aria-hidden />
-                    <span className="font-mono">{profile.lightning_address}</span>
-                  </p>
-                )}
+
+                <div className="mt-4 space-y-2">
+                  {lightning && (
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Zap size={14} className="text-bitcoin-orange-400 shrink-0" aria-hidden />
+                      <span className="font-mono text-sm text-gray-300 truncate">{lightning}</span>
+                      <button
+                        type="button"
+                        className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-lg border border-white/10 text-gray-300 hover:text-white touch-manipulation"
+                        onClick={() => handleCopy(lightning, 'Lightning address')}
+                        aria-label="Copy Lightning address"
+                      >
+                        <Copy size={16} />
+                      </button>
+                      <button
+                        type="button"
+                        className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-lg border border-white/10 text-gray-300 hover:text-white touch-manipulation"
+                        onClick={() => setShowIdentityQr('lightning')}
+                        aria-label="Show Lightning QR"
+                      >
+                        <QrCode size={16} />
+                      </button>
+                    </div>
+                  )}
+                  {npub && (
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-500 shrink-0">npub</span>
+                      <span className="font-mono text-xs text-gray-400 truncate">{npub}</span>
+                      <button
+                        type="button"
+                        className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-lg border border-white/10 text-gray-300 hover:text-white touch-manipulation"
+                        onClick={() => handleCopy(npub, 'npub')}
+                        aria-label="Copy npub"
+                      >
+                        <Copy size={16} />
+                      </button>
+                    </div>
+                  )}
+                  {onchain && (
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-gray-500 shrink-0">BTC</span>
+                      <span className="font-mono text-xs text-gray-400 truncate">{onchain}</span>
+                      <button
+                        type="button"
+                        className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-lg border border-white/10 text-gray-300 hover:text-white touch-manipulation"
+                        onClick={() => handleCopy(onchain, 'Bitcoin address')}
+                        aria-label="Copy Bitcoin address"
+                      >
+                        <Copy size={16} />
+                      </button>
+                      <button
+                        type="button"
+                        className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-lg border border-white/10 text-gray-300 hover:text-white touch-manipulation"
+                        onClick={() => setShowDonateQr(true)}
+                        aria-label="Show Bitcoin QR"
+                      >
+                        <QrCode size={16} />
+                      </button>
+                    </div>
+                  )}
+                  {profile.nostr_pubkey && <ZapTotals pubkey={profile.nostr_pubkey} className="mt-1" />}
+                </div>
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-2 shrink-0">
@@ -330,7 +489,19 @@ export function CreatorProfilePage() {
                 className="min-h-[44px]"
               >
                 {subscribed ? t('creator.subscribed') : t('creator.subscribe')}
+                {!subscribed && <DemoBadge label="Demo" className="ml-2" />}
               </Button>
+              <Button variant="secondary" onClick={() => void handleFollow()} className="min-h-[44px]">
+                {following ? <UserCheck size={18} className="mr-2" /> : <UserPlus size={18} className="mr-2" />}
+                {following ? t('dashboard.following') : 'Follow'}
+              </Button>
+              <Link
+                href={messageHref}
+                className="inline-flex items-center justify-center min-h-[44px] px-4 rounded-xl border border-neon-cyan-500/25 bg-neon-cyan-500/10 text-sm font-semibold text-neon-cyan-200 hover:bg-neon-cyan-500/15"
+              >
+                <MessageCircle size={18} className="mr-2" />
+                Message
+              </Link>
             </div>
           </div>
 
@@ -366,7 +537,7 @@ export function CreatorProfilePage() {
           />
         )}
 
-        {posts.length > 0 && (
+        {posts.length > 0 ? (
           <CreatorPostFeed
             creatorName={profile.username}
             subscriberCount={subscriberCount}
@@ -376,6 +547,16 @@ export function CreatorProfilePage() {
             onTip={() => setShowTip(true)}
             t={t}
           />
+        ) : (
+          <Card variant="glass" className="p-8 sm:p-10 text-center mb-12">
+            <Play size={28} className="text-gray-500 mx-auto mb-3" />
+            <h2 className="text-lg font-bold text-white mb-1">No posts yet</h2>
+            <p className="text-gray-400 text-sm max-w-md mx-auto">
+              {profile.wishlists.length > 0
+                ? 'Wishlist-only profile — no feed drops here. Gift a list below or subscribe locally.'
+                : 'This creator has not published posts or wishlists yet.'}
+            </p>
+          </Card>
         )}
 
         <section className="mb-14" aria-labelledby="creator-wishlists-heading">
@@ -454,12 +635,78 @@ export function CreatorProfilePage() {
         </div>
       </div>
 
-      <Modal isOpen={showTip} onClose={() => setShowTip(false)} title={t('creator.tip')} size="sm">
-        <TipMenu onSelect={handleTip} />
-        {profile.lightning_address && (
-          <p className="mt-3 text-xs text-gray-500 text-center font-mono break-all">{profile.lightning_address}</p>
+      <Modal isOpen={showTip} onClose={resetTip} title={t('creator.tip')} size="sm">
+        <TipMenu onSelect={(sats) => void handleTip(sats)} />
+        {tipBusy && <p className="mt-3 text-xs text-gray-400 text-center">Fetching Lightning invoice…</p>}
+        {tipSats && (tipQrUrl || tipInvoice) && (
+          <div className="mt-4 space-y-3">
+            <p className="text-xs text-center text-gray-400">
+              {tipSats.toLocaleString()} sats · {tipInvoice ? 'bolt11 invoice' : 'Lightning address'} — not settled here
+            </p>
+            {tipQrUrl && (
+              <div className="bg-white p-3 rounded-xl mx-auto w-full max-w-[220px]">
+                <img src={tipQrUrl} alt="Tip payment QR" className="w-full aspect-square" />
+              </div>
+            )}
+            {(tipInvoice || lightning) && (
+              <WalletDeepLinks paymentUri={tipInvoice || lightningQrData(lightning || '')} />
+            )}
+          </div>
+        )}
+        {lightning && (
+          <p className="mt-3 text-xs text-gray-500 text-center font-mono break-all">{lightning}</p>
         )}
       </Modal>
+
+      <Modal
+        isOpen={Boolean(showIdentityQr && identityQrValue)}
+        onClose={() => setShowIdentityQr(null)}
+        title={showIdentityQr === 'lightning' ? 'Lightning QR' : 'Bitcoin QR'}
+        size="sm"
+      >
+        {identityQrValue && (
+          <div className="space-y-3">
+            <div className="bg-white p-3 rounded-xl mx-auto w-full max-w-[240px]">
+              <img src={getQrImageUrl(identityQrValue, 280)} alt="Payment QR" className="w-full aspect-square" />
+            </div>
+            <WalletDeepLinks paymentUri={identityQrValue} />
+          </div>
+        )}
+      </Modal>
+
+      {onchain && (
+        <DonateQRModal
+          isOpen={showDonateQr}
+          onClose={() => setShowDonateQr(false)}
+          address={onchain}
+          lightningUri={lightning ? lightningQrData(lightning) : undefined}
+          recipientLabel={`@${profile.username}`}
+        />
+      )}
+
+      <MobileStickyCta>
+        <div className="flex gap-2">
+          <Button variant="outline" className="flex-1 min-h-[44px] text-sm" onClick={() => setShowTip(true)}>
+            <Zap size={16} className="mr-1.5" />
+            {t('creator.tip')}
+          </Button>
+          <Button
+            variant="bitcoin"
+            className="flex-1 min-h-[44px] text-sm"
+            onClick={() => (subscribed ? undefined : handleSubscribe())}
+            disabled={subscribed}
+          >
+            {subscribed ? t('creator.subscribed') : t('creator.subscribe')}
+          </Button>
+          <Link
+            href={messageHref}
+            className="inline-flex items-center justify-center min-h-[44px] min-w-[44px] px-3 rounded-xl border border-white/15 text-neon-cyan-200"
+            aria-label="Message"
+          >
+            <MessageCircle size={18} />
+          </Link>
+        </div>
+      </MobileStickyCta>
     </div>
   );
 }

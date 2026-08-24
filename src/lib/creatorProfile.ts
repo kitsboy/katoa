@@ -17,11 +17,15 @@ export interface ProfileWishlist {
 }
 
 export interface CreatorProfile {
+  /** Live `profiles.id` when loaded from Supabase; null for mock creators. */
+  id: string | null;
   username: string;
   avatar_url: string | null;
   bio?: string;
   lightning_address?: string | null;
   nostr_pubkey?: string | null;
+  /** On-chain receive address from public `wallet_addresses` (never a demo placeholder). */
+  bitcoin_address?: string | null;
   banner_url?: string | null;
   wishlists: ProfileWishlist[];
   fromMock: boolean;
@@ -116,13 +120,19 @@ export function isUnsupportedVisibilityError(error: QueryError): boolean {
   );
 }
 
-export function liveProfileFromRow(row: LiveProfileRow, wishlists: ProfileWishlist[]): CreatorProfile {
+export function liveProfileFromRow(
+  row: LiveProfileRow,
+  wishlists: ProfileWishlist[],
+  bitcoin_address: string | null = null
+): CreatorProfile {
   return {
+    id: row.id,
     username: row.username,
     avatar_url: row.avatar_url,
     bio: row.bio || undefined,
     lightning_address: row.lightning_address,
     nostr_pubkey: row.nostr_pubkey,
+    bitcoin_address,
     banner_url: row.banner_url,
     wishlists,
     fromMock: false,
@@ -147,12 +157,16 @@ export function mockProfileForUsername(username: string): CreatorProfile | null 
   const creators = lists.map((w) => w.creator as typeof w.creator & MockCreatorExtras);
   const withBio = creators.find((c) => c.bio);
   const withLn = creators.find((c) => c.lightning_address);
+  const extras = creators as Array<typeof first.creator & MockCreatorExtras & { bitcoin_address?: string | null }>;
+  const withOnchain = extras.find((c) => c.bitcoin_address);
   return {
+    id: null,
     username: first.creator.username,
     avatar_url: first.creator.avatar_url,
     bio: withBio?.bio,
     lightning_address: withLn?.lightning_address ?? null,
     nostr_pubkey: creators.find((c) => c.nostr_pubkey)?.nostr_pubkey ?? null,
+    bitcoin_address: withOnchain?.bitcoin_address ?? null,
     banner_url: null,
     wishlists: lists.map((w) => {
       const extra = w as typeof w & MockListExtras;
@@ -245,6 +259,32 @@ async function fetchCreatorWishlists(creatorId: string): Promise<ProfileWishlist
   return [];
 }
 
+type WalletAddressRow = {
+  address_value: string | null;
+  address_type: string;
+  is_active: boolean | null;
+};
+
+/** Public on-chain receive address, if the creator published one. Never invents a placeholder. */
+export async function fetchCreatorOnchainAddress(userId: string | null | undefined): Promise<string | null> {
+  if (!userId || !isSupabaseConfigured()) return null;
+  try {
+    const { data, error } = await supabase
+      .from('wallet_addresses')
+      .select('address_value, address_type, is_active')
+      .eq('user_id', userId);
+
+    if (error || !data) return null;
+    const match = asRows<WalletAddressRow>(data).find(
+      (row) => row.is_active !== false && row.address_type === 'onchain' && Boolean(row.address_value?.trim())
+    );
+    const value = match?.address_value?.trim();
+    return value || null;
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Live Supabase profile when a row exists (even with 0 wishlists).
  * No row / lookup failure / unconfigured → mock creator, else null.
@@ -258,8 +298,11 @@ export async function loadCreatorProfile(username: string): Promise<CreatorProfi
     try {
       const row = await fetchLiveProfileRow(cleaned);
       if (row) {
-        const wishlists = await fetchCreatorWishlists(row.id);
-        live = liveProfileFromRow(row, wishlists);
+        const [wishlists, bitcoin_address] = await Promise.all([
+          fetchCreatorWishlists(row.id),
+          fetchCreatorOnchainAddress(row.id),
+        ]);
+        live = liveProfileFromRow(row, wishlists, bitcoin_address);
       }
     } catch {
       live = null;

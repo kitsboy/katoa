@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { STORAGE_KEYS } from '../storage';
-import { isSubscribed, subscribeLocal, unsubscribe } from '../subscriptions';
+import { getSubscription, isSubscribed, subscribeLocal, unsubscribe } from '../subscriptions';
 
 describe('subscriptions', () => {
   beforeEach(() => {
@@ -21,5 +21,11 @@ describe('subscriptions', () => {
     subscribeLocal('luna-exclusive-videos');
     unsubscribe('luna-exclusive-videos');
     expect(isSubscribed('luna-exclusive-videos')).toBe(false);
+  });
+
+  it('records source as local (not a Lightning settlement)', () => {
+    const state = subscribeLocal('luna-exclusive-videos', 'patron');
+    expect(state.source).toBe('local');
+    expect(getSubscription('luna-exclusive-videos')?.source).toBe('local');
   });
 });

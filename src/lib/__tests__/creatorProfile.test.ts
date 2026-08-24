@@ -156,6 +156,7 @@ describe('mockProfileForUsername', () => {
   it('matches mock creators case-insensitively', () => {
     const profile = mockProfileForUsername('LUNA_VIP');
     expect(profile?.fromMock).toBe(true);
+    expect(profile?.id).toBeNull();
     expect(profile?.username).toBe('luna_vip');
     expect(profile?.wishlists.some((w) => w.slug === 'luna-exclusive-videos')).toBe(true);
   });
@@ -171,6 +172,7 @@ describe('selectCreatorProfileSource', () => {
     const selected = selectCreatorProfileSource('luna_vip', live);
     expect(selected).toBe(live);
     expect(selected?.fromMock).toBe(false);
+    expect(selected?.id).toBe('live-1');
     expect(selected?.wishlists).toEqual([]);
     expect(selected?.bio).toBe('Real Luna');
   });
@@ -208,6 +210,9 @@ describe('loadCreatorProfile', () => {
         if (table === 'profiles') {
           profileCalls.push(call);
           return (opts.profile ?? { data: null, error: null }) as { data: unknown; error: unknown };
+        }
+        if (table === 'wallet_addresses') {
+          return { data: [], error: null };
         }
         wishlistCalls.push(call);
         if (wishlistQueue.length > 0) return wishlistQueue.shift() as { data: unknown; error: unknown };
