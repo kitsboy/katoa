@@ -287,18 +287,20 @@ export function Footer() {
         address={bitcoinAddress}
       />
 
-      {/* Donation drawer — preserved */}
+      {/* Donation drawer — unmount when closed so it cannot cover the landing */}
+      {showDonation && (
       <div
-        className={`fixed bottom-0 left-0 right-0 z-[70] transition-transform duration-500 ease-out ${
-          showDonation ? 'translate-y-0' : 'translate-y-full'
-        }`}
+        className="fixed bottom-0 left-0 right-0 z-[70] translate-y-0"
+        role="dialog"
+        aria-modal="true"
+        aria-label={t('footer.donateSats')}
       >
         <div className="relative bg-gradient-to-t from-charcoal-950 via-charcoal-900 to-charcoal-950 border-t-2 border-bitcoin-orange-500/50 shadow-[0_-10px_50px_rgba(247,147,26,0.25)] pb-safe">
           <button
             type="button"
             onClick={() => setShowDonation(false)}
             aria-label="Close donation drawer"
-            className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/10 hover:bg-white/15 border border-white/10 text-gray-400 hover:text-white flex items-center justify-center transition-all"
+            className="absolute top-4 right-4 w-11 h-11 rounded-full bg-white/10 hover:bg-white/15 border border-white/10 text-gray-100 hover:text-white flex items-center justify-center transition-all"
           >
             <ChevronDown size={20} />
           </button>
@@ -353,12 +355,13 @@ export function Footer() {
           </div>
         </div>
       </div>
+      )}
 
       {showDonation && (
         <div
           role="presentation"
           onClick={() => setShowDonation(false)}
-          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+          className="fixed inset-0 bg-charcoal-950/60 backdrop-blur-sm z-[60]"
         />
       )}
     </>
