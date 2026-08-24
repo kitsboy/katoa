@@ -48,7 +48,7 @@ export function SecurityPage() {
         description={t('security.metaDesc')}
         path="/security"
       />
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
         <PageHero title={t('security.title')} subtitle={t('security.metaDesc')} />
         <TrustProofStrip className="mb-10" />
 
@@ -90,7 +90,7 @@ export function SecurityPage() {
             View source on GitHub
           </a>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

@@ -122,19 +122,13 @@ function RouteAnnouncer() {
 
 function ExplorePreload() {
   useEffect(() => {
-    const links = document.querySelectorAll('a[href="/explore"], a[href^="/explore"]');
-    const preload = () => { void import('./pages/ExplorePage'); };
-    const bind = (el: Element) => {
-      el.addEventListener('mouseenter', preload, { once: true });
-      el.addEventListener('focusin', preload, { once: true });
-    };
-    links.forEach(bind);
-    return () => {
-      links.forEach((el) => {
-        el.removeEventListener('mouseenter', preload);
-        el.removeEventListener('focusin', preload);
-      });
-    };
+    const id = window.setTimeout(() => {
+      void import('./pages/ExplorePage');
+      void import('./pages/ComparisonPage');
+      void import('./pages/FAQPage');
+      void import('./pages/DashboardPage');
+    }, 400);
+    return () => window.clearTimeout(id);
   }, []);
   return null;
 }

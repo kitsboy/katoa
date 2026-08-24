@@ -26,7 +26,7 @@ export function PressKitPage() {
         description="KATOA press kit — one-liner, boilerplate, logos, and links for journalists and partners."
         path="/press"
       />
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
         <PageHero title="Press kit" subtitle="Assets and copy for media, partners, and meetup hosts." />
 
         <div className="space-y-6">
@@ -93,7 +93,7 @@ export function PressKitPage() {
             </ul>
           </section>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

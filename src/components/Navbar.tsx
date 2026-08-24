@@ -158,8 +158,8 @@ export function Navbar() {
               <OfflineIndicator />
             </div>
 
-            <div className="hidden md:flex items-center gap-1 lg:gap-2">
-              <div className="flex items-center gap-0.5 mr-2 lg:mr-4 px-1 py-1 rounded-full border bg-white/[0.03] border-white/[0.06]">
+            <div className="hidden md:flex items-center gap-1 lg:gap-2 min-w-0">
+              <div className="flex items-center gap-0.5 mr-1 lg:mr-3 px-1 py-1 rounded-full border bg-white/[0.03] border-white/[0.06]">
                 <Link
                   href="/explore"
                   className={`nav-link-pill relative ${isActive('/explore') ? 'nav-link-pill-active' : ''}`}
@@ -169,19 +169,19 @@ export function Navbar() {
                 </Link>
                 <Link
                   href="/comparison"
-                  className={`nav-link-pill ${isActive('/comparison') ? 'nav-link-pill-active' : ''}`}
+                  className={`nav-link-pill hidden lg:inline-flex ${isActive('/comparison') ? 'nav-link-pill-active' : ''}`}
                 >
                   {t('nav.comparison')}
                 </Link>
                 <Link
                   href="/faq"
-                  className={`nav-link-pill ${isActive('/faq') ? 'nav-link-pill-active' : ''}`}
+                  className={`nav-link-pill hidden xl:inline-flex ${isActive('/faq') ? 'nav-link-pill-active' : ''}`}
                 >
                   {t('nav.faq')}
                 </Link>
                 <Link
                   href="/messages"
-                  className={`nav-link-pill relative inline-flex items-center gap-1.5 ${
+                  className={`nav-link-pill relative hidden xl:inline-flex items-center gap-1.5 ${
                     location.pathname.startsWith('/messages') ? 'nav-link-pill-active' : ''
                   }`}
                 >

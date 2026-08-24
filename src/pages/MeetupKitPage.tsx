@@ -28,7 +28,7 @@ export function MeetupKitPage() {
         description="Talk track, QR, and demo script for KATOA at Bitcoin meetups."
         path="/meetup"
       />
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
         <PageHero title="Meetup kit" subtitle="Run a clear 60-second demo at any Bitcoin or mutual-aid meetup." />
 
         <div className="space-y-4">
@@ -66,7 +66,7 @@ export function MeetupKitPage() {
             </Link>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

@@ -109,7 +109,7 @@ export function TemplatesPage() {
         description="Start faster with KATOA templates — models, fitness, meals, golf, music, mutual aid, and more. Zero platform fees."
         path="/templates"
       />
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
         <PageHero
           title="Wishlist templates"
           subtitle={
@@ -199,7 +199,7 @@ export function TemplatesPage() {
             For creators
           </Link>
         </p>
-      </main>
+      </div>
     </div>
   );
 }

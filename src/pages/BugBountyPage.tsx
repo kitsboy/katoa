@@ -17,7 +17,7 @@ export function BugBountyPage() {
         description="Report security issues on KATOA. Responsible disclosure. Sats rewards when funded."
         path="/security/bounty"
       />
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
         <PageHero
           title="Bug bounty lite"
           subtitle="Help harden a zero-fee, non-custodial creator stack. No testing on mainnet funds that are not yours."
@@ -63,7 +63,7 @@ export function BugBountyPage() {
         <p className="mt-8 text-center text-xs text-gray-600">
           Related: <Link href="/security" className="text-neon-cyan-400 hover:underline">Security & custody</Link>
         </p>
-      </main>
+      </div>
     </div>
   );
 }

@@ -83,7 +83,7 @@ export function FAQPage() {
       <PageMeta title={t('faq.metaTitle')} description={t('faq.metaDesc')} path="/faq" />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: toJsonLdScript(faqSchema) }} />
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
         <PageHero title={t('faq.title')} subtitle={t('faq.subtitle')} />
 
         <div className="mb-6">
@@ -195,7 +195,7 @@ export function FAQPage() {
             </a>
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

@@ -41,7 +41,7 @@ export function CreatorsPage() {
         description={t('creators.pageSubtitle')}
         path="/creators"
       />
-      <main
+      <div
         className="max-w-5xl mx-auto px-4 sm:px-6 py-8"
         aria-label={t('a11y.creatorsMain')}
       >
@@ -91,7 +91,7 @@ export function CreatorsPage() {
             </Button>
           </Link>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

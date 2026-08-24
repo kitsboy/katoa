@@ -186,7 +186,7 @@ export function MessagesPage() {
         path="/messages"
         noindex
       />
-      <main
+      <div
         className="max-w-3xl mx-auto px-4 sm:px-6 py-8"
         aria-label={t('a11y.messagesMain')}
       >
@@ -399,7 +399,7 @@ export function MessagesPage() {
             </Link>
           </p>
         )}
-      </main>
+      </div>
     </div>
   );
 }

@@ -72,7 +72,7 @@ export function Nip05ClaimPage() {
         description="Request a KATOA NIP-05 handle for your Nostr pubkey."
         path="/nip05"
       />
-      <main className="max-w-lg mx-auto px-4 sm:px-6 py-8">
+      <div className="max-w-lg mx-auto px-4 sm:px-6 py-8">
         <PageHero
           title="Claim name@katoa.org"
           subtitle="Link your Nostr identity to a KATOA handle. Platform key is katoa@katoa.org; creators request personal handles here."
@@ -109,7 +109,7 @@ export function Nip05ClaimPage() {
             and docs/NOSTR-NIP05.md.
           </p>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

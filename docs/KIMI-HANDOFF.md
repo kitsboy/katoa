@@ -1,3 +1,14 @@
+## Session — 2026-08-24 (Grok M3) — Desktop nav + page-change hiccups
+
+**Role:** M3 code only. Pushed `main`.
+
+### Done
+- Desktop island: Explore always; Why Katoa from `lg`; FAQ/Messages from `xl` so mid-width stops crowding.
+- One `<main>` landmark (inner page mains → divs).
+- Faster route fade (0.18s) + idle prefetch of Explore/Comparison/FAQ/Dashboard.
+
+---
+
 ## Session — 2026-08-24 (Grok M3) — Header island no longer covers page copy
 
 **Role:** M3 code only. Pushed `main`.

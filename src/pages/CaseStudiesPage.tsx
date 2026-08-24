@@ -35,7 +35,7 @@ export function CaseStudiesPage() {
         description="How creators use KATOA — zero-fee wishlists and Lightning support."
         path="/case-studies"
       />
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
         <PageHero
           title="Case studies"
           subtitle="Patterns that work. Some stories use demo catalogs until live pilots publish."
@@ -57,7 +57,7 @@ export function CaseStudiesPage() {
             </article>
           ))}
         </div>
-      </main>
+      </div>
     </div>
   );
 }

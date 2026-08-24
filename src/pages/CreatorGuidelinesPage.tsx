@@ -36,7 +36,7 @@ export function CreatorGuidelinesPage() {
         description="How to use KATOA as a creator — tips, wishlists, DMs, and safety."
         path="/creators/guidelines"
       />
-      <main
+      <div
         className="max-w-2xl mx-auto px-4 sm:px-6 py-8"
         aria-label={t('creators.guidelinesTitle')}
       >
@@ -69,7 +69,7 @@ export function CreatorGuidelinesPage() {
             {t('nav.security')}
           </Link>
         </nav>
-      </main>
+      </div>
     </div>
   );
 }

@@ -71,7 +71,7 @@ export function RoadmapPage() {
         description={t('roadmap.inApp.meta')}
         path="/roadmap"
       />
-      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
         <PageHero title={t('roadmap.inApp.title')} subtitle={t('roadmap.inApp.meta')} />
 
         <ol className="space-y-3">
@@ -111,7 +111,7 @@ export function RoadmapPage() {
           </Link>{' '}
           or open a PR.
         </p>
-      </main>
+      </div>
     </div>
   );
 }
