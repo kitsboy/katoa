@@ -7,7 +7,7 @@ A revolutionary creator platform enabling anyone, anywhere to receive support vi
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js 18+
+- Node.js 20+
 - npm or yarn
 
 ### Development
@@ -54,7 +54,7 @@ A revolutionary creator platform enabling anyone, anywhere to receive support vi
 ## 📚 Documentation (Best Organized for Humans + Kimi Handoff)
 
 **Design & marketing (read before UI or pitch work)**:
-- [docs/DESIGN.md](./docs/DESIGN.md) — Colors, typography, tokens, components, z-index, mobile patterns (living doc)
+- [docs/DESIGN.md](./docs/DESIGN.md) — Night-jewel tokens, contrast rules, components, z-index, mobile patterns (living doc)
 - [docs/EXECUTIVE-SUMMARY.md](./docs/EXECUTIVE-SUMMARY.md) — Leadership overview (~5 min read)
 - [docs/MARKETING.md](./docs/MARKETING.md) — Pitch, messaging, CTAs, campaigns
 - [docs/marketing/KATOA-Marketing-Presentation.pdf](./docs/marketing/KATOA-Marketing-Presentation.pdf) — Slide deck (PDF)
@@ -113,8 +113,8 @@ All docs are Obsidian-friendly Markdown. Run the `giveabit-project-handoff` skil
 - ✅ Share buttons everywhere
 
 ### Platform & UX
-- ✅ Multi-language support (7 languages via `LanguageContext` + `pageStrings`)
-- ✅ Charcoal/glass design system across all pages (mobile-first, premium feel)
+- ✅ Multi-language support (en, es, pt, fr, de, ja, zh — no Swahili)
+- ✅ Night-jewel design system (deep plum / ember — not beige, not all-black; mobile-first)
 - ✅ Toast notifications, ConfirmDialog, EmptyState, Breadcrumbs, PageMeta (dynamic OG)
 - ✅ PWA service worker v2, offline fallback, `npm run sitemap`
 - ✅ Nostr authentication (NIP-07 browser extension: Alby etc.) — full profile sync + wishlist publishing (NIP-78)
@@ -146,7 +146,8 @@ All docs are Obsidian-friendly Markdown. Run the `giveabit-project-handoff` skil
 ### Bitcoin Integration
 - **Payments**: BTCPay Server + Lightning Network
 - **Libraries**: nostr-tools for decentralized identity
-- **Price Data**: CoinGecko API
+- **Map**: MapLibre GL + OpenFreeMap (Leaflet fully removed)
+- **Price Data**: Coinbase / CoinGecko APIs (footer + navbar BTC price strip; Pulse/Protocol widgets removed)
 
 ### Infrastructure
 - **Hosting (Live)**: Cloudflare (custom domain katoa.org, CF headers confirmed)
@@ -168,10 +169,12 @@ All docs are Obsidian-friendly Markdown. Run the `giveabit-project-handoff` skil
   /data           # changelog.json, mock data
   /hooks          # useRouter.tsx (deprecated — React Router v6 in App.tsx)
   /lib            # supabase, nostr, btcpay, bitcoinPrice, productParser
-  /pages          # 17 route pages (lazy-loaded)
-    - Home, Explore, WishlistRoute, Dashboard, Project, Settings
-    - About, Contact, FAQ, Pricing, Comparison, Pitch, Auth
-    - Terms, Privacy, NotFound (+ WishlistPage for dashboard embed)
+  /pages          # ~29 route pages (lazy-loaded)
+    - Home, Explore, Creators, Guidelines, /u/:username profiles
+    - WishlistRoute, Dashboard, Project, Settings, Messages
+    - About, Contact, FAQ, Pricing, Comparison, Pitch (noindex)
+    - Security, Roadmap, Templates, Press, Meetup, Case studies
+    - Terms, Privacy, Auth, NIP-05, NotFound
 /scripts          # generate-sitemap.mjs, setup-supabase.sh, etc.
 /supabase/migrations  # 23 database migrations
 /public           # sw.js, robots.txt, sitemap.xml, static assets
@@ -239,11 +242,14 @@ BTCPay settlement is `supabase/functions/btcpay-webhook` (HMAC + service role). 
 
 ## 🎨 Design Principles
 
+Night-jewel (target — CSS landing in parallel). See [`docs/DESIGN.md`](./docs/DESIGN.md).
+
 ### Color Palette
-- Bitcoin Orange (`#FF8700`) - Primary brand color
-- Emerald/Cyan gradients - Success states
-- Night Blue - Background tones
-- Neutral grays - UI elements
+- Deep plum (`#12081c`) / ember (`#080510`) — page surfaces. **Not** beige `#dfd4c8`. **Not** pure `#000`
+- Violet (`#a78bfa`) — product energy, hover rings
+- Bitcoin orange (`#F7931A`) — money, sats, donate
+- Neon cyan (`#14E6FF`) — interactive, focus, links
+- Body near-white; muted ≥ `#c4b8d4` (never gray-600 on dark)
 
 ### UX Features
 - Soft glow effects on primary elements
@@ -263,7 +269,7 @@ This project welcomes contributions! (See the basic process in the old text belo
 - Kimi integrates the structured docs into MASTER-BRAIN.md, Kanban, and the permanent vault (no raw chat dumps).
 - Sync the hand-off files (and/or project folder) via Tailscale to the M4 Obsidian location for nightly backups.
 
-**Current hand-off package (as of 2026-07-06)**:
+**Current hand-off package (as of 2026-08-24)**:
 - `docs/KIMI-HANDOFF.md` — rolling session log
 - `LATEST-UPDATE.md` — last commit one-liner
 - `docs/EXECUTIVE-SUMMARY.md`, `docs/MARKETING.md`, `docs/DESIGN.md`
@@ -329,13 +335,14 @@ MIT License — See [LICENSE](./LICENSE) (newly added during 2026-06-10 organiza
 
 See the full living roadmap: **[docs/ROADMAP.md](./docs/ROADMAP.md)** (rebranded from early BitWish notes, cleaned during handoff prep).
 
-**High-level status (2026-07-06)**:
-- ✅ Phase 1–3 complete and live (auth, wishlists/projects, media, social, Nostr, Bitcoin rails, charcoal/glass UI, 200 frontend improvements)
-- ✅ Frontend polish: hero motion, floating nav, PWA, i18n pageStrings, ConfirmDialog/toast, lazy routes
-- 🚧 Phase 4 privacy + full BTCPay (end-to-end prod integration is the clear next engineering priority)
-- 📋 Later phases (mobile app, advanced monetization, scale) planned per Give A Bit vision
+**High-level status (2026-08-24, v1.1.7)**:
+- ✅ ~29 routes live at katoa.org (Cloudflare Pages) — wishlists, public `/u/:username` profiles, creators, map, PWA, i18n (7 langs)
+- ✅ Night-jewel visual target (plum / ember / violet). Map is MapLibre + OpenFreeMap
+- ✅ OF-parity UI (likes/comments/PPV/subscribe) as **client-local seams** until THOR Lightning webhook
+- 🚧 Production Lightning invoices + webhook (code exists; do not claim live settlement)
+- 📋 Sample metrics only (`public/metrics.json`, 11 creators, `demo: true`) — never “thousands of creators”
 
-The product is already a credible, usable, beautiful 0% fee Bitcoin creator platform today.
+The product is a usable 0% PLATFORM-fee Bitcoin creator surface today. Stay honest about Lightning and demo catalogs.
 
 ## 🌟 Why KATOA?
 

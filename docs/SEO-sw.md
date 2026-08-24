@@ -1,25 +1,24 @@
 ---
-title: Mchango wa SEO na Uchambuzi wa SEO
-project: katoa
-version: 0.1.0
-last_updated: 2026-06-24
-owner: Kimi / Qwen (Uchambuzi wa Kila wiki)
-update_frequency: Kila wiki (Jumatatu)
+title: SEO — Swahili (N/A)
+project: KATOA
+version: 1.1.7
+last_updated: 2026-08-24
+locale: sw
+status: not-applicable
 ---
 
-# SEO — Katoa (katoa.org)
+# SEO — Swahili (`sw`) — not shipped
 
-## URL Ilishirikiwa
-https://katoa.org
+**Status: N/A.** Katoa does **not** ship a Swahili locale.
 
-## Maneno Muhimili ya Kutafutwa
-| Maneno Muhimili Yaliyoongoza | Niyi ya Kutafuta |
-|-----------------------------|-----------------|
-| Mfumo wa kuunda kijiada la Bitcoin | Bhai |
-| Makusudi ya Kilumaine ya ya usafiri wa fedha bila malipo | Utekelezaji |
-| Vichooke vya kutoa msahara wa Bitcoin | Bhai |
+Shipped languages: **en, es, pt, fr, de, ja, zh** (`LanguageContext`, `hreflang` in `PageMeta` / `index.html`).
 
-## Tovuti ya Uchambuzi wa Kila wiki
-| Tarehe | Mtambulaji wa SEO | Matokeo | Ushauri |
-|--------|------------------|---------|---------|
-| 2026-06-24 | Kimi | Ufundishaji wa msingi umetengenezwa | Uchambuzi kamili wa Qwen ni kwenye mabaki |
+Do not:
+
+- Add `hreflang="sw"`
+- Target Swahili keywords for katoa.org
+- Treat older `SEO-sw.md` drafts as live copy
+
+If Swahili is added later, create real titles/descriptions then and wire `sw` through i18n + `PageMeta`. Until then this file is a marker only.
+
+Canonical SEO: [`SEO.md`](./SEO.md).

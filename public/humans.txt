@@ -9,12 +9,13 @@ GitHub: https://github.com/kitsboy/katoa
 Bitcoin Lightning Network
 Nostr Protocol
 Supabase
+MapLibre + OpenFreeMap
 The open-source community
 
 /* STANDARDS */
 HTML5, CSS3, TypeScript, React, Vite, Tailwind CSS
 
 /* SITE */
-Last update: 2026/07/15
+Last update: 2026/08/24
 Software: MIT License
-Language: English (7 languages supported)
+Language: English, Spanish, Portuguese, French, German, Japanese, Chinese

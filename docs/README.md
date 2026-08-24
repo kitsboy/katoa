@@ -36,9 +36,9 @@
 |-----|----------|
 | [**SEO.md**](./SEO.md) | Primary SEO strategy |
 | [**katoa_SEO.md**](./katoa_SEO.md) | Extended SEO notes |
-| [**SEO-*.md**](./SEO-es.md) | Localized SEO (es, fr, de, pt, zh, sw) |
-| [**I18N.md**](./I18N.md) | Language system |
+| [**SEO-*.md**](./SEO-es.md) | Localized SEO (es, pt, fr, de, ja, zh). `SEO-sw.md` is N/A — no Swahili locale |
+| [**I18N.md**](./I18N.md) | Language system (en es pt fr de ja zh) |
 
 ---
 
-*Last updated: 2026-07-06*
+*Last updated: 2026-08-24*

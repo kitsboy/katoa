@@ -1,9 +1,9 @@
 # KATOA — Marketing & Pitch Guide
 
-**Date:** 2026-07-01  
+**Date:** 2026-08-24  
 **Audience:** Content, landing pages, social, pitch decks, Kimi/HERMES brain, Give A Bit ecosystem  
 **Tone:** Warm, simple, empowering — explain like a curious 16-year-old who cares about fairness. Bitcoin sovereignty without jargon walls.  
-**Visual language:** See [`DESIGN.md`](./DESIGN.md) · Deck PDF: [`marketing/KATOA-Marketing-Presentation.pdf`](./marketing/KATOA-Marketing-Presentation.pdf)
+**Visual language:** Night-jewel — see [`DESIGN.md`](./DESIGN.md) · Deck PDF: [`marketing/KATOA-Marketing-Presentation.pdf`](./marketing/KATOA-Marketing-Presentation.pdf)
 
 ---
 
@@ -13,11 +13,13 @@
 |---------|-------|
 | **Name** | KATOA |
 | **Expansion** | Keep All That's Owed Always |
-| **Domain** | katoa.org |
+| **Domain** | [katoa.org](https://katoa.org) |
+| **Source** | [github.com/kitsboy/katoa](https://github.com/kitsboy/katoa) |
 | **Parent** | Give A Bit (giveabit.io) |
 | **Category** | Zero-fee Bitcoin Lightning creator support |
 | **Enemy** | Platform rent, banking gatekeepers, payout delays |
 | **Hero promise** | Creators keep 100% |
+| **License / harbour** | MIT · Safe Harbour |
 
 ### Signature lines (use everywhere)
 
@@ -30,7 +32,7 @@ Keep 100% of Your Earnings. Built on Bitcoin Lightning Network.
 ```
 
 ```
-Protocol-level upgrade to creator monetization.
+Keep All That's Owed Always.
 ```
 
 ```
@@ -41,9 +43,9 @@ Not another creator platform. Infrastructure for a better creator economy.
 
 ## Positioning statement
 
-**KATOA** is the privacy-first, **0% fee** platform for creators, makers, causes, and everyday people who want to give or receive support **directly** — without banks, platforms, or middlemen taking a cut.
+**KATOA** is the privacy-first, **0% PLATFORM-fee** surface for creators, makers, causes, and everyday people who want to give or receive support **directly** — without banks, platforms, or middlemen taking a cut.
 
-It converts *“I want to help this person”* into an instant, borderless, private Bitcoin Lightning payment the recipient actually keeps.
+It converts *“I want to help this person”* into a borderless, private Bitcoin Lightning payment the recipient actually keeps. Settlement is **non-custodial**: sats go to creator-controlled Lightning addresses and wallets — Katoa does not operate a hot wallet of user funds.
 
 ---
 
@@ -70,16 +72,16 @@ For givers: you want to help someone directly. Instead you get surveillance chec
 | Benefit | Proof in product |
 |---------|------------------|
 | **0% platform fees forever** | Pricing page, FAQ, architecture (no take-rate tables) |
-| **Instant settlement** | Lightning-native copy + live widgets |
-| **No bank, no KYC, no borders** | Auth + wallet flows, comparison page |
-| **Privacy foundations** | Nostr login, encrypted messaging path |
-| **Beautiful for normals** | QR codes, share links, mobile nav, donate sheet |
+| **Bitcoin Lightning** | Addresses, QR, wallet fields — market what ships; do not invent live invoices |
+| **No bank, no KYC, no borders** | Auth + wallet flows, comparison page, 195+ countries |
+| **Privacy foundations** | Optional Nostr login, encrypted messaging path |
+| **Beautiful for normals** | Night-jewel UI, QR codes, share links, mobile nav |
 | **Open source (MIT)** | GitHub public, FOSS footer badge |
 | **Radical transparency** | Fee comparison calculator on Home + Pricing |
 
 ### Two-sentence pitch
 
-> KATOA lets anyone receive Bitcoin support in seconds with zero platform fees. Built on Lightning and Nostr so creators keep every sat and own their audience — from anywhere on Earth.
+> KATOA lets anyone receive Bitcoin support with zero platform fees. Built on Lightning, with Nostr optional, so creators keep every sat and own their audience — from anywhere on Earth.
 
 ---
 
@@ -109,18 +111,18 @@ For givers: you want to help someone directly. Instead you get surveillance chec
 
 | Platform | Fees | Countries | Payout | Bank/KYC | KATOA edge |
 |----------|------|-----------|--------|----------|------------|
-| OnlyFans | ~20% | Limited | 7 days | Yes | **0% · instant · sovereign** |
-| Throne | ~10% | ~10 for 0% | Slow | Yes | **Global · no rent** |
-| Linktree | 9–10% or $40/mo | ~50 | Varies | Yes | **No subscription tax** |
-| Kickstarter | 5% + processing | ~50 | Post-campaign | Yes | **No fulfillment lock-in** |
-| **KATOA** | **0%** | **195+** | **Seconds** | **No** | **Open source Lightning native** |
+| Large subscription apps | ~20% | Limited | Days | Yes | **0% · sovereign · Lightning** |
+| Wishlist / gifting apps | ~10% | ~10 for 0% | Slow | Yes | **Global · no rent** |
+| Link-in-bio | 9–10% or $40/mo | ~50 | Varies | Yes | **No subscription tax** |
+| Crowdfunding | 5% + processing | ~50 | Post-campaign | Yes | **No fulfillment lock-in** |
+| **KATOA** | **0%** | **195+** | **Lightning** | **No** | **Open source · non-custodial** |
 
 ### Human-language advantages
 
 - *“You keep every sat.”*  
 - *“It works from anywhere.”*  
 - *“Supporters don't need bank permission.”*  
-- *“Money moves at the speed of light — for almost nothing.”*  
+- *“Money moves on Lightning — for almost nothing.”*  
 - *“Your wishlist can live on Nostr, not just our servers.”*
 
 ---
@@ -130,15 +132,17 @@ For givers: you want to help someone directly. Instead you get surveillance chec
 Use on Pricing, decks, and social threads:
 
 1. **0% Platform Fees** — forever, not a launch promo  
-2. **Instant Lightning** — seconds, not payout cycles  
+2. **Bitcoin Lightning** — creator-controlled destinations  
 3. **Global by Default** — 195+ countries, no FX skim  
 4. **No Banking Required** — start without KYC  
 5. **On-Chain & Lightning** — supporter choice  
 6. **Unlimited Wishlists** — projects, causes, campaigns  
-7. **Live Analytics** — real-time dashboard  
-8. **Shareable Pages** — QR + social-ready links  
-9. **Privacy First** — Nostr keys, decentralized path  
-10. **BOLT 12 Recurring** — subscription tiers for patrons  
+7. **Shareable Pages** — QR + social-ready links (`og-share.svg`)  
+8. **Privacy First** — Nostr optional, keys you control  
+9. **Open Source (MIT)** — audit, fork, self-host the frontend  
+10. **BOLT 12 path** — reusable offers / patron tiers on the **roadmap**, not marketed as live recurring billing  
+
+Do **not** list Pulse/Protocol widgets. Those were removed 2026-07-06. The footer/nav BTC **price** strip is the only ambient Bitcoin chrome.
 
 ---
 
@@ -154,15 +158,15 @@ Built on Bitcoin Lightning Network.
 ### Social / X (tweet-length)
 
 ```
-Throne takes ~10%. OnlyFans takes 20%. We take 0%.
-Lightning. Nostr. 195+ countries.
+They take 10–20%. We take 0%.
+Lightning. Optional Nostr. 195+ countries.
 Creators keep everything → katoa.org
 ```
 
 ### Nostr / Bitcoin-native
 
 ```
-Finally a wishlist that speaks Lightning + Nostr natively.
+A wishlist that speaks Lightning + optional Nostr.
 Publish as replaceable events. Get paid directly. 0% platform rent.
 katoa.org
 ```
@@ -178,7 +182,7 @@ Identity you control. Financial sovereignty for creators.
 
 ```
 Send help that actually arrives.
-No 30% processing black hole. No waiting. Just sats — fast.
+No 30% processing black hole. Just sats — to them.
 ```
 
 ### Nonprofit / org
@@ -192,13 +196,17 @@ Transparent wishlists for causes that can't wait on legacy rails.
 
 ## Voice & vocabulary
 
-### Use
+### Use (keyword glossary)
 
-`keep` · `yours` · `instant` · `private` · `borderless` · `open` · `forever` · `sovereign` · `sats` · `FOSS`
+`zero fee creator platform bitcoin` · `bitcoin lightning wishlist` · `nostr creator support` · `keep 100% creator earnings` · `non-custodial lightning tips`
 
-### Avoid on first contact
+Also: `keep` · `yours` · `private` · `borderless` · `open` · `forever` · `sovereign` · `sats` · `FOSS`
 
-`disrupt` · unqualified `ecosystem` · heavy protocol specs · `web3` · `crypto` (prefer **Bitcoin**)
+### Avoid on first contact / public SEO
+
+`donation widget` · `OnlyFans alternative` · `crypto` / `web3` (prefer **Bitcoin**) · `disrupt` · unqualified `ecosystem` · heavy protocol specs · “thousands of creators” · “live Lightning invoices” until they exist · Pulse / Protocol widgets
+
+Internal comparison math on `/comparison` may name competitors. That is not a search slogan.
 
 ### Micro-copy examples
 
@@ -207,34 +215,46 @@ Transparent wishlists for causes that can't wait on legacy rails.
 | Primary CTA | **Start Earning 100%** |
 | Secondary CTA | **See How We Compare** |
 | Giver CTA | **Explore Creators** |
-| Donate | **Donate sats** |
+| Support | **Send sats** |
 | Stat pill | **0% fees forever** |
 | Wishlist progress | **0 sats raised of 50,000 — be the first** |
+| Demo catalog | **Demo** / **Sample** — never implied live |
 
 ---
 
 ## Visual & design direction
 
-Align all campaigns with [`DESIGN.md`](./DESIGN.md):
+Align all campaigns with [`DESIGN.md`](./DESIGN.md) — **night-jewel**, not beige:
 
-- **Surfaces:** charcoal glass (`#050509` / `#070711`)  
-- **Primary accent:** neon cyan `#14E6FF` — product energy, links, default CTAs  
-- **Money accent:** bitcoin orange `#F7931A` — donate, pricing, warmth  
-- **Success:** emerald — savings, checkmarks, “keep 100%”  
-- **Typography:** Space Grotesk display + Inter body + JetBrains Mono for addresses  
-- **Mood:** Dark, electric, hopeful, slightly rebellious — never aggressive  
+| Role | Token | Hex |
+|------|-------|-----|
+| Page / product | Deep plum | `#12081c` |
+| Ember wells | Ember | `#080510` |
+| Product accent | Violet | `#a78bfa` |
+| Money | Bitcoin orange | `#F7931A` |
+| Interactive | Neon cyan | `#14E6FF` |
+
+**Retired:** beige `#dfd4c8`, sand-tan marketing, pure `#000` “all-black.” Body copy is near-white; muted text ≥ `#c4b8d4`. Cards use **highlight trim** (orange hairline + inner catch-light) and **violet rings** on hover.
+
+**Typography:** Space Grotesk display + Inter body + JetBrains Mono for addresses.
+
+**Mood:** Night jewel — deep, electric, hopeful. Never beige. Never aggressive. Never all-black.
 
 **Imagine / creative assets:** Use generated art for *mood* (covers, social banners). Put **all text, numbers, and tables in code/HTML** — image models garble structured content.
+
+Share card: `public/og-share.svg` (1200×630).
 
 ---
 
 ## SEO & discoverability
 
-**Primary keywords:** katoa, katoa.org, bitcoin wishlist, lightning wishlist, zero fee creator platform, bitcoin donations, nostr wishlist, bitcoin crowdfunding, private donations bitcoin, no kyc donations
+**Primary keywords:** zero fee creator platform bitcoin · bitcoin lightning wishlist · nostr creator support · keep 100% creator earnings · non-custodial lightning tips
 
-**Secondary:** creator economy bitcoin, lightning address donations, bitcoin patronage, decentralized giving, give a bit
+**Secondary:** katoa, katoa.org, bitcoin wishlist, lightning address, bitcoin patronage, no kyc, give a bit
 
-**Localized SEO:** See `SEO.md`, `SEO-*.md`, `katoa_SEO.md`
+**Localized SEO:** [`SEO.md`](./SEO.md) plus `SEO-es.md`, `SEO-pt.md`, `SEO-fr.md`, `SEO-de.md`, `SEO-ja.md`, `SEO-zh.md`. **No Swahili locale** (`SEO-sw.md` is N/A).
+
+**Honesty:** [`public/metrics.json`](../public/metrics.json) is a **sample** (11 creators, `demo: true`). Never “thousands of creators.”
 
 ---
 
@@ -244,7 +264,7 @@ Align all campaigns with [`DESIGN.md`](./DESIGN.md):
 |----------|-----|-------------|
 | Creator | Start Earning 100% / Start Free | `/auth` |
 | Researcher | See How We Compare | `/comparison` |
-| Giver | Explore Creators | `/explore` |
+| Giver | Explore Creators | `/explore` · `/creators` |
 | Nostr user | Sign in with Nostr | `/auth` (extension detected) |
 | Org / sales | Contact Us | `/contact` |
 | Developer | View on GitHub | github.com/kitsboy/katoa |
@@ -254,7 +274,7 @@ Align all campaigns with [`DESIGN.md`](./DESIGN.md):
 ## Campaign ideas (low effort, high impact)
 
 1. **“0% explained in 60 seconds”** — screen recording of fee calculator  
-2. **Creator receipt stories** — “Received 200k sats in under a minute”  
+2. **Creator receipt stories** — only with **real** settled sats (do not invent)  
 3. **“Support without a bank”** — step-by-step using KATOA  
 4. **Nostr meta-wishlist** — publish a list pointing to katoa.org  
 5. **Give A Bit cross-post** — tadbuy, Sea Shanty, ecosystem newsletter  
@@ -266,9 +286,10 @@ Align all campaigns with [`DESIGN.md`](./DESIGN.md):
 ## Competitor differentiation rules
 
 - Never trash competitors personally — **show the math**  
-- Drive to `/comparison` and `FeeComparison` component  
+- Drive to `/comparison` and `FeeComparison`  
 - Lead with sovereignty + fees, not feature checklists alone  
 - Update comparison table when competitor pricing changes  
+- Do not use “OnlyFans alternative” as public SEO copy  
 
 ---
 
@@ -277,9 +298,12 @@ Align all campaigns with [`DESIGN.md`](./DESIGN.md):
 | Claim | Reality check |
 |-------|---------------|
 | “0% forever” | Architectural commitment — never add take-rate tables |
-| “Instant” | Lightning path; on-chain varies by mempool |
-| “Full BTCPay” | Foundation built; market direct addresses + QR today |
-| “Millions of users” | Early stage — lean on mission, OSS, live widgets |
+| “Instant” | Lightning **path**; on-chain varies by mempool. Do not claim production invoices until webhook is live |
+| “BOLT 12 subscriptions” | **Path / roadmap**, not a live recurring product |
+| “Likes / comments / PPV / subscribe” | **Client-local seams** until THOR Lightning webhook |
+| “Thousands of users / creators” | **False.** Sample catalog: 11 creators, `demo: true` |
+| “Live network widgets” | **Removed** 2026-07-06. Price strip only |
+| Beige / sand marketing | **Retired.** Night-jewel is the visual |
 
 ---
 
@@ -290,6 +314,7 @@ Always connect:
 - Footer: *“A Give A Bit project”* → giveabit.io  
 - About / README: ecosystem framing  
 - Shared language: private, feel-good, sovereignty, Lightning, Nostr, normal people first  
+- Safe Harbour on public surfaces  
 
 When KATOA wins, the whole Give A Bit story strengthens — and vice versa.
 
@@ -304,7 +329,8 @@ When KATOA wins, the whole Give A Bit story strengthens — and vice versa.
 | PDF deck | `docs/marketing/KATOA-Marketing-Presentation.pdf` |
 | HTML deck (editable) | `docs/marketing/katoa-presentation.html` |
 | Cover art | `docs/marketing/katoa-cover.jpg` |
-| Design tokens | `docs/DESIGN.md` |
+| Design tokens | `docs/DESIGN.md` · `DESIGN.md` |
+| Share OG | `public/og-share.svg` (1200×630) |
 | In-app marketing | HomePage, ComparisonPage, PricingPage, Footer |
 
 ---
@@ -319,13 +345,13 @@ When KATOA wins, the whole Give A Bit story strengthens — and vice versa.
   "file://$(pwd)/docs/marketing/katoa-presentation.html"
 ```
 
-Edit `katoa-presentation.html` first, then re-run. See `docs/marketing/README.md`.
+Edit `katoa-presentation.html` first, then re-run. See `docs/marketing/README.md`. Visuals should follow night-jewel tokens, not beige.
 
 ---
 
-**Use this document as the narrative layer on top of the product. The app already sells itself with hero copy, live Bitcoin data, and fee math — this is how we tell the story everywhere else.**
+**Use this document as the narrative layer on top of the product.** The app sells itself with hero copy and fee math — this is how we tell the story everywhere else. Stay honest about Lightning, metrics, and local seams.
 
-*Done — marketing foundation updated for July 2026.*
+*Marketing foundation updated for the night-jewel era (August 2026).*
 
 ---
-**Diligence pack:** [docs/diligence/](../diligence/) (investor + architecture + ask)
+**Diligence pack:** [docs/diligence/](./diligence/) (investor + architecture + ask)

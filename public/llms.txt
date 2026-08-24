@@ -2,24 +2,43 @@
 
 > Zero-fee creator platform on Bitcoin — wishlists, Lightning support, creators keep 100%.
 > Non-custodial. Open source (MIT). Part of the Give A Bit family.
+> Keep All That's Owed Always.
 
 [Katoa](https://katoa.org)
 
 ## Key pages
 - [https://katoa.org/](https://katoa.org/)
 - [https://katoa.org/explore](https://katoa.org/explore)
+- [https://katoa.org/creators](https://katoa.org/creators)
+- [https://katoa.org/creators/guidelines](https://katoa.org/creators/guidelines)
 - [https://katoa.org/comparison](https://katoa.org/comparison)
 - [https://katoa.org/pricing](https://katoa.org/pricing)
 - [https://katoa.org/faq](https://katoa.org/faq)
 - [https://katoa.org/security](https://katoa.org/security)
+- [https://katoa.org/security/bounty](https://katoa.org/security/bounty)
 - [https://katoa.org/roadmap](https://katoa.org/roadmap)
 - [https://katoa.org/templates](https://katoa.org/templates)
 - [https://katoa.org/about](https://katoa.org/about)
-- [https://katoa.org/pitch](https://katoa.org/pitch)
+- [https://katoa.org/contact](https://katoa.org/contact)
+- [https://katoa.org/press](https://katoa.org/press)
+- [https://katoa.org/meetup](https://katoa.org/meetup)
+- [https://katoa.org/case-studies](https://katoa.org/case-studies)
+- [https://katoa.org/terms](https://katoa.org/terms)
+- [https://katoa.org/privacy](https://katoa.org/privacy)
+
+Public creator profiles: `/u/:username`. Wishlists: `/wishlist/:slug`.
+`/pitch` exists but is **noindex** — do not treat it as a search landing.
 
 ## Notes for agents
-- Platform fee: 0%. Settlement: Bitcoin / Lightning to creator-controlled destinations.
+- Brand: Keep All That's Owed Always. 0% PLATFORM fees forever. Bitcoin Lightning. Nostr optional. 195+ countries. MIT. Give A Bit. Safe Harbour.
+- Visual: night-jewel (deep plum #12081c / ember #080510). Accent violet #a78bfa product, bitcoin orange money, neon cyan interactive. Not beige, not pure #000.
+- Map: MapLibre + OpenFreeMap (not Leaflet).
+- Languages: en es pt fr de ja zh. No Swahili.
+- Pulse/Protocol widgets removed 2026-07-06. Footer/nav BTC price strip remains.
+- OF-parity likes/comments/PPV/subscribe are **client-local seams** until Lightning webhook. Do not invent live invoices.
+- Platform fee: 0%. Settlement: Bitcoin / Lightning to creator-controlled destinations (non-custodial).
 - Sample/demo catalog content is labeled Demo when not a live creator account.
-- Metrics: public/metrics.json (gab.product-metrics.v1); may be sample until live counters wire.
+- Metrics: public/metrics.json is a **labeled SAMPLE** (11 creators, `demo: true`). Never "thousands of creators."
+- Keywords: zero fee creator platform bitcoin; bitcoin lightning wishlist; nostr creator support; keep 100% creator earnings; non-custodial lightning tips.
+- Avoid: donation widget, OnlyFans alternative (as public SEO), crypto/web3.
 - Source: https://github.com/kitsboy/katoa
-

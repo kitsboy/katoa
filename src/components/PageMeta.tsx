@@ -5,6 +5,12 @@ const SITE_URL = import.meta.env.VITE_SITE_URL ?? 'https://katoa.org';
 const DEFAULT_TITLE = 'Katoa: Zero-Fee Bitcoin Creator Platform | Lightning & Nostr';
 const DEFAULT_DESCRIPTION =
   'Create Bitcoin wishlists, receive Lightning gifts instantly, and keep 100% of earnings. Zero platform fees, no KYC, works in 195+ countries.';
+/** Default share card is 1200×630. Do not pair logo2-512.png with these dimensions. */
+const DEFAULT_OG_IMAGE = `${SITE_URL}/og-share.svg`;
+const OG_SHARE_WIDTH = '1200';
+const OG_SHARE_HEIGHT = '630';
+const LOGO_512_WIDTH = '512';
+const LOGO_512_HEIGHT = '512';
 
 const OG_LOCALE: Record<Language, string> = {
   en: 'en_US',
@@ -36,7 +42,7 @@ export function PageMeta({
   title,
   description,
   path = '',
-  image = `${SITE_URL}/logo2-512.png`,
+  image = DEFAULT_OG_IMAGE,
   ogVideo,
   noindex = false,
 }: PageMetaProps) {
@@ -68,8 +74,17 @@ export function PageMeta({
     setMeta('twitter:title', fullTitle);
     setMeta('og:url', `${SITE_URL}${canonicalPath}`, 'property');
     setMeta('og:image', absoluteImage, 'property');
-    setMeta('og:image:width', '1200', 'property');
-    setMeta('og:image:height', '630', 'property');
+    const imagePath = absoluteImage.split('?')[0];
+    if (imagePath.endsWith('/og-share.svg')) {
+      setMeta('og:image:width', OG_SHARE_WIDTH, 'property');
+      setMeta('og:image:height', OG_SHARE_HEIGHT, 'property');
+    } else if (imagePath.endsWith('/logo2-512.png')) {
+      setMeta('og:image:width', LOGO_512_WIDTH, 'property');
+      setMeta('og:image:height', LOGO_512_HEIGHT, 'property');
+    } else {
+      document.querySelector('meta[property="og:image:width"]')?.remove();
+      document.querySelector('meta[property="og:image:height"]')?.remove();
+    }
     setMeta('og:image:alt', fullTitle, 'property');
     setMeta('twitter:image', absoluteImage);
     setMeta('og:type', ogVideo ? 'video.other' : 'website', 'property');

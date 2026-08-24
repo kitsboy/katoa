@@ -1,11 +1,13 @@
 ---
-title: SEO Strategy & Audit
+title: SEO Strategy & Audit (legacy stub)
 project: katoa
-version: 0.1.0
-last_updated: 2026-06-24
-owner: Kimi / Qwen (Weekly Audit)
-update_frequency: Weekly (Monday)
+version: 1.1.7
+last_updated: 2026-08-24
+owner: Give A Bit
+canonical: docs/SEO.md
 ---
+
+> **Canonical SEO lives in [`SEO.md`](./SEO.md).** This stub is kept so old links resolve. Do not use “Bitcoin donation widget” as a keyword.
 
 # SEO — Katoa (katoa.org)
 
@@ -15,9 +17,11 @@ https://katoa.org
 ## Target Keywords
 | Primary Keyword | Search Intent |
 |----------------|--------------|
-| Bitcoin creator platform | Commercial |
-| Zero fee Lightning tips | Transactional |
-| Bitcoin donation widget | Commercial |
+| zero fee creator platform bitcoin | Commercial |
+| bitcoin lightning wishlist | Transactional |
+| nostr creator support | Informational |
+| keep 100% creator earnings | Commercial |
+| non-custodial lightning tips | Transactional |
 
 ## Weekly Audit Log
 | Date | Auditor | Findings | Recommendations |

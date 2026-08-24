@@ -1,10 +1,10 @@
 ---
 title: Mission
 project: KATOA
-version: 1.0.0
+version: 1.1.7
 audience: internal + public
 tags: [katoa, mission, bitcoin, creators, give-a-bit]
-last_updated: 2026-07-01
+last_updated: 2026-08-24
 owner: Give A Bit
 ---
 
@@ -14,17 +14,18 @@ owner: Give A Bit
 
 ## Our purpose
 
-KATOA exists to democratize giving and creator support using Bitcoin — so anyone with a smartphone can fund causes and creators worldwide, **instantly, privately, and directly**, with **zero platform fees**.
+KATOA exists to democratize giving and creator support using Bitcoin — so anyone with a smartphone can fund causes and creators worldwide, **privately and directly**, with **zero platform fees**.
 
-We replace rent-seeking creator platforms with sovereign infrastructure: Lightning for settlement, Nostr for identity, open source for trust.
+We replace rent-seeking creator platforms with sovereign infrastructure: Lightning for settlement, optional Nostr for identity, open source for trust.
 
 ## Core values
 
 1. **Bitcoin sovereignty first** — Self-custody, permissionless rails, no bank gatekeepers required to participate.
-2. **Privacy by design** — Nostr keys, minimal surveillance, roadmap toward stronger payment privacy (PayNyms, mixnet layers).
+2. **Privacy by design** — Optional Nostr keys, minimal surveillance, roadmap toward stronger payment privacy (PayNyms, mixnet layers).
 3. **Zero rent, forever** — 0% platform fees is an architectural and cultural commitment, not a promotion.
 4. **Open source (MIT)** — Auditable code. Users can fork, verify, and self-host the frontend.
 5. **Safe harbour** — Educational framing; we empower creators without promising legal or financial outcomes we cannot guarantee.
+6. **Honesty** — Demo catalogs are labeled. Sample metrics stay sample. We do not invent live Lightning or a “live network” of widgets.
 
 ## The problem we solve
 
@@ -32,12 +33,12 @@ Legacy creator platforms extract **5–20%**, require banking and KYC, delay pay
 
 ## Our solution
 
-A beautiful, mobile-first wishlist and project funding platform where:
+A beautiful, mobile-first wishlist and project funding platform — **night-jewel** in look, Bitcoin-native in rails — where:
 
-- Supporters pay via **Lightning or on-chain Bitcoin**
-- Creators receive **100%** of what supporters intend (minus tiny network fees)
-- Identity can live on **Nostr** — portable beyond any single company
-- **Live Bitcoin data** makes the network tangible, not abstract
+- Supporters pay via **Lightning or on-chain Bitcoin** to destinations the creator controls
+- Creators receive **100%** of what supporters intend (minus tiny network fees, never a Katoa skim)
+- Identity **can** live on **Nostr** — portable beyond any single company
+- The **BTC price strip** in the footer/nav keeps Bitcoin tangible; Pulse/Protocol homepage widgets were **removed** (2026-07-06) and are not part of the product story
 
 ## Who it serves
 
@@ -46,6 +47,8 @@ A beautiful, mobile-first wishlist and project funding platform where:
 - Unbanked, censored, or geographically excluded builders  
 - Bitcoin and Nostr communities  
 - Supporters who want private, direct, low-fee giving  
+
+Works in **195+ countries**. Languages shipped: English, Spanish, Portuguese, French, German, Japanese, Chinese.
 
 ---
 
@@ -61,4 +64,4 @@ Always consult qualified professionals for legal and financial decisions.
 **See also:** [`EXECUTIVE-SUMMARY.md`](./EXECUTIVE-SUMMARY.md) · [`MARKETING.md`](./MARKETING.md) · [`DESIGN.md`](./DESIGN.md)
 
 ---
-**Diligence pack:** [docs/diligence/](../diligence/) (investor + architecture + ask)
+**Diligence pack:** [docs/diligence/](./diligence/) (investor + architecture + ask)

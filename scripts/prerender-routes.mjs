@@ -18,6 +18,7 @@ export const SITEMAP_STATIC_ROUTES = [
   { path: '/press', priority: '0.5', changefreq: 'monthly' },
   { path: '/meetup', priority: '0.4', changefreq: 'monthly' },
   { path: '/creators', priority: '0.85', changefreq: 'weekly' },
+  { path: '/creators/guidelines', priority: '0.6', changefreq: 'monthly' },
   { path: '/case-studies', priority: '0.6', changefreq: 'monthly' },
   { path: '/terms', priority: '0.5', changefreq: 'monthly' },
   { path: '/privacy', priority: '0.5', changefreq: 'monthly' },

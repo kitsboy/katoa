@@ -1,7 +1,7 @@
 # KATOA Design System
 
-**Last updated:** 2026-08-20  
-**Status:** Living document — reflects current codebase; edit when tokens or patterns change.
+**Last updated:** 2026-08-24  
+**Status:** Living document — **night-jewel is the visual target.** Parent is implementing these tokens in CSS in parallel. Document the target, not beige.
 
 > **Quick links:** Tokens live in [`tailwind.config.js`](../tailwind.config.js) and [`src/index.css`](../src/index.css).  
 > **Primitives:** [`Card`](../src/components/Card.tsx) · [`Button`](../src/components/Button.tsx) · [`Modal`](../src/components/Modal.tsx) · [`Input`](../src/components/Input.tsx)
@@ -12,93 +12,118 @@
 
 ### What KATOA feels like
 
-KATOA is a **dark, glassy, Bitcoin-native** product UI. It should feel:
+KATOA is a **night-jewel** product UI: deep plum glass, a violet spark, bitcoin-orange warmth. It should feel:
 
 - **Sovereign** — creators keep 100%; no bank-core aesthetic
-- **Electric** — neon cyan accents, subtle glow, motion on interaction
-- **Warm where it matters** — bitcoin-orange for money, donation, and CTAs
-- **Global & accessible** — large touch targets, safe areas, readable contrast on mobile
+- **Jewel, not void** — plum and ember, never pure black, never beige
+- **Electric** — violet product energy, cyan on interactive, subtle glow
+- **Warm where it matters** — bitcoin-orange for money and sats
+- **Global & accessible** — large touch targets, safe areas, **readable contrast** on mobile
 
 ### Brand keywords
 
-`0% fees` · `Lightning` · `FOSS` · `privacy-first` · `global` · `instant`
+`0% fees` · `Lightning` · `FOSS` · `privacy-first` · `global` · `keep 100%`
 
 ### Visual hierarchy (accent usage)
 
-| Role | Token | Use for |
-|------|-------|---------|
-| Primary action | `neon-cyan-500` | Default buttons, nav hover, links, “product” energy |
-| Money / donate / sats | `bitcoin-orange-500` | Donations, pricing, Bitcoin features, warm CTAs |
-| Success / savings | `emerald-400` | Checkmarks, “you keep 100%”, positive comparisons |
-| Body text | `gray-300`–`gray-500` | Descriptions, metadata, secondary copy |
-| Surfaces | `charcoal-950` / `charcoal-900` | Page backgrounds, nav, footer |
-| Glass panels | `white/[0.05]` + highlight trim | Cards, drawers, modals |
+| Role | Token | Hex | Use for |
+|------|-------|-----|---------|
+| Page / product surface | Deep plum | `#12081c` | Page backgrounds, product chrome |
+| Ember wells | Ember | `#080510` | Deeper bands, landing base, footer wells |
+| Product energy | Violet `katoa-violet` | `#a78bfa` | Product accent, hover rings, jewel headlines |
+| Money / donate / sats | `bitcoin-orange-500` | `#F7931A` | Donations, pricing, Bitcoin features |
+| Interactive | `neon-cyan-500` | `#14E6FF` | Links, focus rings, default interactive |
+| Success / savings | `emerald-400` | — | Checkmarks, “you keep 100%” |
+| Body text | Near-white | `#f8f4ff` / `#f6f1ea` | Headings + body on dark |
+| Muted text | Jewel muted | **≥ `#c4b8d4`** | Descriptions, metadata — never dimmer |
+| Glass panels | `white/[0.05]` + highlight trim | — | Cards, drawers, modals |
 
-### Highlight trim (cards)
+### Contrast rules (non-negotiable)
 
-Every elevated surface uses a **three-layer edge** so it lifts off charcoal:
+Night-jewel fails if type disappears into the plum.
 
-1. **Hairline border** — `rgba(255,255,255,0.12)`
+1. **Body is near-white** — `#f8f4ff`, `#f6f1ea`, or `text-white`. Not `gray-300` as a default body color.
+2. **Muted ≥ `#c4b8d4`** — lavender-mist. Do not use `text-gray-500`, `text-gray-600`, `#9ca3af`, or `#b4aba2` for secondary copy on dark.
+3. **Never `gray-600` on dark.** Tailwind `gray-600` (`#4b5563`) fails WCAG on plum/ember.
+4. **Never all-black.** No `#000`, no `bg-black` full-bleed pages. Deepest fill is ember `#080510` or plum `#12081c`. Overlays may use `bg-black/75` only as a **scrim**, not a surface.
+5. **Never beige.** `#dfd4c8` marketing theme is retired. Do not reintroduce sand-tan landings.
+
+Eyebrows may use violet or cyan at full token strength — not gray.
+
+### Highlight trim + violet rings
+
+Every elevated surface uses a **three-layer edge** so it lifts off plum — plus a **violet ring** on hover:
+
+1. **Hairline border** — `rgba(255,255,255,0.12)`–`0.15`
 2. **Accent trim** — `0 0 0 1px rgba(247, 147, 26, 0.42)` (bitcoin orange)
 3. **Inner catch-light** — `inset 0 1px 0 rgba(255,255,255,0.16)`
+4. **Hover ring** — `border-katoa-violet/40` + violet glow `0 0 40px rgba(139, 92, 246, 0.14)`
 
-Landing helper: `.lp-card` / `.lp-bento-card` / `.lp-onboarding` / `.lp-cta-panel` / `.lp-metric`. Product primitive: `Card variant="glass"`.
+Landing helper: `.lp-card` / `.lp-bento-card` / `.lp-onboarding` / `.lp-cta-panel` / `.lp-metric`. Product primitive: `Card variant="glass"` (hover already uses the violet ring).
 
 Do **not** use `white/3` + `white/10` alone — those cards disappear into the background.
 
-### Two surface eras (migration note)
+### Visual eras (do not mix)
 
-**Modern (preferred):** Ember charcoal + glass + highlight trim + `neon-cyan` / `bitcoin-orange`  
-— Home (`.lp-page`), Footer, Pricing, Navbar, MobileNav, DonateQRModal, dashboard
+| Era | Status |
+|-----|--------|
+| **Night-jewel (now)** | Deep plum `#12081c` + ember `#080510` + violet product + orange money + cyan interactive. **Target.** CSS is landing in parallel. |
+| Ember charcoal (2026-08-20) | `--ember-950` `#080510` + highlight trim. Compatible ancestor of night-jewel — keep ember wells. |
+| Beige marketing | `#dfd4c8` — **retired.** Failed contrast (cards at 55% white on taupe). |
+| All-black | `#000` / `#050509` as a full page — **retired as the look.** Too void; jewel needs plum. |
+| Pulse / Protocol widgets | **Removed 2026-07-06.** Footer/nav BTC price strip stays. |
+| Legacy CSS only | `night-blue-*` / `sand-tan` remain in `index.css` for reference — do not use in new UI. |
 
-**Legacy tokens in CSS only:** `night-blue-*` / `sand-tan` remain in `index.css` for reference — no longer used in components. Beige landing (`#dfd4c8`) is retired.
-
-**Migrated to charcoal/glass (2026-07-06):** All 17 pages + all shared components. Legacy `night-blue` tokens remain in CSS only for reference.
-
-When building **new** UI, use the **modern** palette exclusively.
+When building **new** UI, use **night-jewel exclusively**.
 
 ---
 
 ## 2. Color tokens
 
-### CSS variables (`src/index.css` `:root`)
+### Target CSS variables (`:root`)
+
+Parent is aligning `src/index.css` to this table. Prefer these names in new work:
 
 ```css
---charcoal-950: #050509;
---charcoal-900: #070711;
---ember-950: #080510;       /* landing page base (Give A Bit ember) */
---ember-900: #0c0816;       /* muted landing bands */
---neon-cyan: #14E6FF;
---bitcoin-orange: #F7931A;
---ink: #f6f1ea;             /* landing body on dark */
---ink-muted: #b4aba2;
+--plum-950: #12081c;        /* night-jewel page */
+--ember-950: #080510;       /* deepest wells (Give A Bit ember) */
+--ember-900: #0c0816;       /* muted bands */
+--surface-1: #1a1028;       /* elevated glass underlay */
+--surface-2: #221634;
+--ink: #f8f4ff;             /* body near-white */
+--ink-muted: #c4b8d4;       /* minimum muted — do not go darker */
+--katoa-violet: #a78bfa;    /* product */
+--katoa-violet-deep: #8b5cf6;
+--bitcoin-orange: #F7931A;  /* money */
+--neon-cyan: #14E6FF;       /* interactive */
 --trim-orange: rgba(247, 147, 26, 0.42);
---trim-cyan: rgba(20, 230, 255, 0.22);
+--trim-violet: rgba(167, 139, 250, 0.40);
 --highlight: rgba(255, 255, 255, 0.16);
---sand-tan: #e1b382;        /* legacy */
---night-blue: #2d545e;      /* legacy */
 ```
+
+Existing tokens still in the file (`--charcoal-950: #050509`, `--ink-muted: #b4aba2`) are **migration leftovers**. Do not copy them into new UI. Do not treat charcoal-950 as the night-jewel page color.
 
 ### Tailwind extended palette (`tailwind.config.js`)
 
-#### Charcoal (backgrounds)
+#### Night-jewel surfaces (target)
 
 | Token | Hex | Usage |
 |-------|-----|--------|
-| `charcoal-950` | `#050509` | Body bg, mobile nav, deepest surface |
-| `charcoal-900` | `#070711` | Elevated panels, dropdowns, scrollbar track |
-| `charcoal-800` | `#0a0a14` | Optional deeper layers |
-| `charcoal-700` | `#0d0d1a` | Optional deeper layers |
+| Deep plum | `#12081c` | Body / page bg, product chrome |
+| Ember | `#080510` | Deepest wells, landing bands |
+| `jewel.violet` / `katoa-violet-500` | `#a78bfa` | Product accent |
+| `jewel.fuchsia` | `#e879f9` | Rare jewel highlights |
+| `jewel.amber` | `#f59e0b` | Paired with bitcoin-orange |
 
-#### Neon cyan (primary accent)
+#### Neon cyan (interactive)
 
 | Token | Hex | Usage |
 |-------|-----|--------|
-| `neon-cyan-500` | `#14E6FF` | Primary buttons, active nav, links |
-| `neon-cyan-400` | `#3DEBFF` | Hover states, gradient ends |
-| `neon-cyan-600` | `#00D4ED` | Darker cyan variant |
+| `neon-cyan-500` | `#14E6FF` | Links, focus, interactive chrome |
+| `neon-cyan-400` | `#3DEBFF` | Hover |
+| `neon-cyan-600` | `#00D4ED` | Darker cyan |
 
-#### Bitcoin orange (money accent)
+#### Bitcoin orange (money)
 
 | Token | Hex | Usage |
 |-------|-----|--------|
@@ -106,77 +131,75 @@ When building **new** UI, use the **modern** palette exclusively.
 | `bitcoin-orange-400` | `#F9A825` | Highlights, gradient text |
 | `bitcoin-orange-600` | `#E67E00` | Hover on orange buttons |
 
-#### Night blue (legacy surfaces)
+#### Katoa violet (product)
 
 | Token | Hex | Usage |
 |-------|-----|--------|
-| `night-blue-500` | `#2d545e` | Legacy page gradients |
-| `night-blue-800` | `#12343b` | Legacy deep bg |
-| `night-blue-shadow-700` | `#12343b` | About hero sections |
+| `katoa-violet-400` / `500` | `#a78bfa` | Product energy, rings |
+| `katoa-violet-600` | `#8b5cf6` | Hover / deep glow |
+| `katoa-violet-800` | `#6d28d9` | Ink on light-jewel experiments only |
 
-#### Sand tan (legacy warmth)
-
-| Token | Hex | Usage |
-|-------|-----|--------|
-| `sand-tan-300` / `500` | `#e1b382` | Legacy gradients, shimmer |
-| `sand-tan-600` | `#c89666` | Legacy gradient shadows |
-
-#### Semantic (Tailwind defaults — use consistently)
+#### Semantic
 
 | Token | Usage |
 |-------|--------|
 | `emerald-400` / `emerald-500` | Success, checkmarks, savings |
-| `red-400` / `red-500` | Errors, danger button, competitor fees |
-| `amber-600` | Paired with bitcoin-orange in gradients |
-| `gray-300`–`gray-600` | Body and muted text |
+| `red-400` / `red-500` | Errors, danger, competitor fees |
+| Near-white / `--ink` | Body |
+| `#c4b8d4` / `--ink-muted` | Muted only |
 | `white/5`–`white/15` | Borders and glass overlays |
+
+**Do not** reach for `gray-500` / `gray-600` on dark surfaces.
 
 ### Opacity patterns
 
 ```
-bg-white/[0.05]     — glass card fill (never below 0.05 on charcoal)
+bg-white/[0.05]     — glass card fill (never below 0.05 on plum)
 border-white/15     — default glass border
 trim-orange ring    — 0 0 0 1px rgba(247,147,26,0.42)
-inset highlight     — inset 0 1px 0 rgba(255,255,255,0.12)
-bg-black/30         — inset info panels
-bg-charcoal-950/70  — sticky nav (with backdrop-blur)
-bg-charcoal-950/95  — mobile nav
+violet hover ring   — border-katoa-violet/40 + 0 0 40px rgba(139,92,246,0.14)
+inset highlight     — inset 0 1px 0 rgba(255,255,255,0.16)
+bg-black/30         — inset info panels (scrim, not page)
+bg-plum/70          — sticky nav (with backdrop-blur); target #12081c
 ```
 
-Landing (`.lp-page`) is **dark ember**, same family as the product UI. Do not reintroduce the beige `#dfd4c8` marketing theme — it failed contrast (cards at 55% white on taupe).
+Landing (`.lp-page`) is **night-jewel / ember**, same family as the product UI. Do not reintroduce beige `#dfd4c8`.
 
 ### Gradient recipes (copy-paste)
 
 ```html
-<!-- Page background (modern) -->
-bg-gradient-to-b from-charcoal-950 via-charcoal-900 to-charcoal-950
+<!-- Page background (night-jewel) -->
+bg-[#12081c]
+<!-- or -->
+bg-gradient-to-b from-[#12081c] via-[#0c0816] to-[#080510]
 
 <!-- Hero title -->
-bg-gradient-to-r from-bitcoin-orange-400 via-amber-300 to-neon-cyan-400 bg-clip-text text-transparent
+bg-gradient-to-r from-bitcoin-orange-400 via-katoa-violet-400 to-neon-cyan-400 bg-clip-text text-transparent
 
 <!-- Bitcoin CTA button (via Button variant="bitcoin") -->
 bg-gradient-to-r from-bitcoin-orange-500 to-amber-600
 
 <!-- Ambient glow blob -->
+bg-katoa-violet/10 rounded-full blur-3xl
 bg-bitcoin-orange-500/10 rounded-full blur-3xl
 bg-neon-cyan-500/8 rounded-full blur-3xl
 
 <!-- Divider line -->
-bg-gradient-to-r from-transparent via-neon-cyan-500/40 to-transparent
+bg-gradient-to-r from-transparent via-katoa-violet/40 to-transparent
 ```
 
 ### Text gradient utilities (`src/index.css`)
 
 | Class | Colors |
 |-------|--------|
-| `.text-gradient-cyan` | `#14E6FF` → `#00D4ED` |
-| `.text-gradient-bitcoin` | `#F9A825` → `#F7931A` |
+| `.text-gradient-cyan` | `#14E6FF` → `#00D4ED` (interactive) |
+| `.text-gradient-bitcoin` | `#F9A825` → `#F7931A` (money) |
 | `.text-gradient-emerald` | `#34d399` → `#14E6FF` |
-| `.text-gradient-tan` | sand-tan legacy |
-| `.text-gradient-blue` | night-blue legacy |
-| `.gradient-title` | sand-tan → night-blue (legacy headings) |
+| Jewel headline | violet → fuchsia (`.hero-headline-accent` / lp jewel) |
 
 **Glow text:** `.glow-cyan` · `.glow-orange`
+
+Legacy `.text-gradient-tan` / `.text-gradient-blue` / `.gradient-title` — do not use.
 
 ---
 
@@ -193,16 +216,15 @@ bg-gradient-to-r from-transparent via-neon-cyan-500/40 to-transparent
 
 ### Loaded fonts
 
-- **index.html:** Inter (400–800), DM Serif Display  
-- **index.css @import:** Space Grotesk (400–700), JetBrains Mono (400–600)
+- **index.html:** Inter (400–800), DM Serif Display, Space Grotesk, JetBrains Mono  
 
-### Body defaults (`index.css`)
+### Body defaults
 
 ```
 font-size: 15px
 letter-spacing: -0.011em
 line-height: 1.6
-color: white on charcoal-950
+color: near-white on plum #12081c (not gray, not #000 page)
 ```
 
 ### Heading scale (responsive patterns in use)
@@ -212,8 +234,8 @@ color: white on charcoal-950
 | Hero H1 | `text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-black` | Page heroes |
 | Section H2 | `text-2xl sm:text-3xl font-display font-bold` | Section titles |
 | Card H3 | `text-xl font-bold` | Plan names, feature titles |
-| Eyebrow | `text-[10px] uppercase tracking-widest font-semibold text-gray-500` | Section labels |
-| Mono label | `text-[10px] font-mono tracking-widest uppercase` | Footer, API strip |
+| Eyebrow | `text-[10px] uppercase tracking-widest font-semibold text-katoa-violet` | Section labels (not gray) |
+| Mono label | `text-[10px] font-mono tracking-widest uppercase text-[#c4b8d4]` | Footer, API strip |
 
 ### Mobile input rule
 
@@ -281,19 +303,21 @@ Use on: MobileNav, donation drawer, DonateQRModal bottom sheet.
 ### Borders
 
 ```
-border border-white/10          — glass cards
-border-2 border-neon-cyan-500/60 — outline buttons
-border-bitcoin-orange-500/50     — featured pricing card
+border border-white/15           — glass cards
+border-2 border-neon-cyan-500/60 — outline / interactive
+border-katoa-violet/40           — hover ring
+border-bitcoin-orange-500/50     — featured pricing / money
 border-t border-white/10         — footer dividers, mobile nav
 ```
 
 ### Shadows & glow (common arbitrary values)
 
 ```
-shadow-[0_0_24px_rgba(20,230,255,0.25)]           — primary button
+shadow-[0_0_24px_rgba(20,230,255,0.25)]           — cyan interactive
 shadow-[0_0_24px_rgba(247,147,26,0.3)]            — bitcoin button
+shadow-[0_0_40px_rgba(167,139,250,0.18)]          — violet product hover
 shadow-[0_0_40px_rgba(247,147,26,0.12)]           — featured card
-shadow-[0_8px_32px_rgba(0,0,0,0.4)]               — glass card (Card component)
+shadow-[0_8px_32px_rgba(18,8,28,0.55)]            — glass card lift on plum
 shadow-[0_-8px_60px_rgba(247,147,26,0.2)]         — bottom sheet upward glow
 ```
 
@@ -311,7 +335,7 @@ shadow-[0_-8px_60px_rgba(247,147,26,0.2)]         — bottom sheet upward glow
 | `animate-sheet-up` | 0.38s cubic-bezier(0.32, 0.72, 0, 1) | Mobile bottom sheets |
 | `animate-slide-in-right` | 0.3s | Drawers from right |
 | `animate-float` | 6s infinite | Decorative |
-| `animate-glow` | 2s infinite | Icon boxes (About) |
+| `animate-glow` | 2s infinite | Icon boxes |
 | `animate-shimmer` | 2s linear | Loading placeholders |
 | `animate-gradient` | 6s | Animated gradient bg |
 | `animate-subtle-pulse` | 3s | Status indicators |
@@ -330,7 +354,7 @@ touch-manipulation              — all interactive mobile targets
 
 ### Hover utilities
 
-- `.hover-lift` — translateY(-8px) + cyan glow shadow  
+- `.hover-lift` — translateY(-8px) + glow shadow  
 - `.transition-all-smooth` — 0.3s cubic-bezier global transition
 
 ---
@@ -347,7 +371,7 @@ Use these layers consistently; avoid arbitrary high values unless overlaying mod
 | QR / donate modal backdrop | `z-[80]` | DonateQRModal |
 | QR / donate modal content | `z-[90]` | DonateQRModal sheet |
 | Legacy Modal | `99998`–`99999` | `Modal.tsx` (consider lowering to z-[100] in future) |
-| Map expanded | `z-[100]` | BTCMapEmbed |
+| Map expanded | `z-[100]` | UnifiedBTCMap (MapLibre) |
 
 ---
 
@@ -362,8 +386,10 @@ Use these layers consistently; avoid arbitrary high values unless overlaying mod
 | Prop | Options | Notes |
 |------|---------|-------|
 | `variant` | `glass` (default), `solid`, `outline` | Prefer `glass` for new work |
-| `hover` | boolean | Cyan border glow + lift |
+| `hover` | boolean | **Violet ring** + lift (`border-katoa-violet/40`) |
 | `padding` | `none`, `sm`, `md`, `lg` | Default `none` — often pass `p-6` via className |
+
+Glass default already includes highlight trim (orange ring + inner catch-light).
 
 **Important:** Card sets `overflow-hidden`. Badges that hang outside the card (e.g. “Most popular”) must sit on a **wrapper** above the Card, not inside it.
 
@@ -375,10 +401,10 @@ Use these layers consistently; avoid arbitrary high values unless overlaying mod
 
 | Variant | When |
 |---------|------|
-| `primary` | Default CTA — neon cyan |
+| `primary` | Default CTA — cyan interactive (or violet if the page is product-forward) |
 | `bitcoin` | Donate, pricing, warm money actions |
 | `secondary` | Secondary actions on dark glass |
-| `outline` | Tertiary / ghost emphasis with cyan border |
+| `outline` | Tertiary / ghost emphasis |
 | `ghost` | Inline toolbar actions |
 | `danger` | Destructive |
 
@@ -390,25 +416,29 @@ Use these layers consistently; avoid arbitrary high values unless overlaying mod
 
 ### Modal (`src/components/Modal.tsx`)
 
-Legacy night-blue modal. New overlays should follow **DonateQRModal** pattern:
+New overlays should follow **DonateQRModal** pattern:
 
 - Mobile: bottom sheet + `animate-sheet-up` + `pb-safe`
 - Desktop: centered + `animate-scale-in`
 - Body scroll lock + Escape to close
-- Backdrop: `bg-black/75 backdrop-blur-md`
+- Backdrop: `bg-black/75 backdrop-blur-md` (**scrim only**)
+- Panel fill: plum/ember glass, not `#000`
 
 ### Input (`src/components/Input.tsx`)
 
-Still uses legacy `gray-800` / `focus:ring-orange-500`. Acceptable for forms until migrated. Target state:
+Target state:
 
 ```
 bg-white/5 border-white/10 focus:ring-neon-cyan-500/50 rounded-xl
+text near-white; placeholder #c4b8d4
 ```
+
+Do not use `gray-800` fields or `gray-600` labels on dark.
 
 ### Icons
 
 **Library:** `lucide-react` (stroke icons, size 16–24 typical)  
-**Icon container:** `w-10 h-10 rounded-xl bg-gradient-to-br from-{accent}/20 border border-white/10`
+**Icon container:** `w-10 h-10 rounded-xl bg-gradient-to-br from-katoa-violet/20 border border-white/10`
 
 ---
 
@@ -416,7 +446,7 @@ bg-white/5 border-white/10 focus:ring-neon-cyan-500/50 rounded-xl
 
 ### Floating island navigation (`Navbar.tsx`)
 
-The navbar is a **floating glass island** — not a full-width sticky bar.
+The navbar is a **floating glass island** — not a full-width sticky bar. It stays dark (night-jewel) on all routes, including home — no light island.
 
 ```tsx
 // Outer wrapper: fixed, centered, pointer-events-none
@@ -424,35 +454,32 @@ className="fixed top-3 sm:top-4 inset-x-0 z-50 px-4 sm:px-6 pointer-events-none"
 
 // Inner island (.nav-island in index.css)
 className="nav-island pointer-events-auto max-w-7xl mx-auto rounded-2xl"
-// scrolled state adds .nav-island-scrolled — stronger blur + border
 ```
 
-**CSS classes** (`src/index.css`):
-- `.nav-island` — glass fill, subtle border, backdrop-blur
-- `.nav-island-scrolled` — elevated shadow when `scrollY > 12`
-
-Nav links use **pill style** (`rounded-full px-3 py-1.5`) with cyan active state.
+Nav links use **pill style** (`rounded-full px-3 py-1.5`) with cyan or violet active state.
 
 ### Mobile bottom nav
 
 ```tsx
-className="md:hidden fixed bottom-0 inset-x-0 z-50 border-t border-white/10 bg-charcoal-950/95 backdrop-blur-xl safe-area-bottom"
-// items: min-h-[56px] touch-manipulation, active = text-neon-cyan-500
+className="md:hidden fixed bottom-0 inset-x-0 z-50 border-t border-white/10 bg-[#12081c]/95 backdrop-blur-xl safe-area-bottom"
+// items: min-h-[56px] touch-manipulation, active = violet or cyan
 ```
 
 ### Section eyebrow + title
 
 ```tsx
-<p className="text-[10px] uppercase tracking-[0.2em] text-neon-cyan-500 font-semibold mb-3">Label</p>
+<p className="text-[10px] uppercase tracking-[0.2em] text-katoa-violet font-semibold mb-3">Label</p>
 <h2 className="text-3xl sm:text-4xl font-display font-bold text-white mb-3">Title</h2>
-<p className="text-gray-400 text-sm sm:text-base max-w-2xl mx-auto">Subtitle</p>
+<p className="text-[#c4b8d4] text-sm sm:text-base max-w-2xl mx-auto">Subtitle</p>
 ```
 
 ### Glass info callout
 
 ```tsx
-<div className="p-4 sm:p-6 rounded-2xl bg-black/30 border border-white/10 text-center">
+<div className="p-4 sm:p-6 rounded-2xl bg-white/[0.05] border border-white/10 text-center">
 ```
+
+Avoid `bg-black` panels.
 
 ### Pill badge (above card)
 
@@ -467,26 +494,11 @@ className="md:hidden fixed bottom-0 inset-x-0 z-50 border-t border-white/10 bg-c
 
 ### Donation / Bitcoin strip
 
-Orange warm accents, `font-mono` for addresses, QR on white background with `imageRendering: crisp-edges`.
+Orange warm accents, `font-mono` for addresses, QR on white background with `imageRendering: crisp-edges`. Footer/nav **BTC price strip** is the ambient Bitcoin chrome. Pulse/Protocol widgets are gone.
 
-### Homepage hero (`HeroOverlayCard` + `HeroMotionBackground`)
+### Homepage hero
 
-```tsx
-// Motion background: drifting orbs, scan lines, vignette
-<HeroMotionBackground />
-
-// Glass overlay card
-<div className="hero-overlay-card ...">
-  <div className="hero-overlay-grid" />  {/* subtle grid texture */}
-</div>
-```
-
-**CSS classes** (`src/index.css`):
-- `.hero-overlay-card` — mesh glow, refined glass, corner accents
-- `.hero-overlay-grid` — low-opacity grid texture overlay
-- `.hero-headline-accent` — gradient text with subtle glow on hero H1
-
-Primary CTA on hero uses **white pill** (`bg-white text-charcoal-950 rounded-full`); secondary uses glass outline.
+Motion orbs + glass overlay on plum/ember. Primary CTA may be a **white pill** (`bg-white text-[#12081c] rounded-full`); secondary uses glass outline. Jewel headline uses violet → fuchsia → amber.
 
 ---
 
@@ -499,9 +511,11 @@ Primary CTA on hero uses **white pill** (`bg-white text-charcoal-950 rounded-ful
 - [ ] `role="dialog"` + `aria-modal` on modals
 - [ ] Body scroll lock when overlays open
 - [ ] Escape closes modals/menus
-- [ ] Focus visible on form fields (ring on focus)
+- [ ] Focus visible on form fields (cyan ring on focus)
 - [ ] Main content clears MobileNav: `pb-20 md:pb-0` on `<main>`
 - [ ] Inputs ≥ 16px font on mobile (global CSS rule)
+- [ ] Body near-white; muted ≥ `#c4b8d4`; no `gray-600` on dark
+- [ ] Page background is plum/ember, never `#000`
 
 ---
 
@@ -509,14 +523,14 @@ Primary CTA on hero uses **white pill** (`bg-white text-charcoal-950 rounded-ful
 
 | Page / component | What to copy |
 |------------------|--------------|
-| [`HomePage.tsx`](../src/pages/HomePage.tsx) | Motion hero, overlay card, white pill CTAs, stats strip |
-| [`HeroOverlayCard.tsx`](../src/components/HeroOverlayCard.tsx) | Glass card, mesh glow, grid texture |
-| [`HeroMotionBackground.tsx`](../src/components/HeroMotionBackground.tsx) | Drifting orbs, scan lines, vignette |
-| [`Navbar.tsx`](../src/components/Navbar.tsx) | Floating island nav, pill links, scroll state |
-| [`PricingPage.tsx`](../src/pages/PricingPage.tsx) | Section structure, feature grid, plan cards |
-| [`Footer.tsx`](../src/components/Footer.tsx) | Ambient glow, job board, donation drawer |
+| [`HomePage.tsx`](../src/pages/HomePage.tsx) | Landing structure, fee math, discovery |
+| [`Navbar.tsx`](../src/components/Navbar.tsx) | Floating island nav (dark on all routes) |
+| [`PricingPage.tsx`](../src/pages/PricingPage.tsx) | Section structure, plan cards |
+| [`Footer.tsx`](../src/components/Footer.tsx) | Ambient glow, job board, donation drawer, price strip |
 | [`DonateQRModal.tsx`](../src/components/DonateQRModal.tsx) | Mobile sheet, z-index, copy/share pattern |
 | [`MobileNav.tsx`](../src/components/MobileNav.tsx) | Bottom tab bar, active state |
+| [`Card.tsx`](../src/components/Card.tsx) | Highlight trim + violet hover ring |
+| [`UnifiedBTCMap.tsx`](../src/components/UnifiedBTCMap.tsx) | MapLibre + OpenFreeMap (not Leaflet) |
 
 ---
 
@@ -528,23 +542,28 @@ Primary CTA on hero uses **white pill** (`bg-white text-charcoal-950 rounded-ful
 4. **Update this file** — keep tables in sync so agents and humans honor the same source of truth  
 5. **Run** `npm run build` after token changes to catch missing class names
 
+### Parallel CSS note (2026-08-24)
+
+Parent is implementing night-jewel in CSS in parallel with this document. If code still shows `--charcoal-950: #050509` or beige leftover utilities, **do not copy them forward**. Prefer `#12081c` / `#080510` / `#a78bfa` / muted `#c4b8d4`.
+
 ### Suggested token additions (future)
 
+- Promote `--plum-950: #12081c` in `:root` and Tailwind
+- Raise `--ink-muted` to `#c4b8d4`
 - Consolidate `Modal` z-index to the scale in §7
-- Migrate `Input` focus ring to `neon-cyan`  
-- Deprecate `night-blue` page backgrounds page-by-page  
+- Deprecate `night-blue` / `sand-tan` / beige lp leftovers from `index.css`
 
 ---
 
 ## 13. Marketing & pitch alignment
 
-Visual work for decks, social, and landing pages should match this system. Narrative copy lives in:
+Visual work for decks, social, and landing pages should match **night-jewel**. Narrative copy lives in:
 
 - [`MARKETING.md`](./MARKETING.md) — voice, CTAs, channel messaging  
 - [`EXECUTIVE-SUMMARY.md`](./EXECUTIVE-SUMMARY.md) — leadership facts  
 - [`marketing/KATOA-Marketing-Presentation.pdf`](./marketing/KATOA-Marketing-Presentation.pdf) — embellished slide deck  
 
-Use **HTML/code for slide text and numbers**; use generated imagery for mood only (see `marketing/katoa-cover.jpg`).
+Use **HTML/code for slide text and numbers**; use generated imagery for mood only (see `marketing/katoa-cover.jpg`). Share OG: `public/og-share.svg` (1200×630).
 
 ---
 
@@ -552,12 +571,15 @@ Use **HTML/code for slide text and numbers**; use generated imagery for mood onl
 
 When implementing new UI for KATOA:
 
-1. Read this file first.  
+1. Read this file first. Night-jewel is the target.  
 2. Use `Card` + `Button` primitives — do not invent new button styles.  
-3. Prefer `charcoal` + glass + `neon-cyan` / `bitcoin-orange`.  
-4. Match spacing: `max-w-7xl`, standard gutters, `pt-24` below nav.  
-5. Test at **375px** width — bottom nav and safe areas matter.  
-6. After visual changes, update **§11 reference** or this doc if you introduce a new pattern.
+3. Prefer plum `#12081c` + ember `#080510` + violet / orange / cyan.  
+4. Body near-white; muted ≥ `#c4b8d4`; never `gray-600` on dark; never `#000` pages; never beige.  
+5. Highlight trim + violet hover rings on elevated surfaces.  
+6. Match spacing: `max-w-7xl`, standard gutters, `pt-24` below nav.  
+7. Test at **375px** width — bottom nav and safe areas matter.  
+8. Map is **MapLibre + OpenFreeMap**, not Leaflet.  
+9. After visual changes, update **§11 reference** or this doc if you introduce a new pattern.
 
 ---
 
