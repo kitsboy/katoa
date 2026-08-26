@@ -2102,6 +2102,10 @@ const contactPageStrings = {
     'contact.error.message': 'Message must be at least 10 characters',
     'contact.metaTitle': 'Contact',
     'contact.metaDesc': 'Get in touch with the KATOA team.',
+    'contact.successTitle': 'Your message is ready',
+    'contact.successTo': 'Your message is on its way to',
+    'contact.composeAgain': 'Open in your email app',
+    'contact.newMessage': 'Send another message',
   },
   es: {
     'contact.email': 'Correo',
@@ -2124,6 +2128,10 @@ const contactPageStrings = {
     'contact.error.message': 'El mensaje debe tener al menos 10 caracteres',
     'contact.metaTitle': 'Contacto',
     'contact.metaDesc': 'Habla con el equipo de KATOA.',
+    'contact.successTitle': 'Tu mensaje está listo',
+    'contact.successTo': 'Tu mensaje va en camino a',
+    'contact.composeAgain': 'Abrir en tu app de correo',
+    'contact.newMessage': 'Enviar otro mensaje',
   },
   pt: {
     'contact.email': 'E-mail',
@@ -2146,6 +2154,10 @@ const contactPageStrings = {
     'contact.error.message': 'A mensagem deve ter pelo menos 10 caracteres',
     'contact.metaTitle': 'Contato',
     'contact.metaDesc': 'Fale com a equipe da KATOA.',
+    'contact.successTitle': 'Sua mensagem está pronta',
+    'contact.successTo': 'Sua mensagem está a caminho de',
+    'contact.composeAgain': 'Abrir no seu app de e-mail',
+    'contact.newMessage': 'Enviar outra mensagem',
   },
   fr: {
     'contact.email': 'E-mail',
@@ -2168,6 +2180,10 @@ const contactPageStrings = {
     'contact.error.message': 'Le message doit contenir au moins 10 caractères',
     'contact.metaTitle': 'Contact',
     'contact.metaDesc': 'Contactez l’équipe KATOA.',
+    'contact.successTitle': 'Votre message est prêt',
+    'contact.successTo': 'Votre message est en route vers',
+    'contact.composeAgain': 'Ouvrir dans votre app mail',
+    'contact.newMessage': 'Envoyer un autre message',
   },
   de: {
     'contact.email': 'E-Mail',
@@ -2190,6 +2206,10 @@ const contactPageStrings = {
     'contact.error.message': 'Nachricht muss mindestens 10 Zeichen haben',
     'contact.metaTitle': 'Kontakt',
     'contact.metaDesc': 'Nimm Kontakt mit dem KATOA-Team auf.',
+    'contact.successTitle': 'Deine Nachricht ist fertig',
+    'contact.successTo': 'Deine Nachricht ist unterwegs zu',
+    'contact.composeAgain': 'In deiner E-Mail-App öffnen',
+    'contact.newMessage': 'Eine weitere Nachricht senden',
   },
   ja: {
     'contact.email': 'メール',
@@ -2212,6 +2232,10 @@ const contactPageStrings = {
     'contact.error.message': 'メッセージは10文字以上必要です',
     'contact.metaTitle': 'お問い合わせ',
     'contact.metaDesc': 'KATOAチームにご連絡ください。',
+    'contact.successTitle': 'メッセージの準備ができました',
+    'contact.successTo': 'メッセージを送信先へ',
+    'contact.composeAgain': 'メールアプリで開く',
+    'contact.newMessage': '別のメッセージを送る',
   },
   zh: {
     'contact.email': '电子邮件',
@@ -2234,6 +2258,10 @@ const contactPageStrings = {
     'contact.error.message': '消息至少需要10个字符',
     'contact.metaTitle': '联系我们',
     'contact.metaDesc': '联系 KATOA 团队。',
+    'contact.successTitle': '消息已准备好',
+    'contact.successTo': '消息正在发送至',
+    'contact.composeAgain': '在邮件应用中打开',
+    'contact.newMessage': '发送另一条消息',
   },
 };
 

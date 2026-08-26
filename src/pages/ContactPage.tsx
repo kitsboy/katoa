@@ -7,7 +7,7 @@ import { PageHero } from '../components/PageHero';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useToast } from '../components/Toast';
 import { copyToClipboard } from '../lib/clipboard';
-import { Mail, MessageSquare, Send, Copy } from 'lucide-react';
+import { Mail, MessageSquare, Send, Copy, CheckCircle2 } from 'lucide-react';
 
 const EMAIL = 'hello@giveabit.io';
 
@@ -16,6 +16,8 @@ export function ContactPage() {
   const { toast } = useToast();
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '', website: '' });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitted, setSubmitted] = useState(false);
+  const [lastMailto, setLastMailto] = useState('');
 
   const validate = () => {
     const e: Record<string, string> = {};
@@ -39,7 +41,21 @@ export function ContactPage() {
     });
     window.location.href = mailto;
     toast(t('contact.openingMail'));
+    setLastMailto(mailto);
+    setSubmitted(true);
     setFormData({ name: '', email: '', subject: '', message: '', website: '' });
+  };
+
+  const startNewMessage = () => {
+    setSubmitted(false);
+    setLastMailto('');
+    setErrors({});
+  };
+
+  const reopenMail = () => {
+    if (!lastMailto) return;
+    window.location.href = lastMailto;
+    toast(t('contact.openingMail'));
   };
 
   const copyEmail = async () => {
@@ -87,6 +103,30 @@ export function ContactPage() {
           </Card>
         </div>
 
+        {submitted ? (
+        <Card variant="glass" className="p-6 sm:p-8">
+          <div className="text-center py-4">
+            <div className="inline-flex w-14 h-14 bg-emerald-500/20 rounded-full items-center justify-center mb-4">
+              <CheckCircle2 className="text-emerald-400" size={28} />
+            </div>
+            <h2 className="text-xl font-display font-bold text-white mb-2">{t('contact.successTitle')}</h2>
+            <p className="text-gray-300 mb-1">
+              {t('contact.successTo')}{' '}
+              <a className="text-neon-cyan-400 font-medium underline" href={`mailto:${EMAIL}`}>{EMAIL}</a>
+            </p>
+            <p className="text-gray-400 text-sm mb-6">{t('contact.responseTime')}</p>
+            <p className="text-gray-400 text-sm mb-8 max-w-md mx-auto">{t('contact.messageCopied')}</p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Button variant="bitcoin" className="min-h-[48px] flex-1 touch-manipulation" onClick={reopenMail}>
+                <Send size={18} className="mr-2" /> {t('contact.composeAgain')}
+              </Button>
+              <Button variant="ghost" className="min-h-[48px] flex-1 touch-manipulation" onClick={startNewMessage}>
+                {t('contact.newMessage')}
+              </Button>
+            </div>
+          </div>
+        </Card>
+        ) : (
         <Card variant="glass" className="p-6 sm:p-8">
           <h2 className="text-xl font-display font-bold text-white mb-6">{t('contact.sendMessage')}</h2>
           <form onSubmit={handleSubmit} className="space-y-5" noValidate>
@@ -127,6 +167,7 @@ export function ContactPage() {
             </Button>
           </form>
         </Card>
+        )}
       </div>
     </div>
   );
