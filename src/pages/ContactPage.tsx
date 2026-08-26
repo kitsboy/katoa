@@ -86,12 +86,12 @@ export function ContactPage() {
             </div>
             <h3 className="font-bold text-white mb-1">{t('contact.community')}</h3>
             <a
-              href="https://github.com/kitsboy/katoa/discussions"
+              href="https://github.com/kitsboy/katoa/issues"
               target="_blank"
               rel="noopener noreferrer"
               className="text-gray-400 text-sm hover:text-neon-cyan-400 transition-colors"
             >
-              {t('contact.githubDiscussions')}
+              {t('contact.githubIssues')}
             </a>
           </Card>
           <Card variant="glass" className="p-5 text-center">

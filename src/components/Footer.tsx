@@ -29,7 +29,7 @@ const bitcoinAddress = 'bc1qhm5ndfjhqxdk3cx0pngyps4f5nnwdckulmge6c8keyf2pk0neqts
 
 const apiLinks = [
   { label: 'Supabase API', href: 'https://supabase.com/docs/guides/api', icon: DatabaseIcon },
-  { label: 'BTC Map API', href: 'https://api.btcmap.org/v4', icon: Globe },
+  { label: 'BTC Map API', href: 'https://api.btcmap.org/v2/areas', icon: Globe },
   { label: 'Mempool.space', href: 'https://mempool.space/api', icon: BlocksIcon },
   { label: 'Nostr NIPs', href: 'https://github.com/nostr-protocol/nips', icon: BookOpen },
 ];
