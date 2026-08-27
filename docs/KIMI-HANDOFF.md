@@ -1,3 +1,15 @@
+## Session — 2026-08-27 · Breez donate + footer QR fix (Grok M3)
+
+**Done:**
+- Public donate drawer on Breez Spark: `katoa@breez.tips` + `bc1plz7d4utggmvzeuvc4h5eh9ej3wfjgcc33jc8rvemwgxjtfjpdr3syn3a89` (`e230fa5`).
+- Cam: footer donate “did not work.” Google Charts Infographics QR URL is **HTTP 404**. Footer + enlarge modal now draw `lightning:katoa@breez.tips` in-page (`qrcode.react`, `e0c7626`). `getQrImageUrl` leftover callers → `api.qrserver.com`.
+- Live-verified on katoa.org: Donate sats / ₿ FOSS opens drawer; LN + on-chain shown; SVG QR present; enlarge shows `katoa@breez.tips`; no Charts image.
+
+**Decisions:** Public receive = Breez only (family `wallets.json`). Do not invent addresses.
+
+**Git State:** SHA `e0c7626` on `origin/main`. Unpushed: none.
+
+---
 ## Latest Session Summary (from 2026-08-24 goodbye)
 
 **Chat Topic:** Night-jewel visual era + honest “creator support for everyone” MVP client path, then a full docs/pitch/exec refresh and clean goodbye.
