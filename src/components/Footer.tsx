@@ -24,8 +24,13 @@ import {
   Shield,
 } from 'lucide-react';
 import { APP_VERSION_FULL, APP_BUILT_AT } from '../generated/app-version';
+import { getQrImageUrl, lightningQrData } from '../lib/qr';
 
-const bitcoinAddress = 'bc1qhm5ndfjhqxdk3cx0pngyps4f5nnwdckulmge6c8keyf2pk0neqtshjn8ad';
+/** Breez Spark (Config A, 2026-08-27) — giveabit.io/wallets.json */
+const bitcoinAddress = 'bc1plz7d4utggmvzeuvc4h5eh9ej3wfjgcc33jc8rvemwgxjtfjpdr3syn3a89';
+const lightningAddress = 'katoa@breez.tips';
+const lightningUri = lightningQrData(lightningAddress);
+const lightningQrUrl = getQrImageUrl(lightningUri, 400);
 
 const apiLinks = [
   { label: 'Supabase API', href: 'https://supabase.com/docs/guides/api', icon: DatabaseIcon },
@@ -52,7 +57,7 @@ export function Footer() {
 
   const handleCopyAddress = async () => {
     const { copyToClipboard } = await import('../lib/clipboard');
-    const result = await copyToClipboard(bitcoinAddress);
+    const result = await copyToClipboard(lightningAddress);
     if (result === 'success') {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -284,6 +289,7 @@ export function Footer() {
         isOpen={qrExpanded}
         onClose={() => setQrExpanded(false)}
         address={bitcoinAddress}
+        lightningUri={lightningUri}
       />
 
       {/* Donation drawer — unmount when closed so it cannot cover the landing */}
@@ -323,7 +329,7 @@ export function Footer() {
                   aria-expanded={qrExpanded}
                 >
                   <img
-                    src="/donations-qr.png"
+                    src={lightningQrUrl || '/donations-qr.png'}
                     alt={t('footer.donateQrAlt')}
                     className="w-full h-full object-contain"
                     style={{ imageRendering: 'crisp-edges' }}
@@ -334,7 +340,9 @@ export function Footer() {
               <div className="flex-1 min-w-0 w-full">
                 <div className="bg-white/5 border border-white/10 rounded-xl p-3 mb-3">
                   <div className="flex items-center justify-between gap-2 mb-1">
-                    <span className="text-xs text-white uppercase tracking-wider font-semibold">{t('footer.mainChain')}</span>
+                    <span className="text-xs text-white uppercase tracking-wider font-semibold inline-flex items-center gap-1">
+                      <Zap size={12} /> Lightning
+                    </span>
                     <button
                       type="button"
                       onClick={handleCopyAddress}
@@ -343,7 +351,9 @@ export function Footer() {
                       {copied ? <><Check size={12} /> {t('footer.copied')}</> : <><Copy size={12} /> {t('footer.copy')}</>}
                     </button>
                   </div>
-                  <code className="text-xs text-gray-400 break-all font-mono block leading-tight">{bitcoinAddress}</code>
+                  <code className="text-xs text-gray-400 break-all font-mono block leading-tight">{lightningAddress}</code>
+                  <p className="mt-2 text-[10px] text-gray-500 uppercase tracking-wider font-semibold">{t('footer.mainChain')}</p>
+                  <code className="text-[10px] text-gray-500 break-all font-mono block leading-tight mt-1">{bitcoinAddress}</code>
                 </div>
                 <p className="text-xs text-gray-400 leading-relaxed">
                   {t('footer.donateFund')}

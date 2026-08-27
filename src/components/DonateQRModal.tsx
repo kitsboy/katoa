@@ -40,14 +40,16 @@ export function DonateQRModal({
       : '');
 
   useEffect(() => {
-    if (!isOpen || !address) return;
-    const qrData = tipSats
-      ? `bitcoin:${address}?amount=${(tipSats / 100_000_000).toFixed(8)}`
-      : bitcoinQrData(address);
+    if (!isOpen || (!address && !lightningUri)) return;
+    const qrData = lightningUri
+      ? lightningUri
+      : tipSats
+        ? `bitcoin:${address}?amount=${(tipSats / 100_000_000).toFixed(8)}`
+        : bitcoinQrData(address);
     setQrCodeUrl(getQrImageUrl(qrData, 400));
     setQrFailed(false);
     setCopied(false);
-  }, [isOpen, address, tipSats]);
+  }, [isOpen, address, tipSats, lightningUri]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -66,13 +68,17 @@ export function DonateQRModal({
     };
   }, [isOpen, onClose]);
 
+  const copyTarget = lightningUri
+    ? lightningUri.replace(/^lightning:/i, '')
+    : address;
+
   const copyAddress = useCallback(async () => {
-    const result = await copyToClipboard(address);
+    const result = await copyToClipboard(copyTarget);
     if (result === 'success') {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
-  }, [address]);
+  }, [copyTarget]);
 
   const shareAddress = useCallback(async () => {
     if (!canShare) return;
@@ -172,7 +178,7 @@ export function DonateQRModal({
                 className="w-full text-left p-3.5 rounded-xl bg-black/40 border border-white/10 hover:border-bitcoin-orange-500/40 transition-colors touch-manipulation group min-h-[44px]"
               >
                 <code className="text-[11px] sm:text-xs text-gray-300 break-all font-mono leading-relaxed block group-active:text-white">
-                  {address}
+                  {copyTarget}
                 </code>
                 <span className="mt-2 inline-flex items-center gap-1.5 text-xs text-bitcoin-orange-400 font-medium">
                   {copied ? (
