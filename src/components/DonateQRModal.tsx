@@ -4,7 +4,8 @@ import { Button } from './Button';
 import { TipAmountPicker } from './TipAmountPicker';
 import { WalletDeepLinks } from './WalletDeepLinks';
 import { TrustProofStrip } from './TrustProofStrip';
-import { bitcoinQrData, getQrImageUrl } from '../lib/qr';
+import { bitcoinQrData } from '../lib/qr';
+import { QRCodeSVG } from 'qrcode.react';
 import { copyToClipboard } from '../lib/clipboard';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -25,9 +26,7 @@ export function DonateQRModal({
   recipientLabel,
 }: DonateQRModalProps) {
   const { t } = useLanguage();
-  const [qrCodeUrl, setQrCodeUrl] = useState('');
   const [copied, setCopied] = useState(false);
-  const [qrFailed, setQrFailed] = useState(false);
   const [tipSats, setTipSats] = useState<number | null>(null);
   const canShare = typeof navigator !== 'undefined' && typeof navigator.share === 'function';
 
@@ -40,16 +39,9 @@ export function DonateQRModal({
       : '');
 
   useEffect(() => {
-    if (!isOpen || (!address && !lightningUri)) return;
-    const qrData = lightningUri
-      ? lightningUri
-      : tipSats
-        ? `bitcoin:${address}?amount=${(tipSats / 100_000_000).toFixed(8)}`
-        : bitcoinQrData(address);
-    setQrCodeUrl(getQrImageUrl(qrData, 400));
-    setQrFailed(false);
+    if (!isOpen) return;
     setCopied(false);
-  }, [isOpen, address, tipSats, lightningUri]);
+  }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -149,18 +141,22 @@ export function DonateQRModal({
                 aria-hidden
               />
               <div className="relative bg-white p-3 sm:p-4 rounded-2xl shadow-xl ring-1 ring-black/5">
-                {qrCodeUrl && !qrFailed ? (
-                  <img
-                    src={qrCodeUrl}
-                    alt="Bitcoin donation QR code"
-                    className="w-full aspect-square object-contain"
-                    style={{ imageRendering: 'crisp-edges' }}
-                    onError={() => setQrFailed(true)}
+                {paymentUri ? (
+                  <QRCodeSVG
+                    value={paymentUri}
+                    size={268}
+                    level="M"
+                    includeMargin
+                    bgColor="#ffffff"
+                    fgColor="#000000"
+                    title="Donation QR code"
+                    aria-label="Donation QR code"
+                    className="w-full h-auto"
                   />
                 ) : (
                   <img
                     src="/donations-qr.png"
-                    alt="Bitcoin donation QR code"
+                    alt="Donation QR code"
                     className="w-full aspect-square object-contain"
                     style={{ imageRendering: 'crisp-edges' }}
                   />

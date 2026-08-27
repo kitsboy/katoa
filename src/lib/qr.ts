@@ -2,12 +2,13 @@ import { isDummyPaymentTarget } from './validateAddress';
 
 export { isDummyPaymentTarget } from './validateAddress';
 
-/** Client-side QR via Google Charts API (no extra npm dependency). */
+/** QR image URL. Google Charts Infographics is dead (404); use a public QR endpoint. */
 export function getQrImageUrl(data: string, size = 300): string {
   const payload = data.trim();
   if (!payload || isDummyPaymentTarget(payload)) return '';
   const encoded = encodeURIComponent(payload);
-  return `https://chart.googleapis.com/chart?cht=qr&chs=${size}x${size}&chl=${encoded}&choe=UTF-8&chld=H|1`;
+  const px = Math.max(80, Math.min(size, 1000));
+  return `https://api.qrserver.com/v1/create-qr-code/?size=${px}x${px}&data=${encoded}&ecc=M&margin=1`;
 }
 
 /** BIP-21 `bitcoin:` URI. `amount` is BTC (not sats). Empty if the address is dummy/missing. */

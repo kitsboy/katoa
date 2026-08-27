@@ -24,13 +24,13 @@ import {
   Shield,
 } from 'lucide-react';
 import { APP_VERSION_FULL, APP_BUILT_AT } from '../generated/app-version';
-import { getQrImageUrl, lightningQrData } from '../lib/qr';
+import { lightningQrData } from '../lib/qr';
+import { QRCodeSVG } from 'qrcode.react';
 
 /** Breez Spark (Config A, 2026-08-27) — giveabit.io/wallets.json */
 const bitcoinAddress = 'bc1plz7d4utggmvzeuvc4h5eh9ej3wfjgcc33jc8rvemwgxjtfjpdr3syn3a89';
 const lightningAddress = 'katoa@breez.tips';
 const lightningUri = lightningQrData(lightningAddress);
-const lightningQrUrl = getQrImageUrl(lightningUri, 400);
 
 const apiLinks = [
   { label: 'Supabase API', href: 'https://supabase.com/docs/guides/api', icon: DatabaseIcon },
@@ -271,6 +271,8 @@ export function Footer() {
               <button
                 type="button"
                 onClick={() => setShowDonation(!showDonation)}
+                aria-label={t('footer.donateSats')}
+                aria-expanded={showDonation}
                 className="flex items-center gap-2 text-sm text-gray-400 hover:text-bitcoin-orange-400 transition-colors group"
               >
                 <span>{t('footer.madeWith')}</span>
@@ -328,11 +330,16 @@ export function Footer() {
                   aria-label={t('footer.donateExpand')}
                   aria-expanded={qrExpanded}
                 >
-                  <img
-                    src={lightningQrUrl || '/donations-qr.png'}
-                    alt={t('footer.donateQrAlt')}
-                    className="w-full h-full object-contain"
-                    style={{ imageRendering: 'crisp-edges' }}
+                  <QRCodeSVG
+                    value={lightningUri}
+                    size={128}
+                    level="M"
+                    includeMargin
+                    bgColor="#ffffff"
+                    fgColor="#000000"
+                    title={t('footer.donateQrAlt')}
+                    aria-label={t('footer.donateQrAlt')}
+                    className="w-full h-full"
                   />
                 </button>
                 <p className="text-[10px] text-gray-500 sm:hidden">{t('footer.tapEnlarge')}</p>

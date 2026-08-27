@@ -34,9 +34,9 @@ describe('isBolt11Invoice', () => {
 });
 
 describe('getQrImageUrl', () => {
-  it('encodes data for chart API', () => {
+  it('encodes data for the QR image endpoint', () => {
     const url = getQrImageUrl('bitcoin:addr', 200);
-    expect(url).toContain('cht=qr');
+    expect(url).toContain('api.qrserver.com');
     expect(url).toContain('200x200');
     expect(url).toContain(encodeURIComponent('bitcoin:addr'));
   });
