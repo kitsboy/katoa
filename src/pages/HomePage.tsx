@@ -13,6 +13,7 @@ import { ArrowRight, Zap, Shield, Globe } from 'lucide-react';
 import { FeeComparison } from '../components/FeeComparison';
 import { OnboardingChecklist } from '../components/OnboardingChecklist';
 import { FamilyLinks } from '../components/FamilyLinks';
+import { SatohashStampWidget } from '../components/SatohashStampWidget';
 import { CreatorVerticalsGrid } from '../components/CreatorVerticalsGrid';
 import { CreatorDiscoveryGrid } from '../components/CreatorDiscoveryGrid';
 import { mockWishlists } from '../data/mockWishlists';
@@ -240,7 +241,8 @@ export function HomePage() {
       </section>
 
       <section className="lp-section lp-section-muted">
-        <div className="lp-container">
+        <div className="lp-container space-y-8">
+          <SatohashStampWidget />
           <FamilyLinks />
         </div>
       </section>
