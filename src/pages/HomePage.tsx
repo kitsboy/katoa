@@ -123,6 +123,14 @@ export function HomePage() {
 
       <LandingTrustBar />
 
+      <section className="py-6 sm:py-8" aria-label="Bitcoin proof of existence">
+        <div className="lp-container">
+          <div className="max-w-xl mx-auto">
+            <SatohashStampWidget />
+          </div>
+        </div>
+      </section>
+
       <section className="lp-section">
         <div className="lp-container">
           <CreatorVerticalsGrid />
@@ -241,8 +249,7 @@ export function HomePage() {
       </section>
 
       <section className="lp-section lp-section-muted">
-        <div className="lp-container space-y-8">
-          <SatohashStampWidget />
+        <div className="lp-container">
           <FamilyLinks />
         </div>
       </section>
