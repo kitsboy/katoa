@@ -44,7 +44,8 @@ jobs:
           for attempt in $(seq 1 24); do
             sleep 10
             HTML=$(curl -fsSL "https://katoa.org/" || true)
-            echo "$HTML" | grep -q "Katoa" || { echo "attempt=$attempt: not live yet"; continue; }
+            printf '%s' "$HTML" > /tmp/prod-page.html
+            grep -q "Katoa" /tmp/prod-page.html || { echo "attempt=$attempt: not live yet"; continue; }
             CSS=$(echo "$HTML" | grep -oE '/assets/index-[A-Za-z0-9_.-]+\.css' | head -1 || true)
             JS=$(echo "$HTML" | grep -oE '/assets/index-[A-Za-z0-9_.-]+\.js' | head -1 || true)
             echo "attempt=$attempt CSS=$CSS JS=$JS"
