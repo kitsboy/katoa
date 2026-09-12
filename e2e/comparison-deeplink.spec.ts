@@ -13,7 +13,7 @@ import { test, expect } from '@playwright/test';
  */
 
 test('deep link ?earnings=5000 keeps hero, slider and calculator consistent', async ({ page }) => {
-  await page.goto('/comparison?earnings=5000', { waitUntil: 'networkidle' });
+  await page.goto('/comparison?earnings=5000', { waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(4000);
 
   // Slider
@@ -36,7 +36,7 @@ test('deep link ?earnings=5000 keeps hero, slider and calculator consistent', as
 });
 
 test('no-param /comparison stays at 10,000 / 2,000 / 24,000', async ({ page }) => {
-  await page.goto('/comparison', { waitUntil: 'networkidle' });
+  await page.goto('/comparison', { waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(4000);
 
   const slider = page.locator('#comparison-earnings');
@@ -55,7 +55,7 @@ test('no-param /comparison stays at 10,000 / 2,000 / 24,000', async ({ page }) =
 });
 
 test('adjusting the slider updates the calculator too (single source of truth)', async ({ page }) => {
-  await page.goto('/comparison', { waitUntil: 'networkidle' });
+  await page.goto('/comparison', { waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(2000);
 
   const slider = page.locator('#comparison-earnings');
