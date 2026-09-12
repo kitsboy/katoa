@@ -141,12 +141,20 @@ export function FeeComparison({
   variant = 'default',
   /** Only /comparison should rewrite ?earnings= — never pollute home URL */
   syncUrl = false,
+  /** Controlled mode: parent owns the monthly earnings value (single source of truth).
+      When provided, FeeComparison no longer keeps its own copy and never touches ?earnings=;
+      the parent is responsible for reading/writing the URL. `value` is the USD monthly earnings. */
+  value,
+  onChange,
 }: {
   variant?: 'default' | 'landing';
   syncUrl?: boolean;
+  value?: number;
+  onChange?: (usdEarnings: number) => void;
 }) {
   const isLanding = variant === 'landing';
   const { t } = useLanguage();
+  const isControlled = value !== undefined && typeof onChange === 'function';
   const [monthlyEarnings, setMonthlyEarnings] = useState(10000);
   const [currency, setCurrency] = useState(currencies[0]);
   const [displayValue, setDisplayValue] = useState('10,000');
@@ -163,8 +171,14 @@ export function FeeComparison({
     }
   }, [syncUrl]);
 
+  // Controlled mode: keep the text field in step with the parent's value (slider/deep link).
   useEffect(() => {
-    if (!syncUrl) return;
+    if (!isControlled || value === undefined) return;
+    setDisplayValue(Math.round(value * currency.rate).toLocaleString());
+  }, [value, currency, isControlled]);
+
+  useEffect(() => {
+    if (!syncUrl || isControlled) return;
     const params = new URLSearchParams(window.location.search);
     const earnings = params.get('earnings');
     if (earnings) {
@@ -174,27 +188,32 @@ export function FeeComparison({
         setDisplayValue(num.toLocaleString());
       }
     }
-  }, [syncUrl]);
+  }, [syncUrl, isControlled]);
 
   useEffect(() => {
-    if (!syncUrl || monthlyEarnings <= 0) return;
+    if (!syncUrl || isControlled || monthlyEarnings <= 0) return;
     // Only rewrite query on the comparison page
     if (!window.location.pathname.startsWith('/comparison')) return;
     const url = new URL(window.location.href);
     if (url.searchParams.get('earnings') === String(monthlyEarnings)) return;
     url.searchParams.set('earnings', String(monthlyEarnings));
     window.history.replaceState({}, '', `${url.pathname}${url.search}`);
-  }, [monthlyEarnings, syncUrl]);
+  }, [monthlyEarnings, syncUrl, isControlled]);
 
   const formatNumber = (value: string): string => {
     const numbers = value.replace(/[^0-9]/g, '');
     return numbers.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   };
 
-  const handleInputChange = (value: string) => {
-    const numbers = value.replace(/[^0-9]/g, '');
+  const handleInputChange = (inputValue: string) => {
+    const numbers = inputValue.replace(/[^0-9]/g, '');
     const numValue = parseInt(numbers) || 0;
-    setMonthlyEarnings(numValue);
+    if (isControlled) {
+      // Parent owns the value; report the typed USD equivalent (converted from the local currency).
+      onChange(Math.round(numValue * currency.rate));
+    } else {
+      setMonthlyEarnings(numValue);
+    }
     setDisplayValue(formatNumber(numbers));
   };
 
@@ -230,7 +249,9 @@ export function FeeComparison({
     return { throne, linktree, onlyfans, katoa };
   };
 
-  const amountInUSD = monthlyEarnings / currency.rate;
+  // In controlled mode the parent passes USD monthly earnings directly;
+  // otherwise the typed local-currency value is converted to USD.
+  const amountInUSD = isControlled ? (value ?? 0) : monthlyEarnings / currency.rate;
   const results = calculateFees(amountInUSD);
   const savings = {
     vsThrone: results.throne.fees,

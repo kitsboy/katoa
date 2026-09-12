@@ -251,7 +251,7 @@ export function ComparisonPage() {
           </Card>
         )}
 
-        <FeeComparison syncUrl />
+        <FeeComparison value={monthlyEarnings} onChange={setMonthlyEarnings} />
 
         <div className="mt-20 space-y-12">
           <h2 className="text-4xl font-bold text-center text-white mb-12">{t('comparison.breakdown.title')}</h2>
