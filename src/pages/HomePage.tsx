@@ -240,7 +240,12 @@ export function HomePage() {
             </div>
             <p className="lp-cta-note">{t('home.cta.note')}</p>
             <div className="lp-cta-stats">
-              <div><strong>Live</strong><span>{t('home.cta.launch')}</span></div>
+              {/* Status cell, not a metric: this word must describe the product's
+                phase, never how fresh the figures are — the figure beside it is
+                a labelled demo sample (home.stats.sampleRaised). Reuses the
+                navbar badge's translated status word so the page cannot
+                contradict itself. */}
+              <div><strong>{t('nav.beta')}</strong><span>{t('home.cta.launch')}</span></div>
               <div><strong>{stats.volume}</strong><span>{stats.isDemoSample ? t('home.stats.sampleRaised') : t('home.cta.processed')}</span></div>
               <div><strong>0%</strong><span>{t('home.cta.fees')}</span></div>
             </div>

@@ -90,7 +90,7 @@ const homeStrings = {
     'home.bento.traditional': 'Traditional',
     'home.bento.katoa': 'KATOA',
     'home.cta.note': '0% platform fees. Lightning costs are minimal and usually paid by supporters. KATOA never custodies your balance.',
-    'home.cta.launch': 'Launch',
+    'home.cta.launch': 'Live now',
     'home.cta.processed': 'Processed',
     'home.cta.fees': 'Fees',
     'home.metaTitle': 'KATOA — Zero-Fee Bitcoin Creator Platform',
