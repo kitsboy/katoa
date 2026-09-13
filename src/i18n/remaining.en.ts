@@ -269,4 +269,37 @@ export const remainingEn = {
   'footer.donateQrAlt': 'Donation QR',
   'footer.donateFund':
     'Your sats fund free tools for the Bitcoin community.',
+
+  // Thank-you page — the real end of every conversion flow.
+  'thankyou.metaTitle': 'Thank you — what happens next | KATOA',
+  'thankyou.metaDesc':
+    'Your action completed on KATOA. Here is exactly what happened and the three steps that come next — confirmed by email, wallet, then your first wishlist.',
+  'thankyou.default.title': 'Thank you — that worked.',
+  'thankyou.default.lead':
+    'Your action went through and nothing else is required from you right now. Below is what happens next and where to go from here.',
+  'thankyou.signup.title': 'Thank you — your account is created.',
+  'thankyou.signup.lead':
+    'Welcome to KATOA. We sent a confirmation link to the email address you used — tap it and your account is live. No KYC, no card, no platform fee, ever.',
+  'thankyou.contact.title': 'Thank you — your message is on its way.',
+  'thankyou.contact.lead':
+    'We received your message and a copy was placed on your clipboard as a backup. A human on the KATOA team replies within one business day.',
+  'thankyou.support.title': 'Thank you — your sats keep KATOA free.',
+  'thankyou.support.lead':
+    'Your support funds free, open-source tools for the Bitcoin community. No intermediary touched it, and none ever will.',
+  'thankyou.gift.title': 'Thank you — your gift is sent.',
+  'thankyou.gift.lead':
+    'Your Lightning payment settled peer-to-peer. The creator receives it directly; KATOA never custodies the money and takes 0%.',
+  'thankyou.nextTitle': 'What happens next',
+  'thankyou.step1.title': 'Check your inbox',
+  'thankyou.step1.body':
+    'Confirm your email address so nobody else can claim your username. The link works for 24 hours.',
+  'thankyou.step2.title': 'Add a Lightning address',
+  'thankyou.step2.body':
+    'Settings → Payouts. Paste a Lightning address (Phoenix, Wallet of Satoshi, Muun, or your own LND) so gifts reach you directly.',
+  'thankyou.step3.title': 'Publish your first wishlist',
+  'thankyou.step3.body':
+    'Create a wishlist, set sat prices, and share the link. Supporters fund items instantly over Lightning.',
+  'thankyou.cta.explore': 'Explore projects',
+  'thankyou.cta.dashboard': 'Go to my dashboard',
+  'thankyou.helpPrefix': 'Stuck or something looks wrong? Email us:',
 };

@@ -251,6 +251,12 @@ export function AuthPage() {
               <p className="text-emerald-300 text-sm">
                 Account created. Check your email to confirm if required, then sign in.
               </p>
+              <Link
+                to="/thank-you?from=signup"
+                className="inline-flex items-center gap-1 mt-2 text-sm font-medium text-emerald-200 underline"
+              >
+                What happens next →
+              </Link>
             </div>
           )}
 

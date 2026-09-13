@@ -6,6 +6,7 @@ import { PageMeta } from '../components/PageMeta';
 import { PageHero } from '../components/PageHero';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useToast } from '../components/Toast';
+import { Link } from '../components/Link';
 import { copyToClipboard } from '../lib/clipboard';
 import { Mail, MessageSquare, Send, Copy, CheckCircle2 } from 'lucide-react';
 
@@ -116,6 +117,12 @@ export function ContactPage() {
             </p>
             <p className="text-gray-400 text-sm mb-6">{t('contact.responseTime')}</p>
             <p className="text-gray-400 text-sm mb-8 max-w-md mx-auto">{t('contact.messageCopied')}</p>
+            <Link
+              to="/thank-you?from=contact"
+              className="inline-flex items-center gap-1 mb-4 text-sm font-medium text-neon-cyan-400 underline"
+            >
+              What happens next →
+            </Link>
             <div className="flex flex-col sm:flex-row gap-3">
               <Button variant="bitcoin" className="min-h-[48px] flex-1 touch-manipulation" onClick={reopenMail}>
                 <Send size={18} className="mr-2" /> {t('contact.composeAgain')}

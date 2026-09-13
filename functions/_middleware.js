@@ -31,6 +31,7 @@ const KNOWN_ROUTES = [
   /^\/case-studies\/?$/,
   /^\/creators\/?$/,
   /^\/creators\/guidelines\/?$/,
+  /^\/thank-you\/?$/,
   /^\/messages\/?$/,
   /^\/nip05\/?$/,
   /^\/terms\/?$/,

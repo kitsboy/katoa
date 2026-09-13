@@ -139,6 +139,19 @@ export const PRERENDER_ROUTES = [
     ],
   },
   {
+    path: '/thank-you',
+    title: 'Thank you — what happens next | KATOA',
+    description:
+      'Your KATOA action completed. See exactly what happened and the three steps that come next: confirm your email, add a Lightning address, publish your first wishlist.',
+    h1: 'Thank you — that worked',
+    paragraphs: [
+      'This is the end of the flow you just completed: account sign-up, the contact form, or a support payment. Nothing else is required from you right now.',
+      'What happens next, in order: confirm the email address you used, add a Lightning address so gifts reach you directly, then publish your first wishlist and share the link.',
+      'KATOA never custodies your funds and charges 0% platform fees, so every sat a supporter sends arrives in your own wallet.',
+    ],
+    noindex: true,
+  },
+  {
     path: '/terms',
     title: 'Terms of Service | KATOA',
     description: 'KATOA terms of service for creators and supporters using the Bitcoin wishlist platform.',
