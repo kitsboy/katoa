@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run sitemap && vite build && node scripts/prerender.mjs",
+    "build": "npm run sitemap && vite build && node scripts/prerender.mjs && node scripts/warm-legal-chunks.mjs",
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
