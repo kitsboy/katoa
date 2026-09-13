@@ -81,7 +81,7 @@ const PlatformCard = memo(function PlatformCard({
           )}
           {platform.platform === 'Throne' && (
             <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center p-1 shadow-md">
-              <img src="/Throne_Icon_-_Single_(Gradient).png" alt="Throne" className="w-full h-full object-contain" />
+              <img src="/Throne_Icon_-_Single_(Gradient).webp" alt="Throne" className="w-full h-full object-contain" />
             </div>
           )}
           {platform.platform === 'Linktree' && (
