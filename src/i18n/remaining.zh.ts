@@ -231,7 +231,7 @@ export const remainingZh = {
   'fee.katoaLightning': 'KATOA：即时闪电网络',
   'fee.privacy': '真正的隐私',
   'fee.competitorsData': '竞品：服务器端收集数据',
-  'fee.katoaZk': 'KATOA：零知识证明',
+  'fee.katoaZk': 'KATOA：零知识证明（路线图）',
   'fee.tableCaption': '月收入的平台费对比',
   'fee.colPlatform': '平台',
   'fee.colFees': '月度费用',

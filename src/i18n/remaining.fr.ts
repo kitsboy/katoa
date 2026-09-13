@@ -231,7 +231,7 @@ export const remainingFr = {
   'fee.katoaLightning': 'KATOA : Lightning Network instantané',
   'fee.privacy': 'Vraie vie privée',
   'fee.competitorsData': 'Concurrents : collecte de données côté serveur',
-  'fee.katoaZk': 'KATOA : preuves à connaissance nulle',
+  'fee.katoaZk': 'KATOA : preuves à connaissance nulle (feuille de route)',
   'fee.tableCaption': 'Comparaison des frais de plateforme pour des revenus mensuels',
   'fee.colPlatform': 'Plateforme',
   'fee.colFees': 'Frais mensuels',

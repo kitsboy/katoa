@@ -241,7 +241,7 @@ export function HomePage() {
             <p className="lp-cta-note">{t('home.cta.note')}</p>
             <div className="lp-cta-stats">
               <div><strong>Live</strong><span>{t('home.cta.launch')}</span></div>
-              <div><strong>{stats.volume}</strong><span>{t('home.cta.processed')}</span></div>
+              <div><strong>{stats.volume}</strong><span>{stats.isDemoSample ? t('home.stats.sampleRaised') : t('home.cta.processed')}</span></div>
               <div><strong>0%</strong><span>{t('home.cta.fees')}</span></div>
             </div>
           </div>

@@ -231,7 +231,7 @@ export const remainingJa = {
   'fee.katoaLightning': 'KATOA: 即時Lightning Network',
   'fee.privacy': '本当のプライバシー',
   'fee.competitorsData': '競合: サーバー側でのデータ収集',
-  'fee.katoaZk': 'KATOA: ゼロ知識証明',
+  'fee.katoaZk': 'KATOA: ゼロ知識証明（ロードマップ）',
   'fee.tableCaption': '月間収益に対するプラットフォーム手数料の比較',
   'fee.colPlatform': 'プラットフォーム',
   'fee.colFees': '月額手数料',
