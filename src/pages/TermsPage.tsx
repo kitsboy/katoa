@@ -234,20 +234,13 @@ export function TermsPage() {
             <div className="space-y-4 text-gray-300 leading-relaxed">
               <h3 className="text-lg font-semibold text-white">9.1 Governing Law</h3>
               <p>
-                These Terms shall be governed by and construed in accordance with the laws of the jurisdiction
-                in which Katoa operates, without regard to conflict of law provisions.
+                These Terms are governed by the laws of{' '}
+                <strong className="text-white">[GOVERNING LAW: TBD — pending naming of a legal entity]</strong>.
               </p>
-
-              <h3 className="text-lg font-semibold text-white mt-6">9.2 Arbitration</h3>
-              <p>
-                Any dispute arising from these Terms or the Services shall be resolved through binding arbitration
-                rather than in court, except that you may assert claims in small claims court if they qualify.
-              </p>
-
-              <h3 className="text-lg font-semibold text-white mt-6">9.3 Class Action Waiver</h3>
-              <p>
-                You agree that any arbitration or legal proceeding shall be conducted on an individual basis and not
-                as a class action, consolidated action, or representative action.
+              <p className="mt-4">
+                Until a governing law and forum are named, any dispute under these Terms will first be raised
+                with us in writing at hello@giveabit.io, and we will try in good faith to resolve it within
+                30 days.
               </p>
             </div>
           </section>
@@ -307,14 +300,6 @@ export function TermsPage() {
               </div>
             </div>
           </section>
-
-          <div className="bg-gradient-to-r from-orange-500/10 to-yellow-600/10 border border-orange-500/30 rounded-2xl p-8 mt-12">
-            <p className="text-sm text-gray-400 leading-relaxed">
-              <strong className="text-white">Legal Disclaimer:</strong> This is a template Terms of Service document
-              provided as a starting point. It should be reviewed and customized by qualified legal counsel before use.
-              Katoa makes no representations or warranties regarding the legal adequacy or compliance of this document.
-            </p>
-          </div>
         </div>
       </PageShell>
     </div>

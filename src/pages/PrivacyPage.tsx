@@ -54,8 +54,7 @@ export function PrivacyPage() {
                 <p className="mb-3">When you access our Services, we automatically collect:</p>
                 <ul className="list-disc list-inside space-y-2 ml-4">
                   <li><strong className="text-white">Usage Data:</strong> Pages viewed, features used, time spent, interaction patterns</li>
-                  <li><strong className="text-white">Device Information:</strong> Browser type, operating system, device identifiers</li>
-                  <li><strong className="text-white">Location Data:</strong> Approximate location based on IP address (for analytics and fraud prevention)</li>
+                  <li><strong className="text-white">Device Information:</strong> Browser type and operating system</li>
                   <li><strong className="text-white">Cookies and Similar Technologies:</strong> See Section 6 below</li>
                 </ul>
               </div>
@@ -254,32 +253,14 @@ export function PrivacyPage() {
               6. Cookies and Tracking Technologies
             </h2>
             <div className="space-y-4 text-gray-300 leading-relaxed">
-              <p>We use cookies and similar technologies to:</p>
-              <ul className="list-disc list-inside space-y-2 ml-4">
-                <li>Maintain your login session</li>
-                <li>Remember your preferences (language, theme)</li>
-                <li>Analyze usage patterns and improve performance</li>
-                <li>Provide security features</li>
-              </ul>
-
-              <div className="bg-white/[0.03] backdrop-blur-md border border-white/10 rounded-xl p-6 mt-4 space-y-3">
-                <div>
-                  <h4 className="font-semibold text-white mb-1">Essential Cookies</h4>
-                  <p className="text-sm">Required for the platform to function (authentication, security)</p>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-white mb-1">Analytics Cookies</h4>
-                  <p className="text-sm">Help us understand how users interact with our Services</p>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-white mb-1">Preference Cookies</h4>
-                  <p className="text-sm">Remember your settings and choices</p>
-                </div>
-              </div>
-
-              <p className="mt-4">
-                You can control cookies through your browser settings. Note that disabling cookies may limit
-                functionality of the Services.
+              <p>
+                We set no cookies of our own. Katoa has no login-session cookie, no analytics cookie and no
+                advertising cookie; our analytics is self-hosted and cookie-less.
+              </p>
+              <p>
+                Preferences you set (language, currency, theme) are kept in your browser's own storage, on
+                your device, not in a cookie. Clearing your browsing data removes them. Blocking cookies in
+                your browser does not break Katoa, because we set none of our own.
               </p>
             </div>
           </section>
@@ -411,21 +392,12 @@ export function PrivacyPage() {
               </p>
               <div className="bg-white/[0.03] backdrop-blur-md border border-white/10 rounded-xl p-6 mt-4">
                 <p className="font-semibold text-white mb-3">Katoa Privacy Team</p>
-                <p><strong className="text-white">Email:</strong> privacy@katoa.org</p>
+                <p><strong className="text-white">Email:</strong> hello@giveabit.io</p>
                 <p><strong className="text-white">Website:</strong> https://katoa.org/contact</p>
                 <p className="mt-3 text-sm">Response time: We aim to respond within 48 hours</p>
               </div>
             </div>
           </section>
-
-          <div className="bg-gradient-to-r from-blue-500/10 to-cyan-600/10 border border-blue-500/30 rounded-2xl p-8 mt-12">
-            <p className="text-sm text-gray-400 leading-relaxed">
-              <strong className="text-white">Legal Disclaimer:</strong> This is a template Privacy Policy document
-              provided as a starting point. It should be reviewed and customized by qualified legal counsel to ensure
-              compliance with applicable laws in your jurisdiction. Katoa makes no representations or warranties
-              regarding the legal adequacy or compliance of this document.
-            </p>
-          </div>
         </div>
       </PageShell>
     </div>
