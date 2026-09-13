@@ -2,7 +2,7 @@ export const remainingZh = {
   'nav.templates': '模板',
   'nav.security': '安全',
   'nav.roadmap': '路线图',
-  'nav.beta': 'Beta',
+  'nav.beta': '测试版',
   'nav.betaTitle': 'KATOA 正在积极开发中',
   'nav.route.home': '首页',
   'nav.route.explore': '探索',
