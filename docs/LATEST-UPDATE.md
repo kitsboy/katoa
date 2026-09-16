@@ -1,6 +1,5 @@
-# Katoa — Last Updated 2026-08-24 by Grok
+# Katoa — Last Updated 2026-09-16 by Andrea (Give A Bit · Bitcoin Knowledge lane)
 
-Brief: Night-jewel + honest MVP pushed; ELI16 pitch, exec, 11-slide deck, and handoffs refreshed. Product HEAD `6f43b74`.
-Commit: `dc82bb9` (docs/pitch/goodbye) on top of product `6f43b74`.
-Kimi: confirm CF Pages after `6f43b74` + webhook/nsec (see top of `docs/KIMI-HANDOFF.md`).
-Do not sync to M4 until Kimi says so.
+Brief: "Released & Bitcoin-anchored" creator release attestations live on katoa.org — shared trust UI port, /verify + /verify/:hash one-click chain check, .ots download with every verdict, method surfaced (bitcoind/esplora), forged → "Not proven".
+
+Commit: 4e66d6d (origin/main)

@@ -14,10 +14,17 @@
 - The verify method is surfaced explicitly (`data-testid="verify-method"`, `data-method="bitcoind|esplora"`) — no silent third party. A forged/unresolved hash renders **"Not proven"**, never softened.
 
 **Verified:**
-- `POST https://api.satohash.io/api/verify` live-reconfirmed: `1ce9eb8b…b4f66` → `verified:true`, `verified_method:"bitcoind"`, block `967273`, `ots_download_url` present. All-zeros hash → `verified:false` (no `reason`, only `error`) → correctly maps to `not-proven`.
-- `npm test` 247/247 pass (32 files) · `npm run typecheck` clean · `eslint` clean on new files · `npm run build` green, 26/26 prerendered.
+- `POST https://api.satohash.io/api/verify` live-reconfirmed: `1ce9eb8b…b4f66` → `verified:true`, `verified_method:"bitcoind"`, block `967273`, `ots_download_url` present. All-zeros hash → HTTP **404** + `{verified:false, error:"Hash not found in registry."}` → correctly maps to `not-proven`.
+- `npm test` 249/249 pass (32 files) · `npm run typecheck` clean · `npm run build` green, 26/26 prerendered.
 
-**Git State:** see commit below on `origin/main`. Unpushed: none.
+**Follow-up fixes landed after first push (live smoke caught both):**
+1. `functions/_middleware.js` `KNOWN_ROUTES` lacked `/verify` → hard 404 before the SPA could serve. Added `/verify` + `/verify/:hash` (commit `f9c9d31`).
+2. Forged hashes: the API answers 404 (not 200), so `verifyProof()` threw → UI rendered "Waiting for Bitcoin" instead of "Not proven". Structured 4xx bodies with a `verified` field are now returned as verdicts (commit `4e66d6d`), pinned by 2 new unit tests + e2e 404 contract.
+
+**Live-verified on production `https://katoa.org` (Playwright, real API):**
+- `/verify` renders; deep link `/verify/1ce9eb8b…` → badge "Anchored to Bitcoin", method `bitcoind`, block 967,273, live `.ots` download link; `/verify/0000…` → "Not proven", no block; `/u/paul_music` → release attestations panel. Screenshots in the kanban task `t_2dd26ade`.
+
+**Git State:** `4e66d6d` on `origin/main`. Unpushed: none.
 
 ---
 ## Session — 2026-08-27 · Breez donate + footer QR fix (Grok M3)
