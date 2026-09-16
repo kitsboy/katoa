@@ -83,4 +83,42 @@ describe('verifyProof — the only path to a "verified" verdict', () => {
     );
     await expect(verifyProof('a'.repeat(64))).rejects.toThrow(/checker down/);
   });
+
+  it('treats a structured 404 as an honest not-proven verdict, not a network error', async () => {
+    // The live API answers forged/unknown hashes with HTTP 404 + a structured
+    // body. That is a verdict — the checker resolved the hash and found no
+    // attestation. Throwing here would render "Waiting for Bitcoin" (a lie).
+    const apiRejection = {
+      verified: false,
+      registry_check: true,
+      registry: { found: false, status: null },
+      error: 'Hash not found in registry.',
+    };
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: false,
+        status: 404,
+        statusText: 'Not Found',
+        json: async () => apiRejection,
+      })
+    );
+
+    const verdict = await verifyProof('0'.repeat(64));
+    expect(verdict.verified).toBe(false);
+    expect(verdict.error).toBe('Hash not found in registry.');
+  });
+
+  it('still throws on a 4xx without a structured verified body', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: false,
+        status: 429,
+        statusText: 'Too Many Requests',
+        json: async () => ({ error: 'rate limited' }),
+      })
+    );
+    await expect(verifyProof('b'.repeat(64))).rejects.toThrow(/rate limited/);
+  });
 });

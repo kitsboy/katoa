@@ -191,6 +191,21 @@ export async function verifyProof(
   });
 
   if (!res.ok) {
+    // A structured 4xx rejection is a VERDICT, not a transport failure: the
+    // checker resolved the hash and found nothing (e.g. 404 "Hash not found
+    // in registry." → honest not-proven). Surface it as a verdict so the UI
+    // renders "Not proven" instead of a network error.
+    if (res.status >= 400 && res.status < 500) {
+      try {
+        const errBody = (await res.json()) as Partial<ProofVerdict>;
+        if (typeof errBody === 'object' && errBody !== null && 'verified' in errBody) {
+          return errBody as ProofVerdict;
+        }
+      } catch {
+        // fall through to the generic error
+      }
+    }
+
     let detail = `${res.status} ${res.statusText}`;
     try {
       const errBody = (await res.json()) as {

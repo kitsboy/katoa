@@ -63,7 +63,15 @@ test.describe('verify release surface', () => {
   });
 
   test('forged hash renders "Not proven" and never a block', async ({ page }) => {
-    await stubApi(page, { verified: false, error: 'Hash not found in registry.' });
+    // The live API answers unknown/forged hashes with HTTP 404 + a structured
+    // body. That is a VERDICT (not-proven), never a transport error.
+    await page.route('**/api/verify', async (route) => {
+      await route.fulfill({
+        status: 404,
+        contentType: 'application/json',
+        body: JSON.stringify({ verified: false, error: 'Hash not found in registry.' }),
+      });
+    });
     await page.goto('/verify');
 
     const input = page.getByTestId('release-hash-input');
