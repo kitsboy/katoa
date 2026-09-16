@@ -201,6 +201,7 @@ export function Footer() {
                 <ul className="space-y-2.5 sm:flex sm:flex-wrap sm:gap-x-6 sm:gap-y-2.5 sm:space-y-0">
                   <FooterLink href="/security">{t('nav.security')}</FooterLink>
                   <FooterLink href="/security/bounty">{t('footer.bounty')}</FooterLink>
+                  <FooterLink href="/verify">{t('trust.release.eyebrow')}</FooterLink>
                   <FooterLink href="/terms">{t('footer.terms')}</FooterLink>
                   <FooterLink href="/privacy">{t('footer.privacy')}</FooterLink>
                 </ul>

@@ -1,3 +1,25 @@
+## Session — 2026-09-16 · "Released & Bitcoin-anchored" creator release attestations (Andrea · trust-UI port)
+
+**Done:**
+- Ported the family trust UI to Katoa (deliverable 3 of `t_da054829`). `src/components/trust/HowProofWorks.jsx` is a **byte-for-byte** copy of `kitsboy/satohash@origin/main` (verified by diff) — zero deps, every string overridable via `labels`. Only local addition is `HowProofWorks.d.ts`, the type surface so Katoa's strict `tsc` build can consume the `.jsx`.
+- New `/verify` + deep link `/verify/:hash` (`VerifyReleasePage.tsx`): paste or share a SHA-256, it re-resolves against a real Bitcoin block. Footer gets a "Released & Bitcoin-anchored" link; `/verify` is in the sitemap + prerender list (26/26 routes).
+- `ReleaseAttestation.tsx` — the creator release card. Verdict comes **only** from `verifyProof()` (`POST /api/verify`). Stored registry values are rendered as claims, never as a verdict.
+- `public/attestations/releases.json` — claims-only registry schema (`katoa.release-attestations.v1`) with a `how_to_check_by_hand` block; one real platform release + one `demo: true` sample. No fabricated "verified" fields anywhere.
+- i18n: `src/i18n/trust.ts` adds `trust.*` strings for all 7 locales (en/es/pt/fr/de/ja/zh), wired through `LanguageContext`; `i18nParity` stays green.
+- Tests: `src/lib/__tests__/{verifyProof,releaseAttestations}.test.ts`, `src/components/trust/__tests__/{HowProofWorks,ReleaseAttestation}.test.tsx`, plus `e2e/verify-release.spec.ts` (network-stubbed honesty pinning). `vitest.config.ts` include glob widened to `.jsx` for the ported test.
+
+**Decisions:**
+- **Honesty contract**: nothing in `releaseAttestations.ts` returns a `verified` flag or invents a block — the registry is a list of CLAIMS. Only the live chain check may produce a verdict. `registry_status` is explicitly never rendered as proof.
+- **Assurance requires the means to audit** (Andrea's doctrine): the `.ots` download sits next to the verdict every time, in both `ReleaseAttestation` and `HowProofWorks`. The live `ots_download_url` wins; the registry copy is only a pre-check fallback.
+- The verify method is surfaced explicitly (`data-testid="verify-method"`, `data-method="bitcoind|esplora"`) — no silent third party. A forged/unresolved hash renders **"Not proven"**, never softened.
+
+**Verified:**
+- `POST https://api.satohash.io/api/verify` live-reconfirmed: `1ce9eb8b…b4f66` → `verified:true`, `verified_method:"bitcoind"`, block `967273`, `ots_download_url` present. All-zeros hash → `verified:false` (no `reason`, only `error`) → correctly maps to `not-proven`.
+- `npm test` 247/247 pass (32 files) · `npm run typecheck` clean · `eslint` clean on new files · `npm run build` green, 26/26 prerendered.
+
+**Git State:** see commit below on `origin/main`. Unpushed: none.
+
+---
 ## Session — 2026-08-27 · Breez donate + footer QR fix (Grok M3)
 
 **Done:**

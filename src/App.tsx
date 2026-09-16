@@ -47,6 +47,9 @@ const Nip05ClaimPage = lazy(() => import('./pages/Nip05ClaimPage').then((m) => (
 const CreatorGuidelinesPage = lazy(() =>
   import('./pages/CreatorGuidelinesPage').then((m) => ({ default: m.CreatorGuidelinesPage }))
 );
+const VerifyReleasePage = lazy(() =>
+  import('./pages/VerifyReleasePage').then((m) => ({ default: m.VerifyReleasePage }))
+);
 const CreatorProfilePage = lazy(() =>
   import('./pages/CreatorProfilePage').then((m) => ({ default: m.CreatorProfilePage }))
 );
@@ -169,6 +172,8 @@ function AppShell() {
               <Route path="/compare" element={<Navigate to="/comparison" replace />} />
               <Route path="/pitch" element={<RouteTransition><PitchPage /></RouteTransition>} />
               <Route path="/security" element={<RouteTransition><SecurityPage /></RouteTransition>} />
+              <Route path="/verify" element={<RouteTransition><VerifyReleasePage /></RouteTransition>} />
+              <Route path="/verify/:hash" element={<RouteTransition><VerifyReleasePage /></RouteTransition>} />
               <Route path="/roadmap" element={<RouteTransition><RoadmapPage /></RouteTransition>} />
               <Route path="/templates" element={<RouteTransition><TemplatesPage /></RouteTransition>} />
               <Route path="/press" element={<RouteTransition><PressKitPage /></RouteTransition>} />

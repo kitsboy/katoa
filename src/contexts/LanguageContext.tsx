@@ -13,6 +13,7 @@ import { remainingFr } from '../i18n/remaining.fr';
 import { remainingDe } from '../i18n/remaining.de';
 import { remainingJa } from '../i18n/remaining.ja';
 import { remainingZh } from '../i18n/remaining.zh';
+import { trustStrings } from '../i18n/trust';
 
 export type Language = 'en' | 'es' | 'pt' | 'fr' | 'de' | 'ja' | 'zh';
 
@@ -4143,6 +4144,7 @@ export const translations: Record<Language, Record<string, string>> = {
     ...commonStrings.en,
     ...pageStrings.en,
     ...remainingEn,
+    ...trustStrings.en,
   },
   es: {
     'nav.explore': 'Explorar',
@@ -4184,6 +4186,7 @@ export const translations: Record<Language, Record<string, string>> = {
     ...commonStrings.es,
     ...pageStrings.es,
     ...remainingEs,
+    ...trustStrings.es,
   },
   pt: {
     'nav.explore': 'Explorar',
@@ -4225,6 +4228,7 @@ export const translations: Record<Language, Record<string, string>> = {
     ...commonStrings.pt,
     ...pageStrings.pt,
     ...remainingPt,
+    ...trustStrings.pt,
   },
   fr: {
     'nav.explore': 'Explorer',
@@ -4266,6 +4270,7 @@ export const translations: Record<Language, Record<string, string>> = {
     ...commonStrings.fr,
     ...pageStrings.fr,
     ...remainingFr,
+    ...trustStrings.fr,
   },
   de: {
     'nav.explore': 'Entdecken',
@@ -4307,6 +4312,7 @@ export const translations: Record<Language, Record<string, string>> = {
     ...commonStrings.de,
     ...pageStrings.de,
     ...remainingDe,
+    ...trustStrings.de,
   },
   ja: {
     'nav.explore': '探索',
@@ -4348,6 +4354,7 @@ export const translations: Record<Language, Record<string, string>> = {
     ...commonStrings.ja,
     ...pageStrings.ja,
     ...remainingJa,
+    ...trustStrings.ja,
   },
   zh: {
     'nav.explore': '探索',
@@ -4389,6 +4396,7 @@ export const translations: Record<Language, Record<string, string>> = {
     ...commonStrings.zh,
     ...pageStrings.zh,
     ...remainingZh,
+    ...trustStrings.zh,
   },
 };
 

@@ -1,0 +1,48 @@
+{
+  "schema": "katoa.release-attestations.v1",
+  "note": "Stored values here are CLAIMS, not proof. The verify surface re-resolves every hash against an actual Bitcoin block header and shows what it finds — including 'Not proven'. Never read these fields as a verdict.",
+  "how_to_check_by_hand": {
+    "step1": "curl -sS <artifact_url> -o release.txt",
+    "step2": "sha256sum release.txt  -> must equal the entry's hash below",
+    "step3": "ots verify release.ots  -> OpenTimestamps client, any machine, forever",
+    "tool": "https://opentimestamps.org/"
+  },
+  "releases": [
+    {
+      "id": "katoa-trust-ui-v1",
+      "creator": "katoa",
+      "title": "Released & Bitcoin-anchored trust UI (v1)",
+      "kind": "platform-release",
+      "released_at": "2026-09-16",
+      "artifact_url": "/attestations/katoa-trust-ui-v1.txt",
+      "hash": "7960c231da6cd9f810140c24920a5563606ba71aadd2f8a4db80876b279ed668",
+      "ots_url": "https://api.satohash.io/api/stamps/0f3c11dc-ec66-4cf9-819f-de77824b1b2b?download=true",
+      "verify_url": "https://satohash.io/verify/0f3c11dc-ec66-4cf9-819f-de77824b1b2b",
+      "stamp_id": "0f3c11dc-ec66-4cf9-819f-de77824b1b2b",
+      "claimed": {
+        "status": "pending",
+        "anchored_block": null,
+        "submitted_at": "2026-09-16T19:37:04Z"
+      },
+      "demo": false
+    },
+    {
+      "id": "paul_music-release-v1",
+      "creator": "paul_music",
+      "title": "Night Jewel — demo EP (sample release)",
+      "kind": "creator-release",
+      "released_at": "2026-09-16",
+      "artifact_url": "/attestations/demo/paul_music-release-v1.txt",
+      "hash": "2784372f0a60d557c4da0e1f208fc0a79335478e4876459341545ca56cd27f8d",
+      "ots_url": "https://api.satohash.io/api/stamps/2e47f540-86c6-41da-bf85-183dfd3f55e5?download=true",
+      "verify_url": "https://satohash.io/verify/2e47f540-86c6-41da-bf85-183dfd3f55e5",
+      "stamp_id": "2e47f540-86c6-41da-bf85-183dfd3f55e5",
+      "claimed": {
+        "status": "pending",
+        "anchored_block": null,
+        "submitted_at": "2026-09-16T19:37:05Z"
+      },
+      "demo": true
+    }
+  ]
+}

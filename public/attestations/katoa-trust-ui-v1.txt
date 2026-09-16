@@ -1,0 +1,48 @@
+KATOA RELEASE MANIFEST — "Released & Bitcoin-anchored" trust UI (v1)
+====================================================================
+
+Product:        Katoa — zero-fee, non-custodial Bitcoin creator platform
+Site:           https://katoa.org
+Repository:     https://github.com/kitsboy/katoa
+Released:       2026-09-16
+Release kind:   platform release (public web surface, no fees, no accounts)
+
+WHAT THIS FILE IS
+-----------------
+This file is the anchored artifact. It is published at:
+  https://katoa.org/attestations/katoa-trust-ui-v1.txt
+
+Its SHA-256 fingerprint was submitted to the public OpenTimestamps calendars
+and anchored into a Bitcoin block. Anyone can therefore prove that *this exact
+byte-for-byte file* existed at or before that block — without asking Katoa,
+without an account, and without trusting any company.
+
+WHAT THE RELEASE CONTAINS
+-------------------------
+1. "Released & Bitcoin-anchored" creator release attestations on Katoa.
+2. A one-click verify surface (/verify) that re-resolves any release hash
+   against an actual Bitcoin block header, and names HOW it was checked:
+     - bitcoind  — checked against Katoa's own Bitcoin node
+     - esplora   — checked against a public blockchain explorer
+3. A downloadable .ots proof next to every verdict. Assurance without the
+   means to audit is not assurance.
+4. Forged or unresolved proofs render "Not proven" — never softened, never
+   upgraded, never replaced by a registry status.
+
+WHAT IT PROVES — AND WHAT IT DOES NOT
+-------------------------------------
+Proves:      this exact file existed at or before the anchored Bitcoin block.
+Does not:    prove who wrote it, that it is true, or that it is legally binding.
+Authorship needs a signature (for example a Nostr key); legal weight is a
+question for counsel, not for a hash.
+
+VERIFY IT YOURSELF (no Katoa, no API, no permission)
+---------------------------------------------------
+  curl -sS https://katoa.org/attestations/katoa-trust-ui-v1.txt -o release.txt
+  sha256sum release.txt
+      -> must equal this release's fingerprint in
+         https://katoa.org/attestations/releases.json
+  ots verify release.ots        (OpenTimestamps client, any machine, forever)
+      -> must report a Bitcoin block at or after the anchored height
+
+Katoa can go offline. Bitcoin does not have to be asked.

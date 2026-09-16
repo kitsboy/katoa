@@ -19,6 +19,7 @@ import { SubscriptionTiers } from '../components/SubscriptionTiers';
 import { DonateQRModal } from '../components/DonateQRModal';
 import { ZapTotals } from '../components/ZapTotals';
 import { DemoBadge } from '../components/DemoBadge';
+import { ReleaseAttestationsPanel } from '../components/trust/ReleaseAttestationsPanel';
 import { MobileStickyCta } from '../components/MobileStickyCta';
 import { WalletDeepLinks } from '../components/WalletDeepLinks';
 import { useToast } from '../components/Toast';
@@ -648,6 +649,8 @@ export function CreatorProfilePage() {
             </div>
           )}
         </section>
+
+        <ReleaseAttestationsPanel creator={profile.username} className="mb-14" />
 
         <div className="mb-14 py-10 px-4 sm:px-6 lg:px-8 -mx-4 sm:-mx-6 lg:-mx-8 rounded-3xl border border-white/10 bg-white/[0.02]">
           <SubscriptionTiers creatorName={profile.username} onSubscribe={(tierId) => handleSubscribe(tierId)} />

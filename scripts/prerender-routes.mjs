@@ -13,6 +13,7 @@ export const SITEMAP_STATIC_ROUTES = [
   { path: '/contact', priority: '0.6', changefreq: 'monthly' },
   { path: '/security', priority: '0.7', changefreq: 'monthly' },
   { path: '/security/bounty', priority: '0.4', changefreq: 'monthly' },
+  { path: '/verify', priority: '0.6', changefreq: 'monthly' },
   { path: '/roadmap', priority: '0.6', changefreq: 'weekly' },
   { path: '/templates', priority: '0.7', changefreq: 'weekly' },
   { path: '/press', priority: '0.5', changefreq: 'monthly' },
@@ -327,6 +328,17 @@ export const PRERENDER_ROUTES = [
     description: 'Fund clean water access in Nigeria via Bitcoin Lightning wishlists.',
     h1: 'Nigeria Clean Water',
     paragraphs: ['Bitcoin-native crowdfunding with instant settlement.'],
+  },
+  {
+    path: '/verify',
+    title: 'Check a Release — Bitcoin-anchored Proof | KATOA',
+    description:
+      'Verify any released file against an actual Bitcoin block. Paste a SHA-256 hash, see how the check was done (own node or public explorer), download the .ots proof, and re-verify it yourself forever.',
+    h1: 'Check a release — you do not have to trust us',
+    paragraphs: [
+      'KATOA releases are fingerprinted with SHA-256, sent to public OpenTimestamps calendars, and anchored into a Bitcoin block. Anyone can re-check the anchor against the blockchain itself — no account, no KYC, no KATOA needing to be trusted.',
+      'When a hash verifies, the page names the method used: Katoa\'s own Bitcoin node (bitcoind) or a public blockchain explorer (esplora). Every verdict comes with the downloadable .ots proof file so you can audit it independently, forever. A forged or unresolved hash is reported plainly as "Not proven" — never softened.',
+    ],
   },
 ];
 

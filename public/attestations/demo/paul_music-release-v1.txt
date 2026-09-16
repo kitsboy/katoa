@@ -1,0 +1,32 @@
+DEMO CREATOR RELEASE ARTIFACT — sample data (not a real creator release)
+=======================================================================
+
+Creator profile:  https://katoa.org/u/paul_music   (DEMO / sample profile)
+Marked demo:      yes — see the "Demo" badge on the profile and on this entry
+Published at:     https://katoa.org/attestations/demo/paul_music-release-v1.txt
+
+This artifact exists to demonstrate Katoa's creator release attestation surface
+end to end with a real Bitcoin-anchored proof. It describes a *sample* release
+that belongs to Katoa's demo catalogue; it is not a claim about any real person,
+work, or date.
+
+Sample release described here (sample data):
+  Title:   "Night Jewel — demo EP"
+  Format:  audio + cover art, 6 tracks (sample)
+  Issued:  2026-09-16 (sample)
+
+WHAT THE ANCHOR PROVES
+----------------------
+Only this: the exact bytes of THIS file existed at or before the Bitcoin block
+recorded in https://katoa.org/attestations/releases.json.
+Nothing about authorship, ownership, quality, or truth. A demo artifact is
+still honestly anchored — which is the whole point: the proof is about the
+file, not about whose name is on it.
+
+VERIFY IT YOURSELF
+------------------
+  curl -sS https://katoa.org/attestations/demo/paul_music-release-v1.txt -o demo.txt
+  sha256sum demo.txt
+  ots verify demo.ots
+
+No account, no API key, no permission from Katoa.

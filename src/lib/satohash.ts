@@ -136,6 +136,77 @@ export interface ApiHealthResult {
   body?: unknown;
 }
 
+/** How the chain check was actually performed. Never inferred, only reported. */
+export type VerifyMethod = 'bitcoind' | 'esplora';
+
+/**
+ * A chain-resolved verdict from POST /api/verify.
+ *
+ * Honesty rules baked into the shape:
+ * - `verified === true` always carries `verified_method` + `bitcoin_block_height`.
+ * - `registry_status` is Satohash's index, NOT proof. Never render it as a verdict.
+ * - A rejection carries `reason` (machine) or `error` (human) but never a block.
+ */
+export interface ProofVerdict {
+  verified: boolean;
+  verified_method?: VerifyMethod | null;
+  bitcoin_block_height?: number | null;
+  block_time?: number | null;
+  block_hash?: string | null;
+  ots_download_url?: string | null;
+  explainer?: string | null;
+  /** Machine-readable rejection: no_block_attestation | merkle_root_mismatch | block_does_not_exist | digest_mismatch */
+  reason?: string | null;
+  status?: string | null;
+  error?: string | null;
+  registry_status?: string | null;
+  digest?: string | null;
+  filename?: string | null;
+}
+
+/**
+ * POST /api/verify — resolve a SHA-256 hash against an actual Bitcoin block.
+ *
+ * This is the only thing on the site allowed to produce a "verified" verdict.
+ * The response is returned untouched: this client never upgrades a result.
+ */
+export async function verifyProof(
+  hash: string,
+  options: { signal?: AbortSignal } = {}
+): Promise<ProofVerdict> {
+  const normalized = hash.trim().toLowerCase();
+  if (!HEX64.test(normalized)) {
+    throw new Error('Hash must be exactly 64 hex characters (SHA-256)');
+  }
+
+  const res = await fetch(`${getSatohashApiUrl()}/api/verify`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'X-Satohash-Client': CLIENT_ID,
+    },
+    body: JSON.stringify({ hash: normalized }),
+    signal: options.signal,
+  });
+
+  if (!res.ok) {
+    let detail = `${res.status} ${res.statusText}`;
+    try {
+      const errBody = (await res.json()) as {
+        message?: string;
+        error?: string;
+      };
+      detail = errBody.message || errBody.error || detail;
+    } catch {
+      // keep status text
+    }
+    throw new Error(`Satohash verify failed: ${detail}`);
+  }
+
+  return (await res.json()) as ProofVerdict;
+}
+
 /** GET /health on the Satohash API. */
 export async function getApiHealth(
   signal?: AbortSignal

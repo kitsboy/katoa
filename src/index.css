@@ -55,6 +55,20 @@ html[data-katoa-build="2026-08-24-night-jewel"] {
   --theme-accent: #f7931a;
 }
 
+/* Family trust tokens (HowProofWorks port) — mapped to the night-jewel theme.
+   The shared component reads these CSS variables; scoping under .family-trust
+   keeps the mapping local to the trust surface instead of polluting :root. */
+.family-trust {
+  --accent-gold: var(--bitcoin-orange);
+  --accent-success: #2dd4bf;
+  --accent-alert: #fb7185;
+  --border: rgba(255, 255, 255, 0.14);
+  --text-primary: var(--ink);
+  --text-secondary: var(--ink-muted);
+  --bg-secondary: rgba(255, 255, 255, 0.04);
+  --surface-raised: rgba(255, 255, 255, 0.08);
+}
+
 @layer base {
   body {
     @apply text-white;
