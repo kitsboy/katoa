@@ -204,6 +204,9 @@ export function Footer() {
                   <FooterLink href="/terms">{t('footer.terms')}</FooterLink>
                   <FooterLink href="/privacy">{t('footer.privacy')}</FooterLink>
                 </ul>
+                <p className="mt-4 text-[11px] leading-relaxed text-gray-400">
+                  No cookies. We use self-hosted, cookie-less analytics. Nothing to consent to.
+                </p>
               </div>
             </div>
 
