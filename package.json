@@ -22,7 +22,8 @@
     "generate-metrics": "npx tsx scripts/generate-metrics.ts",
     "version:write": "node scripts/write-version.mjs",
     "version:bump": "node scripts/write-version.mjs --bump",
-    "prebuild": "npm run version:write && npm run generate-metrics"
+    "prebuild": "npm run version:write && npm run generate-metrics",
+    "check:security": "node scripts/check-secret-hygiene.mjs"
   },
   "engines": {
     "node": ">=20"
