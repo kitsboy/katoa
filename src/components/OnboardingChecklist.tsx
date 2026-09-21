@@ -95,6 +95,7 @@ export function OnboardingChecklist({ variant = 'landing' }: { variant?: 'landin
 
   const completedCount = items.filter((item) => checked[item.id]).length;
   const allDone = completedCount === items.length;
+  const progressPercent = Math.round((completedCount / items.length) * 100);
 
   function toggle(id: string) {
     setChecked((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -116,7 +117,29 @@ export function OnboardingChecklist({ variant = 'landing' }: { variant?: 'landin
     setChecked((prev) => ({ ...prev, share: true }));
   }
 
-  if (allDone) return null;
+  if (allDone) {
+    return (
+      <div
+        data-testid="creator-launch-ready"
+        className={dark ? 'rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-5' : 'lp-onboarding'}
+      >
+        <div className="flex items-start gap-3">
+          <div className="rounded-xl bg-emerald-500/15 p-2 text-emerald-300" aria-hidden>
+            <Check size={20} />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-emerald-300">100% ready</p>
+            <h2 className="mt-1 text-lg font-bold text-white">You’re ready to share</h2>
+            <p className="mt-1 text-sm leading-relaxed text-gray-300">Wallet, wishlist, public profile, and share link are all set.</p>
+            <Link href={publicHref} className="mt-3 inline-flex min-h-[40px] items-center rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-3 text-sm font-bold text-emerald-200">View public profile →</Link>
+          </div>
+        </div>
+        <div className="mt-4 h-2 overflow-hidden rounded-full bg-white/10" role="progressbar" aria-label="Creator launch progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={100}>
+          <div className="h-full w-full rounded-full bg-gradient-to-r from-emerald-400 to-neon-cyan-400" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -139,7 +162,11 @@ export function OnboardingChecklist({ variant = 'landing' }: { variant?: 'landin
         <div className="text-right shrink-0 tabular-nums">
           <span className={dark ? 'text-xl font-bold text-bitcoin-orange-400' : 'lp-onboarding-count'}>{completedCount}</span>
           <span className={dark ? 'text-sm text-gray-500' : 'lp-onboarding-count-total'}>/{items.length}</span>
+          <span className="block text-[10px] font-bold text-gray-500">{progressPercent}%</span>
         </div>
+      </div>
+      <div className="mb-5 h-2 overflow-hidden rounded-full bg-white/10" role="progressbar" aria-label="Creator launch progress" aria-valuemin={0} aria-valuemax={100} aria-valuenow={progressPercent}>
+        <div className="h-full rounded-full bg-gradient-to-r from-bitcoin-orange-500 to-neon-cyan-400 transition-all duration-500" style={{ width: `${progressPercent}%` }} />
       </div>
 
       <ul className="space-y-2">
