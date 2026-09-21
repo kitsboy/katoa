@@ -1,3 +1,30 @@
+## Session — 2026-09-21 · Route cache recovery + creator-world visual upgrades (Buffy M3)
+
+**Done:**
+- Diagnosed the live `/explore/` error boundary: the service worker had cached an old asset manifest, and missing hashed chunks were being served as HTML (`Failed to fetch dynamically imported module`). `/comparison` itself rendered correctly; it shared the same stale-cache risk.
+- Hardened `public/sw.js`: bumped the static cache to `v18`, never caches `sw.js`, and rejects cached HTML when an asset is expected.
+- Pushed `3b03be8` — route/cache fix plus immersive creator profile headers.
+- Pushed `8f15e54` — mobile creator splash shelf now uses horizontal snap scrolling with a clear swipe cue.
+- Pushed `1c27cce` — demo creator profiles now have richer story fallbacks; Paul and Skate Colombia have curated post drops like Luna and Sasha.
+- Profile headers are now full-bleed beauty shots with blurred color wash, floating glass identity card, Demo preview treatment, and one dominant Support CTA.
+
+**Decisions:**
+- Keep `/comparison` as the long-form proof page, but make it resilient to the same stale asset-cache problem.
+- Mobile discovery should feel like a visual story shelf, not a compressed desktop grid.
+- Demo creators must feel like coherent mini-worlds while remaining clearly labeled demo content; no fake live payments or creator claims.
+
+**Verification:** `npm run check` passed with 270/270 tests; typecheck clean; build passed with 26/26 prerendered routes; secret-hygiene gate passed; local preview verified `/explore/`, `/comparison`, and `/u/paul_music` without error boundary or broken images.
+
+**Deployment note:** The cache fix is pushed to `origin/main`; production Cloudflare deployment and one fresh browser reload are still required to clear the already-installed v17 worker.
+
+**Git State:**
+- Current code tip before documentation stamp: `1c27cce`.
+- Existing `public/donations-qr.png` deletion remains untouched.
+
+**Family note:** Katoa remains the reference implementation. These changes are presentation, demo-content, and cache reliability work; the Family Payment Core contract is unchanged.
+
+---
+
 ## Session — 2026-09-21 · Katoa visual simplification and beauty-shot pass (Buffy M3)
 
 **Done:**

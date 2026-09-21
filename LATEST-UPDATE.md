@@ -1,14 +1,18 @@
 # katoa — Last Updated 2026-09-21 by Buffy
 
-**Brief:** Shipped the three requested beauty-first discovery upgrades: cinematic creator splash cards, segmented Explore browsing, and a consistent premium Demo preview treatment.
+**Brief:** Fixed the stale service-worker asset failure and shipped immersive creator profiles, mobile swipe discovery, and richer demo creator worlds.
 
-**Visual batches pushed:**
-- `c568adf` — full-screen creator splash cards with immersive portrait visuals, handle, one-line story, and one CTA.
-- `80cd64c` — Explore segmented into `Projects`, `Creators`, and `Video`; selected tab is shareable in the URL.
-- `04cceba` — shared `Demo preview` badge across creator cards, project cards, and the demo banner.
+**Pushed batches:**
+- `3b03be8` — service-worker cache recovery plus full-bleed creator profile heroes and dominant Support CTA.
+- `8f15e54` — mobile snap-scrolling creator shelf with swipe cue.
+- `1c27cce` — richer demo creator stories and curated Paul/Skate Colombia post drops.
 
-**Verification:** `npm run check` passed — 270 tests; typecheck clean; lint has the same 14 existing warnings; build passed with 26/26 prerendered routes; secret-hygiene gate passed.
+**Route diagnosis:** `/explore/` was hitting the error boundary because an old service worker served stale hashed imports; missing chunks returned the SPA HTML with the wrong MIME type. `/comparison` rendered, but had the same cache risk. `public/sw.js` now uses cache `v18`, never caches itself, and rejects cached HTML for assets.
 
-**Product boundary:** These are presentation and discovery improvements only. Family Payment Core remains provider-agnostic; no THOR, live node, production secret, or real-money behavior was added.
+**Verification:** `npm run check` passed — 270 tests; typecheck clean; lint has the same 14 existing warnings; build passed with 26/26 prerendered routes; secret-hygiene gate passed. Local preview verified `/explore/`, `/comparison`, and `/u/paul_music` without errors or broken images.
 
-**Git state:** `04cceba` is current on `origin/main`. Existing `public/donations-qr.png` deletion remains untouched.
+**Deployment note:** Cloudflare must deploy the pushed cache fix; users with the old worker may need one fresh reload after deployment.
+
+**Product boundary:** Family Payment Core remains provider-agnostic. No THOR, live node, production secret, or real-money behavior was added.
+
+**Git state:** Documentation/build stamp follows the three code commits. Existing `public/donations-qr.png` deletion remains untouched.

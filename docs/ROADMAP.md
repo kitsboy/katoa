@@ -4,9 +4,11 @@
 **Last reviewed:** 2026-09-21
 **Status snapshot:** Trust UI, creator launch path, checkout, preview readiness, Family Payment Core Batches 1–2, and the September visual simplification pass are shipped. Katoa is **not MVP yet**: production settlement, strict server matching, live creator data, and Nostr operations remain.
 
-**Visual direction (2026-09-21):** Home is now a short creator-first splash flow with four demo examples; Explore owns deeper discovery. The latest visual batches add cinematic full-screen creator splash cards, `Projects · Creators · Video` Explore segmentation, and one consistent premium `Demo preview` badge. Keep future public surfaces sparse, image-led, mobile-safe, and honest about demo/live status. Do not re-expand the homepage into a second documentation site.
+**Visual direction (2026-09-21):** Home is now a short creator-first splash flow with four demo examples; Explore owns deeper discovery. The latest visual batches add cinematic full-screen creator splash cards, `Projects · Creators · Video` Explore segmentation, one consistent premium `Demo preview` badge, immersive creator headers, mobile snap browsing, and richer demo creator worlds. Keep future public surfaces sparse, image-led, mobile-safe, and honest about demo/live status. Do not re-expand the homepage into a second documentation site.
 
-**Latest visual batch SHAs:** `c568adf` splash cards · `80cd64c` Explore tabs · `04cceba` demo treatment.
+**Latest visual batch SHAs:** `c568adf` splash cards · `80cd64c` Explore tabs · `04cceba` demo treatment · `3b03be8` cache/profile heroes · `8f15e54` mobile swipe shelf · `1c27cce` demo creator worlds.
+
+**Reliability note:** `public/sw.js` now uses static cache `v18`, never caches itself, and rejects cached HTML as an asset. This fixes stale hashed-chunk failures that caused the live `/explore/` error boundary; production still needs the next Cloudflare deploy and a fresh reload.
 
 **Payment Core status (2026-09-21):**
 - ✅ Batch 1 `2cfd461` — family contract, canonical states, transition rules, idempotent event-ledger primitives, and fake provider fixtures.
