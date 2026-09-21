@@ -20,7 +20,21 @@ Creators keep their own NIP-07 keys. The platform key is only for `katoa@katoa.o
 
 Katoa should eventually recognize a shared Give A Bit namespace, using canonical handles such as `alice@giveabit.io` across Katoa, MotoPass, Satohash, Stranded, SherpaCarta, OpenStrata, Tadbuy, giveabit.io, and HQ. A bare `@giveabit` is a product phrase; NIP-05 needs a full `name@domain` address.
 
+Known family agent identities:
+
+| Handle | Role | Rule |
+|---|---|---|
+| `kimi@giveabit.io` | HERMES orchestration agent | Own Nostr key; separate email and NIP-05 facts |
+| `otto@giveabit.io` | GROK BOT/code agent | Own Nostr key; never impersonate Kimi |
+| `katoa@giveabit.io` | Katoa service identity | Service announcements only; not a human |
+
+These are role labels, not legal identity claims. The registry should show whether an identity is a human, agent, or service and what products/scopes it can use.
+
+A Katoa account should only link a NIP-05 handle after resolving the domain and verifying control of the mapped public key with a signed challenge. A typed handle is not proof.
+
 The registry should map one public key to a handle and may include relay hints, product availability, role (`human`, `agent`, or `service`), delegated parent key, scopes, expiry, and revocation. Katoa must not automatically merge accounts or treat NIP-05 as legal identity.
+
+For HERMES/GROK operations, use signed proposals and human approval for new mappings, scope changes, wallet/payment changes, releases, and public attestations. Keep private keys in their owning agent’s secure runtime; publish only public keys, scopes, and revocation state.
 
 Buzz’s useful ideas for this future layer are signed event history, separate keys for agents, scoped permissions, and human approval. Buzz’s full relay/workspace architecture is out of scope for Katoa.
 

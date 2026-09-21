@@ -37,6 +37,17 @@ Block’s [Buzz](https://github.com/block/buzz) is useful as a **pattern**: huma
 
 Use one family identity registry with a canonical NIP-05 shape such as `alice@giveabit.io` (not a bare `@giveabit`). The same public key can be recognized by Katoa, MotoPass, Satohash, Stranded, SherpaCarta, OpenStrata, Tadbuy, giveabit.io, and HQ, while each product keeps its own permissions and data.
 
+Initial operating model:
+
+- `katoa@giveabit.io` — Katoa service identity.
+- `kimi@giveabit.io` — HERMES orchestration agent, with its own Nostr key.
+- `otto@giveabit.io` — GROK BOT/code agent, with a different Nostr key.
+- Human operators — approval authority for identity, payment, release, and scope changes.
+
+The email address associated with an agent may be useful operationally, but it must not be treated as evidence that the NIP-05 key and email account are the same identity. NIP-05 should map a domain-controlled handle to a public key; a signed challenge should prove key control.
+
+Katoa’s future verifier should resolve the handle, verify the public key, show the role and scope, and distinguish `verified agent` from `verified human` or `verified service`. It should never accept a typed NIP-05 label as proof.
+
 A future identity record should contain:
 
 - handle and canonical domain;
@@ -57,6 +68,8 @@ A future identity record should contain:
 - Satohash can timestamp registry, passport, release, or approval snapshots; it does not create identity truth by itself.
 
 ### Phased family rollout
+
+**Agent namespace rollout:** inventory Kimi and Otto public keys → approve roles and scopes → publish minimal mappings → add revocation → add signed approval/audit events → integrate Katoa first.
 
 1. **Now:** keep Katoa’s existing static `katoa@katoa.org` identity and local claim-request flow honest.
 2. **After payment core:** define a shared registry schema and verification rules in Give A Bit, with Katoa as the reference client.

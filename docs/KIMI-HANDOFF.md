@@ -1,3 +1,27 @@
+## Session — 2026-09-21 · Kimi/Otto namespace operating model (Buffy M3)
+
+**Handoff to Kimi on HERMES:**
+
+- Treat `kimi@giveabit.io` as the first Give A Bit **agent identity**, mapped to Kimi’s Nostr public key. The matching email is an operational contact, not proof of legal identity; keep email authentication and NIP-05 verification as separate facts.
+- Give Otto his own Nostr key and future handle such as `otto@giveabit.io`. Never reuse Kimi’s private key, never put agent keys in Git, and never let one agent impersonate another.
+- Reserve clear roles: `katoa@giveabit.io` = Katoa service identity; `kimi@giveabit.io` = HERMES/orchestration agent; `otto@giveabit.io` = GROK/code agent; humans remain the approval authority for identity, payment, release, and permission changes.
+- Build a small registry proposal before automation: `handle`, `pubkey`, `role`, `owner/parent_key`, `products`, `scopes`, `valid_from`, `expires_at`, `revoked_at`, relay hints, and optional MotoPass/Satohash references.
+- In Katoa, accept a NIP-05 string for display/discovery only. Link an identity through a signed NIP-07 challenge or another server-verified signature; never trust a user-supplied `kimi@giveabit.io` label by itself.
+- Use the namespace as a family trust graph: Katoa can show “verified Give A Bit agent” and the agent’s scope, while MotoPass can hold a separate passport credential and Satohash can timestamp the registry or approval snapshot.
+- For sensitive actions, require a signed proposal plus human approval: publishing a NIP-05 mapping, changing an agent scope, deploying payment code, changing a wallet destination, or stamping a release.
+- Start with a manual registry and revocation process. Do not build a global relay, automatic cross-product account merge, or broad autonomous payment authority yet.
+
+**Suggested Kimi workflow:**
+1. Inventory existing agent public keys and assign roles; do not collect private keys into a shared file.
+2. Draft the family namespace registry and approval matrix in the THOR ops brain.
+3. Ask Cam to approve the canonical handles and scopes.
+4. Publish only the minimum public NIP-05 mappings.
+5. Have Katoa implement the reference verifier later; family products consume the same contract.
+
+**Decision:** Katoa remains the reference implementation for the shared identity/payment language. Do not write a second contract in HERMES, GROK BOT, MotoPass, or another family app.
+
+---
+
 ## Session — 2026-09-21 · Family Payment Core status + Give A Bit identity review (Buffy M3)
 
 **Done:**
