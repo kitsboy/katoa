@@ -1,5 +1,9 @@
-# Katoa — Last Updated 2026-09-16 by Andrea (Give A Bit · Bitcoin Knowledge lane)
+# Katoa — Last Updated 2026-09-21 by Buffy (M3 code lane)
 
-Brief: "Released & Bitcoin-anchored" creator release attestations live on katoa.org — shared trust UI port, /verify + /verify/:hash one-click chain check, .ots download with every verdict, method surfaced (bitcoind/esplora), forged → "Not proven".
+Brief: Three pushed solo UX batches: first-wishlist wizard, missing-wallet creator state, and payment expiry/retry/copy polish. No real money or fake settlement claims.
 
-Commit: 4e66d6d (origin/main)
+Batches: `1d334aa` · `a7c4228` · `85e8e20`
+
+Verification: `npm run check` (249 tests) and `npm run build` green; lint has 14 existing warnings.
+
+Base: `85e8e20` on origin/main. Remaining gate: real Lightning invoice → webhook → confirmed creator receipt.

@@ -1,8 +1,14 @@
-# katoa — Last Updated 2026-09-12 by Ziggy (t_d9f4141e)
+# katoa — Last Updated 2026-09-21 by Buffy
 
-**Brief:** /comparison deep links now consistent — hero, slider and fee calculator share one source of truth for `?earnings=`.
+**Brief:** Three solo UX batches shipped: first-wishlist wizard, explicit missing-wallet profile state, and payment expiry/retry/copy polish.
 
-**Commit:** `6b23d54` (fix) + `3e88dcb` (regression spec).
+**Batches:** `1d334aa` · `a7c4228` · `85e8e20`
+
+**Verification:** `npm run check` green — 249 tests; `npm run build` green; 14 existing lint warnings only.
+
+**What remains:** Real invoice → webhook → confirmed settlement, live Nostr identity, and live creator data. Katoa is not MVP yet.
+
+**Current base:** `85e8e20` on `origin/main`; pre-existing `public/donations-qr.png` deletion remains untouched.
 
 - Deep link `katoa.org/comparison?earnings=5000` previously contradicted itself: hero/slider showed default $10,000 while the calculator used 5,000. Root cause: two components each owned an independent monthly-earnings copy and both read/wrote the same query param.
 - Fix: lifted state up to ComparisonPage; FeeComparison is now controlled (`value`/`onChange`) on /comparison and keeps independent state only on home/pricing.

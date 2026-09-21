@@ -123,7 +123,11 @@ Profiles · Wishlists · Items · Contributions · Projects · Follows · Wallet
 
 ### Tests (this era)
 
-Unit suite green in the night-jewel/MVP pass (~222). Playwright coverage includes landing, FAQ, dashboard, 404, auth, legal, creator-profile.
+`npm run check` is green: typecheck + lint (14 existing warnings) + **249 unit tests**. Production build prerenders 26/26 routes. Playwright coverage includes landing, FAQ, dashboard, 404, auth, legal, creator-profile, and release verification.
+
+### Creator path shipped — still pre-MVP
+
+The product now has a clear creator launch path: **add wallet → create wishlist → publish profile → share**. The first-wishlist screen collects the story, goal, visibility, and product link in one pass. Public creator profiles lead with wallet destination, Bitcoin proof, verification guidance, and an honest “not ready to receive” state when no wallet exists. Payment UI shows **invoice created → payment sent → creator received**, with expiry, retry, and copy feedback; the final state remains locked until the server/webhook confirms it. These surfaces prepare the edge; they do not mean production settlement is live.
 
 ### Staged / blocked (Cam / THOR)
 
@@ -205,7 +209,7 @@ Drive prospects to `/comparison` and the live calculator — let the math close.
 
 ## Prioritized next steps
 
-1. **Production Lightning path** — webhook live, confirmed gifts, no fake “instant settlement” until sats land  
+1. **Production Lightning path** — webhook live, confirmed gifts, no fake “instant settlement” until sats land; the UI edge is ready but Katoa is still pre-MVP
 2. **Replace OF-parity local seams** — subscribe / PPV / likes-comments backed by Lightning + Nostr  
 3. **Real usage proof** — first creators with public wishlists and **settled** sats  
 4. **Authoritative metrics** — retire the sample `metrics.json` when counters are real  

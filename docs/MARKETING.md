@@ -87,7 +87,7 @@ For givers: you want to help someone directly. Instead you get surveillance chec
 
 ## ELI16 pitch (investor / waitress / student)
 
-*Canonical 2026-08-24. Read this out loud. Full version also lives in [`EXECUTIVE-SUMMARY.md`](./EXECUTIVE-SUMMARY.md).*
+*Canonical 2026-09-21. Read this out loud. Full version also lives in [`EXECUTIVE-SUMMARY.md`](./EXECUTIVE-SUMMARY.md).*
 
 Katoa is a place where you can get paid directly in Bitcoin — from anywhere, without a bank, a middleman, or a 20% platform cut. You make a page (a profile plus wishlists), share the link, and people send you sats over Lightning. Same idea as a tip jar, a GoFundMe, or a subscribe button — except Katoa’s fee is **0%**, forever, and the money is meant to land in *your* wallet.
 
@@ -95,7 +95,7 @@ Sign up with email or Google (Nostr is optional). Add your own Lightning or Bitc
 
 You’d use it because the old internet taxes the people doing the work. For an investor: a creator economy that isn’t rented from Visa and app stores. For a 25-year-old with a following or a night shift: share a link, get paid, keep it.
 
-**Honesty overlay (always attach):** gifts use the creator’s saved Lightning address; production invoices/webhooks are still THOR; subscribe/PPV/likes are local seams; catalog is 11 demo creators.
+**Honesty overlay (always attach):** the creator launch path is wallet → wishlist → publish → share; creator profiles now show wallet destination and Bitcoin proof guidance; payment UI can prepare an invoice and show its status, but production invoice/webhook settlement is still THOR; subscribe/PPV/likes are local seams; catalog is 11 demo creators. Katoa is not MVP yet.
 
 ---
 
@@ -312,7 +312,7 @@ Share card: `public/og-share.svg` (1200×630).
 | Claim | Reality check |
 |-------|---------------|
 | “0% forever” | Architectural commitment — never add take-rate tables |
-| “Instant” | Lightning **path**; on-chain varies by mempool. Do not claim production invoices until webhook is live |
+| “Instant” | Lightning **path**; on-chain varies by mempool. The UI stepper shows invoice → waiting → receipt, but do not claim creator receipt until the webhook is live |
 | “BOLT 12 subscriptions” | **Path / roadmap**, not a live recurring product |
 | “Likes / comments / PPV / subscribe” | **Client-local seams** until THOR Lightning webhook |
 | “Thousands of users / creators” | **False.** Sample catalog: 11 creators, `demo: true` |

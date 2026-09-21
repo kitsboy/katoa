@@ -1,8 +1,16 @@
 # Next list — needs Cam / THOR (honest backlog)
 
-Updated **2026-08-24** — night-jewel + honest MVP on `main` (product HEAD `6f43b74`, v1.1.7).
+Updated **2026-09-21** — trust UI + creator launch path + honest payment-status edge shipped. Katoa is **not MVP yet**; product HEAD is `fb1c643` plus this frontend batch.
 
 ## Still needs you (cannot finish alone)
+
+### Newly finished alone on M3 — 2026-09-21
+- Creator launch checklist: **add wallet → create wishlist → publish profile → share**.
+- Payment status stepper: **invoice created → payment sent → creator received**, with the final state locked behind backend confirmation.
+- Trust-first creator profile: wallet destination, proof badge, verification explanation, release attestations, and support CTA in one card.
+- Checks: typecheck, lint, 249 tests, and production build green. No real money or settlement claims added.
+- Follow-up UX batches pushed: first-wishlist wizard (`1d334aa`), wallet readiness state (`a7c4228`), payment expiry/retry/copy polish (`85e8e20`).
+
 
 ### Subscriptions (OF-parity) — ⭐ handoff for next LLM on Hermes
 - **SPEC:** `docs/SUBSCRIPTION-FLOW-SPEC.md` — DB `subscriptions` table, invoice `metadata.kind='subscription'`, webhook activation.

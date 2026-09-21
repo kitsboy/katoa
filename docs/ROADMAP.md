@@ -1,8 +1,8 @@
 # KATOA Implementation Roadmap
 ## Production-Ready MVP Enhancement Plan
 
-**Last reviewed:** 2026-07-06  
-**Status snapshot:** Live on katoa.org · charcoal/glass UI complete (17 pages, 57 components) · 200 frontend improvements (batches 3A–3E + hero/nav refresh @ `c65d1ed`) · Supabase/Cloudflare ops staged  
+**Last reviewed:** 2026-09-21
+**Status snapshot:** Trust UI, creator launch path, and honest payment-status edge are shipped. Katoa is **not MVP yet**: real Lightning settlement, live creator data, and Nostr backend remain.
 **Pitch context:** [`EXECUTIVE-SUMMARY.md`](./EXECUTIVE-SUMMARY.md) · [`MARKETING.md`](./MARKETING.md)
 
 ---
@@ -17,7 +17,8 @@
 - ✅ PWA service worker v2, `scripts/generate-sitemap.mjs`, dynamic OG per wishlist
 - ✅ About accordions, wishlist reorder (localStorage), breadcrumbs, ContributorsWall
 
-**Next frontend priorities:** ExplorePage lucide tree-shaking · remaining hardcoded About/Comparison body copy i18n · prerender/SSR for SEO
+**Completed frontend priorities:** creator launch checklist (wallet → wishlist → publish → share) · first-wishlist one-screen wizard · trust-first creator profile · explicit missing-wallet state · honest payment status stepper with expiry/retry/copy feedback · release proof verification.
+**Next priorities:** wire the real invoice → webhook → confirmed flow; replace local/demo engagement seams; add live Nostr identity and creator data. Do not market payment receipt as live until the backend confirms it.
 
 ---
 

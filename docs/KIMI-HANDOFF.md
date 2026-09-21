@@ -1,3 +1,44 @@
+## Session — 2026-09-21 · Creator launch path + payment edge + solo UX batches (Buffy M3)
+
+**Three pushed batches:**
+- `1d334aa` — first-wishlist one-screen setup: story, goal, visibility, product link, and publish choice.
+- `a7c4228` — missing-wallet creator profile state: explicit “Not ready to receive yet,” disabled support CTA, no misleading payment readiness.
+- `85e8e20` — payment handoff polish: expiry alert, one-tap retry, copy confirmation, and precise waiting language.
+
+**Final verification:** `npm run check` passed (249/249 tests; typecheck clean; 14 existing lint warnings), `npm run build` passed with 26/26 prerendered routes, and the secret-hygiene gate passed.
+
+**Git State:**
+- `origin/main`: `85e8e20`.
+- All three requested UX batches are committed and pushed.
+- Existing `public/donations-qr.png` deletion was not touched.
+
+---
+
+## Session — 2026-09-21 · Creator launch path + payment edge + trust-first profile (Buffy M3)
+
+**Done:**
+- Reworked the dashboard creator checklist into one clear path: **add wallet → create wishlist → publish profile → share**. Live checks use wallet/profile/project visibility; demo checks stay local.
+- Added `PaymentStatusStepper`: **Invoice created → Payment sent → Creator received**. The final state is visibly locked behind server confirmation; demo and pending states never claim settlement.
+- Added `TrustFirstCreatorCard` to public creator profiles: wallet destination, copy controls, proof badge, “how verification works,” release attestations, and one support CTA in one obvious card.
+- Wired the stepper into the payment modal and post-payment state without changing the existing non-custodial behavior.
+- Updated roadmap/backlog/latest-update docs to say clearly: Katoa is **not MVP yet**. Real money remains THOR/backend work.
+
+**Decisions:**
+- No invoice, paid, or creator-received state is trusted from a browser click. `I paid (waiting)` remains waiting until the backend/webhook confirms.
+- No new provider, secret, database migration, or real-money operation was introduced. This batch is fully M3-safe and solo-completable.
+- Trust proof is an explanation and live verification entry point; missing proof is never styled as verified.
+
+**Verified:**
+- `npm run check`: typecheck passed, lint passed with 14 existing warnings, **249/249 tests passed**.
+- `npm run build`: green; 26/26 routes prerendered.
+- Existing pre-session deletion `public/donations-qr.png` was not touched.
+
+**Git State:**
+- Base pulled: `fb1c643` (`origin/main`).
+- Local changes are not committed or pushed yet.
+
+---
+
 ## Session — 2026-09-16 · "Released & Bitcoin-anchored" creator release attestations (Andrea · trust-UI port)
 
 **Done:**
