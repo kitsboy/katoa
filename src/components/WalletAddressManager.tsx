@@ -382,6 +382,11 @@ export function WalletAddressManager() {
     }
   };
 
+  const liveFormValidation = formData.address_value.trim()
+    ? validateWalletAddress(formData.address_type, formData.address_value)
+    : null;
+  const readyToReceive = Boolean(receiveQr?.value);
+
   if (loading) {
     return (
       <Card className="p-6">
@@ -421,6 +426,25 @@ export function WalletAddressManager() {
               Add Address
             </Button>
           )}
+        </div>
+
+        <div
+          data-testid="wallet-ready-preview"
+          className={`mb-6 rounded-xl border p-4 ${readyToReceive ? 'border-emerald-500/30 bg-emerald-500/10' : 'border-amber-500/30 bg-amber-500/10'}`}
+          role="status"
+          aria-live="polite"
+        >
+          <div className="flex items-center gap-2">
+            {readyToReceive ? <Check size={17} className="text-emerald-300" aria-hidden /> : <Shield size={17} className="text-amber-300" aria-hidden />}
+            <p className={`text-sm font-bold ${readyToReceive ? 'text-emerald-200' : 'text-amber-200'}`}>
+              {readyToReceive ? 'Ready to receive' : 'Not ready to receive'}
+            </p>
+          </div>
+          <p className="mt-1 text-xs leading-relaxed text-gray-300">
+            {readyToReceive
+              ? 'Your primary address is valid and can be shown on your public profile. Katoa never holds your funds.'
+              : 'Add and activate a valid Lightning or Bitcoin address before sharing your profile.'}
+          </p>
         </div>
 
         {receiveQr && (
@@ -484,8 +508,8 @@ export function WalletAddressManager() {
                       setFormError(null);
                       setFormData({ ...formData, address_value: e.target.value });
                     }}
-                    aria-invalid={formError ? true : undefined}
-                    aria-describedby={formError ? 'wallet-address-error' : undefined}
+                    aria-invalid={Boolean(formError || liveFormValidation) || undefined}
+                    aria-describedby={formError || liveFormValidation ? 'wallet-address-error' : undefined}
                     placeholder={addressPlaceholder(formData.address_type)}
                     className="flex-1 px-4 py-3 min-h-[44px] bg-white/5 border border-white/20 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   />
@@ -499,10 +523,13 @@ export function WalletAddressManager() {
                     <QrCode size={20} />
                   </Button>
                 </div>
-                {formError && (
+                {(formError || liveFormValidation) && (
                   <p id="wallet-address-error" className="mt-1 text-sm text-red-400" role="alert">
-                    {formError}
+                    {formError || liveFormValidation}
                   </p>
+                )}
+                {!formError && !liveFormValidation && formData.address_value.trim() && (
+                  <p className="mt-1 flex items-center gap-1 text-sm text-emerald-300"><Check size={14} aria-hidden /> Format looks valid. Save it to make it your active receive option.</p>
                 )}
               </div>
 
