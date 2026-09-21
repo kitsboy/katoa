@@ -1,5 +1,6 @@
-import { ArrowUpRight, Play, Sparkles } from 'lucide-react';
+import { ArrowUpRight, Play } from 'lucide-react';
 import { Link } from './Link';
+import { DemoPreviewBadge } from './DemoPreviewBadge';
 import { MediaCard } from './MediaCard';
 import type { CreatorVideoWishlist } from './CreatorVideoCard';
 
@@ -28,10 +29,7 @@ export function CreatorSplashCard({ creator, featured = false }: CreatorSplashCa
         className="absolute inset-0 !aspect-auto h-full w-full"
         overlay={<div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(9,7,15,0.1)_10%,rgba(9,7,15,0.16)_38%,rgba(9,7,15,0.94)_100%)]" />}
         topLeft={
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-black/35 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-white backdrop-blur-md">
-            <Sparkles size={11} className="text-bitcoin-orange-300" />
-            Creator preview
-          </span>
+          <DemoPreviewBadge />
         }
         topRight={
           creator.cover_video_url ? (

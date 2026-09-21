@@ -9,6 +9,7 @@ import { ProgressBar } from '../components/ProgressBar';
 import { MediaCard } from '../components/MediaCard';
 import { SatsDisplay } from '../components/SatsDisplay';
 import { DemoBanner } from '../components/DemoBanner';
+import { DemoPreviewBadge } from '../components/DemoPreviewBadge';
 import { EmptyState } from '../components/EmptyState';
 import { CardSkeleton } from '../components/Skeleton';
 import { supabase, asRows } from '../lib/supabase';
@@ -166,11 +167,7 @@ const WishlistCard = memo(function WishlistCard({
             className="!aspect-[16/11]"
           topLeft={
             <>
-              {(wishlist.id.startsWith('mock') || wishlist.slug?.includes('demo')) && (
-                <span className="px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-bitcoin-orange-500/90 text-white border border-white/20">
-                  Demo
-                </span>
-              )}
+              {(wishlist.id.startsWith('mock') || wishlist.slug?.includes('demo')) && <DemoPreviewBadge compact />}
               {isTrending && <TrendingBadge type="trending" />}
               {isNew && !isTrending && <TrendingBadge type="new" />}
             </>

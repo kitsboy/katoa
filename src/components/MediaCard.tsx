@@ -1,6 +1,7 @@
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import { Gift, Play, Volume2, VolumeX } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { DemoPreviewBadge } from './DemoPreviewBadge';
 
 export interface MediaCardSource {
   imageUrl?: string | null;
@@ -91,7 +92,7 @@ export function MediaCard({
       {!hasVideo && !hasImage && (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[radial-gradient(circle_at_50%_35%,rgba(167,139,250,0.3),transparent_58%),linear-gradient(135deg,#211633,#0b0a12)]">
           <Gift size={38} className="text-white/25" aria-hidden />
-          <span className="text-[10px] uppercase tracking-[0.18em] text-white/45">KATOA demo</span>
+          <DemoPreviewBadge compact />
         </div>
       )}
 
