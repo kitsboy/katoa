@@ -1,3 +1,31 @@
+## Session — 2026-09-21 · Family Payment Core Batch 2 — BTCPay plug (Buffy M3)
+
+**Done:**
+- Wrapped the existing `src/lib/btcpay.ts` client as `BTCPayPaymentPlug` using the Batch 1 contract.
+- Added provider status normalization into family states.
+- BTCPay intent creation stays `pending`; the client never writes settlement or database rows.
+- Kept the existing signed `supabase/functions/btcpay-webhook` as the sole settlement writer and event source. It was not rebuilt.
+- Added fake-client tests for invoice creation, status reads, state mapping, and the empty client event surface.
+- No UI changes and no live node, THOR, Umbrel, Start9, secret, or credential changes.
+
+**Decisions:**
+- The client plug is intentionally not an event ledger; the signed webhook remains authoritative.
+- `katoa_tx_id`, rail, and existing metadata travel through the existing invoice proxy boundary.
+- No second payment contract was introduced. Katoa remains the family reference implementation.
+
+**Verified:** `npm run check` passed with **262/262 tests**, typecheck clean, 14 existing lint warnings; secret-hygiene gate passed. Focused Batch 2 tests: 4/4.
+
+**Git State:**
+- Code SHA: `59b4efc` on `origin/main`.
+- Unpushed: none.
+- Existing `public/donations-qr.png` deletion remains untouched.
+
+**Still outside this plug:** subscriptions, zaps, Lightning Address, LNbits, direct LND, Silent Payments, provider health/reconciliation, and the three shared UI chips. These wait for later batches.
+
+**Kimi one-line note:** Katoa is the reference implementation of Family Payment Core; do not write a second contract.
+
+---
+
 ## Session — 2026-09-21 · Family Payment Core Batch 1 (Buffy M3)
 
 **Done:**
