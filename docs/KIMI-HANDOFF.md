@@ -1,3 +1,29 @@
+## Session — 2026-09-21 · Solo payment foundation and family template handoff (Buffy M3)
+
+**Implemented locally, no live infrastructure:**
+- Strict provider-agnostic intent matching for amount, kind, creator, wishlist, item, and tier.
+- Staged Supabase migration `20260921000000_family_payment_core.sql` with payment intent fields, durable `payment_events`, RLS read policy, and atomic `increment_funding_totals` function.
+- Existing signed webhook now follows append-event-first, mismatch rejection, pending-only update, idempotency, and atomic-total calls. It remains the only settlement writer.
+- Shared payment UI now uses `intent`, `pending`, `confirming`, `settled`, `expired`, and `failed`, plus rail and `demo`/`staged`/`live` labels. On-chain shows `0 → 1 → 2 → 6+` confirmations.
+- Subscription intent helper uses the same plug and metadata (`kind=subscription`, creator, tier); local unlock remains explicitly demo-only.
+- Added creator Payment Audit foundation, provider-health model, and blocking MVP readiness checklist.
+- Updated Katoa roadmap, Cam/THOR needs, and latest update for the family template.
+
+**Verification:** `npm run check` passed with **270/270 tests**, typecheck clean, build passed with 26/26 prerendered routes, secret-hygiene gate passed, 14 existing lint warnings.
+
+**Activation boundary for Kimi/THOR:**
+- Do not apply the migration to production yet.
+- Create/review the provider-neutral invoice proxy before adding any provider credentials.
+- Run staging/funded testnet replay tests before production.
+- Reconcile and health-check jobs remain un-deployed.
+- No THOR, Umbrel, Start9, live node, or real-money connection was made.
+
+**Family template note:** Katoa is the reference implementation. Family products should reuse the contract, metadata, states, rails, health labels, audit semantics, and readiness gates—not create another payment language.
+
+**Current local work is ready for review; no commit/push yet for this solo foundation.** Existing `public/donations-qr.png` deletion remains untouched.
+
+---
+
 ## Session — 2026-09-21 · Family Payment Core status + Give A Bit identity review (Buffy M3)
 
 **Done:**

@@ -7,13 +7,19 @@ describe('PaymentActivityTimeline', () => {
     render(<PaymentActivityTimeline status="pending" />);
     const timeline = screen.getByTestId('payment-activity-timeline');
     expect(timeline).toHaveAttribute('data-activity-status', 'pending');
-    expect(screen.getByText('Waiting for payment confirmation')).toBeInTheDocument();
-    expect(screen.getByText('Creator received')).toBeInTheDocument();
+    expect(screen.getByText('Pending')).toBeInTheDocument();
+    expect(screen.getByText('Settled')).toBeInTheDocument();
+  });
+
+  it('shows on-chain confirmation progress', () => {
+    render(<PaymentActivityTimeline status="confirming" rail="onchain" environment="staged" />);
+    expect(screen.getByText('Confirming')).toBeInTheDocument();
+    expect(screen.getByText(/0 → 1 → 2 → 6\+/)).toBeInTheDocument();
   });
 
   it('shows an expired request as closed and retryable', () => {
     render(<PaymentActivityTimeline status="expired" />);
-    expect(screen.getByText('Payment request expired')).toBeInTheDocument();
-    expect(screen.getByText('Generate a new request if you still want to pay.')).toBeInTheDocument();
+    expect(screen.getByText('Payment expired')).toBeInTheDocument();
+    expect(screen.getByText(/Generate a new request if needed/)).toBeInTheDocument();
   });
 });

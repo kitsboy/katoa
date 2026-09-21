@@ -1,4 +1,5 @@
 import { getStorage, setStorage, STORAGE_KEYS } from './storage';
+import type { PaymentIntent, PaymentMetadata, PaymentProviderPlug } from './paymentCore';
 
 export interface SubscriptionState {
   creatorSlug: string;
@@ -6,6 +7,29 @@ export interface SubscriptionState {
   subscribedAt: number;
   /** 'local' = demo (this session). 'invoice' = confirmed by BTCPay/LNbits webhook. */
   source: 'local' | 'invoice';
+}
+
+/** Build the canonical payment intent used when real subscription settlement is enabled. */
+export async function createSubscriptionIntent(
+  plug: PaymentProviderPlug,
+  params: {
+    creatorSlug: string;
+    tierId: string;
+    amountSats: number;
+    metadata?: PaymentMetadata;
+  },
+): Promise<PaymentIntent> {
+  return plug.createIntent({
+    amountSats: params.amountSats,
+    rail: 'lightning',
+    memo: `KATOA subscription: ${params.creatorSlug}/${params.tierId}`,
+    metadata: {
+      ...params.metadata,
+      kind: 'subscription',
+      creator_slug: params.creatorSlug,
+      tier_id: params.tierId,
+    },
+  });
 }
 
 /**

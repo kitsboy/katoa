@@ -20,9 +20,11 @@ type TxRow = {
   item_id: string | null;
   wishlist_id: string | null;
   payment_hash: string | null;
+  intent_id: string | null;
+  metadata: Record<string, unknown> | null;
 };
 
-const TX_SELECT = "id, status, amount_sats, item_id, wishlist_id, payment_hash";
+const TX_SELECT = "id, status, amount_sats, item_id, wishlist_id, payment_hash, intent_id, metadata";
 
 serve(async (req: Request) => {
   if (req.method !== "POST") {
@@ -78,35 +80,72 @@ serve(async (req: Request) => {
     return json(200, { ok: true, updated: false, reason: "transaction not found" });
   }
 
-  const alreadyRaised = isConfirmedStatus(tx.status);
-  if (alreadyRaised) {
-    return json(200, { ok: true, updated: false, transactionId: tx.id, idempotent: true });
+  const amount = positiveSats(tx.amount_sats) ?? parseAmountSats(payload, metadata);
+  const providerAmount = parseAmountSats(payload, metadata);
+  if (providerAmount && tx.amount_sats && providerAmount !== tx.amount_sats) {
+    return json(422, { ok: false, reason: "amount mismatch" });
   }
 
-  const { error: updateError } = await supabase
+  const itemId = asString(metadata.item_id) ?? asString(metadata.itemId) ?? tx.item_id;
+  const wishlistId =
+    asString(metadata.wishlist_id) ?? asString(metadata.wishlistId) ?? tx.wishlist_id;
+  if (!matchesReference(metadata.wishlist_id ?? metadata.wishlistId, tx.wishlist_id)
+    || !matchesReference(metadata.item_id ?? metadata.itemId, tx.item_id)
+    || (tx.intent_id && txId && tx.intent_id !== txId && tx.id !== txId)) {
+    return json(422, { ok: false, reason: "intent context mismatch" });
+  }
+
+  const eventId = asString(payload.id) ?? asString(payload.eventId) ?? `${type ?? "settled"}:${invoiceId ?? tx.id}`;
+  const { error: eventError } = await supabase.from("payment_events").insert({
+    id: eventId,
+    transaction_id: tx.id,
+    provider: "btcpay",
+    event_type: type ?? "InvoiceSettled",
+    state: "settled",
+    amount_sats: amount,
+    external_id: invoiceId,
+    payload,
+  });
+  if (eventError) {
+    if (eventError.code === "23505") {
+      return json(200, { ok: true, updated: false, transactionId: tx.id, idempotent: true });
+    }
+    console.error("btcpay-webhook: failed to append payment event", eventError.message);
+    return text(500, "event ledger error");
+  }
+
+  const { data: updatedRows, error: updateError } = await supabase
     .from("transactions")
-    .update({ status: "confirmed" })
-    .eq("id", tx.id);
+    .update({ status: "confirmed", confirmed_at: new Date().toISOString(), external_id: invoiceId })
+    .eq("id", tx.id)
+    .eq("status", "pending")
+    .select("id");
 
   if (updateError) {
     console.error("btcpay-webhook: failed to confirm transaction", updateError.message);
     return text(500, "database error");
   }
-
-  const amount = positiveSats(tx.amount_sats) ?? parseAmountSats(payload, metadata);
-  const itemId = asString(metadata.item_id) ?? asString(metadata.itemId) ?? tx.item_id;
-  const wishlistId =
-    asString(metadata.wishlist_id) ?? asString(metadata.wishlistId) ?? tx.wishlist_id;
-
-  if (amount && itemId) {
-    await incrementColumn(supabase, "wishlist_items", "sats_raised", itemId, amount);
+  if (!updatedRows?.length && isConfirmedStatus(tx.status)) {
+    return json(200, { ok: true, updated: false, transactionId: tx.id, idempotent: true });
   }
-  if (amount && wishlistId) {
-    await incrementColumn(supabase, "wishlists", "total_sats_raised", wishlistId, amount);
+
+  const { error: totalsError } = await supabase.rpc("increment_funding_totals", {
+    p_wishlist_id: wishlistId,
+    p_item_id: itemId,
+    p_amount_sats: amount,
+  });
+  if (totalsError) {
+    console.error("btcpay-webhook: failed to update funding totals", totalsError.message);
+    return text(500, "funding totals error");
   }
 
   return json(200, { ok: true, updated: true, transactionId: tx.id });
 });
+
+function matchesReference(value: unknown, expected: string | null): boolean {
+  if (value == null || expected == null) return true;
+  return String(value) === expected;
+}
 
 function isConfirmedStatus(status: string | null): boolean {
   return status === "confirmed" || status === "completed";
@@ -135,6 +174,7 @@ async function findTransaction(
   return null;
 }
 
+/* Kept for compatibility with older deployments; new settlement uses the atomic RPC. */
 async function incrementColumn(
   supabase: ReturnType<typeof createClient>,
   table: "wishlist_items" | "wishlists",

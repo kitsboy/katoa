@@ -15,6 +15,7 @@ Updated **2026-09-21** — Family Payment Core Batches 1–2 and checkout/previe
 - Family Payment Core Batch 1 pushed: contract/state machine/event-ledger primitives/fake fixtures (`2cfd461`).
 - Family Payment Core Batch 2 pushed: existing gift client wrapped as BTCPay plug; existing webhook remains sole settlement writer (`59b4efc`).
 - Handoff/docs stamp pushed (`4ebb4ec`). Verification: **262 tests**, typecheck, and secret-hygiene gate passed; 14 existing lint warnings remain.
+- Solo payment foundation added locally: strict matching, staged event ledger/atomic totals, replay-safe webhook shape, canonical state UI, subscription intent metadata, audit panel, provider health, and MVP readiness checks. Full verification: **270 tests**, build 26/26 routes, secret scan passed.
 
 
 ### Family identity / NIP-05 — future shared Give A Bit layer
@@ -30,11 +31,13 @@ Updated **2026-09-21** — Family Payment Core Batches 1–2 and checkout/previe
 - Client seam is done (`src/lib/subscriptions.ts`); backend is the only missing piece.
 
 ### Money
-1. **BTCPay or LNbits / LNURL** production + CF secrets  
-2. **Webhook live** (`supabase/functions/btcpay-webhook/`) → confirm txs  
-3. **Staging + testnet Lightning**  
-4. **Real zap e2e** with your lud16 + Alby on funded network  
-5. **Authoritative Supabase** product counters in production env  
+1. **Review/apply staged Family Payment Core migration** in non-production first; no production push yet.
+2. **Build/configure provider-neutral invoice proxy** with server-only credentials.
+3. **BTCPay or LNbits / LNURL** production + CF secrets
+4. **Webhook live** (`supabase/functions/btcpay-webhook/`) → confirm txs
+5. **Staging + testnet Lightning**
+6. **Real zap e2e** with your lud16 + Alby on funded network
+7. **Authoritative Supabase** product counters in production env
 
 ### Secrets / ops
 6. **Backup platform nsec** → THOR vault (`.nostr-platform-secret.local.json`) then delete local  

@@ -42,11 +42,13 @@ import { CardSkeleton } from '../components/Skeleton';
 import { EarningsPanel } from '../components/EarningsPanel';
 import { CoverImageUpload } from '../components/CoverImageUpload';
 import { PreviewReadinessPanel } from '../components/PreviewReadinessPanel';
+import { PaymentAuditPanel } from '../components/PaymentAuditPanel';
 
 import { getStorage, setStorage, STORAGE_KEYS } from '../lib/storage';
 import { fetchLiveEarnings } from '../lib/earnings';
 import { DEMO_USER_ID } from '../lib/demoAuth';
 import { mockWishlists } from '../data/mockWishlists';
+import { createPaymentHealth } from '../lib/paymentHealth';
 
 type Project = DbProject & { wishlist_count?: number };
 
@@ -900,6 +902,15 @@ export function DashboardPage() {
                 <div id="dashboard-earnings">
                   <h2 className="font-display text-2xl font-bold text-white mb-2">{t('dashboard.raised')}</h2>
                   <EarningsPanel isDemo={isDemoUser} userId={user?.id} />
+                  <PaymentAuditPanel
+                    items={[]}
+                    health={createPaymentHealth({
+                      provider: 'btcpay',
+                      environment: isDemoUser ? 'demo' : 'staged',
+                      status: 'unconfigured',
+                      details: 'Provider health becomes live after the server connector is configured.',
+                    })}
+                  />
                 </div>
               )}
             </section>

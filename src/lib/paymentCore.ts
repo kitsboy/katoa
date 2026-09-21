@@ -30,6 +30,17 @@ export type PaymentProvider =
 
 export type PaymentMetadata = Record<string, string | number | boolean | null>;
 
+export type PaymentKind = 'gift' | 'tip' | 'subscription' | 'ppv' | 'zap';
+
+export interface PaymentMatchExpectations {
+  amountSats: number;
+  kind?: PaymentKind;
+  creatorId?: string;
+  wishlistId?: string;
+  itemId?: string;
+  tierId?: string;
+}
+
 export interface CreateIntentParams {
   amountSats: number;
   memo?: string;
@@ -49,6 +60,41 @@ export interface PaymentIntent {
   expiresAt?: string;
   externalId?: string;
   paymentHash?: string;
+}
+
+export function paymentMetadataValue(
+  metadata: PaymentMetadata,
+  key: string,
+): string | number | boolean | null | undefined {
+  return metadata[key];
+}
+
+/**
+ * Validate provider data against the original intent before settlement.
+ * Missing optional context is allowed; present context must match exactly.
+ */
+export function assertPaymentMatch(
+  intent: PaymentIntent,
+  expected: PaymentMatchExpectations,
+): void {
+  validateAmount(expected.amountSats);
+  if (intent.amountSats !== expected.amountSats) {
+    throw new PaymentInvariantError('Payment amount does not match the intent');
+  }
+
+  const checks: Array<[string, string | undefined]> = [
+    ['kind', expected.kind],
+    ['creator_id', expected.creatorId],
+    ['wishlist_id', expected.wishlistId],
+    ['item_id', expected.itemId],
+    ['tier_id', expected.tierId],
+  ];
+  for (const [key, value] of checks) {
+    if (value == null) continue;
+    if (String(paymentMetadataValue(intent.metadata, key) ?? '') !== value) {
+      throw new PaymentInvariantError(`Payment ${key} does not match the intent`);
+    }
+  }
 }
 
 export interface PaymentEvent {

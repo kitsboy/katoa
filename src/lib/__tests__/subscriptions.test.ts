@@ -1,10 +1,35 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { STORAGE_KEYS } from '../storage';
-import { getSubscription, isSubscribed, subscribeLocal, unsubscribe } from '../subscriptions';
+import type { CreateIntentParams } from '../paymentCore';
+import { getSubscription, isSubscribed, subscribeLocal, unsubscribe, createSubscriptionIntent } from '../subscriptions';
 
 describe('subscriptions', () => {
   beforeEach(() => {
     localStorage.removeItem(STORAGE_KEYS.creatorSubscriptions);
+  });
+
+  it('builds subscription intents through the shared provider contract', async () => {
+    const plug = {
+      name: 'btcpay' as const,
+      createIntent: async (params: CreateIntentParams) => ({
+        id: 'fake-subscription-intent',
+        amountSats: params.amountSats,
+        memo: params.memo,
+        metadata: params.metadata,
+        rail: params.rail,
+        provider: 'btcpay' as const,
+        state: 'intent' as const,
+        createdAt: '2026-09-21T00:00:00.000Z',
+      }),
+      getStatus: async () => { throw new Error('not used'); },
+      listEvents: async () => [],
+    };
+    const intent = await createSubscriptionIntent(plug, {
+      creatorSlug: 'luna',
+      tierId: 'patron',
+      amountSats: 21_000,
+    });
+    expect(intent.metadata).toMatchObject({ kind: 'subscription', creator_slug: 'luna', tier_id: 'patron' });
   });
 
   it('starts unsubscribed', () => {

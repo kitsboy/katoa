@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   applyPaymentEvent,
+  assertPaymentMatch,
   assertTransition,
   createIntentRecord,
   createMemoryEventLedger,
@@ -113,6 +114,49 @@ describe('Family Payment Core', () => {
     expect(fakeLnbitsPaidPayload.pending).toBe(false);
     expect(fakeLndSettledPayload.settled).toBe(true);
     expect(fakeLndSettledPayload.value).toBe('21000');
+  });
+
+  it('rejects mismatched creator, wishlist, or tier context', () => {
+    const intent = createIntentRecord(
+      'fake-match',
+      'btcpay',
+      {
+        amountSats: 21_000,
+        metadata: {
+          kind: 'subscription',
+          creator_id: 'creator-1',
+          wishlist_id: 'wishlist-1',
+          tier_id: 'tier-1',
+        },
+        rail: 'lightning',
+      },
+    );
+
+    expect(() => assertPaymentMatch(intent, {
+      amountSats: 21_000,
+      kind: 'subscription',
+      creatorId: 'creator-1',
+      wishlistId: 'wishlist-1',
+      tierId: 'tier-wrong',
+    })).toThrow('tier_id');
+
+    expect(() => assertPaymentMatch(intent, {
+      amountSats: 22_000,
+      kind: 'subscription',
+    })).toThrow('amount');
+  });
+
+  it('accepts an exact payment match', () => {
+    const intent = createIntentRecord(
+      'fake-match-ok',
+      'btcpay',
+      { amountSats: 1_000, metadata: { kind: 'gift', wishlist_id: 'w-1' }, rail: 'lightning' },
+    );
+    expect(() => assertPaymentMatch(intent, {
+      amountSats: 1_000,
+      kind: 'gift',
+      wishlistId: 'w-1',
+    })).not.toThrow();
   });
 
   it('rejects invalid intent amounts', () => {

@@ -8,7 +8,8 @@
 - ✅ Batch 1 `2cfd461` — family contract, canonical states, transition rules, idempotent event-ledger primitives, and fake provider fixtures.
 - ✅ Batch 2 `59b4efc` — existing gift client wrapped as the BTCPay plug; existing signed webhook remains the sole settlement writer.
 - ✅ Handoff/docs `4ebb4ec` — Kimi handoff and latest update stamped.
-- ⏳ Next: strict server amount/creator/tier matching, then subscriptions and the remaining provider plugs.
+- ✅ Solo-safe foundation added locally: strict intent-match helpers, staged event-ledger/atomic-total migration, replay-safe webhook shape, shared state/rail/environment UI, subscription intent metadata, audit panel foundation, provider-health model, and MVP readiness checklist.
+- ⏳ Next activation gate: Kimi reviews and deploys the migration/proxy only after staging tests; then subscriptions and the remaining provider plugs.
 - 🚫 No THOR, Umbrel, Start9, live node, production secret, or real-money connection has been made.
 **Pitch context:** [`EXECUTIVE-SUMMARY.md`](./EXECUTIVE-SUMMARY.md) · [`MARKETING.md`](./MARKETING.md)
 
@@ -28,6 +29,32 @@
 **Next priorities:** wire the real invoice → webhook → confirmed flow; replace local/demo engagement seams; add live Nostr identity and creator data. Do not market payment receipt as live until the backend confirms it.
 
 **Latest shipped UX batches:** `38eb19f` checkout sheet · `d730ea6` preview readiness · `1bdbfb4` supporter trust summary. All are presentation and guidance improvements only; no browser action can claim settlement.
+
+## Solo build completion status — 2026-09-21
+
+### Completed in code without live infrastructure
+
+- Strict matching helpers reject amount, payment kind, creator, wishlist, item, or tier mismatches.
+- `payment_events` schema provides provider event IDs, replay records, states, payload audit, and processing timestamps.
+- Atomic `increment_funding_totals` SQL function replaces unsafe read-then-write totals when deployed.
+- Existing signed webhook now appends the event first, rejects mismatches, updates pending rows once, and calls the atomic totals function.
+- Payment UI uses the same family state vocabulary and shows rail plus demo/staged/live environment.
+- Subscription intents carry `kind=subscription`, creator, and tier metadata through the shared plug; local unlock remains demo-only.
+- Creator dashboard has a payment audit foundation and provider-health label.
+- `mvpReadiness` records the blocking checks; it remains blocked until deployment, reconciliation, and real staging tests pass.
+
+### Still requires Kimi / THOR
+
+1. Review and apply the migration to a non-production staging database.
+2. Implement or configure the secure provider-neutral invoice proxy.
+3. Configure one provider plug with server-only credentials.
+4. Run funded testnet/staging payments and webhook replay tests.
+5. Deploy reconciliation/scheduled health checks.
+6. Only then consider production funds.
+
+### Family-template rule
+
+Other Give A Bit products should consume the Family Payment Core contract and the shared state/health vocabulary. They must not create product-specific `paid`, `confirmed`, or provider-specific UI states.
 
 ## Family identity and namespace direction (future, reviewed 2026-09-21)
 
