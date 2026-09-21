@@ -1,16 +1,14 @@
 # katoa — Last Updated 2026-09-21 by Buffy
 
-**Brief:** Simplified the public experience into a shorter creator-first landing page and a cleaner Explore discovery surface.
+**Brief:** Shipped the three requested beauty-first discovery upgrades: cinematic creator splash cards, segmented Explore browsing, and a consistent premium Demo preview treatment.
 
-**Visual refresh:**
-- Homepage is now hero → trust proof → four curated demo examples → compact how-it-works → CTA.
-- Removed duplicated Trending/New creator sections and the long marketing pitch-deck sections.
-- Explore no longer repeats video creators, recently viewed, or a large vertical filter wall.
-- Media cards now eagerly load priority beauty shots, use stable cover framing, and show a KATOA demo fallback if an image fails.
-- Smoke-tested homepage, Explore, a demo wishlist, and a demo creator profile; no broken images and expected links resolved.
+**Visual batches pushed:**
+- `c568adf` — full-screen creator splash cards with immersive portrait visuals, handle, one-line story, and one CTA.
+- `80cd64c` — Explore segmented into `Projects`, `Creators`, and `Video`; selected tab is shareable in the URL.
+- `04cceba` — shared `Demo preview` badge across creator cards, project cards, and the demo banner.
 
-**Verification:** `npm run check` green — 270 tests; typecheck clean; build green with 26/26 prerendered routes; secret scan green; 14 existing lint warnings only.
+**Verification:** `npm run check` passed — 270 tests; typecheck clean; lint has the same 14 existing warnings; build passed with 26/26 prerendered routes; secret-hygiene gate passed.
 
-**Payment status:** Family Payment Core remains unchanged and provider-agnostic. No THOR, live node, production secret, or real-money behavior was added.
+**Product boundary:** These are presentation and discovery improvements only. Family Payment Core remains provider-agnostic; no THOR, live node, production secret, or real-money behavior was added.
 
-**Git state:** Visual refresh is ready to commit and push. Existing `public/donations-qr.png` deletion remains untouched.
+**Git state:** `04cceba` is current on `origin/main`. Existing `public/donations-qr.png` deletion remains untouched.

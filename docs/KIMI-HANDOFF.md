@@ -17,8 +17,15 @@
 - `npm run build`: green, 26/26 routes prerendered.
 - Secret-hygiene gate passed.
 
+**Done in follow-up visual batches:**
+- `c568adf` — cinematic full-screen creator splash cards: one dominant portrait feature plus supporting portrait stories, handle, one-line story, and one CTA.
+- `80cd64c` — segmented Explore browsing with `Projects`, `Creators`, and `Video` tabs; URL state remembers the selected segment.
+- `04cceba` — shared premium `Demo preview` badge treatment across splash cards, project cards, and the demo banner.
+
+**Verification:** `npm run check` passed with 270/270 tests, typecheck clean, 14 existing lint warnings; build passed with 26/26 prerendered routes; secret-hygiene gate passed.
+
 **Git State:**
-- Pending visual-refresh commit will follow this handoff entry.
+- Visual batch SHAs are pushed to `origin/main`; current tip is `04cceba`.
 - Existing `public/donations-qr.png` deletion remains untouched.
 
 **Family note:** Katoa remains the reference implementation; this is presentation work only and does not alter the Family Payment Core contract.
