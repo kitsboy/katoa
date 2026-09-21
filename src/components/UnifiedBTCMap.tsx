@@ -441,7 +441,6 @@ export function UnifiedBTCMap({
     } finally {
       setEventsLoading(false);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showEvents]);
 
   // ---- Areas here chips ----

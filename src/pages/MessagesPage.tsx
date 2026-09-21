@@ -71,13 +71,14 @@ export function MessagesPage() {
 
   const threads = useMemo(() => {
     if (!myPub) return [] as string[];
+    const blockedList = getBlockedPubkeys();
     const set = new Set<string>();
     for (const m of messages) {
       const peerHex = m.from === myPub ? m.to : m.from;
-      if (peerHex && !isBlocked(peerHex)) set.add(peerHex);
+      if (peerHex && !blockedList.includes(peerHex.toLowerCase())) set.add(peerHex);
     }
     return [...set];
-  }, [messages, myPub, blocked]);
+  }, [messages, myPub]);
 
   useEffect(() => {
     const missing = threads.filter((hex) => !fetchedKind0.current.has(hex)).slice(0, 16);

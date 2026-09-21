@@ -21,7 +21,9 @@ export default tseslint.config(
       ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': [
         'warn',
-        { allowConstantExport: true },
+        // Context/hook files export useX() hooks alongside their Provider component; that is
+        // a deliberate pattern here (the plugin matches these as literal names, not regex).
+        { allowConstantExport: true, allowExportNames: ['useAuth', 'useToast', 'useCurrency', 'useLanguage', 'translations', 'languageFlags', 'languageNames', 'CURRENCY_OPTIONS'] },
       ],
       'no-console': ['warn', { allow: ['warn', 'error'] }],
     },

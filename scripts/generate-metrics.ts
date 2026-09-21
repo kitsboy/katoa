@@ -60,7 +60,7 @@ function main() {
     },
   };
   fs.writeFileSync(OUT, JSON.stringify(envelope, null, 2) + '\n', 'utf-8');
-  console.log('public/metrics.json written');
+  process.stdout.write('public/metrics.json written\n');
 }
 
 main();

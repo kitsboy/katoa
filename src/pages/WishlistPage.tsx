@@ -180,6 +180,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
   }, [showPaymentModal]);
 
   // Demo wishlist: auto-complete gift flow after ~3s (mobile-friendly preview)
+  const selectedItemId = selectedItem?.id ?? null;
   useEffect(() => {
     if (!showPaymentModal || !isDemoWishlist) return;
     setDemoAutoProgress(0);
@@ -191,6 +192,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
     const done = window.setTimeout(() => {
       setDemoAutoProgress(100);
       // Demo lists only: local preview bump. Live lists never increment sats_raised in the browser.
+      const selectedItem = items.find((it) => it.id === selectedItemId);
       if (isDemoWishlist && selectedItem) {
         setItems((prev) =>
           prev.map((it) => {
@@ -214,7 +216,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
       window.clearInterval(tick);
       window.clearTimeout(done);
     };
-  }, [showPaymentModal, isDemoWishlist, selectedItem?.id, giftForm.amount, toast]);
+  }, [showPaymentModal, isDemoWishlist, selectedItemId, items, giftForm.amount, toast]);
 
   function handleThemeChange(color: string) {
     setThemeColor(color);
@@ -239,15 +241,17 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
     }
   }, [slug]);
 
+  const wishlistSlug = wishlist?.slug ?? null;
+  const wishlistTitle = wishlist?.title ?? null;
   useEffect(() => {
-    if (!wishlist) return;
+    if (!wishlistSlug || wishlistTitle === null) return;
     const recent = getStorage<RecentWishlist[]>(STORAGE_KEYS.recentlyViewedWishlists, []);
     const updated = [
-      { slug: wishlist.slug, title: wishlist.title, viewedAt: Date.now() },
-      ...recent.filter((r) => r.slug !== wishlist.slug),
+      { slug: wishlistSlug, title: wishlistTitle, viewedAt: Date.now() },
+      ...recent.filter((r) => r.slug !== wishlistSlug),
     ].slice(0, 8);
     setStorage(STORAGE_KEYS.recentlyViewedWishlists, updated);
-  }, [wishlist?.slug, wishlist?.title]);
+  }, [wishlistSlug, wishlistTitle]);
 
   const loadWishlist = useCallback(async (signal?: { cancelled: boolean }) => {
     const isCancelled = () => signal?.cancelled === true;
