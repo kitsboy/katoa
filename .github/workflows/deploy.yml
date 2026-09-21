@@ -36,13 +36,20 @@ jobs:
           # Unique footer version every deploy (vX.Y.Z+run.N)
           GITHUB_RUN_NUMBER: ${{ github.run_number }}
         run: npm run version:bump && npm run build
-      - name: Verify live deploy + assets are not HTML (CF git integration)
+      - name: Verify live deploy + assets + production SHA (CF git integration)
         run: |
           set -euo pipefail
-          # CF edge propagation can lag briefly after the git-integration build finishes
+          # CF edge propagation can lag briefly after the git-integration build finishes.
+          # The page/assets check alone can pass against a HEALTHY OLDER deploy (that is
+          # exactly how the 2026-09-21 stuck-build queue went unnoticed: production kept
+          # serving 1c27cce while ae74e11 sat queued). So we only pass when production
+          # version.json reports THIS commit's SHA, polling up to ~15 minutes.
+          EXPECTED_SHA="${GITHUB_SHA:0:7}"
+          echo "Expecting production to serve commit $EXPECTED_SHA"
           ok=0
-          for attempt in $(seq 1 24); do
-            sleep 10
+          reason="page or assets never confirmed live"
+          for attempt in $(seq 1 60); do
+            sleep 15
             HTML=$(curl -fsSL "https://katoa.org/" || true)
             printf '%s' "$HTML" > /tmp/prod-page.html
             grep -q "Katoa" /tmp/prod-page.html || { echo "attempt=$attempt: not live yet"; continue; }
@@ -68,16 +75,26 @@ jobs:
                   ;;
               esac
             done
-            if [ "$bad" -eq 0 ]; then
+            if [ "$bad" -ne 0 ]; then
+              continue
+            fi
+            # Assets are live — now require the production version to be THIS commit.
+            reason="katoa.org is live but still serving an OLDER commit (possible stuck/queued Cloudflare build)"
+            VERSION_JSON=$(curl -fsSL "https://katoa.org/version.json?cb=$GITHUB_RUN_ID-$attempt" || true)
+            PROD_SHA=$(printf '%s' "$VERSION_JSON" | grep -oE '"gitSha"[[:space:]]*:[[:space:]]*"[^"]+"' | cut -d'"' -f4 || true)
+            echo "attempt=$attempt production gitSha=${PROD_SHA:-<none>} expected=$EXPECTED_SHA"
+            if [ -n "$PROD_SHA" ] && [ "$PROD_SHA" = "$EXPECTED_SHA" ]; then
               ok=1
               break
             fi
+            echo "production is behind; retrying ($attempt/60)"
           done
           if [ "$ok" -ne 1 ]; then
-            echo "::error::Live/asset Origin check failed after retries for $GITHUB_SHA"
+            echo "::error::$reason — pushed SHA $EXPECTED_SHA was not live after 15 minutes."
+            echo "::error::Fix: cancel the stuck build in the Cloudflare Pages dashboard, then rerun this workflow (workflow_dispatch, mode=verify)."
             exit 1
           fi
-          echo "Live + asset Origin check OK"
+          echo "Live + assets + version SHA OK for $EXPECTED_SHA"
 
   # Manual fallback only — cannot race the git integration because it never runs on push.
   break_glass_deploy:
