@@ -16,6 +16,16 @@
 
 Creators keep their own NIP-07 keys. The platform key is only for `katoa@katoa.org` brand verification and optional platform announcements — not for user custody.
 
+## Family namespace direction (future)
+
+Katoa should eventually recognize a shared Give A Bit namespace, using canonical handles such as `alice@giveabit.io` across Katoa, MotoPass, Satohash, Stranded, SherpaCarta, OpenStrata, Tadbuy, giveabit.io, and HQ. A bare `@giveabit` is a product phrase; NIP-05 needs a full `name@domain` address.
+
+The registry should map one public key to a handle and may include relay hints, product availability, role (`human`, `agent`, or `service`), delegated parent key, scopes, expiry, and revocation. Katoa must not automatically merge accounts or treat NIP-05 as legal identity.
+
+Buzz’s useful ideas for this future layer are signed event history, separate keys for agents, scoped permissions, and human approval. Buzz’s full relay/workspace architecture is out of scope for Katoa.
+
+MotoPass passport references and Satohash timestamps should be optional, separate proof layers. NIP-05 says “this domain controls this mapping”; it does not say “this person passed KYC.”
+
 ## Creator handles (future)
 
 Claiming `alice@katoa.org`:

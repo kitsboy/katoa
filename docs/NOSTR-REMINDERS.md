@@ -1,6 +1,10 @@
 # REMINDERS — Nostr / platform ops (do not skip)
 
-**For Cam + next Grok session.** Last set: 2026-08-11.
+**For Cam + next Grok session.** Updated 2026-09-21 after Family Payment Core review and Buzz identity-model review.
+
+## Family identity note
+
+The long-term goal is one verified Give A Bit namespace, using full NIP-05 handles such as `name@giveabit.io` across the family suite. NIP-05 is domain-to-pubkey discoverability, not legal identity. Keep MotoPass passports and Satohash timestamps as separate optional proof layers. Agent identities must use separate, scoped, revocable keys with human approval.
 
 ## Safe rollout order (already in PR `7ecff71`)
 

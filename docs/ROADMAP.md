@@ -2,7 +2,14 @@
 ## Production-Ready MVP Enhancement Plan
 
 **Last reviewed:** 2026-09-21
-**Status snapshot:** Trust UI, creator launch path, checkout, and preview readiness are shipped. Katoa is **not MVP yet**: real Lightning settlement, live creator data, and Nostr backend remain.
+**Status snapshot:** Trust UI, creator launch path, checkout, preview readiness, and Family Payment Core Batches 1–2 are shipped. Katoa is **not MVP yet**: production settlement, strict server matching, live creator data, and Nostr operations remain.
+
+**Payment Core status (2026-09-21):**
+- ✅ Batch 1 `2cfd461` — family contract, canonical states, transition rules, idempotent event-ledger primitives, and fake provider fixtures.
+- ✅ Batch 2 `59b4efc` — existing gift client wrapped as the BTCPay plug; existing signed webhook remains the sole settlement writer.
+- ✅ Handoff/docs `4ebb4ec` — Kimi handoff and latest update stamped.
+- ⏳ Next: strict server amount/creator/tier matching, then subscriptions and the remaining provider plugs.
+- 🚫 No THOR, Umbrel, Start9, live node, production secret, or real-money connection has been made.
 **Pitch context:** [`EXECUTIVE-SUMMARY.md`](./EXECUTIVE-SUMMARY.md) · [`MARKETING.md`](./MARKETING.md)
 
 ---
@@ -20,7 +27,45 @@
 **Completed frontend priorities:** creator launch checklist (wallet → wishlist → publish → share) · first-wishlist one-screen wizard · launch progress and ready-to-share state · trust-first creator profile · explicit missing-wallet state · wallet validation and receive-ready preview · honest payment status stepper with expiry/retry/copy feedback · payment activity timeline · mobile-first checkout sheet · preview readiness gaps · supporter trust summary · release proof verification.
 **Next priorities:** wire the real invoice → webhook → confirmed flow; replace local/demo engagement seams; add live Nostr identity and creator data. Do not market payment receipt as live until the backend confirms it.
 
-**Latest shipped batches:** `38eb19f` checkout sheet · `d730ea6` preview readiness · `1bdbfb4` supporter trust summary. All are presentation and guidance improvements only; no browser action can claim settlement.
+**Latest shipped UX batches:** `38eb19f` checkout sheet · `d730ea6` preview readiness · `1bdbfb4` supporter trust summary. All are presentation and guidance improvements only; no browser action can claim settlement.
+
+## Family identity and namespace direction (future, reviewed 2026-09-21)
+
+Block’s [Buzz](https://github.com/block/buzz) is useful as a **pattern**: humans and agents share signed Nostr events, identities have their own keys, actions are searchable/auditable, and sensitive work uses scoped permissions plus human approval. We should not copy Buzz’s full relay/workspace/agent platform into Katoa.
+
+### Give A Bit proposal
+
+Use one family identity registry with a canonical NIP-05 shape such as `alice@giveabit.io` (not a bare `@giveabit`). The same public key can be recognized by Katoa, MotoPass, Satohash, Stranded, SherpaCarta, OpenStrata, Tadbuy, giveabit.io, and HQ, while each product keeps its own permissions and data.
+
+A future identity record should contain:
+
+- handle and canonical domain;
+- Nostr public key and relay hints;
+- products enabled for that identity;
+- `human`, `agent`, or `service` role;
+- parent human key for delegated agents;
+- scopes, expiry, and revocation status;
+- optional MotoPass passport reference;
+- optional Satohash proof/attestation reference;
+- audit events for approvals and changes.
+
+### Safety limits
+
+- NIP-05 proves that the domain maps a name to a public key; it does **not** prove a person’s legal identity.
+- A MotoPass passport must remain a separate, consent-based credential. Do not silently turn a NIP-05 handle into KYC.
+- Agent keys must be separate from human keys, narrowly scoped, expiring, revocable, and never receive the human’s private key.
+- Satohash can timestamp registry, passport, release, or approval snapshots; it does not create identity truth by itself.
+
+### Phased family rollout
+
+1. **Now:** keep Katoa’s existing static `katoa@katoa.org` identity and local claim-request flow honest.
+2. **After payment core:** define a shared registry schema and verification rules in Give A Bit, with Katoa as the reference client.
+3. **Then:** support verified family handles such as `name@giveabit.io`, with product aliases only when necessary.
+4. **Then:** add delegated agent identities with scopes and human approval events.
+5. **Then:** connect MotoPass passport references and Satohash timestamps as optional proof layers.
+6. **Later:** consider a signed event/audit service; do not build a Buzz-sized relay until multiple products genuinely need it.
+
+**Do not build yet:** a global relay, autonomous agents with broad access, automatic identity merging, legal-identity claims, or a second identity/payment contract.
 
 ---
 

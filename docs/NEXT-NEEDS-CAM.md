@@ -1,6 +1,6 @@
 # Next list — needs Cam / THOR (honest backlog)
 
-Updated **2026-09-21** — checkout, preview, and supporter-trust UX shipped. Katoa is **not MVP yet**; product HEAD is `1bdbfb4`.
+Updated **2026-09-21** — Family Payment Core Batches 1–2 and checkout/preview/trust UX are shipped. Katoa is **not MVP yet**; product/docs tip is `4ebb4ec`.
 
 ## Still needs you (cannot finish alone)
 
@@ -12,8 +12,17 @@ Updated **2026-09-21** — checkout, preview, and supporter-trust UX shipped. Ka
 - Follow-up UX batches pushed: first-wishlist wizard (`1d334aa`), wallet readiness state (`a7c4228`), payment expiry/retry/copy polish (`85e8e20`).
 - Latest solo UX batches pushed: launch progress (`67be386`), wallet readiness preview (`ba0365a`), payment activity timeline (`0fe6a2e`).
 - Checkout, preview, and trust UX pushed: mobile checkout sheet (`38eb19f`), preview readiness gaps (`d730ea6`), supporter trust summary (`1bdbfb4`).
-- Verification: 251 tests, typecheck, build (26/26 routes), and secret-hygiene gate passed; 14 existing lint warnings remain.
+- Family Payment Core Batch 1 pushed: contract/state machine/event-ledger primitives/fake fixtures (`2cfd461`).
+- Family Payment Core Batch 2 pushed: existing gift client wrapped as BTCPay plug; existing webhook remains sole settlement writer (`59b4efc`).
+- Handoff/docs stamp pushed (`4ebb4ec`). Verification: **262 tests**, typecheck, and secret-hygiene gate passed; 14 existing lint warnings remain.
 
+
+### Family identity / NIP-05 — future shared Give A Bit layer
+- Buzz review: use its signed-event, separate-agent-key, scoped-permission, and human-approval ideas; do not copy the full relay/workspace product.
+- Desired namespace: canonical handles such as `name@giveabit.io`, recognized across Katoa and the family suite.
+- NIP-05 domain mapping is discoverability, not legal identity. MotoPass passport and Satohash proof must remain separate optional layers.
+- Current Katoa `/nip05` flow is still a local claim request copied for ops; platform nsec stays THOR-vault-only.
+- Future order: shared registry schema → family verification → delegated agent keys/scopes → MotoPass/Satohash references.
 
 ### Subscriptions (OF-parity) — ⭐ handoff for next LLM on Hermes
 - **SPEC:** `docs/SUBSCRIPTION-FLOW-SPEC.md` — DB `subscriptions` table, invoice `metadata.kind='subscription'`, webhook activation.
@@ -32,7 +41,7 @@ Updated **2026-09-21** — checkout, preview, and supporter-trust UX shipped. Ka
 7. **Deploy Edge Function** for NIP-07 challenge login (stub README ready)  
 8. **Ops process for NIP-05 claims** (`/nip05` UI copies request; merge into `public/.well-known/nostr.json` or automate)  
 9. **Sign platform kind-0 + NIP-65** once with vault nsec  
-10. **Confirm CF Pages** deployed `main` through `1bdbfb4` (hard-refresh: checkout sheet, preview readiness, supporter trust summary)
+10. **Confirm CF Pages** deployed `main` through `4ebb4ec` (hard-refresh: payment-core docs plus checkout sheet, preview readiness, supporter trust summary)
 
 ### Human growth
 11. **Seed 10–20 real creators**  

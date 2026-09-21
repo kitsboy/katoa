@@ -1,3 +1,26 @@
+## Session — 2026-09-21 · Family Payment Core status + Give A Bit identity review (Buffy M3)
+
+**Done:**
+- Reviewed and documented Family Payment Core progress: Batch 1 contract (`2cfd461`), Batch 2 BTCPay plug (`59b4efc`), and docs handoff (`4ebb4ec`).
+- Updated `docs/ROADMAP.md`, `docs/NEXT-NEEDS-CAM.md`, `docs/NOSTR-NIP05.md`, `docs/NOSTR-REMINDERS.md`, and `LATEST-UPDATE.md`.
+- Reviewed Block’s [Buzz](https://github.com/block/buzz). Kept the useful model: signed event history, separate human/agent keys, scoped permissions, and human approval. Rejected copying its full relay/workspace/agent platform into Katoa.
+- Documented a future shared namespace using full NIP-05 handles such as `name@giveabit.io` across the Give A Bit family.
+- Documented the separation between NIP-05 discoverability, MotoPass passport credentials, and Satohash timestamps/proofs.
+
+**Decisions:**
+- NIP-05 proves domain-to-public-key mapping; it does not prove legal identity or KYC.
+- Agent keys must be separate, scoped, expiring, revocable, and approved by a human.
+- Do not build a global relay, automatic identity merger, broad autonomous agent, or second payment/identity contract yet.
+- Current `/nip05` remains a local claim request copied for ops; platform nsec remains THOR-vault-only.
+
+**Git State:**
+- Documentation changes are local and not committed or pushed yet.
+- Existing `public/donations-qr.png` deletion remains untouched.
+
+**Next recommended order:** Batch 3 strict server amount/creator/tier matching → subscriptions → provider health/reconciliation → shared payment UI chips → family identity registry design.
+
+---
+
 ## Session — 2026-09-21 · Family Payment Core Batch 2 — BTCPay plug (Buffy M3)
 
 **Done:**
