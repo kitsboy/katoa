@@ -18,8 +18,7 @@ export function CreatorSplashCard({ creator, featured = false }: CreatorSplashCa
       href={`/u/${creator.creator.username}`}
       className={`creator-splash-card group relative block overflow-hidden rounded-[1.5rem] border border-white/10 bg-[#120d1d] shadow-[0_18px_60px_rgba(0,0,0,0.35)] ${
         featured ? 'min-h-[31rem] sm:min-h-[38rem] lg:col-span-2' : 'min-h-[25rem] sm:min-h-[31rem]'
-      } max-sm:min-w-[84vw] max-sm:snap-start
-      }`}
+      } max-sm:min-w-[84vw] max-sm:snap-start`}
       data-testid="creator-splash-card"
     >
       <MediaCard

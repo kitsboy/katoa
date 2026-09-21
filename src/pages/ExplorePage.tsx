@@ -692,13 +692,14 @@ export function ExplorePage() {
         <Card className="mb-8 overflow-hidden border-2 border-bitcoin-orange-500/40 shadow-[0_0_40px_rgba(255,135,0,0.2)] hover:shadow-[0_0_60px_rgba(255,135,0,0.35)] transition-all duration-300 animate-slide-up group">
           <div className="grid md:grid-cols-2 gap-0">
             <MediaCard
-              className="h-64 sm:h-80 md:h-auto md:min-h-[360px]"
+              className="h-72 sm:h-96 md:h-auto md:min-h-[430px] md:rounded-l-2xl"
               media={{
                 imageUrl: featured.cover_image,
-                videoUrl: (featured as { cover_video_url?: string }).cover_video_url,
-                alt: featured.title,
+                videoUrl: 'https://videos.pexels.com/video-files/9724317/9724317-sd_480_360_30fps.mp4',
+                alt: 'Skateboarders riding through an urban skate session in Medellín',
               }}
               priority
+              alwaysPlay
               aspect="wide"
               topLeft={<TrendingBadge type="featured" />}
               bottomLeft={

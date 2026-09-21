@@ -1,3 +1,26 @@
+## Session — 2026-09-21 · Skate Colombia video card polish (Buffy M3)
+
+**Done:**
+- Replaced the mismatched ocean/drone video on the featured Medellín project with a skateboard clip from Pexels: `9724317-sd_480_360_30fps.mp4`.
+- Fixed the hero media treatment so the video stays clipped inside the card, fills the intended frame, and uses the existing skateboard cover image as its poster.
+- Added an `alwaysPlay` mode to `MediaCard` for featured video heroes. The video remains mounted while the volume control toggles its real muted state instead of showing a decorative sound icon over a stopped video.
+- Improved the featured card proportions and media height for mobile and desktop.
+- Fixed a stray class-brace in the mobile creator shelf markup.
+
+**Decisions:**
+- Keep audio opt-in: videos start muted for browser policy and user control; the volume button is functional when the clip has an audio track.
+- Keep the Skate Colombia story visually coherent: skateboard cover image, skateboard footage, Medellín project copy, and direct support CTA.
+- No payment or settlement behavior changed.
+
+**Verification:** `npm run check` passed with 270/270 tests, typecheck clean, 14 existing lint warnings; build passed with 26/26 prerendered routes; secret-hygiene gate passed.
+
+**Git State:**
+- Code and docs stamp are pushed in the current batch; existing `public/donations-qr.png` deletion remains untouched.
+
+**Family note:** This is a reusable media-card pattern for family products: safe object-fit framing, explicit poster, muted-by-default audio, and a real user-controlled sound state.
+
+---
+
 ## Session — 2026-09-21 · Route cache recovery + creator-world visual upgrades (Buffy M3)
 
 **Done:**

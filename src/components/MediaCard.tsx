@@ -22,6 +22,8 @@ interface MediaCardProps {
   autoplayOnHover?: boolean;
   showPlayIndicator?: boolean;
   priority?: boolean;
+  /** Keep a featured video playing so the sound control is always meaningful. */
+  alwaysPlay?: boolean;
 }
 
 const aspectClasses = {
@@ -43,13 +45,14 @@ export function MediaCard({
   autoplayOnHover = true,
   showPlayIndicator = true,
   priority = false,
+  alwaysPlay = false,
 }: MediaCardProps) {
   const { t } = useLanguage();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [muted, setMuted] = useState(true);
   const [videoFailed, setVideoFailed] = useState(false);
   const [imageFailed, setImageFailed] = useState(false);
-  const [previewing, setPreviewing] = useState(false);
+  const [previewing, setPreviewing] = useState(alwaysPlay);
   const prefersReducedMotion =
     typeof window !== 'undefined' &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -60,11 +63,16 @@ export function MediaCard({
   const hasImage = Boolean(media.imageUrl) && !imageFailed;
 
   useEffect(() => {
+    if (alwaysPlay) setPreviewing(true);
+  }, [alwaysPlay, media.videoUrl]);
+
+  useEffect(() => {
     if (!previewing || !canPreview || !videoRef.current) return;
     videoRef.current.play().catch(() => setVideoFailed(true));
   }, [previewing, canPreview]);
 
   const stopPreview = () => {
+    if (alwaysPlay) return;
     if (videoRef.current) {
       videoRef.current.pause();
       videoRef.current.currentTime = 0;
@@ -87,7 +95,7 @@ export function MediaCard({
       onMouseEnter={startPreview}
       onMouseLeave={stopPreview}
       onTouchStart={shouldAutoplay ? startPreview : undefined}
-      onTouchEnd={shouldAutoplay ? stopPreview : undefined}
+      onTouchEnd={shouldAutoplay && !alwaysPlay ? stopPreview : undefined}
     >
       {!hasVideo && !hasImage && (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[radial-gradient(circle_at_50%_35%,rgba(167,139,250,0.3),transparent_58%),linear-gradient(135deg,#211633,#0b0a12)]">
