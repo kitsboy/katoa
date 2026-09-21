@@ -164,7 +164,8 @@ export function mockProfileForUsername(username: string): CreatorProfile | null 
     id: null,
     username: first.creator.username,
     avatar_url: first.creator.avatar_url,
-    bio: withBio?.bio,
+    // Give every sample creator a clear identity story instead of an empty shell.
+    bio: withBio?.bio || first.description,
     lightning_address: usablePaymentAddress(withLn?.lightning_address ?? null),
     nostr_pubkey: creators.find((c) => c.nostr_pubkey)?.nostr_pubkey ?? null,
     bitcoin_address: usablePaymentAddress(withOnchain?.bitcoin_address ?? null),
