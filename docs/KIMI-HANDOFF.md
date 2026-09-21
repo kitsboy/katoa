@@ -1,3 +1,29 @@
+## Session — 2026-09-21 · Family Payment Core Batch 1 (Buffy M3)
+
+**Done:**
+- Added the family-wide provider interface with `createIntent`, `getStatus`, and `listEvents`.
+- Added canonical states: `intent → pending → confirming → settled | expired | failed`.
+- Enforced direct Lightning settlement and the on-chain confirming step.
+- Added append-first, idempotent event-ledger primitives with provider and amount checks.
+- Added fake BTCPay, LNbits, and LND payload fixtures. No live node, THOR funds, credentials, or `VITE_*` secrets.
+- Existing gifts, subscriptions, and webhook behavior were not changed in this batch.
+
+**Decisions:**
+- The frontend depends on the provider-neutral contract; infrastructure plugs remain behind it.
+- `settled`, `expired`, and `failed` are terminal states.
+- This is pure M3 code and test infrastructure. THOR/Umbrel/Start9 remains a later configuration and staging task.
+
+**Verified:** `npm run check` passed with **258/258 tests**, typecheck clean, 14 existing lint warnings; secret-hygiene gate passed. Focused payment-core tests: 7/7.
+
+**Git State:**
+- SHA: `2cfd461` on `origin/main`.
+- Unpushed: none.
+- Existing `public/donations-qr.png` deletion remains untouched.
+
+**Next batches:** wrap the existing server/client payment path as the provider plug, then add strict server-side matching. Do not connect THOR funds yet.
+
+---
+
 ## Session — 2026-09-21 · Checkout, preview, and trust UX (Buffy M3)
 
 **Three pushed batches:**
