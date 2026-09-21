@@ -25,6 +25,9 @@ function swStrings() {
   return SW_STRINGS[lang] ?? SW_STRINGS.en;
 }
 
+/** Set when the user asked for a reload, so controllerchange does not re-banner. */
+let requestedReload = false;
+
 function showUpdateBanner() {
   if (document.querySelector('[data-sw-update]')) return;
   const { update, refresh } = swStrings();
@@ -41,7 +44,10 @@ function showUpdateBanner() {
   button.type = 'button';
   button.className = 'ml-2 text-neon-cyan-400 font-semibold underline min-h-[44px] px-2';
   button.textContent = refresh;
-  button.addEventListener('click', () => window.location.reload());
+  button.addEventListener('click', () => {
+    requestedReload = true;
+    window.location.reload();
+  });
 
   banner.appendChild(text);
   banner.appendChild(button);
@@ -54,6 +60,12 @@ if ('serviceWorker' in navigator && import.meta.env.PROD) {
     navigator.serviceWorker
       .register('/sw.js')
       .then((reg) => {
+        // A waiting worker may already exist by the time register() resolves
+        // (slow networks can finish installing before we attach listeners).
+        if (reg.waiting && navigator.serviceWorker.controller) {
+          showUpdateBanner();
+        }
+        // A new worker installing while this tab is open.
         reg.addEventListener('updatefound', () => {
           const worker = reg.installing;
           worker?.addEventListener('statechange', () => {
@@ -61,6 +73,20 @@ if ('serviceWorker' in navigator && import.meta.env.PROD) {
               showUpdateBanner();
             }
           });
+        });
+        // sw.js uses skipWaiting + clients.claim, so a new worker can take
+        // control of this tab while we are still running old assets — that
+        // fires controllerchange and is the most reliable update signal.
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          if (!requestedReload) showUpdateBanner();
+        });
+        // Long-lived tabs: re-check hourly and when the tab regains focus.
+        const poll = () => {
+          reg.update().catch(() => {});
+        };
+        setInterval(poll, 60 * 60 * 1000);
+        document.addEventListener('visibilitychange', () => {
+          if (document.visibilityState === 'visible') poll();
         });
       })
       .catch((err) => console.warn('Service worker registration failed:', err));
