@@ -1,6 +1,9 @@
 /**
+ * Family Payment Core: BTCPay server plug.
  * BTCPay → Katoa settlement webhook.
  * Confirms pending gifts server-side. The browser never marks payments complete.
+ * Keep this endpoint as the sole writer of settled gift rows; do not duplicate
+ * this contract in another provider-specific frontend flow.
  *
  * Secrets (Supabase Edge env / `supabase secrets set`, never VITE_* or git):
  *   BTCPAY_WEBHOOK_SECRET, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY

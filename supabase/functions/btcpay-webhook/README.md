@@ -4,6 +4,8 @@
 
 The browser records gift **intent** (`transactions.status = 'pending'`). This function is the only path that marks a payment `confirmed` and bumps `sats_raised`.
 
+This endpoint is Katoa's first Family Payment Core provider plug. The client adapter in `src/lib/btcpay.ts` creates/reads intents; this signed server endpoint remains the only settlement writer and event source. Do not create a second frontend payment contract.
+
 ## What it does
 
 1. `POST` only (BTCPay server-to-server — no CORS).
