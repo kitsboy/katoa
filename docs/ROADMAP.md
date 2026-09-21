@@ -2,7 +2,7 @@
 ## Production-Ready MVP Enhancement Plan
 
 **Last reviewed:** 2026-09-21
-**Status snapshot:** Trust UI, creator launch path, and honest payment-status edge are shipped. Katoa is **not MVP yet**: real Lightning settlement, live creator data, and Nostr backend remain.
+**Status snapshot:** Trust UI, creator launch path, checkout, and preview readiness are shipped. Katoa is **not MVP yet**: real Lightning settlement, live creator data, and Nostr backend remain.
 **Pitch context:** [`EXECUTIVE-SUMMARY.md`](./EXECUTIVE-SUMMARY.md) · [`MARKETING.md`](./MARKETING.md)
 
 ---
@@ -17,8 +17,10 @@
 - ✅ PWA service worker v2, `scripts/generate-sitemap.mjs`, dynamic OG per wishlist
 - ✅ About accordions, wishlist reorder (localStorage), breadcrumbs, ContributorsWall
 
-**Completed frontend priorities:** creator launch checklist (wallet → wishlist → publish → share) · first-wishlist one-screen wizard · launch progress and ready-to-share state · trust-first creator profile · explicit missing-wallet state · wallet validation and receive-ready preview · honest payment status stepper with expiry/retry/copy feedback · payment activity timeline · release proof verification.
+**Completed frontend priorities:** creator launch checklist (wallet → wishlist → publish → share) · first-wishlist one-screen wizard · launch progress and ready-to-share state · trust-first creator profile · explicit missing-wallet state · wallet validation and receive-ready preview · honest payment status stepper with expiry/retry/copy feedback · payment activity timeline · mobile-first checkout sheet · preview readiness gaps · supporter trust summary · release proof verification.
 **Next priorities:** wire the real invoice → webhook → confirmed flow; replace local/demo engagement seams; add live Nostr identity and creator data. Do not market payment receipt as live until the backend confirms it.
+
+**Latest shipped batches:** `38eb19f` checkout sheet · `d730ea6` preview readiness · `1bdbfb4` supporter trust summary. All are presentation and guidance improvements only; no browser action can claim settlement.
 
 ---
 

@@ -1,6 +1,6 @@
 # KATOA — Marketing & Pitch Guide
 
-**Date:** 2026-08-24  
+**Date:** 2026-09-21
 **Audience:** Content, landing pages, social, pitch decks, Kimi/HERMES brain, Give A Bit ecosystem  
 **Tone:** Warm, simple, empowering — explain like a curious 16-year-old who cares about fairness. Bitcoin sovereignty without jargon walls.  
 **Visual language:** Night-jewel — see [`DESIGN.md`](./DESIGN.md) · Deck PDF: [`marketing/KATOA-Marketing-Presentation.pdf`](./marketing/KATOA-Marketing-Presentation.pdf)
@@ -48,6 +48,12 @@ Not another creator platform. Infrastructure for a better creator economy.
 It converts *“I want to help this person”* into a borderless, private Bitcoin Lightning payment the recipient actually keeps. Settlement is **non-custodial**: sats go to creator-controlled Lightning addresses and wallets — Katoa does not operate a hot wallet of user funds.
 
 ---
+
+## Product truth — latest frontend progress
+
+Checkout now has a mobile-first sheet with QR, wallet, and copy actions. Creator preview mode shows what is missing before a profile is shared. Supporters see the creator’s destination and proof guidance before paying. These are UX improvements, not proof of settlement: never say a creator received funds until the production webhook confirms it.
+
+Latest batches: `38eb19f` · `d730ea6` · `1bdbfb4`.
 
 ## The problem (make it visceral)
 

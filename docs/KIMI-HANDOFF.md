@@ -1,3 +1,21 @@
+## Session — 2026-09-21 · Checkout, preview, and trust UX (Buffy M3)
+
+**Three pushed batches:**
+- `38eb19f` — mobile-first checkout sheet with larger touch targets, responsive QR, amount/method summary, and copy/wallet actions.
+- `d730ea6` — creator preview readiness panel showing missing wallet, story, and profile details before sharing.
+- `1bdbfb4` — supporter trust summary in checkout with destination, proof guidance, and explicit backend-confirmation boundary.
+
+**Verified:** `npm run check` passed with **251/251 tests**, typecheck clean, 14 existing lint warnings; `npm run build` passed with 26/26 prerendered routes; secret-hygiene gate passed.
+
+**Git State:**
+- `origin/main`: `1bdbfb4` plus the final docs/build stamp below.
+- No real-money or fake-confirmation behavior added.
+- Existing `public/donations-qr.png` deletion remains untouched.
+
+**Next gate:** production invoice → webhook → confirmed settlement, then live creator data and Nostr identity. Katoa is not MVP yet.
+
+---
+
 ## Session — 2026-09-21 · Creator launch progress + wallet readiness + payment timeline (Buffy M3)
 
 **Three pushed batches:**

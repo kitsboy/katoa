@@ -1,9 +1,9 @@
 # KATOA — Executive Summary
 
-**Date:** 2026-08-24  
+**Date:** 2026-09-21
 **Project:** KATOA (katoa.org)  
 **Version:** 1.1.7  
-**Product HEAD:** `6f43b74` — *fix: gift/tip Lightning follows the saved wallet address*  
+**Product HEAD:** `1bdbfb4` — *feat: add trust context to checkout*
 **Status:** Live product SPA · night-jewel visual era · Cloudflare Pages  
 **Ecosystem:** [Give A Bit](https://giveabit.io) — Bitcoin sovereignty tools for private, feel-good giving  
 **License:** MIT (open source)  
@@ -46,6 +46,12 @@ You’d use it because the old internet taxes the people doing the work. Large s
 | “Thousands of creators” | **False.** Sample catalog: **11** creators, `metrics.json` `demo: true`. |
 
 ---
+
+## Latest product progress (2026-09-21)
+
+The frontend is now closer to a supporter-ready experience: mobile checkout has clear wallet and QR actions, creator preview mode shows missing details before sharing, and checkout includes a concise trust summary with wallet destination and proof guidance. These batches do **not** confirm payment; production invoice → webhook → settlement remains the MVP gate.
+
+Batches: `38eb19f` · `d730ea6` · `1bdbfb4`.
 
 ## The problem (why now)
 

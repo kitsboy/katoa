@@ -1,6 +1,6 @@
 # Next list — needs Cam / THOR (honest backlog)
 
-Updated **2026-09-21** — trust UI + creator launch path + honest payment-status edge shipped. Katoa is **not MVP yet**; product HEAD is `fb1c643` plus this frontend batch.
+Updated **2026-09-21** — checkout, preview, and supporter-trust UX shipped. Katoa is **not MVP yet**; product HEAD is `1bdbfb4`.
 
 ## Still needs you (cannot finish alone)
 
@@ -11,6 +11,8 @@ Updated **2026-09-21** — trust UI + creator launch path + honest payment-statu
 - Checks: typecheck, lint, 249 tests, and production build green. No real money or settlement claims added.
 - Follow-up UX batches pushed: first-wishlist wizard (`1d334aa`), wallet readiness state (`a7c4228`), payment expiry/retry/copy polish (`85e8e20`).
 - Latest solo UX batches pushed: launch progress (`67be386`), wallet readiness preview (`ba0365a`), payment activity timeline (`0fe6a2e`).
+- Checkout, preview, and trust UX pushed: mobile checkout sheet (`38eb19f`), preview readiness gaps (`d730ea6`), supporter trust summary (`1bdbfb4`).
+- Verification: 251 tests, typecheck, build (26/26 routes), and secret-hygiene gate passed; 14 existing lint warnings remain.
 
 
 ### Subscriptions (OF-parity) — ⭐ handoff for next LLM on Hermes
@@ -30,7 +32,7 @@ Updated **2026-09-21** — trust UI + creator launch path + honest payment-statu
 7. **Deploy Edge Function** for NIP-07 challenge login (stub README ready)  
 8. **Ops process for NIP-05 claims** (`/nip05` UI copies request; merge into `public/.well-known/nostr.json` or automate)  
 9. **Sign platform kind-0 + NIP-65** once with vault nsec  
-10. **Confirm CF Pages** deployed `main` through `6f43b74` (hard-refresh: night-jewel, opaque header, gift QR follows saved Lightning wallet)
+10. **Confirm CF Pages** deployed `main` through `1bdbfb4` (hard-refresh: checkout sheet, preview readiness, supporter trust summary)
 
 ### Human growth
 11. **Seed 10–20 real creators**  
