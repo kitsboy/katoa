@@ -49,6 +49,7 @@ import { DemoBadge } from '../components/DemoBadge';
 import { PaymentStatusStepper } from '../components/PaymentStatusStepper';
 import { PaymentActivityTimeline } from '../components/PaymentActivityTimeline';
 import { MobileCheckoutSummary } from '../components/MobileCheckoutSummary';
+import { SupporterTrustSummary } from '../components/SupporterTrustSummary';
 
 const SAT_PRESETS = [
   { label: '1K', value: 1000 },
@@ -1622,6 +1623,12 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
           />
           <PaymentStatusStepper status={isDemoWishlist ? 'demo' : 'invoice-created'} />
           <PaymentActivityTimeline status={isDemoWishlist ? 'demo' : invoiceExpired ? 'expired' : 'pending'} compact />
+          <SupporterTrustSummary
+            username={wishlist.creator.username}
+            lightning={hasLightning ? lightningAddr : null}
+            onchain={hasOnchain ? onchainAddress : null}
+            isDemo={isDemoWishlist}
+          />
 
           {isDemoWishlist && (
             <div className="rounded-xl border border-bitcoin-orange-500/30 bg-bitcoin-orange-500/10 p-3" role="status">
