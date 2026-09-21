@@ -99,10 +99,12 @@ export const CreatorVideoCard = memo(function CreatorVideoCard({
             </div>
           }
           bottomRight={
-            <span className="creator-video-card__video-pill">
-              <Play size={10} className="fill-white" />
-              {t('explore.video')}
-            </span>
+            wishlist.cover_video_url ? (
+              <span className="creator-video-card__video-pill">
+                <Play size={10} className="fill-white" />
+                {t('explore.video')}
+              </span>
+            ) : undefined
           }
           />
         </div>

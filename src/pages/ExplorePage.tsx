@@ -19,7 +19,7 @@ import { getStorage, setStorage, STORAGE_KEYS } from '../lib/storage';
 import { toJsonLdScript } from '../lib/jsonLd';
 import { useLanguage } from '../contexts/LanguageContext';
 import { PageMeta } from '../components/PageMeta';
-import { Gift, Search, MapPin, Globe, SlidersHorizontal, Star, Heart, X, Video } from 'lucide-react';
+import { Gift, Search, MapPin, Globe, SlidersHorizontal, Star, Heart, X, Video, Users, LayoutGrid } from 'lucide-react';
 import { CreatorVideoCard } from '../components/CreatorVideoCard';
 import { FavoritesExport } from '../components/FavoritesExport';
 import { verticalById } from '../data/creatorVerticals';
@@ -72,6 +72,9 @@ const defaultFilters: ExploreFilters = {
   sortBy: 'recent',
 };
 
+type ExploreTab = 'projects' | 'creators' | 'video';
+const EXPLORE_TABS: ExploreTab[] = ['projects', 'creators', 'video'];
+
 const SORT_OPTIONS = new Set(['recent', 'trending', 'funded', 'goal']);
 
 function readExploreFiltersFromUrl(): {
@@ -79,11 +82,14 @@ function readExploreFiltersFromUrl(): {
   showMap: boolean;
   favoritesOnly: boolean;
   videosOnly: boolean;
+  tab: ExploreTab;
   vertical: string;
 } {
   const params = new URLSearchParams(window.location.search);
   const sort = params.get('sort');
   const vertical = params.get('vertical') ?? '';
+  const requestedTab = params.get('tab') as ExploreTab | null;
+  const tab = requestedTab && EXPLORE_TABS.includes(requestedTab) ? requestedTab : 'projects';
   return {
     filters: {
       searchTerm: params.get('search') ?? '',
@@ -94,13 +100,14 @@ function readExploreFiltersFromUrl(): {
     showMap: params.get('map') === '1' || params.get('map') === 'true',
     favoritesOnly: params.get('favorites') === '1' || params.get('favorites') === 'true',
     videosOnly: params.get('videos') === '1' || params.get('videos') === 'true',
+    tab,
     vertical: verticalById(vertical) ? vertical : '',
   };
 }
 
 function hasUrlExploreFilters(): boolean {
   const params = new URLSearchParams(window.location.search);
-  return ['search', 'country', 'category', 'sort', 'map', 'favorites', 'videos', 'vertical'].some((key) =>
+  return ['search', 'country', 'category', 'sort', 'map', 'favorites', 'videos', 'tab', 'vertical'].some((key) =>
     params.has(key)
   );
 }
@@ -346,6 +353,9 @@ export function ExplorePage() {
   const [showMap, setShowMap] = useState(() =>
     useUrlFilters ? urlState.showMap : getStorage<boolean>(STORAGE_KEYS.exploreShowMap, false)
   );
+  const [activeTab, setActiveTab] = useState<ExploreTab>(() =>
+    useUrlFilters ? urlState.tab : 'projects'
+  );
 
   useEffect(() => {
     setStorage(STORAGE_KEYS.exploreShowMap, showMap);
@@ -367,7 +377,7 @@ export function ExplorePage() {
 
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
-  }, [debouncedSearch, selectedCountry, selectedCategory, sortBy, favoritesOnly, videosOnly, selectedVertical]);
+  }, [debouncedSearch, selectedCountry, selectedCategory, sortBy, favoritesOnly, videosOnly, selectedVertical, activeTab]);
 
   useEffect(() => {
     loadWishlists();
@@ -421,6 +431,9 @@ export function ExplorePage() {
     if (videosOnly) params.set('videos', '1');
     else params.delete('videos');
 
+    if (activeTab !== 'projects') params.set('tab', activeTab);
+    else params.delete('tab');
+
     if (selectedVertical) params.set('vertical', selectedVertical);
     else params.delete('vertical');
 
@@ -430,7 +443,7 @@ export function ExplorePage() {
     if (currentUrl !== nextUrl) {
       window.history.replaceState({}, '', nextUrl);
     }
-  }, [searchTerm, selectedCountry, selectedCategory, sortBy, showMap, favoritesOnly, videosOnly, selectedVertical]);
+  }, [searchTerm, selectedCountry, selectedCategory, sortBy, showMap, favoritesOnly, videosOnly, selectedVertical, activeTab]);
 
   async function loadCategories() {
     try {
@@ -471,8 +484,10 @@ export function ExplorePage() {
       filtered = filtered.filter((w) => favorites.includes(w.id));
     }
 
-    if (videosOnly) {
+    if (videosOnly || activeTab === 'video') {
       filtered = filtered.filter((w) => isCreatorVideoCard(w) || Boolean(w.cover_video_url));
+    } else if (activeTab === 'projects') {
+      filtered = filtered.filter((w) => !isCreatorVideoCard(w) && !w.cover_video_url);
     }
 
     if (selectedVertical) {
@@ -513,6 +528,7 @@ export function ExplorePage() {
     favorites,
     videosOnly,
     selectedVertical,
+    activeTab,
   ]);
 
   async function loadWishlists() {
@@ -574,14 +590,6 @@ export function ExplorePage() {
     });
   }, []);
 
-  const toggleVideosOnly = useCallback(() => {
-    setVideosOnly((prev) => {
-      const next = !prev;
-      setStorage(STORAGE_KEYS.exploreVideosOnly, next);
-      return next;
-    });
-  }, []);
-
   const clearFilters = useCallback(() => {
     setSelectedCategory('');
     setSelectedCountry('');
@@ -589,6 +597,7 @@ export function ExplorePage() {
     setSearchTerm('');
     setFavoritesOnly(false);
     setVideosOnly(false);
+    setActiveTab('projects');
     setSelectedVertical('');
     setStorage(STORAGE_KEYS.exploreFavoritesOnly, false);
     setStorage(STORAGE_KEYS.exploreVideosOnly, false);
@@ -601,6 +610,7 @@ export function ExplorePage() {
     searchTerm ||
     favoritesOnly ||
     videosOnly ||
+    activeTab !== 'projects' ||
     selectedVertical;
 
   const favoritesMeta = useMemo(
@@ -765,6 +775,33 @@ export function ExplorePage() {
             {resultCountLabel}. {mapStatusLabel}
           </p>
 
+          <div className="mb-6 grid grid-cols-3 gap-1 rounded-2xl border border-white/10 bg-white/[0.04] p-1.5" role="tablist" aria-label="Explore content type">
+            {[
+              { id: 'projects' as const, label: 'Projects', icon: LayoutGrid },
+              { id: 'creators' as const, label: 'Creators', icon: Users },
+              { id: 'video' as const, label: 'Video', icon: Video },
+            ].map(({ id, label, icon: Icon }) => (
+              <button
+                key={id}
+                type="button"
+                role="tab"
+                aria-selected={activeTab === id}
+                onClick={() => {
+                  setActiveTab(id);
+                  setVideosOnly(false);
+                }}
+                className={`flex min-h-[46px] items-center justify-center gap-2 rounded-xl px-3 text-sm font-bold transition-all ${
+                  activeTab === id
+                    ? 'bg-white text-charcoal-950 shadow-[0_8px_24px_rgba(0,0,0,0.2)]'
+                    : 'text-gray-400 hover:bg-white/10 hover:text-white'
+                }`}
+              >
+                <Icon size={17} aria-hidden />
+                {label}
+              </button>
+            ))}
+          </div>
+
           <div className="space-y-4 mb-6">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="relative flex-1">
@@ -813,15 +850,7 @@ export function ExplorePage() {
                   {t('explore.favoritesOnly')}
                 </Button>
 
-                <Button
-                  variant={videosOnly ? 'primary' : 'outline'}
-                  onClick={toggleVideosOnly}
-                  className="flex-1 sm:flex-none border-[#00aff0]/30 hover:border-[#00aff0]/60"
-                  aria-pressed={videosOnly}
-                >
-                  <Video size={20} className={`mr-2 ${videosOnly ? 'text-[#00aff0]' : ''}`} />
-                  {t('explore.videosOnly')}
-                </Button>
+
               </div>
             </div>
 
@@ -961,14 +990,14 @@ export function ExplorePage() {
         {loading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" aria-busy="true" aria-label={t('explore.loadingProjects')}>
             {[...Array(9)].map((_, i) => (
-              <CardSkeleton key={i} variant={videosOnly ? 'tall' : 'default'} />
+              <CardSkeleton key={i} variant={activeTab !== 'projects' ? 'tall' : 'default'} />
             ))}
           </div>
         ) : gridWishlists.length > 0 ? (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 items-stretch [&>a]:min-h-0">
               {gridWishlists.slice(0, visibleCount).map((wishlist) =>
-                isCreatorVideoCard(wishlist) ? (
+                activeTab !== 'projects' || isCreatorVideoCard(wishlist) ? (
                   <CreatorVideoCard
                     key={wishlist.id}
                     wishlist={wishlist}
