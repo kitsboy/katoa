@@ -20,6 +20,7 @@ interface MediaCardProps {
   bottomRight?: ReactNode;
   autoplayOnHover?: boolean;
   showPlayIndicator?: boolean;
+  priority?: boolean;
 }
 
 const aspectClasses = {
@@ -40,11 +41,13 @@ export function MediaCard({
   bottomRight,
   autoplayOnHover = true,
   showPlayIndicator = true,
+  priority = false,
 }: MediaCardProps) {
   const { t } = useLanguage();
   const videoRef = useRef<HTMLVideoElement>(null);
   const [muted, setMuted] = useState(true);
   const [videoFailed, setVideoFailed] = useState(false);
+  const [imageFailed, setImageFailed] = useState(false);
   const [previewing, setPreviewing] = useState(false);
   const prefersReducedMotion =
     typeof window !== 'undefined' &&
@@ -53,7 +56,7 @@ export function MediaCard({
 
   const canPreview = Boolean(media.videoUrl) && !videoFailed;
   const hasVideo = canPreview;
-  const hasImage = Boolean(media.imageUrl);
+  const hasImage = Boolean(media.imageUrl) && !imageFailed;
 
   useEffect(() => {
     if (!previewing || !canPreview || !videoRef.current) return;
@@ -73,29 +76,22 @@ export function MediaCard({
     setPreviewing(true);
   };
 
-  const handleMouseEnter = () => {
-    startPreview();
-  };
-
-  const handleMouseLeave = () => {
-    stopPreview();
-  };
-
   const isCreator = variant === 'creator';
 
   return (
     <div
-      className={`relative overflow-hidden bg-charcoal-900 ${aspectClasses[aspect]} ${className} ${
+      className={`relative overflow-hidden bg-gradient-to-br from-[#24163b] via-charcoal-900 to-[#090912] ${aspectClasses[aspect]} ${className} ${
         isCreator ? 'media-card--creator' : ''
       }`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onMouseEnter={startPreview}
+      onMouseLeave={stopPreview}
       onTouchStart={shouldAutoplay ? startPreview : undefined}
       onTouchEnd={shouldAutoplay ? stopPreview : undefined}
     >
       {!hasVideo && !hasImage && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-charcoal-800 to-charcoal-950">
-          <Gift size={64} className="text-white/15 animate-float" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[radial-gradient(circle_at_50%_35%,rgba(167,139,250,0.3),transparent_58%),linear-gradient(135deg,#211633,#0b0a12)]">
+          <Gift size={38} className="text-white/25" aria-hidden />
+          <span className="text-[10px] uppercase tracking-[0.18em] text-white/45">KATOA demo</span>
         </div>
       )}
 
@@ -103,14 +99,13 @@ export function MediaCard({
         <img
           src={media.imageUrl!}
           alt={media.alt}
-          className={`absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${
+          className={`absolute inset-0 w-full h-full object-cover object-center transition-all duration-500 group-hover:scale-105 ${
             previewing && canPreview ? 'opacity-0' : 'opacity-100'
           }`}
-          loading="lazy"
+          loading={priority ? 'eager' : 'lazy'}
+          fetchPriority={priority ? 'high' : 'auto'}
           decoding="async"
-          onError={(e) => {
-            e.currentTarget.style.display = 'none';
-          }}
+          onError={() => setImageFailed(true)}
         />
       )}
 
@@ -118,7 +113,7 @@ export function MediaCard({
         <video
           ref={videoRef}
           src={media.videoUrl!}
-          className="absolute inset-0 w-full h-full object-cover z-[1]"
+          className="absolute inset-0 w-full h-full object-cover object-center z-[1]"
           muted={muted}
           loop
           playsInline
@@ -140,7 +135,6 @@ export function MediaCard({
       />
 
       {overlay}
-
       {topLeft && <div className="absolute top-3 left-3 z-10">{topLeft}</div>}
       {topRight && <div className="absolute top-3 right-3 z-10">{topRight}</div>}
       {bottomLeft && <div className="absolute bottom-3 left-3 z-10">{bottomLeft}</div>}

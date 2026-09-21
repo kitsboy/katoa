@@ -1,3 +1,30 @@
+## Session — 2026-09-21 · Katoa visual simplification and beauty-shot pass (Buffy M3)
+
+**Done:**
+- Replaced the long homepage pitch-deck flow with a shorter creator-first path: hero → proof → curated demo shelf → four-step explanation → CTA.
+- Expanded the homepage demo shelf to four distinct examples: Luna, Sasha, Medellín Skate Colombia, and Paul the musician. Removed the duplicate Trending/New sections.
+- Simplified Explore by removing the duplicate video showcase, recently-viewed strip, and large vertical-chip wall. Full browsing remains in the project grid and optional map.
+- Improved media cards with eager loading for priority beauty shots, stable `object-cover` framing, and a branded KATOA demo fallback when an image fails.
+- Smoke-verified `/`, `/explore`, `/wishlist/luna-exclusive-videos`, and `/u/paul_music`; all had zero broken images and expected wishlist/profile links.
+
+**Decisions:**
+- Home is now a confident splash/product entry point, not the entire marketing site.
+- Explore owns discovery depth; the homepage only gives enough examples to make the product feel real.
+- Demo content stays visibly demo content; no fake live payment or creator claims were introduced.
+
+**Verification:**
+- `npm run check`: 270/270 tests, typecheck clean, 14 existing lint warnings.
+- `npm run build`: green, 26/26 routes prerendered.
+- Secret-hygiene gate passed.
+
+**Git State:**
+- Pending visual-refresh commit will follow this handoff entry.
+- Existing `public/donations-qr.png` deletion remains untouched.
+
+**Family note:** Katoa remains the reference implementation; this is presentation work only and does not alter the Family Payment Core contract.
+
+---
+
 ## Session — 2026-09-21 · Solo payment foundation and family template handoff (Buffy M3)
 
 **Implemented locally, no live infrastructure:**

@@ -4,7 +4,6 @@ import { Card } from '../components/Card';
 import { Link } from '../components/Link';
 import { Input } from '../components/Input';
 import { Button } from '../components/Button';
-import { CategoryBadge } from '../components/CategoryBadge';
 import { TrendingBadge } from '../components/TrendingBadge';
 import { ProgressBar } from '../components/ProgressBar';
 import { MediaCard } from '../components/MediaCard';
@@ -23,7 +22,7 @@ import { PageMeta } from '../components/PageMeta';
 import { Gift, Search, MapPin, Globe, SlidersHorizontal, Star, Heart, X, Video } from 'lucide-react';
 import { CreatorVideoCard } from '../components/CreatorVideoCard';
 import { FavoritesExport } from '../components/FavoritesExport';
-import { CREATOR_VERTICALS, verticalById } from '../data/creatorVerticals';
+import { verticalById } from '../data/creatorVerticals';
 
 const BTCMapSection = lazy(() =>
   import('../components/BTCMapSection').then((m) => ({ default: m.BTCMapSection }))
@@ -612,23 +611,7 @@ export function ExplorePage() {
     [wishlists, favorites]
   );
 
-  const videoCreators = useMemo(
-    () => wishlists.filter((w) => isCreatorVideoCard(w)),
-    [wishlists]
-  );
-
-  const showcaseVideoIds = useMemo(
-    () => new Set(videoCreators.slice(0, 2).map((w) => w.id)),
-    [videoCreators]
-  );
-
-  const gridWishlists = useMemo(
-    () =>
-      videoCreators.length > 0
-        ? filteredWishlists.filter((w) => !showcaseVideoIds.has(w.id))
-        : filteredWishlists,
-    [filteredWishlists, showcaseVideoIds, videoCreators.length]
-  );
+  const gridWishlists = filteredWishlists;
 
   useEffect(() => {
     if (visibleCount >= gridWishlists.length) return;
@@ -665,14 +648,6 @@ export function ExplorePage() {
   }, [wishlistsWithLocation]);
 
   const featured = mockWishlists.find((w) => w.slug === 'medellin-skate-park') ?? mockWishlists[0];
-
-  const recentlyViewed = useMemo(
-    () =>
-      getStorage<{ slug: string; title: string }[]>(STORAGE_KEYS.recentlyViewedWishlists, [])
-        .filter((r) => r.slug !== featured.slug)
-        .slice(0, 4),
-    [featured.slug]
-  );
 
   const itemListSchema = useMemo(
     () => ({
@@ -716,6 +691,7 @@ export function ExplorePage() {
                 videoUrl: (featured as { cover_video_url?: string }).cover_video_url,
                 alt: featured.title,
               }}
+              priority
               aspect="wide"
               topLeft={<TrendingBadge type="featured" />}
               bottomLeft={
@@ -782,51 +758,6 @@ export function ExplorePage() {
           </div>
         </Card>
 
-        {videoCreators.length > 0 && (
-          <section className="mb-10" aria-labelledby="video-creators-heading">
-            <div className="flex items-end justify-between gap-4 mb-4">
-              <div>
-                <h2 id="video-creators-heading" className="text-xl sm:text-2xl font-display font-bold text-white">
-                  {t('explore.videoCreators')}
-                </h2>
-                <p className="text-gray-400 text-sm mt-1">{t('explore.videoCreatorsDesc')}</p>
-              </div>
-              <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#00aff0]/15 border border-[#00aff0]/30 text-[#00aff0] text-xs font-bold">
-                <Video size={14} />
-                {t('explore.hoverPreview')}
-              </span>
-            </div>
-            <div className="grid grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6 max-w-3xl mx-auto lg:max-w-4xl items-stretch [&>a]:min-h-0">
-              {videoCreators.slice(0, 2).map((wishlist) => (
-                <CreatorVideoCard
-                  key={wishlist.id}
-                  wishlist={wishlist}
-                  isFavorite={favorites.includes(wishlist.id)}
-                  onToggleFavorite={toggleFavorite}
-                  t={t}
-                />
-              ))}
-            </div>
-          </section>
-        )}
-
-        {recentlyViewed.length > 0 && (
-          <div className="mb-8">
-            <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">{t('explore.recentlyViewed')}</h2>
-            <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1 -mx-1 px-1">
-              {recentlyViewed.map((item) => (
-                <Link
-                  key={item.slug}
-                  href={`/wishlist/${item.slug}`}
-                  className="shrink-0 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-gray-200 hover:border-neon-cyan-500/40 hover:text-neon-cyan-400 transition-colors touch-manipulation"
-                >
-                  {item.title}
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
-
         <div className="mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">{t('explore.allProjects')}</h1>
           <p className="text-gray-300 mb-2 text-base sm:text-lg">{t('explore.subtitle')}</p>
@@ -891,45 +822,6 @@ export function ExplorePage() {
                   <Video size={20} className={`mr-2 ${videosOnly ? 'text-[#00aff0]' : ''}`} />
                   {t('explore.videosOnly')}
                 </Button>
-              </div>
-            </div>
-
-            {/* Creator vertical filter chips */}
-            <div className="space-y-2" role="group" aria-label={t('explore.verticals')}>
-              <p className="text-xs font-semibold uppercase tracking-wider text-gray-500">
-                {t('explore.verticals')}
-              </p>
-              <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1 -mx-1 px-1">
-                <button
-                  type="button"
-                  onClick={() => setSelectedVertical('')}
-                  aria-pressed={!selectedVertical}
-                  className={`shrink-0 px-3 py-2 min-h-[40px] rounded-full text-xs font-semibold border transition-colors touch-manipulation ${
-                    !selectedVertical
-                      ? 'bg-neon-cyan-500/15 border-neon-cyan-500/40 text-neon-cyan-300'
-                      : 'bg-white/5 border-white/10 text-gray-400 hover:border-white/20'
-                  }`}
-                >
-                  {t('explore.allVerticals')}
-                </button>
-                {CREATOR_VERTICALS.map((v) => (
-                  <button
-                    key={v.id}
-                    type="button"
-                    onClick={() => setSelectedVertical((cur) => (cur === v.id ? '' : v.id))}
-                    aria-pressed={selectedVertical === v.id}
-                    className={`shrink-0 px-3 py-2 min-h-[40px] rounded-full text-xs font-semibold border transition-colors touch-manipulation ${
-                      selectedVertical === v.id
-                        ? 'bg-bitcoin-orange-500/15 border-bitcoin-orange-500/40 text-bitcoin-orange-200'
-                        : 'bg-white/5 border-white/10 text-gray-400 hover:border-white/20'
-                    }`}
-                  >
-                    <span aria-hidden className="mr-1">
-                      {v.emoji}
-                    </span>
-                    {v.label}
-                  </button>
-                ))}
               </div>
             </div>
 
@@ -1012,26 +904,12 @@ export function ExplorePage() {
               </div>
             )}
 
-            {!showFilters && (
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-gray-300 text-sm font-medium">{t('explore.quickFilters')}</span>
-                <CategoryBadge
-                  name={t('explore.videosOnly')}
-                  icon="Video"
-                  color="#00aff0"
-                  size="sm"
-                  onClick={toggleVideosOnly}
-                />
-                {categories.slice(0, 6).map((cat) => (
-                  <CategoryBadge
-                    key={cat.id}
-                    name={cat.slug === 'creator' ? t('explore.creatorCategory') : cat.name}
-                    icon={cat.icon ?? undefined}
-                    color={cat.color ?? undefined}
-                    size="sm"
-                    onClick={() => setSelectedCategory(cat.slug)}
-                  />
-                ))}
+            {!showFilters && hasActiveFilters && (
+              <div className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2">
+                <span className="text-xs text-gray-400">{resultCountLabel}</span>
+                <Button variant="ghost" size="sm" onClick={clearFilters} className="text-neon-cyan-300">
+                  {t('explore.clearFilters')}
+                </Button>
               </div>
             )}
           </div>

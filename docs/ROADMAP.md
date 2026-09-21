@@ -2,7 +2,9 @@
 ## Production-Ready MVP Enhancement Plan
 
 **Last reviewed:** 2026-09-21
-**Status snapshot:** Trust UI, creator launch path, checkout, preview readiness, and Family Payment Core Batches 1–2 are shipped. Katoa is **not MVP yet**: production settlement, strict server matching, live creator data, and Nostr operations remain.
+**Status snapshot:** Trust UI, creator launch path, checkout, preview readiness, Family Payment Core Batches 1–2, and the September visual simplification pass are shipped. Katoa is **not MVP yet**: production settlement, strict server matching, live creator data, and Nostr operations remain.
+
+**Visual direction (2026-09-21):** Home is now a short creator-first splash flow with four demo examples; Explore owns deeper discovery. Keep future public surfaces sparse, image-led, mobile-safe, and honest about demo/live status. Do not re-expand the homepage into a second documentation site.
 
 **Payment Core status (2026-09-21):**
 - ✅ Batch 1 `2cfd461` — family contract, canonical states, transition rules, idempotent event-ledger primitives, and fake provider fixtures.
@@ -25,7 +27,7 @@
 - ✅ PWA service worker v2, `scripts/generate-sitemap.mjs`, dynamic OG per wishlist
 - ✅ About accordions, wishlist reorder (localStorage), breadcrumbs, ContributorsWall
 
-**Completed frontend priorities:** creator launch checklist (wallet → wishlist → publish → share) · first-wishlist one-screen wizard · launch progress and ready-to-share state · trust-first creator profile · explicit missing-wallet state · wallet validation and receive-ready preview · honest payment status stepper with expiry/retry/copy feedback · payment activity timeline · mobile-first checkout sheet · preview readiness gaps · supporter trust summary · release proof verification.
+**Completed frontend priorities:** creator launch checklist (wallet → wishlist → publish → share) · first-wishlist one-screen wizard · launch progress and ready-to-share state · trust-first creator profile · explicit missing-wallet state · wallet validation and receive-ready preview · honest payment status stepper with expiry/retry/copy feedback · payment activity timeline · mobile-first checkout sheet · preview readiness gaps · supporter trust summary · release proof verification · shorter creator-first homepage · curated demo shelf · Explore duplicate-section removal · media fallbacks and priority beauty-shot loading.
 **Next priorities:** wire the real invoice → webhook → confirmed flow; replace local/demo engagement seams; add live Nostr identity and creator data. Do not market payment receipt as live until the backend confirms it.
 
 **Latest shipped UX batches:** `38eb19f` checkout sheet · `d730ea6` preview readiness · `1bdbfb4` supporter trust summary. All are presentation and guidance improvements only; no browser action can claim settlement.
