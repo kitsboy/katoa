@@ -46,6 +46,7 @@ import { VisibilityBadge } from '../components/VisibilityBadge';
 import { CreatorPostFeed } from '../components/CreatorPostFeed';
 import { ManageSubscriptionPanel } from '../components/ManageSubscriptionPanel';
 import { DemoBadge } from '../components/DemoBadge';
+import { PaymentStatusStepper } from '../components/PaymentStatusStepper';
 
 const SAT_PRESETS = [
   { label: '1K', value: 1000 },
@@ -153,6 +154,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
   const [subscribed, setSubscribed] = useState(false);
   const [onchainAddress, setOnchainAddress] = useState<string | null>(null);
   const [paymentUri, setPaymentUri] = useState('');
+  const [copiedPayment, setCopiedPayment] = useState(false);
   const [giftIntent, setGiftIntent] = useState<{ amount: number; method: PaymentTab } | null>(null);
   const [showDraftBanner, setShowDraftBanner] = useState(false);
 
@@ -734,8 +736,15 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
   }
 
   async function handleCopyInvoice(text: string) {
-    await copyToClipboard(text);
-    toast('Copied', 'success');
+    if (!text) return;
+    const result = await copyToClipboard(text);
+    if (result === 'success') {
+      setCopiedPayment(true);
+      window.setTimeout(() => setCopiedPayment(false), 1800);
+      toast('Payment details copied', 'success');
+    } else {
+      toast('Could not copy payment details', 'error');
+    }
   }
 
   async function handleShareWishlist() {
@@ -1603,6 +1612,8 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
         title={giftIntent?.method === 'onchain' ? 'Pay on-chain' : 'Pay with Lightning'}
       >
         <div className="space-y-5">
+          <PaymentStatusStepper status={isDemoWishlist ? 'demo' : 'invoice-created'} />
+
           {isDemoWishlist && (
             <div className="rounded-xl border border-bitcoin-orange-500/30 bg-bitcoin-orange-500/10 p-3" role="status">
               <div className="flex items-center gap-2 text-bitcoin-orange-300 text-sm font-semibold mb-2">
@@ -1619,6 +1630,13 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
               <p className="text-[11px] text-gray-400 mt-2">
                 Preview only — no real payment. Live wishlists use your wallet.
               </p>
+            </div>
+          )}
+
+          {invoiceExpired && (
+            <div className="rounded-xl border border-rose-400/30 bg-rose-500/10 p-4" role="alert">
+              <p className="text-sm font-bold text-rose-200">This payment session expired.</p>
+              <p className="mt-1 text-xs leading-relaxed text-rose-100/75">Generate a fresh payment request before scanning or copying anything.</p>
             </div>
           )}
 
@@ -1653,11 +1671,11 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
               />
               <Button
                 variant="outline"
-                onClick={() => handleCopyInvoice(paymentUri || mockInvoice)}
-                aria-label="Copy payment details"
+                onClick={() => void handleCopyInvoice(paymentUri || mockInvoice)}
+                aria-label={copiedPayment ? 'Payment details copied' : 'Copy payment details'}
                 className="min-h-[48px] min-w-[48px]"
               >
-                <Copy size={18} />
+                {copiedPayment ? <Check size={18} className="text-emerald-400" /> : <Copy size={18} />}
               </Button>
             </div>
           </div>
@@ -1677,8 +1695,8 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
           )}
 
           <div className="flex items-center justify-center gap-3 text-bitcoin-orange-500" role="status" aria-live="polite">
-            <span className="font-mono text-sm text-gray-400 tabular-nums">
-              Session {formatCountdown(paymentCountdown)}
+            <span className={`font-mono text-sm tabular-nums ${invoiceExpired ? 'text-rose-300' : 'text-gray-400'}`}>
+              {invoiceExpired ? 'Expired' : `Payment session ${formatCountdown(paymentCountdown)}`}
             </span>
           </div>
 
@@ -1711,7 +1729,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
                   onClick={() => dismissPaymentModal('paid')}
                   disabled={invoiceExpired}
                 >
-                  I paid (waiting)
+                  I paid — wait for confirmation
                 </Button>
                 <Button
                   type="button"

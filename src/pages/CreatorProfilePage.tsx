@@ -19,7 +19,7 @@ import { SubscriptionTiers } from '../components/SubscriptionTiers';
 import { DonateQRModal } from '../components/DonateQRModal';
 import { ZapTotals } from '../components/ZapTotals';
 import { DemoBadge } from '../components/DemoBadge';
-import { ReleaseAttestationsPanel } from '../components/trust/ReleaseAttestationsPanel';
+import { TrustFirstCreatorCard } from '../components/TrustFirstCreatorCard';
 import { MobileStickyCta } from '../components/MobileStickyCta';
 import { WalletDeepLinks } from '../components/WalletDeepLinks';
 import { useToast } from '../components/Toast';
@@ -650,7 +650,13 @@ export function CreatorProfilePage() {
           )}
         </section>
 
-        <ReleaseAttestationsPanel creator={profile.username} className="mb-14" />
+        <TrustFirstCreatorCard
+          username={profile.username}
+          lightning={lightning}
+          onchain={onchain}
+          onCopy={handleCopy}
+          onSupport={() => setShowTip(true)}
+        />
 
         <div className="mb-14 py-10 px-4 sm:px-6 lg:px-8 -mx-4 sm:-mx-6 lg:-mx-8 rounded-3xl border border-white/10 bg-white/[0.02]">
           <SubscriptionTiers creatorName={profile.username} onSubscribe={(tierId) => handleSubscribe(tierId)} />
