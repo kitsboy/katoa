@@ -127,7 +127,7 @@ Profiles · Wishlists · Items · Contributions · Projects · Follows · Wallet
 
 ### Creator path shipped — still pre-MVP
 
-The product now has a clear creator launch path: **add wallet → create wishlist → publish profile → share**. The first-wishlist screen collects the story, goal, visibility, and product link in one pass. Public creator profiles lead with wallet destination, Bitcoin proof, verification guidance, and an honest “not ready to receive” state when no wallet exists. Payment UI shows **invoice created → payment sent → creator received**, with expiry, retry, and copy feedback; the final state remains locked until the server/webhook confirms it. These surfaces prepare the edge; they do not mean production settlement is live.
+The product now has a clear creator launch path: **add wallet → create wishlist → publish profile → share**. A visible progress bar ends in a persistent “You’re ready to share” state. The first-wishlist screen collects the story, goal, visibility, and product link in one pass. Wallet settings validate formats live and show whether the creator is ready to receive. Public profiles lead with wallet destination, Bitcoin proof, verification guidance, and an honest “not ready to receive” state when no wallet exists. Payment UI shows **invoice created → payment sent → creator received**, with expiry, retry, copy feedback, and a separate activity timeline; the final state remains locked until the server/webhook confirms it. These surfaces prepare the edge; they do not mean production settlement is live.
 
 ### Staged / blocked (Cam / THOR)
 

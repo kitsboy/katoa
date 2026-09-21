@@ -17,7 +17,7 @@
 - ✅ PWA service worker v2, `scripts/generate-sitemap.mjs`, dynamic OG per wishlist
 - ✅ About accordions, wishlist reorder (localStorage), breadcrumbs, ContributorsWall
 
-**Completed frontend priorities:** creator launch checklist (wallet → wishlist → publish → share) · first-wishlist one-screen wizard · trust-first creator profile · explicit missing-wallet state · honest payment status stepper with expiry/retry/copy feedback · release proof verification.
+**Completed frontend priorities:** creator launch checklist (wallet → wishlist → publish → share) · first-wishlist one-screen wizard · launch progress and ready-to-share state · trust-first creator profile · explicit missing-wallet state · wallet validation and receive-ready preview · honest payment status stepper with expiry/retry/copy feedback · payment activity timeline · release proof verification.
 **Next priorities:** wire the real invoice → webhook → confirmed flow; replace local/demo engagement seams; add live Nostr identity and creator data. Do not market payment receipt as live until the backend confirms it.
 
 ---

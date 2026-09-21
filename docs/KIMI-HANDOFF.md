@@ -1,3 +1,19 @@
+## Session — 2026-09-21 · Creator launch progress + wallet readiness + payment timeline (Buffy M3)
+
+**Three pushed batches:**
+- `67be386` — creator launch progress bar and persistent 100% “You’re ready to share” state.
+- `ba0365a` — live wallet format feedback plus Settings “Ready to receive / Not ready to receive” preview.
+- `0fe6a2e` — payment activity timeline for intent, pending, confirmed, demo, and expired states; receipt remains backend-gated.
+
+**Verified:** `npm run check` passed with **251/251 tests**, typecheck clean, 14 existing lint warnings; `npm run build` passed with 26/26 prerendered routes.
+
+**Git State:**
+- `origin/main`: `0fe6a2e` plus the final docs/build stamp below.
+- No real-money or fake-confirmation behavior added.
+- Existing `public/donations-qr.png` deletion remains untouched.
+
+---
+
 ## Session — 2026-09-21 · Creator launch path + payment edge + solo UX batches (Buffy M3)
 
 **Three pushed batches:**

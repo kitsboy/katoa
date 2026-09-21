@@ -10,6 +10,7 @@ Updated **2026-09-21** — trust UI + creator launch path + honest payment-statu
 - Trust-first creator profile: wallet destination, proof badge, verification explanation, release attestations, and support CTA in one card.
 - Checks: typecheck, lint, 249 tests, and production build green. No real money or settlement claims added.
 - Follow-up UX batches pushed: first-wishlist wizard (`1d334aa`), wallet readiness state (`a7c4228`), payment expiry/retry/copy polish (`85e8e20`).
+- Latest solo UX batches pushed: launch progress (`67be386`), wallet readiness preview (`ba0365a`), payment activity timeline (`0fe6a2e`).
 
 
 ### Subscriptions (OF-parity) — ⭐ handoff for next LLM on Hermes
