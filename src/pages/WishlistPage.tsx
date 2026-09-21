@@ -48,6 +48,7 @@ import { ManageSubscriptionPanel } from '../components/ManageSubscriptionPanel';
 import { DemoBadge } from '../components/DemoBadge';
 import { PaymentStatusStepper } from '../components/PaymentStatusStepper';
 import { PaymentActivityTimeline } from '../components/PaymentActivityTimeline';
+import { MobileCheckoutSummary } from '../components/MobileCheckoutSummary';
 
 const SAT_PRESETS = [
   { label: '1K', value: 1000 },
@@ -1613,6 +1614,12 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
         title={giftIntent?.method === 'onchain' ? 'Pay on-chain' : 'Pay with Lightning'}
       >
         <div className="space-y-5">
+          <MobileCheckoutSummary
+            amountSats={giftIntent?.amount}
+            method={giftIntent?.method}
+            recipient={wishlist.creator.username}
+            isDemo={isDemoWishlist}
+          />
           <PaymentStatusStepper status={isDemoWishlist ? 'demo' : 'invoice-created'} />
           <PaymentActivityTimeline status={isDemoWishlist ? 'demo' : invoiceExpired ? 'expired' : 'pending'} compact />
 
@@ -1642,7 +1649,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             </div>
           )}
 
-          <div className={`bg-white p-3 sm:p-4 rounded-xl mx-auto w-full max-w-[min(100%,280px)] ${invoiceExpired ? 'opacity-40' : ''}`}>
+          <div className={`bg-white p-3 sm:p-4 rounded-2xl mx-auto w-full max-w-[min(100%,320px)] shadow-[0_12px_40px_rgba(0,0,0,0.24)] ${invoiceExpired ? 'opacity-40' : ''}`}>
             {paymentQrUrl ? (
               <img
                 src={paymentQrUrl}
@@ -1710,7 +1717,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             </p>
           )}
 
-          <div className="flex flex-col gap-2">
+          <div className="sticky bottom-0 -mx-4 sm:mx-0 px-4 sm:px-0 pt-3 pb-[max(0.25rem,env(safe-area-inset-bottom))] bg-charcoal-900/95 backdrop-blur-md border-t border-white/10 flex flex-col gap-2">
             {invoiceExpired ? (
               <Button
                 type="button"
