@@ -47,6 +47,7 @@ import { CreatorPostFeed } from '../components/CreatorPostFeed';
 import { ManageSubscriptionPanel } from '../components/ManageSubscriptionPanel';
 import { DemoBadge } from '../components/DemoBadge';
 import { PaymentStatusStepper } from '../components/PaymentStatusStepper';
+import { PaymentActivityTimeline } from '../components/PaymentActivityTimeline';
 
 const SAT_PRESETS = [
   { label: '1K', value: 1000 },
@@ -1613,6 +1614,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
       >
         <div className="space-y-5">
           <PaymentStatusStepper status={isDemoWishlist ? 'demo' : 'invoice-created'} />
+          <PaymentActivityTimeline status={isDemoWishlist ? 'demo' : invoiceExpired ? 'expired' : 'pending'} compact />
 
           {isDemoWishlist && (
             <div className="rounded-xl border border-bitcoin-orange-500/30 bg-bitcoin-orange-500/10 p-3" role="status">

@@ -2,6 +2,7 @@ import { Check, Share2 } from 'lucide-react';
 import { Button } from './Button';
 import { DemoBadge } from './DemoBadge';
 import { PaymentStatusStepper } from './PaymentStatusStepper';
+import { PaymentActivityTimeline } from './PaymentActivityTimeline';
 
 /** Lightweight success state after a gift intent (non-custodial — not a payment confirmation). */
 export function GiftSuccess({
@@ -52,8 +53,9 @@ export function GiftSuccess({
           {[amountLabel, methodLabel].filter(Boolean).join(' · ')}
         </p>
       )}
-      <div className="max-w-xl mx-auto mb-5 text-left">
+      <div className="max-w-xl mx-auto mb-5 text-left space-y-3">
         <PaymentStatusStepper status={isDemo ? 'demo' : 'paid-waiting'} compact />
+        <PaymentActivityTimeline status={isDemo ? 'demo' : 'pending'} compact />
       </div>
       <p className="text-sm text-gray-400 leading-relaxed mb-6 max-w-sm mx-auto">{message}</p>
       <div className="flex flex-col gap-2 justify-center">
