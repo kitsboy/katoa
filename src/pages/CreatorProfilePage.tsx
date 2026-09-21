@@ -19,6 +19,7 @@ import { SubscriptionTiers } from '../components/SubscriptionTiers';
 import { DonateQRModal } from '../components/DonateQRModal';
 import { ZapTotals } from '../components/ZapTotals';
 import { DemoBadge } from '../components/DemoBadge';
+import { DemoPreviewBadge } from '../components/DemoPreviewBadge';
 import { TrustFirstCreatorCard } from '../components/TrustFirstCreatorCard';
 import { MobileStickyCta } from '../components/MobileStickyCta';
 import { WalletDeepLinks } from '../components/WalletDeepLinks';
@@ -351,8 +352,15 @@ export function CreatorProfilePage() {
         </div>
       )}
 
-      <header className="relative">
-        <div className="relative h-52 sm:h-72 lg:h-[22rem] overflow-hidden">
+      <header className="relative overflow-hidden">
+        <div className="relative h-[28rem] sm:h-[34rem] lg:h-[39rem] overflow-hidden">
+          <div className="absolute inset-0 scale-110 bg-[#1a1028] blur-2xl" aria-hidden="true">
+            <MediaCard
+              className="!aspect-auto h-full w-full opacity-40"
+              media={{ imageUrl: cover.imageUrl, videoUrl: null, alt: '' }}
+              aspect="wide"
+            />
+          </div>
           <MediaCard
             className="!aspect-auto h-full w-full"
             media={{
@@ -363,8 +371,15 @@ export function CreatorProfilePage() {
             aspect="wide"
             variant="default"
             autoplayOnHover={Boolean(cover.videoUrl)}
+            priority
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-charcoal-950 via-charcoal-950/40 to-black/25 pointer-events-none" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,6,14,0.12)_0%,rgba(8,6,14,0.08)_38%,rgba(8,6,14,0.92)_100%)] pointer-events-none" />
+          <div className="absolute inset-x-4 top-5 z-10 flex items-center justify-between sm:inset-x-8 sm:top-8">
+            {profile.fromMock ? <DemoPreviewBadge /> : <span />}
+            <span className="rounded-full border border-white/15 bg-black/30 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-white/80 backdrop-blur-md">
+              Support directly · 0% platform fee
+            </span>
+          </div>
         </div>
       </header>
 
@@ -377,7 +392,7 @@ export function CreatorProfilePage() {
           className="pt-4 mb-2"
         />
 
-        <Card variant="glass" className="relative z-10 -mt-16 sm:-mt-24 p-5 sm:p-7 mb-10">
+        <Card variant="glass" className="relative z-10 -mt-24 sm:-mt-32 p-5 sm:p-7 mb-10 border-white/15 shadow-[0_24px_90px_rgba(0,0,0,0.45)]">
           <div className="flex flex-col lg:flex-row lg:items-start gap-6">
             <div className="flex items-start gap-4 flex-1 min-w-0">
               {profile.avatar_url ? (
@@ -486,9 +501,9 @@ export function CreatorProfilePage() {
                 title={`@${profile.username} on KATOA`}
                 description={profile.bio || `Support @${profile.username} with Bitcoin Lightning.`}
               />
-              <Button variant="outline" onClick={() => setShowTip(true)} className="min-h-[44px]">
+              <Button variant="bitcoin" onClick={() => setShowTip(true)} className="min-h-[48px] px-5 shadow-[0_10px_30px_rgba(247,147,26,0.22)]">
                 <Zap size={18} className="mr-2" />
-                {t('creator.tip')}
+                Support @{profile.username}
               </Button>
               <Button
                 variant="bitcoin"

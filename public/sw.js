@@ -1,4 +1,4 @@
-const CACHE_NAME = 'katoa-static-v17';
+const CACHE_NAME = 'katoa-static-v18';
 const TILE_CACHE_NAME = 'katoa-map-tiles-v1';
 const TILE_MAX_ENTRIES = 3000;
 const OFFLINE_URL = '/offline.html';
@@ -89,6 +89,10 @@ self.addEventListener('fetch', (event) => {
 
   if (url.origin !== self.location.origin) return;
 
+  // Never cache the worker itself. A cached sw.js can pin an old asset manifest
+  // forever and make missing hashed chunks fall back to the SPA HTML shell.
+  if (url.pathname === '/sw.js') return;
+
   const isNavigation = request.mode === 'navigate';
   const isAsset = isStaticAsset(url);
   const isWishlist = isWishlistRoute(url);
@@ -99,13 +103,16 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       caches.open(CACHE_NAME).then(async (cache) => {
         const cached = await cache.match(request);
+        const cachedType = cached?.headers.get('content-type') || '';
+        const validCachedAsset = cached && !cachedType.includes('text/html');
+        if (cached && !validCachedAsset) await cache.delete(request);
         const fetchPromise = fetch(request)
           .then((response) => {
             if (cacheable(request, response)) cache.put(request, response.clone());
             return response;
           })
-          .catch(() => cached);
-        return cached || fetchPromise;
+          .catch(() => (validCachedAsset ? cached : undefined));
+        return validCachedAsset ? cached : fetchPromise;
       })
     );
     return;
