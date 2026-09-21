@@ -207,6 +207,7 @@ export function DashboardPage() {
   const [projectQuery, setProjectQuery] = useState('');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [liveOwnedWishlists, setLiveOwnedWishlists] = useState<OwnedWishlist[]>([]);
+  const [showCreatorPreview, setShowCreatorPreview] = useState(false);
 
   const persistDemoProjects = useCallback((next: Project[]) => {
     setStorage(STORAGE_KEYS.demoDashboardProjects, next);
@@ -832,7 +833,7 @@ export function DashboardPage() {
                       editing={editingProject === project.id}
                       editFormData={editFormData}
                       processing={processing}
-                      previewHref={publicProfileHref}
+                      onPreview={() => setShowCreatorPreview(true)}
                       t={t}
                       onImageUrl={(url) => {
                         if (url === '') void handleBackgroundUpload(null, project.id);
@@ -882,12 +883,10 @@ export function DashboardPage() {
                                 {Math.round((w.total_sats_raised / w.total_sats_goal) * 100)}% funded
                               </p>
                             )}
-                            <Link href={`/wishlist/${w.slug}`} className="mt-4 block">
-                              <Button variant="outline" size="sm" className="w-full">
-                                <ExternalLink size={14} className="mr-1.5" />
-                                Preview as public
-                              </Button>
-                            </Link>
+                            <Button variant="outline" size="sm" className="mt-4 w-full" onClick={() => setShowCreatorPreview(true)}>
+                              <ExternalLink size={14} className="mr-1.5" />
+                              Preview as public
+                            </Button>
                           </div>
                         </Card>
                       ))}
@@ -986,6 +985,18 @@ export function DashboardPage() {
         </form>
       </Modal>
 
+      <CreatorPreviewModal
+        isOpen={showCreatorPreview}
+        onClose={() => setShowCreatorPreview(false)}
+        username={displayName}
+        bio={profile?.bio || ''}
+        lightningAddress={profile?.lightning_address || null}
+        avatarUrl={profile?.avatar_url || null}
+        publicProfileHref={publicProfileHref}
+        projects={projects}
+        wishlists={ownedWishlists}
+      />
+
       <ConfirmDialog
         isOpen={deleteProjectId !== null}
         title={t('confirm.deleteProject.title')}
@@ -1073,6 +1084,72 @@ function LiveEmptyStart({
   );
 }
 
+function CreatorPreviewModal({
+  isOpen,
+  onClose,
+  username,
+  bio,
+  lightningAddress,
+  avatarUrl,
+  publicProfileHref,
+  projects,
+  wishlists,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  username: string;
+  bio: string;
+  lightningAddress: string | null;
+  avatarUrl: string | null;
+  publicProfileHref: string;
+  projects: Project[];
+  wishlists: OwnedWishlist[];
+}) {
+  const publicProjects = projects.filter((project) => project.visibility === 'public');
+  const hasWallet = Boolean(lightningAddress);
+
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} title="Public creator preview">
+      <div data-testid="creator-public-preview" className="space-y-5">
+        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-bitcoin-orange-500/15 via-white/[0.04] to-neon-cyan-500/10 p-5">
+          <div className="flex items-start gap-4">
+            {avatarUrl ? <img src={avatarUrl} alt="" className="h-16 w-16 rounded-2xl object-cover border border-white/15" /> : <div className="h-16 w-16 rounded-2xl bg-bitcoin-orange-500/20 flex items-center justify-center text-2xl font-black text-white">{username[0]?.toUpperCase() || '?'}</div>}
+            <div className="min-w-0">
+              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-bitcoin-orange-300">Supporter view</p>
+              <h2 className="mt-1 text-2xl font-black text-white">@{username}</h2>
+              <p className="mt-1 text-sm text-gray-300">{bio || 'Add a short creator story in Settings.'}</p>
+            </div>
+          </div>
+          <div className={`mt-4 rounded-xl border p-3 ${hasWallet ? 'border-emerald-500/30 bg-emerald-500/10' : 'border-amber-500/30 bg-amber-500/10'}`}>
+            <p className={`text-sm font-bold ${hasWallet ? 'text-emerald-200' : 'text-amber-200'}`}>{hasWallet ? 'Ready to receive support' : 'Wallet still needed before support can work'}</p>
+            <p className="mt-1 text-xs text-gray-400">{hasWallet ? lightningAddress : 'Add a valid Lightning address in Settings. This preview will update live.'}</p>
+          </div>
+        </div>
+
+        <div>
+          <div className="flex items-center justify-between gap-3 mb-3">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-gray-400">What supporters see</h3>
+            <span className="text-xs text-gray-500">{publicProjects.length} public project(s)</span>
+          </div>
+          <div className="grid gap-2">
+            {publicProjects.length > 0 ? publicProjects.map((project) => <div key={project.id} className="rounded-xl border border-white/10 bg-white/[0.03] p-3"><div className="flex items-center justify-between gap-3"><p className="font-bold text-white truncate">{project.title}</p><VisibilityBadge visibility={project.visibility} /></div><p className="mt-1 text-xs text-gray-500 line-clamp-2">{project.description || 'No public description yet.'}</p></div>) : <p className="rounded-xl border border-dashed border-white/15 p-4 text-sm text-gray-500">Publish a project or wishlist to make this page discoverable.</p>}
+            {wishlists.slice(0, 3).map((wishlist) => <div key={wishlist.id} className="rounded-xl border border-white/10 bg-black/20 p-3"><div className="flex items-center justify-between gap-3"><p className="font-bold text-white truncate">{wishlist.title}</p><VisibilityBadge visibility={wishlist.visibility} /></div><p className="mt-1 text-xs text-gray-500">{wishlist.total_sats_goal > 0 ? `${formatPreviewSats(wishlist.total_sats_goal)} sats goal` : 'No funding goal yet'}</p></div>)}
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-2 border-t border-white/10 pt-4">
+          <Link href={publicProfileHref} className="w-full"><Button variant="bitcoin" className="w-full min-h-[48px]"><ExternalLink size={16} className="mr-2" />Open public profile</Button></Link>
+          <Button type="button" variant="outline" onClick={onClose} className="w-full min-h-[44px]">Back to editing</Button>
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
+function formatPreviewSats(sats: number): string {
+  return new Intl.NumberFormat().format(sats);
+}
+
 function FollowCover({ src, fallback }: { src: string | null; fallback: ReactNode }) {
   if (src) {
     return <div className="w-full h-28 bg-cover bg-center" style={{ backgroundImage: `url(${src})` }} />;
@@ -1085,7 +1162,7 @@ function ProjectCard({
   editing,
   editFormData,
   processing,
-  previewHref,
+  onPreview,
   t,
   onImageUrl,
   onFile,
@@ -1099,7 +1176,7 @@ function ProjectCard({
   editing: boolean;
   editFormData: { title: string; description: string; visibility: 'public' | 'private' | 'draft' } | null;
   processing: boolean;
-  previewHref: string;
+  onPreview: () => void;
   t: (key: string) => string;
   onImageUrl: (url: string) => void;
   onFile: (file: File | null) => void;
@@ -1178,12 +1255,10 @@ function ProjectCard({
                   {t('dashboard.manage')}
                 </Button>
               </Link>
-              <Link href={previewHref} className="flex-1 min-w-[8rem]">
-                <Button variant="outline" className="w-full">
-                  <ExternalLink size={16} className="mr-1.5" />
-                  Preview as public
-                </Button>
-              </Link>
+              <Button variant="outline" className="flex-1 min-w-[8rem]" onClick={onPreview}>
+                <ExternalLink size={16} className="mr-1.5" />
+                Preview as public
+              </Button>
               <Button variant="outline" onClick={onEdit} aria-label={t('dashboard.editAria')} className="min-w-[44px] px-3">
                 <Edit size={16} />
               </Button>
