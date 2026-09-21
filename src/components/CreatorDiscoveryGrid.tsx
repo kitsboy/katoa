@@ -28,7 +28,8 @@ export function CreatorDiscoveryGrid({ creators, t }: CreatorDiscoveryGridProps)
         </Link>
       </div>
 
-      <div className="grid auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <p className="mb-4 text-xs font-medium text-gray-500 sm:hidden">Swipe to browse the demo creators →</p>
+      <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3 sm:grid sm:auto-rows-fr sm:grid-cols-2 lg:grid-cols-4 sm:overflow-visible">
         {creators.map((creator, index) => (
           <CreatorSplashCard key={creator.id} creator={creator} featured={index === 0} />
         ))}
