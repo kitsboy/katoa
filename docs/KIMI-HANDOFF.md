@@ -20,7 +20,7 @@
 
 **Family template note:** Katoa is the reference implementation. Family products should reuse the contract, metadata, states, rails, health labels, audit semantics, and readiness gates—not create another payment language.
 
-**Current local work is ready for review; no commit/push yet for this solo foundation.** Existing `public/donations-qr.png` deletion remains untouched.
+**Git State:** Implementation SHA `54361b0` is pushed to `origin/main`; build/docs stamp follows. Existing `public/donations-qr.png` deletion remains untouched.
 
 ---
 

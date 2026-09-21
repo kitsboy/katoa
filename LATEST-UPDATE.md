@@ -10,7 +10,7 @@
 
 **Identity direction:** Buzz’s signed-event, separate-agent-key, scoped-permission, and human-approval ideas are useful at a much smaller scale. Future namespace: full handles such as `name@giveabit.io`; NIP-05, MotoPass, and Satohash remain separate layers.
 
-**Current base:** Solo payment foundation is locally verified; docs/build stamp follows. Pre-existing `public/donations-qr.png` deletion remains untouched.
+**Current base:** Implementation `54361b0`; final build/docs stamp follows. Pre-existing `public/donations-qr.png` deletion remains untouched.
 
 - Deep link `katoa.org/comparison?earnings=5000` previously contradicted itself: hero/slider showed default $10,000 while the calculator used 5,000. Root cause: two components each owned an independent monthly-earnings copy and both read/wrote the same query param.
 - Fix: lifted state up to ComparisonPage; FeeComparison is now controlled (`value`/`onChange`) on /comparison and keeps independent state only on home/pricing.
