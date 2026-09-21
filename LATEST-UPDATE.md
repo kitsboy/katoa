@@ -8,7 +8,7 @@
 
 **Payment status:** Family contract exists; BTCPay gift plug is wrapped; existing signed webhook remains the settlement writer. Subscriptions, zaps, Lightning Address, LNbits, direct LND, Silent Payments, reconciliation, and shared UI chips remain future work.
 
-**Identity direction:** Buzz’s signed-event, separate-agent-key, scoped-permission, and human-approval ideas are useful at a much smaller scale. Future namespace: full handles such as `name@giveabit.io`; `kimi@giveabit.io` is the first HERMES agent identity and Otto should receive a separate `otto@giveabit.io` key/role. NIP-05, MotoPass, and Satohash remain separate layers.
+**Identity direction:** Buzz’s signed-event, separate-agent-key, scoped-permission, and human-approval ideas are useful at a much smaller scale. Future namespace: full handles such as `name@giveabit.io`; NIP-05, MotoPass, and Satohash remain separate layers.
 
 **Current base:** `4ebb4ec` on `origin/main`; pre-existing `public/donations-qr.png` deletion remains untouched.
 

@@ -20,7 +20,6 @@ Updated **2026-09-21** — Family Payment Core Batches 1–2 and checkout/previe
 ### Family identity / NIP-05 — future shared Give A Bit layer
 - Buzz review: use its signed-event, separate-agent-key, scoped-permission, and human-approval ideas; do not copy the full relay/workspace product.
 - Desired namespace: canonical handles such as `name@giveabit.io`, recognized across Katoa and the family suite.
-- Known agents: `kimi@giveabit.io` = HERMES orchestration; `otto@giveabit.io` = GROK BOT/code. Give each a separate Nostr key and explicit scopes; never share keys or infer identity from matching email.
 - NIP-05 domain mapping is discoverability, not legal identity. MotoPass passport and Satohash proof must remain separate optional layers.
 - Current Katoa `/nip05` flow is still a local claim request copied for ops; platform nsec stays THOR-vault-only.
 - Future order: shared registry schema → family verification → delegated agent keys/scopes → MotoPass/Satohash references.
