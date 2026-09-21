@@ -28,6 +28,11 @@ function demoWishlistsExist(): boolean {
   return Object.values(wl).some((arr) => Array.isArray(arr) && arr.length > 0);
 }
 
+function demoProfileIsPublished(): boolean {
+  const projects = getStorage<Array<{ visibility?: string }>>(STORAGE_KEYS.demoDashboardProjects, []);
+  return projects.some((project) => project.visibility === 'public');
+}
+
 export function OnboardingChecklist({ variant = 'landing' }: { variant?: 'landing' | 'dark' }) {
   const { t } = useLanguage();
   const { user, profile, isDemoUser } = useAuth();
@@ -36,23 +41,18 @@ export function OnboardingChecklist({ variant = 'landing' }: { variant?: 'landin
   const publicHref = profile?.username ? `/u/${profile.username}` : '/dashboard';
 
   const items: ChecklistItem[] = [
-    { id: 'account', labelKey: 'onboarding.item.account', href: '/auth' },
     { id: 'wallet', labelKey: 'onboarding.item.wallet', href: '/settings' },
     { id: 'wishlist', labelKey: 'onboarding.item.wishlist', href: '/project' },
+    { id: 'publish', labelKey: 'onboarding.item.publish', href: '/dashboard' },
     { id: 'share', labelKey: 'onboarding.item.share', href: publicHref },
-    {
-      id: 'firstsat',
-      labelKey: 'onboarding.item.firstsat',
-      href: checked.wallet || profile?.lightning_address ? publicHref : '/settings',
-    },
   ];
 
   useEffect(() => {
     setChecked((prev) => {
       const next = { ...prev };
-      if (user) next.account = true;
       if (profile?.lightning_address) next.wallet = true;
       if (isDemoUser && demoWishlistsExist()) next.wishlist = true;
+      if (isDemoUser && demoProfileIsPublished()) next.publish = true;
       return next;
     });
 
@@ -63,17 +63,20 @@ export function OnboardingChecklist({ variant = 'landing' }: { variant?: 'landin
     const hasLightning = Boolean(profile?.lightning_address);
     void (async () => {
       try {
-        const [wishlistRes, walletRes] = await Promise.all([
+        const [wishlistRes, walletRes, publishedProjectRes, publishedWishlistRes] = await Promise.all([
           supabase.from('wishlists').select('id', { count: 'exact', head: true }).eq('creator_id', userId),
           hasLightning
             ? Promise.resolve({ count: 1 })
             : supabase.from('wallet_addresses').select('id', { count: 'exact', head: true }).eq('user_id', userId),
+          supabase.from('projects').select('id', { count: 'exact', head: true }).eq('creator_id', userId).eq('visibility', 'public'),
+          supabase.from('wishlists').select('id', { count: 'exact', head: true }).eq('creator_id', userId).eq('visibility', 'public'),
         ]);
         if (cancelled) return;
         setChecked((prev) => {
           const next = { ...prev };
           if ((wishlistRes.count ?? 0) > 0) next.wishlist = true;
           if ((walletRes.count ?? 0) > 0) next.wallet = true;
+          if ((publishedProjectRes.count ?? 0) > 0 || (publishedWishlistRes.count ?? 0) > 0) next.publish = true;
           return next;
         });
       } catch {
@@ -174,7 +177,7 @@ export function OnboardingChecklist({ variant = 'landing' }: { variant?: 'landin
                       : `lp-onboarding-label ${isChecked ? 'lp-onboarding-label--done' : ''}`
                   }
                 >
-                  {t(item.labelKey)}
+                  {item.id === 'publish' ? 'Publish your profile' : t(item.labelKey)}
                 </span>
                 {!isChecked && item.id === 'share' ? (
                   <button

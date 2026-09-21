@@ -111,6 +111,8 @@ export function ProjectPage() {
     description: '',
     slug: '',
     url: '',
+    goal: '',
+    visibility: 'draft' as 'public' | 'private' | 'draft',
   });
 
   const [editWishlistForm, setEditWishlistForm] = useState<{
@@ -453,15 +455,15 @@ export function ProjectPage() {
           title: wishlistForm.title,
           description: wishlistForm.description,
           slug: nextSlug || `wishlist-${Date.now()}`,
-          visibility: 'draft',
+          visibility: wishlistForm.visibility,
           total_sats_raised: 0,
-          total_sats_goal: 0,
+          total_sats_goal: Number.parseInt(wishlistForm.goal, 10) || 0,
           created_at: new Date().toISOString(),
           items: [],
         };
         persistDemoWishlists([created, ...wishlists]);
         setShowCreateWishlist(false);
-        setWishlistForm({ title: '', description: '', slug: '', url: '' });
+        setWishlistForm({ title: '', description: '', slug: '', url: '', goal: '', visibility: 'draft' });
         toast(t('success.saved'));
         return;
       }
@@ -472,13 +474,14 @@ export function ProjectPage() {
         title: wishlistForm.title,
         description: wishlistForm.description,
         slug: nextSlug,
-        visibility: 'draft',
+        visibility: wishlistForm.visibility,
+        total_sats_goal: Number.parseInt(wishlistForm.goal, 10) || 0,
       });
 
       if (error) throw error;
 
       setShowCreateWishlist(false);
-      setWishlistForm({ title: '', description: '', slug: '', url: '' });
+      setWishlistForm({ title: '', description: '', slug: '', url: '', goal: '', visibility: 'draft' });
       loadWishlists();
     } catch (error: unknown) {
       console.error('Error creating wishlist:', error);
@@ -1057,6 +1060,15 @@ export function ProjectPage() {
         title="Create New Wishlist"
       >
         <form onSubmit={handleCreateWishlist} className="space-y-4">
+          <div className="rounded-xl border border-bitcoin-orange-500/25 bg-bitcoin-orange-500/10 p-4">
+            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-bitcoin-orange-300">First wishlist setup</p>
+            <p className="mt-1 text-sm leading-relaxed text-gray-300">Set the goal, tell supporters what it is for, and choose whether to publish now. You can edit everything later.</p>
+          </div>
+          <div className="grid grid-cols-3 gap-2 text-[11px] font-bold uppercase tracking-wider text-gray-500">
+            <span className="rounded-lg border border-bitcoin-orange-500/30 bg-bitcoin-orange-500/10 px-2 py-2 text-bitcoin-orange-200">1 · Story</span>
+            <span className="rounded-lg border border-white/10 px-2 py-2">2 · Goal</span>
+            <span className="rounded-lg border border-white/10 px-2 py-2">3 · Publish</span>
+          </div>
           <Input
             label="Wishlist URL (optional)"
             value={wishlistForm.url}
@@ -1085,6 +1097,30 @@ export function ProjectPage() {
             placeholder={t('project.placeholder.wishlistName')}
             required
           />
+
+          <Input
+            label="Goal (sats, optional)"
+            type="number"
+            min={0}
+            step={1}
+            value={wishlistForm.goal}
+            onChange={(e) => setWishlistForm({ ...wishlistForm, goal: e.target.value })}
+            placeholder="21000"
+            helperText="A clear target helps supporters know what matters most."
+          />
+
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">Visibility</label>
+            <select
+              value={wishlistForm.visibility}
+              onChange={(e) => setWishlistForm({ ...wishlistForm, visibility: e.target.value as Wishlist['visibility'] })}
+              className="w-full px-4 py-3 bg-charcoal-900 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-bitcoin-orange-500/40"
+            >
+              <option value="draft">Draft — keep it private while editing</option>
+              <option value="private">Private — anyone with the link</option>
+              <option value="public">Public — ready to share</option>
+            </select>
+          </div>
 
           <Input
             label="Slug (URL)"

@@ -43,13 +43,14 @@ describe('OnboardingChecklist', () => {
     Reflect.deleteProperty(navigator, 'share');
   });
 
-  it('points first sat at settings and share at the public profile, not explore', () => {
+  it('shows the creator launch path in order and keeps sharing on the public profile', () => {
     wrap();
-    const firstSatRow = screen.getByText(/first sat/i).closest('li');
-    expect(firstSatRow?.querySelector('a')).toHaveAttribute('href', '/settings');
     const hrefs = screen.getAllByRole('link').map((el) => el.getAttribute('href'));
     expect(hrefs).not.toContain('/explore');
+    expect(hrefs).toContain('/settings');
     expect(hrefs).toContain('/project');
+    expect(hrefs).toContain('/dashboard');
+    expect(screen.getByText('Publish your profile')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /share/i })).toBeInTheDocument();
   });
 
