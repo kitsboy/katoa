@@ -41,6 +41,7 @@ import { GlassCallout } from '../components/GlassCallout';
 import { CardSkeleton } from '../components/Skeleton';
 import { EarningsPanel } from '../components/EarningsPanel';
 import { CoverImageUpload } from '../components/CoverImageUpload';
+import { PreviewReadinessPanel } from '../components/PreviewReadinessPanel';
 
 import { getStorage, setStorage, STORAGE_KEYS } from '../lib/storage';
 import { fetchLiveEarnings } from '../lib/earnings';
@@ -1111,6 +1112,14 @@ function CreatorPreviewModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Public creator preview">
       <div data-testid="creator-public-preview" className="space-y-5">
+        <PreviewReadinessPanel
+          username={username}
+          bio={bio}
+          hasWallet={hasWallet}
+          publicProjects={publicProjects.length}
+          wishlists={wishlists}
+          publicProfileHref={publicProfileHref}
+        />
         <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-bitcoin-orange-500/15 via-white/[0.04] to-neon-cyan-500/10 p-5">
           <div className="flex items-start gap-4">
             {avatarUrl ? <img src={avatarUrl} alt="" className="h-16 w-16 rounded-2xl object-cover border border-white/15" /> : <div className="h-16 w-16 rounded-2xl bg-bitcoin-orange-500/20 flex items-center justify-center text-2xl font-black text-white">{username[0]?.toUpperCase() || '?'}</div>}
