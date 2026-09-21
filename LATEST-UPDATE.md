@@ -1,14 +1,14 @@
 # katoa — Last Updated 2026-09-21 by Buffy
 
-**Brief:** Repaired and upgraded the featured Skate Colombia video card on Explore.
+**Brief:** Preserved the Skate Colombia video change and made the featured media frame explicitly fixed so it cannot escape the card.
 
-**What changed:**
-- Replaced the mismatched ocean/drone clip with a skateboard video matching the Medellín project.
-- Fixed video overflow and card framing across mobile and desktop.
-- Added persistent featured-video playback so the volume control operates on the real video.
-- Audio remains muted by default for browser safety; the user can intentionally unmute.
-- Kept the skateboard beauty shot as the poster and retained the direct Support CTA.
+**Correction:**
+- Git still contains the skateboard clip from `ae74e11`; no work was lost.
+- Replaced competing aspect-ratio/height rules with explicit fixed responsive heights and `!aspect-auto`.
+- Kept persistent video playback and functional mute/unmute behavior.
 
-**Verification:** `npm run check` passed — 270 tests; typecheck clean; lint has the same 14 existing warnings; build passed with 26/26 prerendered routes; secret-hygiene gate passed.
+**Deployment status:** Cloudflare had `0834226` stuck in an active build while `ae74e11` was queued, so production remained on `1c27cce`. Cancel the stuck build and let the newest deployment publish before purging cache.
 
-**Git state:** Focused video/card batch follows the current `main` tip. Existing `public/donations-qr.png` deletion remains untouched.
+**Verification:** `npm run check` passed — 270 tests; typecheck clean; build passed with 26/26 prerendered routes; secret-hygiene gate passed.
+
+**Git state:** Latest source correction is pushed. Existing `public/donations-qr.png` deletion remains untouched.

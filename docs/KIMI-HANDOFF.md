@@ -21,6 +21,24 @@
 
 ---
 
+## Session — 2026-09-21 · Skate card recovery after queued deployment (Buffy M3)
+
+**Done:**
+- Confirmed Git still contains the skateboard video in `ae74e11`; no work was lost by the Cloudflare redeploy attempt.
+- Strengthened the featured media frame with explicit fixed heights and `!aspect-auto`, preventing the video aspect ratio from escaping the card.
+- Kept the Skate Colombia Pexels clip and the functional `alwaysPlay` mute/unmute behavior.
+
+**Deployment truth:** Cloudflare had `0834226` stuck in an active build for 27+ minutes while `ae74e11` was queued. Production remained on `1c27cce`; this is a deployment queue problem, not a missing source change.
+
+**Verification:** `npm run check` passed with 270/270 tests, typecheck clean, 14 existing lint warnings; build passed with 26/26 prerendered routes; secret-hygiene gate passed.
+
+**Git State:**
+- Latest source fix is pushed after this entry; existing `public/donations-qr.png` deletion remains untouched.
+
+**Next Cloudflare action:** Cancel the stuck `0834226` build, then let the newest deployment build and publish. Do not purge cache until the new deployment is marked Production.
+
+---
+
 ## Session — 2026-09-21 · Route cache recovery + creator-world visual upgrades (Buffy M3)
 
 **Done:**
