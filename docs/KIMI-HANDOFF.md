@@ -1,3 +1,20 @@
+## Session — 2026-09-22 · Guard v2: dynamic paths, CSS url(), prerendered HTML (Buffy M3)
+
+**Done:**
+- Extended `scripts/check-asset-references.mjs` with dynamic-path detection in src/: flags template literals (`` `/images/mock/${h}.jpeg` ``) and `'dir/' + n + '.ext'` concatenations — including same-file const prefixes — **only when the static prefix directory exists under public/**, the only dynamic case that can 404 at runtime. CDN/S3 templates pass naturally.
+- New `--dist` phase, wired as npm `postbuild` (runs automatically after every build): validates every `url()` in `dist/assets/*.css` and every absolute asset reference in prerendered `dist/*.html` against `dist/` — catches anything Tailwind/minification relocated after the source scan.
+- Verified with fault injection: template, concat, const-prefix, and injected-CSS cases all fail with file:line; clean tree passes (86 src refs, 106 dist refs). Fixed a group-index crash in HTML dist scanning found by the first run.
+- Shipped `91d469a` (guard v2) + `6374fe7` (stamps); production verified serving `6374fe7`.
+
+**Decisions:**
+- Calibration first: surveyed the codebase — all 46 `/images/mock/` refs are static literals (already covered), zero concat/CSS-url patterns exist today; this is regression armor, not a current-bug fix.
+- Known limitation, documented: cross-file const prefixes (`const base = '/x/'` exported then templated elsewhere) are not tracked.
+
+**Git State:**
+- SHA: `6374fe7` — pushed, live, working tree clean.
+
+---
+
 ## Session — 2026-09-22 · Asset-reference build guard (Buffy M3)
 
 **Done:**
