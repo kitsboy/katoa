@@ -23,6 +23,7 @@
     "version:write": "node scripts/write-version.mjs",
     "version:bump": "node scripts/write-version.mjs --bump",
     "prebuild": "npm run version:write && npm run generate-metrics",
+    "postbuild": "node scripts/check-asset-references.mjs --dist",
     "check:security": "node scripts/check-secret-hygiene.mjs",
     "check:assets": "node scripts/check-asset-references.mjs"
   },
