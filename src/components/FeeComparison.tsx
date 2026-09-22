@@ -76,7 +76,7 @@ const PlatformCard = memo(function PlatformCard({
           )}
           {platform.platform === 'OnlyFans' && (
             <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center p-1 shadow-md">
-              <img src="/pngwing.com.png" alt="OnlyFans" className="w-full h-full object-contain" />
+              <img src="/onlyfans-logo.svg" alt="OnlyFans" className="w-full h-full object-contain" />
             </div>
           )}
           {platform.platform === 'Throne' && (
