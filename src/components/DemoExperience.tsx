@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ArrowRight, Check, ChevronRight, Eye, Play, Sparkles, Users } from 'lucide-react';
 import { Card } from './Card';
 import { Link } from './Link';
 import { MediaCard } from './MediaCard';
 import { DemoPreviewBadge } from './DemoPreviewBadge';
+import { DEMO_PREVIEW_EVENT, DEMO_SCENARIOS, getDemoDetailLevel, getDemoScenario, type DemoDetailLevel, type DemoScenarioId } from '../lib/demoPreview';
 
 interface StoryChapter {
   id: string;
@@ -71,7 +72,20 @@ const paths = [
 export function DemoExperience() {
   const [activeChapter, setActiveChapter] = useState(0);
   const [showDetails, setShowDetails] = useState(false);
+  const [scenario, setScenario] = useState<DemoScenarioId>(() => getDemoScenario());
+  const [detail, setDetail] = useState<DemoDetailLevel>(() => getDemoDetailLevel());
   const chapter = chapters[activeChapter];
+
+  useEffect(() => {
+    const sync = () => {
+      setScenario(getDemoScenario());
+      setDetail(getDemoDetailLevel());
+    };
+    window.addEventListener(DEMO_PREVIEW_EVENT, sync);
+    return () => window.removeEventListener(DEMO_PREVIEW_EVENT, sync);
+  }, []);
+
+  const scenarioData = DEMO_SCENARIOS.find((item) => item.id === scenario) ?? DEMO_SCENARIOS[0];
 
   return (
     <section id="demo-story" className="lp-section py-12 sm:py-16" aria-labelledby="demo-experience-title">
@@ -85,6 +99,12 @@ export function DemoExperience() {
           <p className="lp-section-subtitle">
             A richer product demo for the weeks before launch: enough detail to feel real, without pretending sample data is live.
           </p>
+          <div className="mt-4 inline-flex flex-wrap items-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-3 py-2 text-xs text-gray-400">
+            <span className="font-semibold text-white">Preview:</span>
+            <span>{scenarioData.shortLabel}</span>
+            <span className="text-white/20">·</span>
+            <span>{detail === 'rich' ? 'Rich walkthrough' : 'Quick skim'}</span>
+          </div>
         </div>
 
         <div className="grid gap-3 md:grid-cols-3 mb-8" aria-label="Choose a demo path">
@@ -140,8 +160,9 @@ export function DemoExperience() {
                 </div>
                 <p className="text-base leading-relaxed text-gray-300">{chapter.description}</p>
 
-                <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-4">
-                  <button
+                {detail === 'rich' && (
+                  <div className="mt-6 rounded-2xl border border-white/10 bg-black/20 p-4">
+                    <button
                     type="button"
                     className="flex w-full items-center justify-between gap-3 text-left"
                     aria-expanded={showDetails}
@@ -150,8 +171,9 @@ export function DemoExperience() {
                     <span className="text-sm font-bold text-white">What the user gets</span>
                     <ChevronRight size={17} className={`text-gray-400 transition-transform ${showDetails ? 'rotate-90' : ''}`} aria-hidden />
                   </button>
-                  {showDetails && <p className="mt-3 text-sm leading-relaxed text-gray-400">{chapter.detail}</p>}
-                </div>
+                    {showDetails && <p className="mt-3 text-sm leading-relaxed text-gray-400">{chapter.detail}</p>}
+                  </div>
+                )}
               </div>
 
               <div>

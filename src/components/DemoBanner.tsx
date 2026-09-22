@@ -1,6 +1,7 @@
 import { Link } from './Link';
 import { useLanguage } from '../contexts/LanguageContext';
 import { DemoPreviewBadge } from './DemoPreviewBadge';
+import { DemoPreviewControl } from './DemoPreviewControl';
 
 interface DemoBannerProps {
   message?: string;
@@ -18,6 +19,7 @@ export function DemoBanner({ message }: DemoBannerProps) {
         <Link href="/wishlist/medellin-skate-park" className="text-neon-cyan-400 font-semibold hover:underline touch-manipulation">
           {t('demo.tryWishlist')}
         </Link>
+        <DemoPreviewControl />
       </div>
     </div>
   );
