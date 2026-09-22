@@ -5,12 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run sitemap && vite build && node scripts/warm-legal-chunks.mjs && node scripts/prerender.mjs",
+    "build": "npm run check:assets && npm run sitemap && vite build && node scripts/warm-legal-chunks.mjs && node scripts/prerender.mjs",
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "check": "npm run typecheck && npm run lint && npm run test",
+    "check": "npm run typecheck && npm run lint && npm run check:assets && npm run test",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
     "db:push": "supabase db push",
@@ -23,7 +23,8 @@
     "version:write": "node scripts/write-version.mjs",
     "version:bump": "node scripts/write-version.mjs --bump",
     "prebuild": "npm run version:write && npm run generate-metrics",
-    "check:security": "node scripts/check-secret-hygiene.mjs"
+    "check:security": "node scripts/check-secret-hygiene.mjs",
+    "check:assets": "node scripts/check-asset-references.mjs"
   },
   "engines": {
     "node": ">=20"
