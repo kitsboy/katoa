@@ -1,3 +1,20 @@
+## Session — 2026-09-22 · Asset-reference build guard (Buffy M3)
+
+**Done:**
+- Added `scripts/check-asset-references.mjs` (`npm run check:assets`): scans `src/**` + `index.html` for absolute-path asset references and fails when the file does not exist in `public/`. Handles query strings, percent-encoded segments, and code-context anchoring so placeholder text (e.g. `https://…/preview.mp4`) and template-literal tails are not false positives.
+- Wired at the front of `npm run build` and into `npm run check`, so local builds and the GitHub Actions deploy (which runs `npm run build`) both fail fast on missing assets.
+- Verified: 86 references pass on the clean tree; reintroducing the `/pngwing.com.png` reference fails with the exact file/line; the ProjectPage placeholder is not flagged.
+- Shipped `6f219f4` (guard) + `fa819e8` (stamps); production verified serving `fa819e8`.
+
+**Decisions:**
+- Gate lives in the build itself (not the CI workflow), so every entry point (local, Actions, break-glass) is covered with no workflow changes.
+- No allowlist entries needed today; escape hatch exists via `KATOA_ASSET_ALLOWLIST` if a legit external case appears.
+
+**Git State:**
+- SHA: `fa819e8` — pushed, live, working tree clean.
+
+---
+
 ## Session — 2026-09-22 · Prod smoke test, OnlyFans logo fix, donation-QR cleanup (Buffy M3)
 
 **Done:**
