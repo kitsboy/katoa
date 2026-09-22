@@ -1,3 +1,31 @@
+## Session — 2026-09-22 · Heavy pre-launch demo polish (Buffy M3)
+
+**Done:**
+- Added `DemoExperience`: three clear demo paths (supporter, creator, evaluator), three multimedia story chapters, expandable detail, and honest sample-only language.
+- Added a focused demo test covering path links, chapter switching, and progressive disclosure.
+- Added compact/expanded card density controls to Explore for richer browsing without visual overload; creator cards adapt their media framing and metadata.
+- Enriched Paul and Skate Colombia sample worlds with milestone posts and contextual comments.
+- Hardened `MediaCard` playback for test/browser environments and added a jsdom `matchMedia` shim.
+- Updated roadmap boundaries: payment-node selection, provider commitment, live engagement, real creator seeding, market launch, and production deployment are explicitly deferred.
+
+**Verification:**
+- `npm test -- --run`: **301/301 tests passed** (42 files).
+- `npm run typecheck`: passed.
+- `npm run lint`: passed.
+- `npm run build`: passed; 26/26 routes prerendered.
+- Source and dist asset-reference checks passed.
+- No payment node, credentials, live creator data, or production deploy touched.
+
+**Decisions:**
+- This is a pre-launch product polish batch, not a market or payment activation batch.
+- Demo content remains visibly sample content; local payment/engagement seams remain unchanged.
+
+**Git State:**
+- SHA: `1e4d2ba4773925bdaca9449fa33f75e05c66738d`
+- Unpushed before final push: `1e4d2ba Polish the pre-launch demo experience`
+
+---
+
 ## Session — 2026-09-22 · Guard v2: dynamic paths, CSS url(), prerendered HTML (Buffy M3)
 
 **Done:**

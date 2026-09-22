@@ -1,10 +1,15 @@
 # katoa — Last Updated 2026-09-22 by Buffy
 
-**Brief:** Production smoke-tested, OnlyFans logo fixed, donation-QR assets and dead fallback cleaned up; working tree fully clean.
+**Brief:** Heavy pre-launch polish: guided demo story, richer sample media, progressive details, and compact discovery views; payment and market gates remain closed.
 
 **Done:**
-- Verified prod on `5166edf` (payment-core), then shipped `56fc5cc` (OnlyFans logo fix, re-verified live), `f9e601d` (donations-qr.png deletion settled + dead fallback branch removed from DonateQRModal), `f829a3d` (stamps), `49f3208` (removed `donations-qr copy.png` duplicate), `6f219f4` + `fa819e8` (asset-reference build guard `check:assets`, front of `npm run build`; fails on references to missing public/ assets).
+- Added a guided three-path demo experience with supporter, creator, and evaluator routes.
+- Added multimedia story chapters with motion preview, chapter navigation, expandable details, and honest demo labeling.
+- Added compact/expanded Explore card density controls.
+- Added richer sample posts and milestone comments for Paul and Skate Colombia.
+- Added focused demo tests and browser-safe media/test handling.
+- Updated roadmap and Cam handoff to explicitly defer payment-node selection, provider commitment, live engagement, real creator seeding, public launch, and production deployment.
 
-**Verification:** `npm run check` green at each step — 299 tests, typecheck + lint clean; build 26/26 routes; secret-hygiene gate passed. Every deploy confirmed by `scripts/check-deploy.mjs`; browser checks show 0 broken images and no error boundaries on `/explore`, `/comparison`, `/u/paul_music`, and the donation drawer → QR modal flow.
+**Verification:** `npm test -- --run` passed with 301 tests across 42 files; typecheck and lint passed; build passed with 26/26 prerendered routes; source/dist asset-reference guards passed.
 
-**Git state:** Tip `49f3208433d89dc0a172b3ffe579ad61f82add35`, pushed, live, working tree clean.
+**Git state:** Tip `1e4d2ba4773925bdaca9449fa33f75e05c66738d`, ready to push. No production deployment was run.
