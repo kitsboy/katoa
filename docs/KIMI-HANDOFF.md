@@ -21,8 +21,8 @@
 - The reset intentionally preserves theme preferences and does not imply live-account deletion.
 
 **Git State:**
-- SHA: `7550b09` plus handoff stamp below.
-- Unpushed before final push: `7550b09 Add local demo preview controls`.
+- SHA: `53af5f0` — pushed to `origin/main`.
+- Unpushed: none.
 
 ---
 
