@@ -1,3 +1,31 @@
+## Session — 2026-09-22 · Demo sample-data control center (Buffy M3)
+
+**Done:**
+- Added a visible `Demo controls` entry point to the demo banner.
+- Added three local sample scenarios: Community impact, Creator studio, and Independent music.
+- Added Rich walkthrough / Quick skim presentation options and surfaced the current selection inside the homepage demo story.
+- Added `Open selected story` shortcut and a safe `Reset demo` action.
+- Reset clears only device-local demo state, favorites, filters, onboarding, local engagement previews, and demo projects; it does not touch Supabase, live accounts, payment nodes, credentials, or theme preferences.
+- Added focused persistence/reset tests for the demo preview state.
+
+**Verification:**
+- `npm test -- --run`: **303/303 tests passed** (43 files).
+- `npm run typecheck`: passed.
+- `npm run lint`: passed.
+- `npm run build`: passed; 26/26 routes prerendered.
+- Source and dist asset-reference checks passed.
+- Existing non-blocking Vite chunk-size and Browserslist warnings remain.
+
+**Decisions:**
+- This is local pre-launch demo tooling only; no payment or market behavior was activated.
+- The reset intentionally preserves theme preferences and does not imply live-account deletion.
+
+**Git State:**
+- SHA: `7550b09` plus handoff stamp below.
+- Unpushed before final push: `7550b09 Add local demo preview controls`.
+
+---
+
 ## Session — 2026-09-22 · Heavy pre-launch demo polish (Buffy M3)
 
 **Done:**
