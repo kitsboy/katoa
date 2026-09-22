@@ -20,8 +20,8 @@
 - Impact data uses existing profile/wishlist/post data and stays honest when supporter counts are unavailable.
 
 **Git State:**
-- SHA: pending final push.
-- Unpushed: feature batch plus documentation stamp.
+- SHA: `348a4a51b74c2b0b3304c2cdac0f1ab27f0ba051` — feature batch pushed to `origin/main`; final handoff stamp follows.
+- Unpushed: documentation stamp only.
 
 ---
 
