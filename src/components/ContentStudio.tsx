@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowUp, Eye, History, LayoutGrid, List, PanelRight, RotateCcw, Save, X } from 'lucide-react';
+import { Eye, History, LayoutGrid, PanelRight, RotateCcw, Save, X } from 'lucide-react';
 import { Button } from './Button';
 import { DemoPreviewBadge } from './DemoPreviewBadge';
+import { ContentCanvas } from './ContentCanvas';
 import { loadStudioDraft, loadStudioVersions, saveStudioDraft, saveStudioVersion, type StudioDraft } from '../lib/contentStudio';
 
 export interface StudioCardItem {
@@ -24,7 +25,7 @@ interface ContentStudioProps {
   isDemo: boolean;
   onProjectChange: (next: StudioProjectValue) => void;
   onCardChange: (id: string, next: Pick<StudioCardItem, 'title' | 'description' | 'visibility'>) => void;
-  onMoveCard: (id: string, direction: 'up') => void;
+  onMoveCard: (id: string, direction: 'up' | 'down') => void;
   onSave: () => void;
   onPreview: () => void;
   onClose: () => void;
@@ -51,7 +52,6 @@ export function ContentStudio({
   onClose,
 }: ContentStudioProps) {
   const [tab, setTab] = useState<StudioTab>('project');
-  const [layout, setLayout] = useState<'expanded' | 'compact'>('expanded');
   const [draft, setDraft] = useState<StudioDraft<DraftValue> | null>(() => loadStudioDraft<DraftValue>(projectId));
   const versions = loadStudioVersions<DraftValue>(projectId);
   const current = useMemo<DraftValue>(() => ({ project, cards }), [project, cards]);
@@ -113,13 +113,8 @@ export function ContentStudio({
             </div>
           ) : (
             <div className="space-y-3">
-              <div className="flex items-center justify-between gap-3"><div><p className="text-sm font-bold text-white">Card order and detail</p><p className="text-xs text-gray-500">Move important content higher without deleting anything.</p></div><div className="flex gap-1 rounded-lg border border-white/10 p-1"><button type="button" onClick={() => setLayout('expanded')} aria-pressed={layout === 'expanded'} className={`min-h-[36px] min-w-[36px] rounded-md ${layout === 'expanded' ? 'bg-white text-charcoal-950' : 'text-gray-400'}`}><LayoutGrid size={16} className="mx-auto" /><span className="sr-only">Expanded cards</span></button><button type="button" onClick={() => setLayout('compact')} aria-pressed={layout === 'compact'} className={`min-h-[36px] min-w-[36px] rounded-md ${layout === 'compact' ? 'bg-white text-charcoal-950' : 'text-gray-400'}`}><List size={16} className="mx-auto" /><span className="sr-only">Compact cards</span></button></div></div>
-              {cards.map((card, index) => (
-                <div key={card.id} className={`rounded-2xl border border-white/10 bg-white/[0.03] p-4 ${layout === 'compact' ? 'sm:flex sm:items-center sm:gap-3' : ''}`}>
-                  <div className="flex items-start justify-between gap-3"><div><p className="text-[10px] font-black uppercase tracking-wider text-gray-500">Card {index + 1}</p><p className="mt-1 font-bold text-white">{card.title || 'Untitled card'}</p></div>{index > 0 && <button type="button" onClick={() => onMoveCard(card.id, 'up')} className="flex min-h-[36px] items-center gap-1 rounded-lg border border-white/10 px-2 text-xs text-gray-400 hover:text-white" title="Move card up"><ArrowUp size={14} /> Up</button>}</div>
-                  {layout === 'expanded' && <div className="mt-3 space-y-2"><input value={card.title} onChange={(e) => onCardChange(card.id, { title: e.target.value, description: card.description, visibility: card.visibility })} className="w-full rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-sm text-white outline-none focus:border-neon-cyan-400/50" placeholder="Card title" /><textarea value={card.description} onChange={(e) => onCardChange(card.id, { title: card.title, description: e.target.value, visibility: card.visibility })} rows={2} className="w-full rounded-lg border border-white/10 bg-black/20 px-3 py-2 text-sm text-white outline-none focus:border-neon-cyan-400/50" placeholder="What does this card unlock?" /></div>}
-                </div>
-              ))}
+              <ContentCanvas cards={cards} onCardChange={onCardChange} onMoveCard={onMoveCard} />
+              <div className="flex items-center justify-end gap-2 text-[11px] text-gray-600"><LayoutGrid size={13} /> Visual ordering saves with your next change.</div>
             </div>
           )}
 

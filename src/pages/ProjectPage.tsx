@@ -1221,11 +1221,12 @@ export function ProjectPage() {
             visibility: next.visibility as 'public' | 'private' | 'draft',
           }))}
           onCardChange={(id, next) => setWishlists((current) => current.map((wishlist) => wishlist.id === id ? { ...wishlist, ...next, visibility: next.visibility as Wishlist['visibility'] } : wishlist))}
-          onMoveCard={(id) => setWishlists((current) => {
+          onMoveCard={(id, direction) => setWishlists((current) => {
             const index = current.findIndex((wishlist) => wishlist.id === id);
-            if (index <= 0) return current;
+            const nextIndex = direction === 'down' ? index + 1 : index - 1;
+            if (index < 0 || nextIndex < 0 || nextIndex >= current.length) return current;
             const next = [...current];
-            [next[index - 1], next[index]] = [next[index], next[index - 1]];
+            [next[index], next[nextIndex]] = [next[nextIndex], next[index]];
             return next;
           })}
           onSave={() => { void persistStudioChanges(); }}

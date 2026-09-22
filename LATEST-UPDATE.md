@@ -1,14 +1,13 @@
 # katoa — Last Updated 2026-09-22 by Buffy
 
-**Brief:** Heavy pre-launch polish now connects Content Studio editing, payment detail, creator story chapters, tabs, and presentation mode without activating live payments.
+**Brief:** Added a visual content canvas, creator impact dashboard, and cinematic checkout layer without activating live payments.
 
 **Done:**
-- Integrated Content Studio into project management with local autosave, version history, restore, preview, card reordering, and progressive editing detail.
-- Added expandable payment journey details for method, amount, destination, timing, fees, proof, and honest demo/staged boundaries.
-- Added creator Story, Media, Goals, Updates, and Proof tabs while preserving existing feed, wishlist, trust, and subscription surfaces.
-- Added story chapters and a keyboard-accessible presentation overlay with progress, captions, and next/previous controls.
-- Added focused tests for persistence and progressive disclosure.
+- Content Studio now includes drag-and-drop card ordering plus responsive phone/desktop preview and focused card editing.
+- Creator Story now includes impact metrics, goal progress, milestone updates, supporter visibility, creator-keeps messaging, and proof verification context.
+- Checkout now has a focused cinematic wrapper with amount summary, Choose → Pay → Confirm steps, demo honesty, and the existing payment QR/trust/status journey.
+- Added focused tests for all three surfaces.
 
-**Verification:** 306 tests passed across 45 files; typecheck, lint, security gate, build, 26/26 prerendered routes, and src/dist asset-reference guards passed. Existing Vite chunk-size and Browserslist warnings remain non-blocking.
+**Verification:** 309 tests passed across 46 files; typecheck, lint, security gate, build, 26/26 prerendered routes, and source/dist asset-reference guards passed. Existing Vite chunk-size, dynamic-import, and Browserslist warnings remain non-blocking.
 
-**Git state:** `464de3ba4de6080d71bcb4e51fbbead118b03db5` pushed to `origin/main`; working tree is being finalized clean. No production hosting deployment, payment-node activation, provider commitment, credentials, or live creator data were touched.
+**Git state:** Feature commit and final handoff stamp are being pushed to `origin/main`; no payment-node activation, provider commitment, credential change, live settlement, or production hosting deployment was run.

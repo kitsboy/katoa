@@ -1,3 +1,30 @@
+## Session — 2026-09-22 · Visual canvas, impact dashboard, and cinematic checkout (Buffy M3)
+
+**Done:**
+- Added a native drag-and-drop Content Canvas inside Content Studio with phone/desktop preview, selected-card editing, keyboard-friendly move controls, and up/down ordering.
+- Added `CreatorImpactDashboard` to creator Story surfaces: raised sats, progress, supporter visibility, 100% creator-keeps message, goal bars, milestone updates, and separately auditable proof link.
+- Added `CinematicCheckout` around the existing checkout journey with focused amount summary, Choose → Pay → Confirm steps, wallet-controlled language, demo labeling, and existing QR/trust/status controls preserved.
+- Added focused `PolishTrio` tests for canvas preview/order controls, impact metrics/proof, and cinematic checkout honesty labels.
+
+**Verification:**
+- `npm test -- --run`: **309/309 tests passed** (46 files).
+- `npm run typecheck`: passed.
+- `npm run lint`: passed.
+- `npm run check:security`: passed with 0 credential findings.
+- `npm run build`: passed; 26/26 routes prerendered; source/dist asset-reference checks passed.
+- Existing non-blocking Vite chunk-size, dynamic-import, and Browserslist warnings remain.
+
+**Decisions:**
+- This is presentation-only pre-launch polish. Payment nodes, providers, credentials, live settlement, and production hosting were not touched.
+- Canvas ordering and demo changes remain local until the existing save paths are used; checkout never marks live funding from the browser.
+- Impact data uses existing profile/wishlist/post data and stays honest when supporter counts are unavailable.
+
+**Git State:**
+- SHA: pending final push.
+- Unpushed: feature batch plus documentation stamp.
+
+---
+
 ## Session — 2026-09-22 · Heavy content, payment, and creator UX polish (Buffy M3)
 
 **Done:**

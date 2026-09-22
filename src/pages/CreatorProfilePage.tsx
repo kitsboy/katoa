@@ -23,6 +23,7 @@ import { DemoPreviewBadge } from '../components/DemoPreviewBadge';
 import { TrustFirstCreatorCard } from '../components/TrustFirstCreatorCard';
 import { CreatorStoryChapters, type StoryChapter } from '../components/CreatorStoryChapters';
 import { CreatorPresentation } from '../components/CreatorPresentation';
+import { CreatorImpactDashboard, type ImpactGoal, type ImpactUpdate } from '../components/CreatorImpactDashboard';
 import { MobileStickyCta } from '../components/MobileStickyCta';
 import { WalletDeepLinks } from '../components/WalletDeepLinks';
 import { useToast } from '../components/Toast';
@@ -184,6 +185,8 @@ export function CreatorProfilePage() {
     { id: 'updates', eyebrow: 'Progress', title: posts.length ? `${posts.length} updates to explore` : 'Progress, in the open', body: posts.length ? 'See the latest drops, milestones, and behind-the-scenes moments from this creator.' : 'Updates can turn a one-time gift into an ongoing relationship.', detail: 'Dates, milestones, and short progress notes give supporters a reason to return.' },
     { id: 'proof', eyebrow: 'Trust', title: 'Clear destination, no mystery', body: 'Wallet details and release proof are shown separately from payment settlement.', detail: 'KATOA never treats a browser click as paid. Settlement requires trusted backend confirmation.' },
   ] : [];
+  const impactGoals: ImpactGoal[] = profile ? profile.wishlists.slice(0, 4).map((wishlist) => ({ id: wishlist.id, title: wishlist.title, raised: wishlist.total_sats_raised || 0, goal: wishlist.total_sats_goal || 1, detail: wishlist.description || 'A visible creator goal supporters can understand.' })) : [];
+  const impactUpdates: ImpactUpdate[] = posts.slice(0, 4).map((post) => ({ id: post.id, title: post.caption.split(/[.!?]/)[0] || 'Creator update', detail: post.caption || 'A new creator update.', date: 'Recent' }));
   const storyTabLabels = [
     { id: 'story' as const, label: 'Story' },
     { id: 'media' as const, label: 'Media' },
@@ -586,6 +589,7 @@ export function CreatorProfilePage() {
         </div>
 
         {storyTab === 'story' && <CreatorStoryChapters chapters={storyChapters} demo={Boolean(profile.fromMock)} />}
+        {storyTab === 'story' && <CreatorImpactDashboard goals={impactGoals} updates={impactUpdates} satsRaised={satsRaised} supporterCount={subscriberCount} demo={Boolean(profile.fromMock)} />}
 
         {storyTab === 'goals' && <section className="mb-12"><div className="mb-5 flex items-center justify-between gap-3"><div><p className="text-[10px] font-black uppercase tracking-[0.18em] text-bitcoin-orange-400">Goals</p><h2 className="mt-1 text-2xl font-black text-white">What support changes</h2></div><button type="button" onClick={() => setPresentationIndex(1)} className="min-h-[44px] rounded-xl border border-white/10 px-3 text-xs font-bold text-gray-300 hover:text-white">Present story</button></div><div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-sm leading-relaxed text-gray-300">{profile.wishlists[0]?.description || 'This creator has not added a goal description yet.'}</div></section>}
 

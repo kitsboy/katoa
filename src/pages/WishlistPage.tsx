@@ -51,6 +51,7 @@ import { PaymentActivityTimeline } from '../components/PaymentActivityTimeline';
 import { MobileCheckoutSummary } from '../components/MobileCheckoutSummary';
 import { SupporterTrustSummary } from '../components/SupporterTrustSummary';
 import { PaymentDetailDisclosure } from '../components/PaymentDetailDisclosure';
+import { CinematicCheckout } from '../components/CinematicCheckout';
 
 const SAT_PRESETS = [
   { label: '1K', value: 1000 },
@@ -1619,8 +1620,9 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
         onClose={() => dismissPaymentModal('cancel')}
         title={giftIntent?.method === 'onchain' ? 'Pay on-chain' : 'Pay with Lightning'}
       >
-        <div className="space-y-5">
-          <MobileCheckoutSummary
+        <CinematicCheckout amountSats={giftIntent?.amount} recipient={wishlist.creator.username} isDemo={isDemoWishlist} onBack={() => dismissPaymentModal('cancel')}>
+          <div className="space-y-5">
+            <MobileCheckoutSummary
             amountSats={giftIntent?.amount}
             method={giftIntent?.method}
             recipient={wishlist.creator.username}
@@ -1777,8 +1779,9 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             >
               Cancel
             </Button>
+            </div>
           </div>
-        </div>
+        </CinematicCheckout>
       </Modal>
 
       <Modal
