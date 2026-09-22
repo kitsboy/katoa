@@ -8,6 +8,7 @@ import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { fetchProductMetrics, homeStatsFromMetrics, type HomeStats } from '../lib/productMetrics';
 import { ArrowRight } from 'lucide-react';
 import { CreatorDiscoveryGrid } from '../components/CreatorDiscoveryGrid';
+import { DemoExperience } from '../components/DemoExperience';
 import { mockWishlists } from '../data/mockWishlists';
 import type { CreatorVideoWishlist } from '../components/CreatorVideoCard';
 
@@ -92,6 +93,8 @@ export function HomePage() {
           <CreatorDiscoveryGrid creators={discoveryCreators} t={t} />
         </div>
       </section>
+
+      <DemoExperience />
 
       <section className="lp-section py-12 sm:py-16" aria-labelledby="home-how-heading">
         <div className="lp-container max-w-5xl">

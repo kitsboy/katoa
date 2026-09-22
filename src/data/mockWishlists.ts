@@ -612,6 +612,7 @@ I'm not asking for handouts—I work hard every single day. But saving up while 
     creator: {
       username: 'paul_music',
       avatar_url: null,
+      bio: 'Street musician building a first independent EP, one song and one supporter at a time.',
     },
   },
   {

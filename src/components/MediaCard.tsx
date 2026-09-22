@@ -68,7 +68,10 @@ export function MediaCard({
 
   useEffect(() => {
     if (!previewing || !canPreview || !videoRef.current) return;
-    videoRef.current.play().catch(() => setVideoFailed(true));
+    const playback = videoRef.current.play();
+    if (playback && typeof playback.catch === 'function') {
+      playback.catch(() => setVideoFailed(true));
+    }
   }, [previewing, canPreview]);
 
   const stopPreview = () => {

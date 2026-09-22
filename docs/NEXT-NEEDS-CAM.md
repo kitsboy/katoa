@@ -1,6 +1,6 @@
 # Next list — needs Cam / THOR (honest backlog)
 
-Updated **2026-09-21** — Family Payment Core Batches 1–2 and checkout/preview/trust UX are shipped. Katoa is **not MVP yet**; product/docs tip is `4ebb4ec`.
+Updated **2026-09-22** — Family Payment Core Batches 1–2 and checkout/preview/trust UX are shipped, but payment activation is intentionally paused. Katoa is in a heavy pre-launch polish phase and is **not ready for market**.
 
 ## Still needs you (cannot finish alone)
 
@@ -24,6 +24,10 @@ Updated **2026-09-21** — Family Payment Core Batches 1–2 and checkout/previe
 - NIP-05 domain mapping is discoverability, not legal identity. MotoPass passport and Satohash proof must remain separate optional layers.
 - Current Katoa `/nip05` flow is still a local claim request copied for ops; platform nsec stays THOR-vault-only.
 - Future order: shared registry schema → family verification → delegated agent keys/scopes → MotoPass/Satohash references.
+
+### Deferred until Cam reopens payment decisions
+
+Payment-node selection, provider commitment, production invoice/webhook activation, subscriptions, real engagement seams, live creator seeding, and market launch are intentionally paused. Keep all demo payment and engagement behavior visibly labeled as local/sample.
 
 ### Subscriptions (OF-parity) — ⭐ handoff for next LLM on Hermes
 - **SPEC:** `docs/SUBSCRIPTION-FLOW-SPEC.md` — DB `subscriptions` table, invoice `metadata.kind='subscription'`, webhook activation.

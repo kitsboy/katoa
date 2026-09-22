@@ -4,7 +4,7 @@
 **Last reviewed:** 2026-09-21
 **Status snapshot:** Trust UI, creator launch path, checkout, preview readiness, Family Payment Core Batches 1–2, and the September visual simplification pass are shipped. Katoa is **not MVP yet**: production settlement, strict server matching, live creator data, and Nostr operations remain.
 
-**Visual direction (2026-09-21):** Home is now a short creator-first splash flow with four demo examples; Explore owns deeper discovery. The latest visual batches add cinematic full-screen creator splash cards, `Projects · Creators · Video` Explore segmentation, one consistent premium `Demo preview` badge, immersive creator headers, mobile snap browsing, and richer demo creator worlds. Keep future public surfaces sparse, image-led, mobile-safe, and honest about demo/live status. Do not re-expand the homepage into a second documentation site.
+**Visual direction (2026-09-22):** Katoa is in a heavy pre-launch polish phase. Home now includes a guided three-path demo, multimedia story chapters, and progressive detail disclosure; Explore adds compact/expanded cards. Keep future public surfaces sparse, image-led, mobile-safe, and honest about demo/live status. Do not activate payment infrastructure, seed real creators, replace local seams, or take Katoa to market until Cam explicitly reopens those gates.
 
 **Latest visual batch SHAs:** `c568adf` splash cards · `80cd64c` Explore tabs · `04cceba` demo treatment · `3b03be8` cache/profile heroes · `8f15e54` mobile swipe shelf · `1c27cce` demo creator worlds.
 
@@ -32,9 +32,17 @@
 - ✅ About accordions, wishlist reorder (localStorage), breadcrumbs, ContributorsWall
 
 **Completed frontend priorities:** creator launch checklist (wallet → wishlist → publish → share) · first-wishlist one-screen wizard · launch progress and ready-to-share state · trust-first creator profile · explicit missing-wallet state · wallet validation and receive-ready preview · honest payment status stepper with expiry/retry/copy feedback · payment activity timeline · mobile-first checkout sheet · preview readiness gaps · supporter trust summary · release proof verification · shorter creator-first homepage · curated demo shelf · Explore duplicate-section removal · media fallbacks and priority beauty-shot loading.
-**Next priorities:** wire the real invoice → webhook → confirmed flow; replace local/demo engagement seams; add live Nostr identity and creator data. Do not market payment receipt as live until the backend confirms it.
+**Next priorities:** finish pre-launch polish in batches: guided demo flow, richer sample creator worlds, multimedia presentation mode, progressive detail controls, accessibility, responsive QA, and performance cleanup. Payment activation, real engagement, live creator seeding, and market launch are intentionally deferred while infrastructure options are reviewed.
 
 **Latest shipped UX batches:** `38eb19f` checkout sheet · `d730ea6` preview readiness · `1bdbfb4` supporter trust summary. All are presentation and guidance improvements only; no browser action can claim settlement.
+
+## Pre-launch polish boundary — 2026-09-22
+
+This phase is deliberately product-facing but not market-facing. All new demo content must remain visibly sample/demo content. Payment buttons may demonstrate the UI state machine, but no node, provider credential, real settlement, real creator claim, or live metric should be introduced by M3 work.
+
+**In scope now:** guided onboarding/demo story, richer sample media and post timelines, compact/expanded discovery views, progressive disclosure, responsive/accessibility cleanup, asset reliability, and end-to-end local demo tests.
+
+**Out of scope until Cam reopens it:** payment-node selection or commitment, production invoice/webhook activation, replacing local engagement seams, real creator seeding, public launch/marketing, and production deployment.
 
 ## Solo build completion status — 2026-09-21
 

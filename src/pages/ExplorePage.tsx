@@ -20,7 +20,7 @@ import { getStorage, setStorage, STORAGE_KEYS } from '../lib/storage';
 import { toJsonLdScript } from '../lib/jsonLd';
 import { useLanguage } from '../contexts/LanguageContext';
 import { PageMeta } from '../components/PageMeta';
-import { Gift, Search, MapPin, Globe, SlidersHorizontal, Star, Heart, X, Video, Users, LayoutGrid } from 'lucide-react';
+import { Gift, Search, MapPin, Globe, SlidersHorizontal, Star, Heart, X, Video, Users, LayoutGrid, List } from 'lucide-react';
 import { CreatorVideoCard } from '../components/CreatorVideoCard';
 import { FavoritesExport } from '../components/FavoritesExport';
 import { verticalById } from '../data/creatorVerticals';
@@ -137,11 +137,13 @@ const WishlistCard = memo(function WishlistCard({
   isFavorite,
   onToggleFavorite,
   t,
+  compact = false,
 }: {
   wishlist: Wishlist;
   isFavorite: boolean;
   onToggleFavorite: (id: string) => void;
   t: (key: string) => string;
+  compact?: boolean;
 }) {
   const navigate = useNavigate();
   const progress = wishlist.total_sats_goal > 0
@@ -164,7 +166,7 @@ const WishlistCard = memo(function WishlistCard({
               alt: wishlist.title,
             }}
             aspect="wide"
-            className="!aspect-[16/11]"
+            className={compact ? '!aspect-[16/8]' : '!aspect-[16/11]'}
           topLeft={
             <>
               {(wishlist.id.startsWith('mock') || wishlist.slug?.includes('demo')) && <DemoPreviewBadge compact />}
@@ -217,9 +219,11 @@ const WishlistCard = memo(function WishlistCard({
             <h3 className="text-lg font-bold text-white mb-1.5 line-clamp-1 group-hover:text-neon-cyan-400 transition-colors">
               {wishlist.title}
             </h3>
-            <p className="text-gray-400 text-sm line-clamp-2 leading-relaxed">
-              {wishlist.description}
-            </p>
+            {!compact && (
+              <p className="text-gray-400 text-sm line-clamp-2 leading-relaxed">
+                {wishlist.description}
+              </p>
+            )}
             {wishlist.country && (
               <div className="flex items-center gap-1.5 text-xs text-gray-500 font-medium mt-2">
                 <MapPin size={12} className="text-bitcoin-orange-500" />
@@ -353,6 +357,7 @@ export function ExplorePage() {
   const [activeTab, setActiveTab] = useState<ExploreTab>(() =>
     useUrlFilters ? urlState.tab : 'projects'
   );
+  const [compactCards, setCompactCards] = useState(false);
 
   useEffect(() => {
     setStorage(STORAGE_KEYS.exploreShowMap, showMap);
@@ -867,7 +872,28 @@ export function ExplorePage() {
                   {t('explore.favoritesOnly')}
                 </Button>
 
-
+                <div className="hidden sm:flex items-center gap-1 rounded-xl border border-white/10 bg-white/[0.03] p-1" aria-label="Card density">
+                  <button
+                    type="button"
+                    onClick={() => setCompactCards(false)}
+                    aria-pressed={!compactCards}
+                    title="Expanded cards"
+                    className={`min-h-[40px] min-w-[40px] rounded-lg flex items-center justify-center transition-colors ${!compactCards ? 'bg-white text-charcoal-950' : 'text-gray-400 hover:text-white'}`}
+                  >
+                    <LayoutGrid size={17} aria-hidden />
+                    <span className="sr-only">Expanded cards</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setCompactCards(true)}
+                    aria-pressed={compactCards}
+                    title="Compact cards"
+                    className={`min-h-[40px] min-w-[40px] rounded-lg flex items-center justify-center transition-colors ${compactCards ? 'bg-white text-charcoal-950' : 'text-gray-400 hover:text-white'}`}
+                  >
+                    <List size={17} aria-hidden />
+                    <span className="sr-only">Compact cards</span>
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -1012,12 +1038,13 @@ export function ExplorePage() {
           </div>
         ) : gridWishlists.length > 0 ? (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 items-stretch [&>a]:min-h-0">
+            <div className={`grid grid-cols-1 ${compactCards ? 'sm:grid-cols-2 lg:grid-cols-4' : 'sm:grid-cols-2 lg:grid-cols-3'} gap-4 sm:gap-6 items-stretch [&>a]:min-h-0`}>
               {gridWishlists.slice(0, visibleCount).map((wishlist) =>
                 activeTab !== 'projects' || isCreatorVideoCard(wishlist) ? (
                   <CreatorVideoCard
                     key={wishlist.id}
                     wishlist={wishlist}
+                    compact={compactCards}
                     isFavorite={favorites.includes(wishlist.id)}
                     onToggleFavorite={toggleFavorite}
                     t={t}
@@ -1026,6 +1053,7 @@ export function ExplorePage() {
                   <WishlistCard
                     key={wishlist.id}
                     wishlist={wishlist}
+                    compact={compactCards}
                     isFavorite={favorites.includes(wishlist.id)}
                     onToggleFavorite={toggleFavorite}
                     t={t}

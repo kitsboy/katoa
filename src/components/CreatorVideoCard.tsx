@@ -65,7 +65,7 @@ export const CreatorVideoCard = memo(function CreatorVideoCard({
             alt: wishlist.title,
           }}
           aspect="tall"
-          className="!aspect-[3/4] sm:!aspect-[4/5]"
+          className={compact ? '!aspect-[4/3] sm:!aspect-[5/4]' : '!aspect-[3/4] sm:!aspect-[4/5]'}
           variant="creator"
           topLeft={
             <span className="creator-video-card__badge">
@@ -131,7 +131,7 @@ export const CreatorVideoCard = memo(function CreatorVideoCard({
                 {subscribers.toLocaleString()} {t('explore.supporters')}
               </p>
             </div>
-            <Lock size={14} className="text-gray-500 shrink-0" aria-hidden />
+            {!compact && <Lock size={14} className="text-gray-500 shrink-0" aria-hidden />}
           </div>
 
           <h3 className="text-white font-bold text-base sm:text-lg mb-1 line-clamp-2 group-hover:text-[#14E6FF] transition-colors">
