@@ -1,3 +1,24 @@
+## Session — 2026-09-22 · Prod smoke test, OnlyFans logo fix, donation-QR cleanup (Buffy M3)
+
+**Done:**
+- Verified production serves `5166edf` (Family Payment Core, Cam via Aider) via deploy watchdog; fast-forwarded local main and ran the full suite green: 299/299 tests (29 new payment-core), typecheck + lint clean, 26/26 routes prerendered, secret-hygiene gate passed.
+- Browser smoke test of katoa.org: `/explore`, `/comparison`, `/u/paul_music` — no error boundaries, SW v18 controlled, creator profile healthy. Found 1 broken image on `/comparison`.
+- Fixed the OnlyFans logo: `FeeComparison.tsx` referenced `/pngwing.com.png`, an asset never committed; Cloudflare's SPA fallback served HTML with HTTP 200 so it broke for every visitor. Added `public/onlyfans-logo.svg` (official Simple Icons glyph, brand blue #00AFF0). Pushed `56fc5cc`; re-verified in prod — 0 broken images.
+- Settled the long-standing `public/donations-qr.png` deletion: confirmed the static-PNG fallback in `DonateQRModal` was unreachable dead code (Footer passes constant onchain address + lightning URI; profile page guards on `onchain`), removed the branch and the asset in `f9e601d`. Verified the live donation drawer → QR modal still renders its in-browser QRCodeSVG in prod.
+- Removed the leftover duplicate `public/donations-qr copy.png` (~97KB) in `49f3208` after confirming zero references.
+- Refreshed build stamps at each tip (`f829a3d`).
+
+**Decisions:**
+- Brand logos come from verified upstream sources (Simple Icons) with brand color baked into the SVG, matching the existing tile pattern.
+- The old PNG URL now returns Cloudflare's SPA fallback (200, text/html) — cosmetic only, nothing references it; noted because the same behavior masked the OnlyFans bug. An asset-reference build guard would catch this class of issue.
+- Working tree is fully clean for the first time since July; every deploy verified by `scripts/check-deploy.mjs` before/after.
+
+**Git State:**
+- SHA: `49f3208433d89dc0a172b3ffe579ad61f82add35`
+- Unpushed: none (all commits pushed and live in production)
+
+---
+
 ## Session — 2026-09-21 · Skate Colombia video card polish (Buffy M3)
 
 **Done:**
