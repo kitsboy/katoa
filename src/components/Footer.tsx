@@ -3,7 +3,8 @@ import { useToast } from './Toast';
 import { Link } from './Link';
 import { useLanguage } from '../contexts/LanguageContext';
 import { FooterBitcoinStrip } from './FooterBitcoinStrip';
-import { FooterJobBoard } from './FooterJobBoard';
+import { FooterJobsStrip } from './FooterJobsStrip';
+import { SectionHeader } from './SectionHeader';
 import { ContributorsWall } from './ContributorsWall';
 import { DonateQRModal } from './DonateQRModal';
 import {
@@ -15,7 +16,6 @@ import {
   Check,
   ChevronDown,
   Github,
-  Sparkles,
   Zap,
   Globe,
   Code2,
@@ -53,7 +53,6 @@ export function Footer() {
   const [showDonation, setShowDonation] = useState(false);
   const [copied, setCopied] = useState(false);
   const [qrExpanded, setQrExpanded] = useState(false);
-  const [jobsExpanded, setJobsExpanded] = useState(false);
 
   const handleCopyAddress = async () => {
     const { copyToClipboard } = await import('../lib/clipboard');
@@ -77,8 +76,8 @@ export function Footer() {
 
         <FooterBitcoinStrip />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 mb-12">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 mb-8">
             {/* Brand */}
             <div className="lg:col-span-3">
               <Link href="/" className="inline-flex items-center gap-3 mb-5 group">
@@ -159,84 +158,67 @@ export function Footer() {
               </div>
             </div>
 
-            {/* Nav */}
-            <div className="lg:col-span-2 grid grid-cols-2 gap-6">
+            {/* Nav — rebalanced: 6 of 12 columns so links stop squishing */}
+            <div className="lg:col-span-6 grid grid-cols-2 sm:grid-cols-3 gap-6 sm:gap-8">
               <div>
-                <h3 className="text-white font-display font-bold mb-4 text-xs uppercase tracking-widest">
-                  {t('footer.company')}
-                </h3>
-                <ul className="space-y-2.5">
+                <SectionHeader size="sm" title={t('footer.company')} />
+                <ul className="space-y-1 sm:space-y-1.5">
                   <FooterLink href="/about">{t('footer.about')}</FooterLink>
                   <FooterLink href="/pricing">{t('footer.pricing')}</FooterLink>
                   <FooterLink href="/contact">{t('footer.contact')}</FooterLink>
                   <FooterLink href="/comparison">{t('nav.comparison')}</FooterLink>
-                  <FooterLink href="/pitch">{t('nav.route.pitch')}</FooterLink>
                   <FooterLink href="/press">{t('footer.press')}</FooterLink>
                   <FooterLink href="/meetup">{t('footer.meetup')}</FooterLink>
-                  <FooterLink href="/creators">{t('footer.creators')}</FooterLink>
-                  <FooterLink href="/creators/guidelines">{t('footer.guidelines')}</FooterLink>
-                  <FooterLink href="/case-studies">{t('footer.caseStudies')}</FooterLink>
-                  <FooterLink href="/messages">{t('nav.messages')}</FooterLink>
                   <FooterLink href="/nip05">{t('footer.nip05')}</FooterLink>
                 </ul>
               </div>
               <div>
-                <h3 className="text-white font-display font-bold mb-4 text-xs uppercase tracking-widest">
-                  {t('footer.product')}
-                </h3>
-                <ul className="space-y-2.5">
+                <SectionHeader size="sm" title={t('footer.product')} />
+                <ul className="space-y-1 sm:space-y-1.5">
                   <FooterLink href="/explore">{t('nav.explore')}</FooterLink>
                   <FooterLink href="/explore?videos=1">{t('footer.videoCreators')}</FooterLink>
                   <FooterLink href="/templates">{t('nav.templates')}</FooterLink>
                   <FooterLink href="/dashboard">{t('nav.dashboard')}</FooterLink>
+                  <FooterLink href="/messages">{t('nav.messages')}</FooterLink>
                   <FooterLink href="/faq">{t('nav.faq')}</FooterLink>
                   <FooterLink href="/roadmap">{t('nav.roadmap')}</FooterLink>
                   <FooterLink href="/auth">{t('common.signIn')}</FooterLink>
                 </ul>
               </div>
-              <div className="col-span-2">
-                <h3 className="text-white font-display font-bold mb-4 text-xs uppercase tracking-widest">
-                  {t('footer.legal')}
-                </h3>
-                <ul className="space-y-2.5 sm:flex sm:flex-wrap sm:gap-x-6 sm:gap-y-2.5 sm:space-y-0">
+              <div>
+                <SectionHeader size="sm" title={t('footer.creators')} />
+                <ul className="space-y-1 sm:space-y-1.5">
+                  <FooterLink href="/creators">{t('footer.creators')}</FooterLink>
+                  <FooterLink href="/creators/guidelines">{t('footer.guidelines')}</FooterLink>
+                  <FooterLink href="/case-studies">{t('footer.caseStudies')}</FooterLink>
+                  <FooterLink href="/pitch">{t('nav.route.pitch')}</FooterLink>
+                </ul>
+              </div>
+              <div className="col-span-2 sm:col-span-3">
+                <SectionHeader size="sm" title={t('footer.legal')} />
+                <ul className="flex flex-wrap gap-x-6 gap-y-1">
                   <FooterLink href="/security">{t('nav.security')}</FooterLink>
                   <FooterLink href="/security/bounty">{t('footer.bounty')}</FooterLink>
                   <FooterLink href="/verify">{t('trust.release.eyebrow')}</FooterLink>
                   <FooterLink href="/terms">{t('footer.terms')}</FooterLink>
                   <FooterLink href="/privacy">{t('footer.privacy')}</FooterLink>
                 </ul>
-                <p className="mt-4 text-[11px] leading-relaxed text-gray-400">
+                <p className="mt-3 text-[11px] leading-relaxed text-gray-400">
                   No cookies. We use self-hosted, cookie-less analytics. Nothing to consent to.
                 </p>
               </div>
             </div>
 
-            {/* Jobs */}
-            <div className="lg:col-span-7">
-              <button
-                type="button"
-                onClick={() => setJobsExpanded(!jobsExpanded)}
-                className="lg:hidden w-full flex items-center justify-between mb-4 p-3 rounded-xl bg-white/[0.03] border border-white/10 text-white font-semibold touch-manipulation"
-                aria-expanded={jobsExpanded}
-              >
-                <span className="flex items-center gap-2">
-                  {t('footer.openRoles')}
-                  <Sparkles size={16} className="text-neon-cyan-500" />
-                </span>
-                <ChevronDown size={18} className={`transition-transform ${jobsExpanded ? 'rotate-180' : ''}`} />
-              </button>
-              <div className={`${jobsExpanded ? 'block' : 'hidden'} lg:block`}>
-                <FooterJobBoard />
-              </div>
+            {/* Jobs — compact one-row strip instead of a full job-board grid */}
+            <div className="lg:col-span-3">
+              <FooterJobsStrip />
             </div>
           </div>
 
-          {/* Contributors */}
-          <div className="mb-12">
-            <h3 className="text-white font-display font-bold mb-4 text-xs uppercase tracking-widest text-gray-300">
-              {t('footer.contributors')}
-            </h3>
-            <ContributorsWall />
+          {/* Contributors — compact one-row strip above the bottom bar */}
+          <div className="mb-8">
+            <SectionHeader size="sm" title={t('footer.contributors')} />
+            <ContributorsWall compact />
           </div>
 
           {/* Bottom bar */}

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Button } from '../components/Button';
+import { SectionHeader } from '../components/SectionHeader';
 import { Card } from '../components/Card';
 import { Modal } from '../components/Modal';
 import { Input } from '../components/Input';
@@ -760,16 +761,18 @@ export function DashboardPage() {
 
               {mainTab === 'projects' && (
                 <>
-              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-4">
-                <div>
-                  <h2 className="font-display text-2xl font-bold text-white">{t('dashboard.yourProjects')}</h2>
-                  <p className="text-gray-400 text-sm">{t('dashboard.yourProjectsSub')}</p>
-                </div>
-                <Button variant="outline" size="sm" onClick={() => setShowCreateModal(true)}>
-                  <Plus size={16} className="mr-1.5" />
-                  {t('dashboard.newProject')}
-                </Button>
-              </div>
+              <SectionHeader
+                size="md"
+                align="left"
+                title={t('dashboard.yourProjects')}
+                subtitle={t('dashboard.yourProjectsSub')}
+                action={
+                  <Button variant="outline" size="sm" onClick={() => setShowCreateModal(true)}>
+                    <Plus size={16} className="mr-1.5" />
+                    {t('dashboard.newProject')}
+                  </Button>
+                }
+              />
 
               {projects.length > 0 && (
                 <div className="flex flex-col sm:flex-row gap-2 mb-5">
@@ -859,8 +862,12 @@ export function DashboardPage() {
 
               {mainTab === 'wishlists' && (
                 <div>
-                  <h2 className="font-display text-2xl font-bold text-white mb-1">{t('dashboard.wishlists')}</h2>
-                  <p className="text-gray-400 text-sm mb-5">Lists under your projects — open one to fund or edit.</p>
+                  <SectionHeader
+                    size="md"
+                    align="left"
+                    title={t('dashboard.wishlists')}
+                    subtitle="Lists under your projects — open one to fund or edit."
+                  />
                   {ownedWishlists.length === 0 ? (
                     <Card variant="glass">
                       <EmptyState
@@ -900,7 +907,7 @@ export function DashboardPage() {
 
               {mainTab === 'earnings' && (
                 <div id="dashboard-earnings">
-                  <h2 className="font-display text-2xl font-bold text-white mb-2">{t('dashboard.raised')}</h2>
+                  <SectionHeader size="md" align="left" title={t('dashboard.raised')} />
                   <EarningsPanel isDemo={isDemoUser} userId={user?.id} />
                   <PaymentAuditPanel
                     items={[]}

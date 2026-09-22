@@ -680,6 +680,15 @@ export function ExplorePage() {
 
   const mapStatusLabel = showMap ? t('explore.mapOpened') : t('explore.mapClosed');
 
+  // Per-tab counts over ALL wishlists (before tab filtering), so the pills
+  // preview how much content each tab holds.
+  const tabCounts = useMemo(() => {
+    const projects = wishlists.filter((w) => !isCreatorVideoCard(w) && !w.cover_video_url).length;
+    const video = wishlists.filter((w) => isCreatorVideoCard(w) || Boolean(w.cover_video_url)).length;
+    const creators = new Set(wishlists.map((w) => w.creator?.username).filter(Boolean)).size;
+    return { projects, creators, video };
+  }, [wishlists]);
+
   return (
     <div className="min-h-screen bg-charcoal-950 pb-20 md:pb-8">
       <PageMeta title={t('explore.metaTitle')} description={t('explore.metaDesc')} path="/explore" />
@@ -766,19 +775,22 @@ export function ExplorePage() {
           </div>
         </Card>
 
-        <div className="mb-8">
+        <div className="mb-6">
           <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">{t('explore.allProjects')}</h1>
           <p className="text-gray-300 mb-2 text-base sm:text-lg">{t('explore.subtitle')}</p>
           <p className="sr-only" aria-live="polite" aria-atomic="true">
             {resultCountLabel}. {mapStatusLabel}
           </p>
+        </div>
 
-          <div className="mb-6 grid grid-cols-3 gap-1 rounded-2xl border border-white/10 bg-white/[0.04] p-1.5" role="tablist" aria-label="Explore content type">
+        {/* Sticky tab bar — stays pinned below the navbar while browsing the grid */}
+        <div className="sticky top-[4.25rem] sm:top-[4.75rem] z-30 -mx-4 px-4 py-2 mb-6 sm:mx-0 sm:px-0 sm:rounded-2xl sm:border sm:border-white/10 bg-charcoal-950/85 backdrop-blur-md">
+          <div className="grid grid-cols-3 gap-1 rounded-2xl border border-white/10 bg-white/[0.04] p-1.5" role="tablist" aria-label="Explore content type">
             {[
-              { id: 'projects' as const, label: 'Projects', icon: LayoutGrid },
-              { id: 'creators' as const, label: 'Creators', icon: Users },
-              { id: 'video' as const, label: 'Video', icon: Video },
-            ].map(({ id, label, icon: Icon }) => (
+              { id: 'projects' as const, label: 'Projects', icon: LayoutGrid, count: tabCounts.projects },
+              { id: 'creators' as const, label: 'Creators', icon: Users, count: tabCounts.creators },
+              { id: 'video' as const, label: 'Video', icon: Video, count: tabCounts.video },
+            ].map(({ id, label, icon: Icon, count }) => (
               <button
                 key={id}
                 type="button"
@@ -796,6 +808,13 @@ export function ExplorePage() {
               >
                 <Icon size={17} aria-hidden />
                 {label}
+                <span
+                  className={`hidden sm:inline-flex min-w-[1.5rem] justify-center text-[10px] font-black px-1.5 py-0.5 rounded-full ${
+                    activeTab === id ? 'bg-charcoal-950/10 text-charcoal-900' : 'bg-white/10 text-gray-400'
+                  }`}
+                >
+                  {count}
+                </span>
               </button>
             ))}
           </div>
