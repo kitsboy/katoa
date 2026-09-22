@@ -141,7 +141,7 @@ export function DonateQRModal({
                 aria-hidden
               />
               <div className="relative bg-white p-3 sm:p-4 rounded-2xl shadow-xl ring-1 ring-black/5">
-                {paymentUri ? (
+                {paymentUri && (
                   <QRCodeSVG
                     value={paymentUri}
                     size={268}
@@ -152,13 +152,6 @@ export function DonateQRModal({
                     title="Donation QR code"
                     aria-label="Donation QR code"
                     className="w-full h-auto"
-                  />
-                ) : (
-                  <img
-                    src="/donations-qr.png"
-                    alt="Donation QR code"
-                    className="w-full aspect-square object-contain"
-                    style={{ imageRendering: 'crisp-edges' }}
                   />
                 )}
               </div>
