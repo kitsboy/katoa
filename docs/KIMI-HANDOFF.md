@@ -21,8 +21,8 @@
 - Demo edits remain device-local and payment UI never claims browser-side settlement.
 
 **Git State:**
-- SHA: pending final push.
-- Unpushed: feature batch plus documentation stamp.
+- SHA: `464de3ba4de6080d71bcb4e51fbbead118b03db5` — pushed to `origin/main`.
+- Unpushed: none.
 
 ---
 
