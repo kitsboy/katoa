@@ -1,3 +1,31 @@
+## Session — 2026-09-22 · Heavy content, payment, and creator UX polish (Buffy M3)
+
+**Done:**
+- Added the integrated `ContentStudio` drawer to ProjectPage: project story editing, wishlist card editing, card reordering, compact/expanded card detail, local autosave, eight-version history, restore, preview, and save actions.
+- Added `PaymentDetailDisclosure` in checkout with expandable method, amount, destination, timing, fee, proof, and demo/staged honesty details.
+- Added creator profile tabs: Story, Media, Goals, Updates, and Proof without deleting the existing feed, wishlist, trust, or subscription content.
+- Added expandable `CreatorStoryChapters` for identity, goals, progress, and trust; added `CreatorPresentation` with progress dots, captions, keyboard arrows, Escape, and demo labels.
+- Added focused persistence and story-disclosure tests.
+
+**Verification:**
+- `npm test -- --run`: **306/306 tests passed** (45 files).
+- `npm run typecheck`: passed.
+- `npm run lint`: passed.
+- `npm run check:security`: passed with 0 credential findings.
+- `npm run build`: passed; 26/26 routes prerendered; src/dist asset-reference checks passed.
+- Existing non-blocking Vite chunk-size and Browserslist warnings remain.
+
+**Decisions:**
+- This is pre-launch polish only. No payment node, provider, credential, real engagement, real creator seed, or production hosting deployment was activated.
+- Existing content remains available; tabs add progressive disclosure rather than removing product surfaces.
+- Demo edits remain device-local and payment UI never claims browser-side settlement.
+
+**Git State:**
+- SHA: pending final push.
+- Unpushed: feature batch plus documentation stamp.
+
+---
+
 ## Session — 2026-09-22 · Demo sample-data control center (Buffy M3)
 
 **Done:**

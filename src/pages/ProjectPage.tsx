@@ -6,6 +6,7 @@ import { Card } from '../components/Card';
 import { Modal } from '../components/Modal';
 import { Input } from '../components/Input';
 import { Link } from '../components/Link';
+import { ContentStudio, type StudioCardItem, type StudioProjectValue } from '../components/ContentStudio';
 
 import { PaymentMethodManager } from '../components/PaymentMethodManager';
 import { CoverVideoUpload } from '../components/CoverVideoUpload';
@@ -92,6 +93,7 @@ export function ProjectPage() {
   const [wishlists, setWishlists] = useState<Wishlist[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
+  const [showContentStudio, setShowContentStudio] = useState(false);
   const [showCreateWishlist, setShowCreateWishlist] = useState(false);
   const [editingWishlist, setEditingWishlist] = useState<string | null>(null);
   const [processing, setProcessing] = useState(false);
@@ -229,8 +231,7 @@ export function ProjectPage() {
     setDemoWishlistsForProject(project.id, toDemoWishlists(project.id, next));
   }
 
-  async function handleUpdateProject(e: React.FormEvent) {
-    e.preventDefault();
+  async function persistProject() {
     if (!project) return;
 
     setProcessing(true);
@@ -276,6 +277,29 @@ export function ProjectPage() {
     } finally {
       setProcessing(false);
     }
+  }
+
+  async function handleUpdateProject(e: React.FormEvent) {
+    e.preventDefault();
+    await persistProject();
+  }
+
+  async function persistStudioChanges() {
+    if (!project) return;
+    await persistProject();
+    if (isDemoUser) {
+      setDemoWishlistsForProject(project.id, toDemoWishlists(project.id, wishlists));
+      toast('Content Studio changes saved to this demo device.', 'success');
+      return;
+    }
+    await Promise.all(wishlists.map((wishlist) =>
+      supabase.from('wishlists').update({
+        title: wishlist.title,
+        description: wishlist.description,
+        visibility: wishlist.visibility,
+      }).eq('id', wishlist.id)
+    ));
+    toast('Project story and content cards saved.', 'success');
   }
 
   async function handleBackgroundUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -771,14 +795,24 @@ export function ProjectPage() {
                   </Button>
                 </div>
               ) : (
-                <Button
-                  onClick={() => setEditing(true)}
-                  variant="bitcoin"
-                  title="Edit project details and settings"
-                >
-                  <Edit size={16} className="mr-2" />
-                  Edit Project
-                </Button>
+                <div className="flex flex-col gap-2 sm:flex-row lg:flex-col">
+                  <Button
+                    onClick={() => setShowContentStudio(true)}
+                    variant="bitcoin"
+                    title="Open the focused content editor"
+                  >
+                    <Settings size={16} className="mr-2" />
+                    Content Studio
+                  </Button>
+                  <Button
+                    onClick={() => setEditing(true)}
+                    variant="outline"
+                    title="Edit payment, media, and project settings"
+                  >
+                    <Edit size={16} className="mr-2" />
+                    Full settings
+                  </Button>
+                </div>
               )}
             </div>
           </div>
@@ -1164,6 +1198,44 @@ export function ProjectPage() {
           </div>
         </form>
       </Modal>
+
+      {showContentStudio && (
+        <ContentStudio
+          projectId={project.id}
+          project={{
+            title: formData.title,
+            description: formData.description,
+            visibility: formData.visibility,
+          } satisfies StudioProjectValue}
+          cards={wishlists.map((wishlist): StudioCardItem => ({
+            id: wishlist.id,
+            title: wishlist.title,
+            description: wishlist.description,
+            visibility: wishlist.visibility,
+          }))}
+          isDemo={isDemoUser}
+          onProjectChange={(next) => setFormData((current) => ({
+            ...current,
+            title: next.title,
+            description: next.description,
+            visibility: next.visibility as 'public' | 'private' | 'draft',
+          }))}
+          onCardChange={(id, next) => setWishlists((current) => current.map((wishlist) => wishlist.id === id ? { ...wishlist, ...next, visibility: next.visibility as Wishlist['visibility'] } : wishlist))}
+          onMoveCard={(id) => setWishlists((current) => {
+            const index = current.findIndex((wishlist) => wishlist.id === id);
+            if (index <= 0) return current;
+            const next = [...current];
+            [next[index - 1], next[index]] = [next[index], next[index - 1]];
+            return next;
+          })}
+          onSave={() => { void persistStudioChanges(); }}
+          onPreview={() => {
+            setShowContentStudio(false);
+            window.open(`/project/${project.slug}`, '_blank', 'noopener,noreferrer');
+          }}
+          onClose={() => setShowContentStudio(false)}
+        />
+      )}
 
       <ConfirmDialog
         isOpen={deleteWishlistId !== null}

@@ -21,6 +21,8 @@ import { ZapTotals } from '../components/ZapTotals';
 import { DemoBadge } from '../components/DemoBadge';
 import { DemoPreviewBadge } from '../components/DemoPreviewBadge';
 import { TrustFirstCreatorCard } from '../components/TrustFirstCreatorCard';
+import { CreatorStoryChapters, type StoryChapter } from '../components/CreatorStoryChapters';
+import { CreatorPresentation } from '../components/CreatorPresentation';
 import { MobileStickyCta } from '../components/MobileStickyCta';
 import { WalletDeepLinks } from '../components/WalletDeepLinks';
 import { useToast } from '../components/Toast';
@@ -96,6 +98,8 @@ export function CreatorProfilePage() {
   const [tipQrUrl, setTipQrUrl] = useState('');
   const [tipSats, setTipSats] = useState<number | null>(null);
   const [tipBusy, setTipBusy] = useState(false);
+  const [storyTab, setStoryTab] = useState<'story' | 'media' | 'goals' | 'updates' | 'proof'>('story');
+  const [presentationIndex, setPresentationIndex] = useState<number | null>(null);
 
   const loadProfile = useCallback(
     async (signal?: { cancelled: boolean }) => {
@@ -174,6 +178,19 @@ export function CreatorProfilePage() {
           profile.username.toLowerCase() === sessionProfile.username.toLowerCase()))
   );
   const messageHref = `/messages?to=${encodeURIComponent(npub || profile?.username || '')}`;
+  const storyChapters: StoryChapter[] = profile ? [
+    { id: 'story', eyebrow: 'Who I am', title: profile.bio ? `Meet @${profile.username}` : `@${profile.username}'s creative world`, body: profile.bio || 'A creator building in public and inviting supporters into the work.', detail: 'A strong first chapter tells people what makes this person worth following before asking for support.' },
+    { id: 'goals', eyebrow: 'The goal', title: profile.wishlists[0]?.title || 'What support unlocks', body: profile.wishlists[0]?.description || 'Every contribution is connected to a visible project, item, or next milestone.', detail: 'Keep the goal concrete: name the thing, show the target, and explain what happens after it is funded.' },
+    { id: 'updates', eyebrow: 'Progress', title: posts.length ? `${posts.length} updates to explore` : 'Progress, in the open', body: posts.length ? 'See the latest drops, milestones, and behind-the-scenes moments from this creator.' : 'Updates can turn a one-time gift into an ongoing relationship.', detail: 'Dates, milestones, and short progress notes give supporters a reason to return.' },
+    { id: 'proof', eyebrow: 'Trust', title: 'Clear destination, no mystery', body: 'Wallet details and release proof are shown separately from payment settlement.', detail: 'KATOA never treats a browser click as paid. Settlement requires trusted backend confirmation.' },
+  ] : [];
+  const storyTabLabels = [
+    { id: 'story' as const, label: 'Story' },
+    { id: 'media' as const, label: 'Media' },
+    { id: 'goals' as const, label: 'Goals' },
+    { id: 'updates' as const, label: 'Updates' },
+    { id: 'proof' as const, label: 'Proof' },
+  ];
 
   const handleSubscribe = (tierId = 'supporter') => {
     if (!profile) return;
@@ -564,6 +581,18 @@ export function CreatorProfilePage() {
           </div>
         </Card>
 
+        <div className="mb-8 rounded-2xl border border-white/10 bg-white/[0.03] p-1" role="tablist" aria-label="Creator profile sections">
+          <div className="grid grid-cols-5 gap-1">{storyTabLabels.map((tab) => <button key={tab.id} type="button" role="tab" aria-selected={storyTab === tab.id} onClick={() => setStoryTab(tab.id)} className={`min-h-[44px] rounded-xl px-2 text-xs font-bold ${storyTab === tab.id ? 'bg-white text-charcoal-950' : 'text-gray-400 hover:text-white'}`}>{tab.label}</button>)}</div>
+        </div>
+
+        {storyTab === 'story' && <CreatorStoryChapters chapters={storyChapters} demo={Boolean(profile.fromMock)} />}
+
+        {storyTab === 'goals' && <section className="mb-12"><div className="mb-5 flex items-center justify-between gap-3"><div><p className="text-[10px] font-black uppercase tracking-[0.18em] text-bitcoin-orange-400">Goals</p><h2 className="mt-1 text-2xl font-black text-white">What support changes</h2></div><button type="button" onClick={() => setPresentationIndex(1)} className="min-h-[44px] rounded-xl border border-white/10 px-3 text-xs font-bold text-gray-300 hover:text-white">Present story</button></div><div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-sm leading-relaxed text-gray-300">{profile.wishlists[0]?.description || 'This creator has not added a goal description yet.'}</div></section>}
+
+        {storyTab === 'proof' && <section className="mb-12"><TrustFirstCreatorCard username={profile.username} lightning={lightning} onchain={onchain} onCopy={handleCopy} onSupport={() => setShowTip(true)} /></section>}
+
+        {presentationIndex !== null && <CreatorPresentation chapters={storyChapters} index={presentationIndex} onIndexChange={setPresentationIndex} onClose={() => setPresentationIndex(null)} demo={Boolean(profile.fromMock)} />}
+
         {subscribed && (
           <ManageSubscriptionPanel
             creatorSlug={subscriptionKeys(profile).find((key) => isSubscribed(key)) ?? profile.username}
@@ -572,7 +601,7 @@ export function CreatorProfilePage() {
           />
         )}
 
-        {posts.length > 0 ? (
+        {(storyTab === 'media' || storyTab === 'updates') && (posts.length > 0 ? (
           <CreatorPostFeed
             creatorName={profile.username}
             subscriberCount={subscriberCount}
@@ -592,9 +621,9 @@ export function CreatorProfilePage() {
                 : 'This creator has not published posts or wishlists yet.'}
             </p>
           </Card>
-        )}
+        ))}
 
-        <section className="mb-14" aria-labelledby="creator-wishlists-heading">
+        <section className={`${storyTab === 'goals' ? '' : 'hidden'} mb-14`} aria-labelledby="creator-wishlists-heading">
           <div className="flex items-center gap-3 mb-6">
             <div className="p-2.5 bg-bitcoin-orange-500/15 rounded-xl">
               <Package size={22} className="text-bitcoin-orange-400" />
@@ -665,13 +694,13 @@ export function CreatorProfilePage() {
           )}
         </section>
 
-        <TrustFirstCreatorCard
+        {storyTab !== 'proof' && <TrustFirstCreatorCard
           username={profile.username}
           lightning={lightning}
           onchain={onchain}
           onCopy={handleCopy}
           onSupport={() => setShowTip(true)}
-        />
+        />}
 
         <div className="mb-14 py-10 px-4 sm:px-6 lg:px-8 -mx-4 sm:-mx-6 lg:-mx-8 rounded-3xl border border-white/10 bg-white/[0.02]">
           <SubscriptionTiers creatorName={profile.username} onSubscribe={(tierId) => handleSubscribe(tierId)} />

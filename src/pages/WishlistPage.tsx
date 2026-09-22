@@ -50,6 +50,7 @@ import { PaymentStatusStepper } from '../components/PaymentStatusStepper';
 import { PaymentActivityTimeline } from '../components/PaymentActivityTimeline';
 import { MobileCheckoutSummary } from '../components/MobileCheckoutSummary';
 import { SupporterTrustSummary } from '../components/SupporterTrustSummary';
+import { PaymentDetailDisclosure } from '../components/PaymentDetailDisclosure';
 
 const SAT_PRESETS = [
   { label: '1K', value: 1000 },
@@ -1631,6 +1632,13 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             username={wishlist.creator.username}
             lightning={hasLightning ? lightningAddr : null}
             onchain={hasOnchain ? onchainAddress : null}
+            isDemo={isDemoWishlist}
+          />
+          <PaymentDetailDisclosure
+            method={giftIntent?.method === 'onchain' ? 'Bitcoin on-chain' : giftIntent?.method === 'nostr' ? 'Nostr Zap' : 'Lightning'}
+            rail={giftIntent?.method === 'onchain' ? 'onchain' : giftIntent?.method === 'nostr' ? 'nostr' : 'lightning'}
+            destination={giftIntent?.method === 'onchain' ? onchainAddress : lightningAddr}
+            amountSats={giftIntent?.amount}
             isDemo={isDemoWishlist}
           />
 

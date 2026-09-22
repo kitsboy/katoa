@@ -1,14 +1,14 @@
 # katoa — Last Updated 2026-09-22 by Buffy
 
-**Brief:** Added a local sample-data control center for switching demo stories, changing presentation detail, and safely resetting preview state.
+**Brief:** Heavy pre-launch polish now connects Content Studio editing, payment detail, creator story chapters, tabs, and presentation mode without activating live payments.
 
 **Done:**
-- Added Demo controls to the demo banner.
-- Added Community impact, Creator studio, and Independent music sample scenarios.
-- Added Rich walkthrough and Quick skim modes.
-- Added selected-story shortcut and local-only reset.
-- Reset preserves theme preferences and never touches Supabase, live accounts, payment nodes, or credentials.
+- Integrated Content Studio into project management with local autosave, version history, restore, preview, card reordering, and progressive editing detail.
+- Added expandable payment journey details for method, amount, destination, timing, fees, proof, and honest demo/staged boundaries.
+- Added creator Story, Media, Goals, Updates, and Proof tabs while preserving existing feed, wishlist, trust, and subscription surfaces.
+- Added story chapters and a keyboard-accessible presentation overlay with progress, captions, and next/previous controls.
+- Added focused tests for persistence and progressive disclosure.
 
-**Verification:** 303 tests passed across 43 files; typecheck and lint passed; build passed with 26/26 prerendered routes; source/dist asset-reference guards passed.
+**Verification:** 306 tests passed across 45 files; typecheck, lint, security gate, build, 26/26 prerendered routes, and src/dist asset-reference guards passed. Existing Vite chunk-size and Browserslist warnings remain non-blocking.
 
-**Git state:** Tip `53af5f0`, pushed to `origin/main`; no production hosting deployment was run.
+**Git state:** Feature commit and documentation stamp are being pushed to `origin/main`; no production hosting deployment, payment-node activation, provider commitment, credentials, or live creator data were touched.
