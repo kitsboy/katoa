@@ -11,4 +11,4 @@
 
 **Verification:** 313 tests passed across 47 files; typecheck, lint, security gate, build, 26/26 prerendered routes, and source/dist asset-reference guards passed. Existing Vite chunk-size, dynamic-import, and Browserslist warnings remain non-blocking.
 
-**Git state:** Auth hardening commit and final handoff stamp are being pushed to `origin/main`. Nostr remains implemented-but-not-deployed pending Supabase review and configuration. No X/Twitter provider was added.
+**Git state:** Auth hardening source commit `23f8c3d` is pushed to `origin/main`. Nostr remains implemented-but-not-deployed pending Supabase review and configuration. No X/Twitter provider was added.

@@ -22,8 +22,8 @@
 - Add Edge/hosting rate limiting before public Nostr activation. No X/Twitter provider was added.
 
 **Git State:**
-- SHA: pending final push.
-- Unpushed: auth hardening batch plus documentation stamp.
+- SHA: `23f8c3d` (auth hardening source batch).
+- Pushed to `origin/main`; no Supabase migration or Edge Function deployment was run.
 
 ---
 
