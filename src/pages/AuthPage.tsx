@@ -10,6 +10,7 @@ import { PageMeta } from '../components/PageMeta';
 import { STORAGE_KEYS } from '../lib/storage';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { hasNip07, nip07UserMessage } from '../lib/nostr';
+import { authCallbackError, postAuthPath } from '../lib/authSecurity';
 
 type Nip07ChipStatus = 'detected' | 'missing' | 'denied';
 
@@ -63,24 +64,14 @@ export function AuthPage() {
 
   const passwordStrength = isSignUp ? getPasswordStrength(formData.password) : null;
 
-  function postAuthPath(): string {
-    const params = new URLSearchParams(window.location.search);
-    const next = params.get('next');
-    if (next && next.startsWith('/') && !next.startsWith('//')) return next;
-    return '/dashboard';
-  }
-
   useEffect(() => {
     const handleAuthCallback = async () => {
-      const params = new URLSearchParams(window.location.search);
-      const errorParam = params.get('error');
-      const errorDescription = params.get('error_description');
-
-      if (errorParam) {
-        setError(errorDescription || 'Authentication failed. Please try again.');
+      const callbackError = authCallbackError(window.location.search);
+      if (callbackError) {
+        setError(callbackError);
         window.history.replaceState({}, document.title, '/auth');
       } else if (session && !loading) {
-        setTimeout(() => navigate(postAuthPath(), { replace: true }), 100);
+        setTimeout(() => navigate(postAuthPath(window.location.search), { replace: true }), 100);
       }
     };
 
@@ -114,7 +105,7 @@ export function AuthPage() {
         setSignUpSuccess(true);
         setIsSignUp(false);
       } else {
-        setTimeout(() => navigate(postAuthPath(), { replace: true }), 300);
+        setTimeout(() => navigate(postAuthPath(window.location.search), { replace: true }), 300);
       }
     } catch (err: unknown) {
       console.error('Auth error:', err);
@@ -159,9 +150,8 @@ export function AuthPage() {
         setNostrNote(result.error.message);
       } else {
         setNip07Status('detected');
-        setNostrNote(
-          'Extension connected. Sign in with email or Google, then link your npub in Settings. Nostr cannot create a session until the server challenge is live.'
-        );
+        setNostrNote('Nostr challenge accepted. Finishing secure session…');
+        navigate(postAuthPath(window.location.search), { replace: true });
       }
     } catch (err: unknown) {
       setNip07Status(nip07StatusFromError(err));
@@ -233,7 +223,7 @@ export function AuthPage() {
             <p className="text-gray-200">
               {isSignUp
                 ? 'Email or Google. Optional Nostr. We do not KYC you.'
-                : 'Sign in with email or Google. Link Nostr in Settings after.'}
+                : 'Sign in with email, Google, or your Nostr extension.'}
             </p>
             <p className="mt-3 text-xs text-gray-200 leading-relaxed">
               0% platform fees · non-custodial · no KYC by Katoa
@@ -288,7 +278,7 @@ export function AuthPage() {
                   setLoading(true);
                   const { error: demoError } = await signInAsDemo();
                   if (demoError) setError(demoError.message);
-                  else navigate(postAuthPath(), { replace: true });
+                  else navigate(postAuthPath(window.location.search), { replace: true });
                   setLoading(false);
                 }}
               >
@@ -326,7 +316,7 @@ export function AuthPage() {
             Continue with Google
           </Button>
 
-          {/* Nostr is not a login — challenge Edge Function is not deployed. */}
+          {/* Nostr login uses a server challenge; private keys stay in the extension. */}
           <div className="mb-6 p-4 rounded-xl border border-purple-500/30 bg-purple-500/5">
             <div className="flex flex-wrap items-center gap-2 mb-3">
               <span
@@ -353,8 +343,7 @@ export function AuthPage() {
               </span>
             </div>
             <p className="text-sm text-purple-200/90 mb-3 leading-relaxed">
-              Nostr cannot create a session here (server challenge missing). Check your extension, then
-              sign in with email or Google and link your npub in Settings.
+              Sign in with a NIP-07 challenge. Your extension signs a short-lived message; KATOA never sees your private key.
             </p>
             <Button
               type="button"
@@ -366,7 +355,7 @@ export function AuthPage() {
               <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
               </svg>
-              Check Nostr extension
+              Continue with Nostr
             </Button>
           </div>
 

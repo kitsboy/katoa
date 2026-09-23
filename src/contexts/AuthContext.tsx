@@ -2,6 +2,8 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { User, Session } from '@supabase/supabase-js';
 import { supabase, asRow, isSupabaseConfigured } from '../lib/supabase';
 import { nostrService } from '../lib/nostr';
+import { googleRedirectTo } from '../lib/authSecurity';
+import { signInWithNostrChallenge } from '../lib/nostrAuth';
 import {
   canUseDemoAuth,
   DEMO_PROFILE,
@@ -181,30 +183,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  function safeNextPath(): string | null {
-    try {
-      const next = new URLSearchParams(window.location.search).get('next');
-      if (next && next.startsWith('/') && !next.startsWith('//')) return next;
-    } catch {
-      /* ignore */
-    }
-    return null;
-  }
-
   async function signInWithGoogle() {
     try {
-      const next = safeNextPath();
-      const redirectTo = next
-        ? `${window.location.origin}/auth?next=${encodeURIComponent(next)}`
-        : `${window.location.origin}/dashboard`;
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo,
-          queryParams: {
-            access_type: 'offline',
-            prompt: 'consent',
-          },
+          redirectTo: googleRedirectTo(window.location.origin, window.location.search),
         },
       });
 
@@ -237,30 +221,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   /**
-   * Secure Nostr login requires a server-side challenge (NIP-07 signed event → Edge Function → session).
+   * Secure Nostr login uses a server-side challenge (NIP-07 signed event → Edge Function → session).
    * Using the public key as a password is an account-takeover risk and is intentionally disabled.
-   * Logged-in users can still link Nostr via syncNostrProfile / settings.
+   * The function remains unavailable until the staged migration and Edge Function are deployed.
    */
   async function signInWithNostr() {
     try {
-      if (!window.nostr) {
-        throw new Error(
-          'Install a Nostr extension (Alby or nos2x). We only use NIP-07 browser signing — we never ask for private keys.'
-        );
+      if (!isSupabaseConfigured()) {
+        throw new Error('Secure Nostr login is unavailable until the KATOA auth function is deployed.');
       }
-
-      // Prove extension works without creating a weak auth session
-      const pk = await window.nostr.getPublicKey();
-      void pk;
-
-      return {
-        error: new Error(
-          'Secure Nostr sign-in needs a server challenge (coming soon). For now: sign in with email/Google, then Settings → Link NIP-07 extension to attach your npub and publish lud16 for zaps.'
-        ),
-      };
+      const result = await signInWithNostrChallenge();
+      if (result.userId) await loadProfile(result.userId);
+      return { error: null };
     } catch (error) {
       const msg = error instanceof Error ? error.message : String(error);
-      if (/reject|denied|user/i.test(msg)) {
+      if (/reject|denied|cancel/i.test(msg)) {
         return { error: new Error('Nostr extension denied permission. Approve the prompt and try again.') };
       }
       return { error: error as Error };

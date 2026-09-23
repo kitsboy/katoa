@@ -1,3 +1,32 @@
+## Session — 2026-09-22 · Google PKCE hardening and staged Nostr challenge login (Buffy M3)
+
+**Done:**
+- Hardened Supabase browser auth with explicit PKCE flow, persistent session refresh, and URL session detection.
+- Simplified Google OAuth: internal callback route only, safe `next` path helper, removed unnecessary offline access and forced consent parameters.
+- Added `authSecurity` tests for open-redirect rejection, callback error handling, and Google callback construction.
+- Implemented client Nostr challenge flow: server-issued challenge, NIP-42 kind `22242` signing in NIP-07, one-time verification, and Supabase token exchange.
+- Added staged `nostr-auth-challenge` Edge Function with domain binding, timestamp/expiration checks, signature verification, atomic challenge consumption, profile pubkey verification, and no private-key handling.
+- Added staged migration `20260922000000_nostr_auth_challenge.sql` for service-role-only challenge storage and `nostr_pubkey_verified`.
+
+**Verification:**
+- `npm test -- --run`: **313/313 tests passed** (47 files).
+- `npm run typecheck`: passed.
+- `npm run lint`: passed.
+- `npm run check:security`: passed with 0 credential findings.
+- `npm run build`: passed; 26/26 routes prerendered; source/dist asset-reference checks passed.
+- Existing non-blocking Vite chunk-size, dynamic-import, and Browserslist warnings remain.
+
+**Security boundaries:**
+- Google provider credentials and redirect allowlists were not changed; verify them in Supabase/Google dashboards before live testing.
+- Nostr is implemented in source but **not deployed or activated**. Review/apply the migration, deploy the function, configure `SITE_URL`, `NOSTR_AUTH_ALLOWED_ORIGINS`, and service-role secrets in Supabase only, then test with a non-critical account.
+- Add Edge/hosting rate limiting before public Nostr activation. No X/Twitter provider was added.
+
+**Git State:**
+- SHA: pending final push.
+- Unpushed: auth hardening batch plus documentation stamp.
+
+---
+
 ## Session — 2026-09-22 · Visual canvas, impact dashboard, and cinematic checkout (Buffy M3)
 
 **Done:**

@@ -1,13 +1,14 @@
 # katoa — Last Updated 2026-09-22 by Buffy
 
-**Brief:** Added a visual content canvas, creator impact dashboard, and cinematic checkout layer without activating live payments.
+**Brief:** Hardened Google OAuth with PKCE and added a staged, server-verified Nostr challenge login without activating live auth infrastructure.
 
 **Done:**
-- Content Studio now includes drag-and-drop card ordering plus responsive phone/desktop preview and focused card editing.
-- Creator Story now includes impact metrics, goal progress, milestone updates, supporter visibility, creator-keeps messaging, and proof verification context.
-- Checkout now has a focused cinematic wrapper with amount summary, Choose → Pay → Confirm steps, demo honesty, and the existing payment QR/trust/status journey.
-- Added focused tests for all three surfaces.
+- Supabase browser auth now explicitly uses PKCE with persistent sessions and token refresh.
+- Google OAuth now uses a safe internal callback route and rejects unsafe `next` redirects; unnecessary offline/forced-consent parameters were removed.
+- Added server-verified Nostr challenge login source: NIP-07 kind `22242`, short expiration, domain binding, atomic replay protection, and Supabase token exchange.
+- Added staged migration and Edge Function source; no Supabase migration, provider credential, secret, or deployment was changed.
+- Added auth security tests.
 
-**Verification:** 309 tests passed across 46 files; typecheck, lint, security gate, build, 26/26 prerendered routes, and source/dist asset-reference guards passed. Existing Vite chunk-size, dynamic-import, and Browserslist warnings remain non-blocking.
+**Verification:** 313 tests passed across 47 files; typecheck, lint, security gate, build, 26/26 prerendered routes, and source/dist asset-reference guards passed. Existing Vite chunk-size, dynamic-import, and Browserslist warnings remain non-blocking.
 
-**Git state:** Feature commit `348a4a51b74c2b0b3304c2cdac0f1ab27f0ba051` pushed to `origin/main`; final handoff stamp follows. No payment-node activation, provider commitment, credential change, live settlement, or production hosting deployment was run.
+**Git state:** Auth hardening commit and final handoff stamp are being pushed to `origin/main`. Nostr remains implemented-but-not-deployed pending Supabase review and configuration. No X/Twitter provider was added.

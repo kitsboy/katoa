@@ -11,9 +11,18 @@ if (import.meta.env.DEV && (supabaseUrl.includes('placeholder') || supabaseAnonK
 let supabase: SupabaseClient<Database>;
 
 try {
-  supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
+  supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      flowType: 'pkce',
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
+    },
+  });
 } catch {
-  supabase = createClient<Database>('https://placeholder.supabase.co', 'placeholder');
+  supabase = createClient<Database>('https://placeholder.supabase.co', 'placeholder', {
+    auth: { flowType: 'pkce', persistSession: true, autoRefreshToken: true, detectSessionInUrl: true },
+  });
 }
 
 export { supabase };
