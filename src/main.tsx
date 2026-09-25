@@ -3,6 +3,28 @@ import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 
+declare global {
+  interface Window {
+    __KATOA_SENTRY__?: any;
+  }
+}
+
+// Client-side Sentry (SPA) — wired-but-off: dynamic import keeps @sentry/react
+// out of the first-paint bundle. No-op until VITE_SENTRY_DSN is set.
+if (import.meta.env.VITE_SENTRY_DSN) {
+  import('@sentry/react').then((Sentry) => {
+    window.__KATOA_SENTRY__ = Sentry;
+    Sentry.init({
+      dsn: import.meta.env.VITE_SENTRY_DSN,
+      integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
+      tracesSampleRate: 0.3,
+      replaysSessionSampleRate: 0.1,
+      replaysOnErrorSampleRate: 1.0,
+      environment: import.meta.env.MODE,
+    });
+  });
+}
+
 // Build stamp — referenced so the entry chunk hash always changes on emergency redeploys
 // (CF has Origin-keyed cache that can poison /assets/*.js with SPA HTML)
 export const KATOA_BUILD_STAMP = '2026-08-11-js-poison-bust-2';

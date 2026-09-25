@@ -31,6 +31,7 @@
     "node": ">=20"
   },
   "dependencies": {
+    "@sentry/react": "^8.55.2",
     "@supabase/supabase-js": "^2.57.4",
     "lucide-react": "^0.344.0",
     "maplibre-gl": "^6.4.0",
