@@ -1,9 +1,14 @@
-# Katoa — Last Updated 2026-09-21 by Buffy (M3 code lane)
+# Katoa — Last Updated 2026-10-08 by Buffy
 
-Brief: Three pushed checkout UX batches: mobile-first checkout sheet, preview readiness gaps, and supporter trust summary. No real money or fake settlement claims.
+Brief: Reconciled doc truth to the current repo tip, fixed a stale BTCPay client comment and a stale subscription spec reference, and added focused test coverage for the existing BTCPay proxy path.
 
-Batches: `38eb19f` · `d730ea6` · `1bdbfb4`
+**Done:**
+- Reconciled docs to the current repo state after the Sentry follow-up landed on `main`.
+- Corrected `src/lib/btcpay.ts` comment so it matches the current proxy-based client path; the browser still never sends a BTCPay store API key.
+- Corrected `docs/SUBSCRIPTION-FLOW-SPEC.md` so it no longer cites a missing `requestLnurlInvoice` helper in `src/lib/nostr.ts` and stays honest about webhook activation.
+- Added fake BTCPay proxy-facing request/response shapes to the existing test fixtures.
+- Added a focused test for the current BTCPay client proxy path (`createInvoice` + `getInvoice` over the server proxy shape).
 
-Verification: `npm run check` (251 tests), `npm run build` (26/26 routes), and secret scan green; lint has 14 existing warnings.
+**Verification:** 316 tests passed across 48 files; typecheck, lint, security gate, build, 26/26 prerendered routes, and source/dist asset-reference guards passed. Existing Vite chunk-size, dynamic-import, and Browserslist warnings remain non-blocking.
 
-Base: `1bdbfb4` on origin/main. Remaining gate: real Lightning invoice → webhook → confirmed creator receipt.
+**Git state:** Latest pushed commit on `main` is `90ae447`. Remote `origin/main` matches local `main`. No Supabase functions, migrations, secrets, or deployment were changed.
