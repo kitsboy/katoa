@@ -9,10 +9,11 @@ import {
 
 /**
  * BTCPay client helpers — public config only.
- * API keys and webhook secrets MUST live on the server (Edge Function / Worker).
- * Never put secrets in VITE_* env vars.
+ *
+ * Today this goes through a server proxy for invoice creation and invoice reads.
+ * The browser never sends a BTCPay store API key. API keys and webhook secrets
+ * still live on the server (Edge Function / Worker), never in VITE_* env vars.
  */
-
 export interface BTCPayConfig {
   serverUrl: string;
   storeId: string;

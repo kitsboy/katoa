@@ -12,9 +12,9 @@ Turn KATOA's creator subscriptions from a demo into real: a fan picks a tier →
 | Piece | Location | Notes |
 |-------|----------|-------|
 | BTCPay client | `src/lib/btcpay.ts` | `BTCPayService.createInvoice(amount, currency, orderId, metadata)` → calls `VITE_API_BASE_URL` proxy. `getInvoice`, `openCheckout`. **No secrets in client.** |
-| LNURL invoice | `src/lib/nostr.ts` | `requestLnurlInvoice` / NIP-57 zap path (creator `lud16`). |
+| LNURL invoice | `src/lib/nostr.ts` | NostrService uses NIP-57 for zaps: a signed kind 9734 request plus receipt validation. |
 | Gift flow | `src/pages/WishlistPage.tsx` | `handleGiftClick`/`GiftDraft` — creates LN invoice, records **intent only**, never marks paid client-side. |
-| Webhook stub | `supabase/functions/btcpay-webhook/README.md` | Scaffold only. Describes: verify HMAC → `transactions.status='confirmed'` → bump `wishlist_items.sats_raised` + wishlist totals. |
+| Webhook stub | `supabase/functions/btcpay-webhook/README.md` | Scaffold still matches the current repo: verify HMAC → confirm transaction + bump funding totals. Real activation needs a deployed BTCPay/LNbits/LND rail and server-side secrets. |
 | Follow tables | `supabase/migrations/20251113035131_add_following_system.sql` | `follows` + `wishlist_follows` already exist (free follow ≈ free subscribe). |
 | Payments | `supabase/migrations/20251113045141_add_payment_methods_system.sql` | `payment_methods` (lightning/lud16 etc). |
 | Client subscribe seam | `src/lib/subscriptions.ts` | Local (localStorage) subscribe/unsubscribe + `isSubscribed(slug)`. Demo-only `source:'local'` — replace with DB-backed state. |
