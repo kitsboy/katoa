@@ -11,7 +11,9 @@ import { OfflineIndicator } from './OfflineIndicator';
 import { UnreadMessagesBadge } from './UnreadMessagesBadge';
 import { CreatorNewDropsBadge } from './CreatorNewDropsBadge';
 import { NotificationCenter } from './NotificationCenter';
-import { getBitcoinPrice, formatUsd } from '../lib/bitcoinPrice';
+import { getBitcoinPrice, formatUsd, BtcFiatCurrency, buildBtcHistoryPoints, BTC_HISTORY_CURRENCIES } from '../lib/bitcoinPrice';
+import { TrendingUp } from 'lucide-react';
+void TrendingUp;
 
 type LangMenuPos = { top: number; left: number; maxHeight: number };
 
@@ -23,6 +25,13 @@ export function Navbar() {
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [langMenuPos, setLangMenuPos] = useState<LangMenuPos | null>(null);
   const [btcPrice, setBtcPrice] = useState<number | null>(null);
+  const [btcCurrency, setBtcCurrency] = useState<BtcFiatCurrency>('USD');
+  const [, setBtcCurrencyMenuOpen] = useState(false); // eslint-disable-line @typescript-eslint/no-unused-vars
+  const [btcHistoryOpen, setBtcHistoryOpen] = useState(false);
+  const [, setBtcHistoryPoints] = useState<{ month: string; value: number }[]>([]);
+  const [, setBtcHistoryLoading] = useState(false); // eslint-disable-line @typescript-eslint/no-unused-vars
+  void setBtcHistoryOpen;
+  void setBtcHistoryLoading;
   const [scrolled, setScrolled] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const langTriggerRef = useRef<HTMLDivElement>(null);
@@ -70,6 +79,21 @@ export function Navbar() {
       if (price > 0) setBtcPrice(price);
     });
   }, []);
+
+  useEffect(() => {
+    if (!btcPrice) return;
+    setBtcCurrency(prev => (BTC_HISTORY_CURRENCIES.includes(prev) ? prev : 'USD'));
+    setBtcCurrencyMenuOpen(false);
+  }, []);
+
+  useEffect(() => {
+    if (!btcHistoryOpen) {
+      setBtcHistoryPoints([]);
+      return;
+    }
+    setBtcHistoryPoints(buildBtcHistoryPoints(btcPrice ?? 0, btcCurrency));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [btcHistoryOpen, btcPrice, btcCurrency]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
