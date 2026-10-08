@@ -32,9 +32,12 @@ until a batch passes.
 
 ## Notes
 
-- `docs/KIMI-HANDOFF.md` top entry is basically accurate for its own batch,
+- `docs/KIMI-HANDOFF.md` top entry is still accurate for its own batch,
   but the repo has moved since then.
 - `docs/LATEST-UPDATE.md`, `docs/ROADMAP.md`, and `docs/NEXT-NEEDS-CAM.md`
   are stale relative to `f1ab754`.
 - The staged Nostr auth function and migration are still not deployed.
 - The BTCPay webhook function README is honest about deployment requirements.
+- During this session, the first pushed batch was a docs-only reconciliation
+  commit, and the second was a small accuracy fix in the BTCPay client
+  comment plus the subscription spec.
