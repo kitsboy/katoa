@@ -52,3 +52,40 @@ export const fakeOnchainConfirmingEvent: PaymentEvent = {
   receivedAt: '2026-09-21T00:00:00.000Z',
   raw: { invoiceId: 'fake-btcpay-onchain-001', confirmations: 1 },
 };
+
+/** Fake BTCPay proxy-facing response shapes for tests only, not a real BTCPay server. */
+export const fakeBtcpayProxyInvoiceResponse: {
+  id: string;
+  amount: string;
+  currency: string;
+  status: 'New' | 'Processing' | 'Settled' | 'Invalid' | 'Expired';
+  checkoutLink: string;
+  orderId?: string;
+  metadata?: Record<string, string>;
+} = {
+  id: 'fake-proxy-invoice-001',
+  amount: '21000',
+  currency: 'SATS',
+  status: 'New',
+  checkoutLink: 'https://proxy.example/btcpay/i/fake-proxy-invoice-001',
+  orderId: 'katoa-intent-001',
+  metadata: { platform: 'Katoa', version: '1.0', katoa_tx_id: 'katoa-intent-001' },
+};
+
+export const fakeBtcpayProxyInvoiceReadResponse: {
+  id: string;
+  amount: string;
+  currency: string;
+  status: 'New' | 'Processing' | 'Settled' | 'Invalid' | 'Expired';
+  checkoutLink: string;
+  orderId?: string;
+  metadata?: Record<string, string>;
+} = {
+  id: 'fake-proxy-invoice-001',
+  amount: '21000',
+  currency: 'SATS',
+  status: 'Settled',
+  checkoutLink: 'https://proxy.example/btcpay/i/fake-proxy-invoice-001',
+  orderId: 'katoa-intent-001',
+  metadata: { platform: 'Katoa', version: '1.0', katoa_tx_id: 'katoa-intent-001' },
+};
