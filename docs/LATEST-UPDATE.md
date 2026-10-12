@@ -11,8 +11,8 @@ Brief: Settings receive-identity register and Payment Methods wallet tab, Wallet
 - Added `docs/STORAGE-CDN.md` to keep R2 as default and document cheap upgrade-ready alternatives.
 - Reconciled `docs/KIMI-HANDOFF.md` and `docs/LATEST-UPDATE.md` to the current tip and left Kimi a demo-hub spec question.
 
-**Verification:** typecheck clean; lint clean except 4 pre-existing Navbar warnings; `npm test -- --run` **316/316 tests passed**; 48 test files; `npm run build` green with 26/26 prerendered routes and asset-reference checks; version/metrics/sitemap regenerated.
+**Verification:** typecheck clean; lint clean except 4 pre-existing Navbar warnings; `npm test -- --run` **316/316 tests passed**; 48 test files; `npm run build` green with 26/26 prerendered routes and asset-reference checks; version/metrics/sitemap regenerated after the final build.
 
-**Final repo state:** `git status` clean except `public/metrics.json` stale from build stamp refresh and `tmp/` throwaway dir. Local main pushed to `origin/main`; remote tip matches `35b630b`.
+**Final repo state:** `git status` clean except for the build-generated stamp files (`public/metrics.json`, `public/version.json`, `src/generated/app-version.ts`) refreshed by the last build, plus the throwaway `tmp/` dir.
 
-**Git state:** Pushed commit `35b630b` to `origin/main`. The only untracked leftover is the throwaway `tmp/` dir. Public build label is `v1.1.7+441.93f74cf` with gitSha `93f74cf` and commitCount `441`.
+**Git state:** Pushed commit `bd117d2` to `origin/main`. Public build label is `v1.1.7+443.bd117d2` with gitSha `bd117d2` and commitCount `443`. Working tree is otherwise clean; remote `origin/main` matches local.
