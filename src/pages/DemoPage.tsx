@@ -5,18 +5,19 @@ import { Card } from '../components/Card';
 import { Link } from '../components/Link';
 import { TipMenu } from '../components/TipMenu';
 import { DemoPreviewBadge } from '../components/DemoPreviewBadge';
+import { MediaCard } from '../components/MediaCard';
 import { useAuth } from '../contexts/AuthContext';
 
 export function DemoPage() {
   const { setLanguage } = useLanguage();
-  const { setDisplayCurrency, satsToDisplay } = useCurrency();
+  const { displayCurrency, setDisplayCurrency, satsToDisplay } = useCurrency();
   const { isDemoUser } = useAuth();
 
   return (
     <div className="min-h-screen bg-charcoal-950">
       <PageMeta
         title="Demo — KATOA"
-        description="Honest Katoa demo: sample creator, currency, language, and tip presets. No live settlement."
+        description="Honest Katoa demo hub: meet Luna, the sample video creator. Try currency, language, and tip presets. No live settlement."
         path="/demo"
         noindex
       />
@@ -24,25 +25,46 @@ export function DemoPage() {
         <Card className="p-8">
           <div className="flex flex-wrap items-center gap-3 mb-3">
             <DemoPreviewBadge />
-            <span className="text-xs font-semibold uppercase tracking-[0.18em] text-neon-cyan-300">Local demo hub</span>
+            <span className="text-xs font-semibold uppercase tracking-[0.18em] text-neon-cyan-300">Demo hub · sample protagonist</span>
           </div>
 
-          <h1 className="text-3xl font-black text-white mb-2">Demo Katoa</h1>
-          <p className="text-gray-300 mb-6 leading-relaxed">
-            This is an honest sample demo. It shows a sample creator, display currency, language, and tip presets — without pretending any of it is a live payment.
+          <h1 className="text-3xl font-black text-white mb-2">Meet Luna</h1>
+          <p className="text-gray-300 mb-2 leading-relaxed">
+            Luna is KATOA’s sample video creator — the protagonist of this demo.
+          </p>
+          <p className="text-gray-400 mb-6 leading-relaxed">
+            She makes exclusive video drops and funds them directly from viewers with Bitcoin Lightning.
+            In this demo, you can open her profile, open her wishlist, switch the display currency,
+            switch the UI language, and try tip presets — all locally, all visibly sample-only.
           </p>
 
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 space-y-5">
+          <MediaCard
+            media={{
+              imageUrl: '/images/mock/pexels-7867fa1faf.jpeg',
+              videoUrl: 'https://videos.pexels.com/video-files/4058851/4058851-hd_720_1280_25fps.mp4',
+              alt: 'Luna — sample video creator',
+            }}
+            aspect="wide"
+            className="rounded-2xl border border-white/10 bg-black/40 overflow-hidden"
+            variant="creator"
+            alwaysPlay
+            priority
+          />
+
+          <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.03] p-5 space-y-5">
             <div>
-              <p className="text-sm font-bold text-white mb-2">Sample creator</p>
+              <p className="text-sm font-bold text-white mb-2">The protagonist</p>
               <p className="text-sm text-gray-400 leading-relaxed">
-                Luna — a demo video creator with a small wishlist, sample posts, and a visible support goal.
+                Luna — independent video creator based in Los Angeles. Her demo wishlist is{' '}
+                <Link to="/wishlist/luna-exclusive-videos" className="text-bitcoin-orange-400 underline decoration-bitcoin-orange-500/40 hover:decoration-bitcoin-orange-300">
+                  Luna — Exclusive Video Collection
+                </Link>.
               </p>
               <div className="mt-3 flex gap-2 flex-wrap">
-                <Link href="/u/luna_vip" className="inline-flex min-h-[44px] px-4 rounded-xl border border-white/10 text-white hover:bg-white/5">
+                <Link to="/u/luna_vip" className="inline-flex min-h-[44px] px-4 rounded-xl border border-white/10 text-white hover:bg-white/5">
                   Open profile
                 </Link>
-                <Link href="/wishlist/luna-exclusive-videos" className="inline-flex min-h-[44px] px-4 rounded-xl border border-white/10 text-white hover:bg-white/5">
+                <Link to="/wishlist/luna-exclusive-videos" className="inline-flex min-h-[44px] px-4 rounded-xl border border-white/10 text-white hover:bg-white/5">
                   Open wishlist
                 </Link>
               </div>
@@ -58,7 +80,7 @@ export function DemoPage() {
                       key={code}
                       type="button"
                       onClick={() => setDisplayCurrency(code as 'SATS'|'BTC'|'USD'|'EUR'|'GBP'|'JPY'|'BRL')}
-                      className={`min-h-[44px] px-4 rounded-lg text-sm font-semibold transition-colors %{
+                      className={`min-h-[44px] px-4 rounded-lg text-sm font-semibold transition-colors ${
                         displayCurrency === code
                           ? 'bg-bitcoin-orange-500/20 text-bitcoin-orange-200'
                           : 'text-gray-300 hover:text-white hover:bg-white/5'
@@ -90,7 +112,7 @@ export function DemoPage() {
                       key={code}
                       type="button"
                       onClick={() => setLanguage(code as 'en'|'es'|'pt'|'fr'|'de'|'ja'|'zh')}
-                      className={`min-h-[44px] px-4 rounded-xl border text-sm font-semibold transition-colors %{
+                      className={`min-h-[44px] px-4 rounded-xl border text-sm font-semibold transition-colors ${
                         'en' === code
                           ? 'border-bitcoin-orange-500/50 bg-bitcoin-orange-500/20 text-bitcoin-orange-200'
                           : 'border-white/10 bg-white/5 text-gray-300 hover:bg-white/10'
