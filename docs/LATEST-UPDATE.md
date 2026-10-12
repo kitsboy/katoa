@@ -13,6 +13,6 @@ Brief: Settings receive-identity register and Payment Methods wallet tab, Wallet
 
 **Verification:** typecheck clean; lint clean except 4 pre-existing Navbar warnings; `npm test -- --run` **316/316 tests passed**; 48 test files; `npm run build` green with 26/26 prerendered routes and asset-reference checks; version/metrics/sitemap regenerated after the final build.
 
-**Final repo state:** `git status` clean except for the build-generated stamp files (`public/metrics.json`, `public/version.json`, `src/generated/app-version.ts`) refreshed by the last build, plus the throwaway `tmp/` dir.
+**Final repo state:** `git status` clean except for the throwaway `tmp/` dir. `public/metrics.json`, `public/version.json`, and `src/generated/app-version.ts` are build-generated stamp files refreshed by the last green build.
 
-**Git state:** Pushed commit `bd117d2` to `origin/main`. Public build label is `v1.1.7+443.bd117d2` with gitSha `bd117d2` and commitCount `443`. Working tree is otherwise clean; remote `origin/main` matches local.
+**Git state:** Pushed commit `5e4ceb8` to `origin/main`. Public build label is `v1.1.7+444.29a9cf8` with gitSha `29a9cf8` and commitCount `444`. Working tree is otherwise clean; remote `origin/main` matches local.
