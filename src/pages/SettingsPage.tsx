@@ -20,7 +20,7 @@ import {
   User, Wallet, MapPin,
   Settings as SettingsIcon, Save, Upload, Camera, Zap, Check, AlertCircle, LayoutDashboard,
   Heart, TrendingUp, Users, FolderOpen, Stamp, ExternalLink, MessageCircle, Trash2,
-  Shield, Link2
+  Shield
 } from 'lucide-react';
 import { Link as RouterLink } from 'react-router-dom';
 import { validateLightningAddress, validateNpub } from '../lib/validateAddress';

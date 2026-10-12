@@ -169,7 +169,8 @@
 - Katoa now has an honest `/demo` hub: sample creator links, display currency switcher, language switcher, and sample tip presets, with every flow labeled sample/demo and no live settlement.
 - Should `/demo` stay as this honest demo hub, or do you want it promoted to the public demo entry point and paired with a richer sample-creator world?
 - If you want the next step, the clean spec is: one sample creator becomes the demo protagonist, the demo hub previews profile + wishlist + currency + language + tip presets, and the full flow stays visibly sample-only.
-- I can keep expanding this without touching live money, live NIP-07, or live Supabase counters.
+- This demo build is green, pushed, and intentionally still leaves live money + live NIP-07 + live Supabase counters to the backend/infra owner.
+- Now expanded: `/demo` is an honest demo hub with sample creator links, display-currency switcher, language switcher, and sample tip presets. `/demo/test` goes to the same page.
 
 ---
 

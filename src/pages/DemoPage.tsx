@@ -8,8 +8,8 @@ import { DemoPreviewBadge } from '../components/DemoPreviewBadge';
 import { useAuth } from '../contexts/AuthContext';
 
 export function DemoPage() {
-  const { t, setLanguage } = useLanguage();
-  const { setDisplayCurrency, displayCurrency, satsToDisplay } = useCurrency();
+  const { setLanguage } = useLanguage();
+  const { setDisplayCurrency, satsToDisplay } = useCurrency();
   const { isDemoUser } = useAuth();
 
   return (
