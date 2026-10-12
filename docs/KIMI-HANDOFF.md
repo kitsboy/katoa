@@ -156,7 +156,7 @@
 - `npm run build`: passed (26/26 prerendered routes, src 91 / dist 106 asset-reference checks, sitemap 41 URLs, version + metrics + sitemap regenerated).
 
 **Git State:**
-- Latest pushed commit after this session: `$(git log -1 --format=%h)`.
+- Latest pushed commit after this session: `74df983b665647fdfd6d744481b3d1fb557713a5`.
 - Pushed to `origin/main`.
 - `docs/STORAGE-CDN.md` and `src/pages/DemoPage.tsx` are first-class committed files in this batch.
 
