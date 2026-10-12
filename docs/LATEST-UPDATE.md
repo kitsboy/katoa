@@ -13,4 +13,6 @@ Brief: Settings receive-identity register and Payment Methods wallet tab, Wallet
 
 **Verification:** typecheck clean; lint clean except 4 pre-existing Navbar warnings; `npm test -- --run` **316/316 tests passed**; 48 test files; `npm run build` green with 26/26 prerendered routes and asset-reference checks; version/metrics/sitemap regenerated.
 
-**Git state:** Pushed commit `93f74cf` to `origin/main`. The only untracked leftover is the throwaway `tmp/` dir.
+**Final repo state:** `git status` clean except `public/metrics.json` stale from build stamp refresh and `tmp/` throwaway dir. Local main pushed to `origin/main`; remote tip matches `35b630b`.
+
+**Git state:** Pushed commit `35b630b` to `origin/main`. The only untracked leftover is the throwaway `tmp/` dir. Public build label is `v1.1.7+441.93f74cf` with gitSha `93f74cf` and commitCount `441`.
