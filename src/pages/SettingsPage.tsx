@@ -20,8 +20,9 @@ import {
   User, Wallet, MapPin,
   Settings as SettingsIcon, Save, Upload, Camera, Zap, Check, AlertCircle, LayoutDashboard,
   Heart, TrendingUp, Users, FolderOpen, Stamp, ExternalLink, MessageCircle, Trash2,
-  Shield
+  Shield, Link2
 } from 'lucide-react';
+import { Link as RouterLink } from 'react-router-dom';
 import { validateLightningAddress, validateNpub } from '../lib/validateAddress';
 import {
   clearDemoAccountStorage,
@@ -1056,28 +1057,28 @@ export function SettingsPage() {
                       <p className="text-sm font-bold text-gray-200 mb-3 uppercase tracking-wider">
                         Public links
                       </p>
-                      <div className="flex flex-col sm:flex-row flex-wrap gap-2">
-                        <Link
-                          href={profileForm.username ? `/u/${encodeURIComponent(profileForm.username)}` : '/explore'}
-                          className="inline-flex items-center justify-center min-h-[44px] px-4 rounded-xl border border-white/10 text-sm text-neon-cyan-400 hover:bg-white/5"
-                        >
-                          <User size={16} className="mr-2" />
-                          Public profile {profileForm.username ? `/u/${profileForm.username}` : ''}
-                        </Link>
-                        <Link
-                          href="/nip05"
-                          className="inline-flex items-center justify-center min-h-[44px] px-4 rounded-xl border border-white/10 text-sm text-gray-300 hover:bg-white/5"
-                        >
-                          NIP-05 claim
-                        </Link>
-                        <Link
-                          href="/messages"
-                          className="inline-flex items-center justify-center min-h-[44px] px-4 rounded-xl border border-white/10 text-sm text-gray-300 hover:bg-white/5"
-                        >
-                          <MessageCircle size={16} className="mr-2" />
-                          Messages
-                        </Link>
-                      </div>
+              <div className="flex flex-col sm:flex-row flex-wrap gap-2">
+                <RouterLink
+                  to={profileForm.username ? `/u/${encodeURIComponent(profileForm.username)}` : '/explore'}
+                  className="inline-flex items-center justify-center min-h-[44px] px-4 rounded-xl border border-white/10 text-sm text-neon-cyan-400 hover:bg-white/5"
+                >
+                  <User size={16} className="mr-2" />
+                  Public profile {profileForm.username ? `/u/${profileForm.username}` : ''}
+                </RouterLink>
+                <RouterLink
+                  to="/nip05"
+                  className="inline-flex items-center justify-center min-h-[44px] px-4 rounded-xl border border-white/10 text-sm text-gray-300 hover:bg-white/5"
+                >
+                  NIP-05 claim
+                </RouterLink>
+                <RouterLink
+                  to="/messages"
+                  className="inline-flex items-center justify-center min-h-[44px] px-4 rounded-xl border border-white/10 text-sm text-gray-300 hover:bg-white/5"
+                >
+                  <MessageCircle size={16} className="mr-2" />
+                  Messages
+                </RouterLink>
+              </div>
                     </div>
 
                     <div className="p-6 bg-black rounded-xl border border-white/10">
