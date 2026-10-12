@@ -3,36 +3,35 @@ import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 
-declare global {
-  interface Window {
-    __KATOA_SENTRY__?: any;
-  }
+interface SentryModuleShape {
+  default: {
+    init(options: {
+      dsn?: string;
+      integrations?: unknown[];
+      tracesSampleRate?: number;
+      replaysSessionSampleRate?: number;
+      replaysOnErrorSampleRate?: number;
+      environment?: string;
+    }): void;
+    browserTracingIntegration(): unknown;
+    replayIntegration(): unknown;
+  };
 }
 
-// Client-side Sentry (SPA) — wired-but-off: dynamic import keeps @sentry/react
-// out of the first-paint bundle. No-op until VITE_SENTRY_DSN is set.
-if (import.meta.env.VITE_SENTRY_DSN) {
-  import('@sentry/react').then((Sentry) => {
-    window.__KATOA_SENTRY__ = Sentry;
-    Sentry.init({
-      dsn: import.meta.env.VITE_SENTRY_DSN,
-      integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
-      tracesSampleRate: 0.3,
-      replaysSessionSampleRate: 0.1,
-      replaysOnErrorSampleRate: 1.0,
-      environment: import.meta.env.MODE,
-    });
-  });
+declare global {
+  interface Window {
+    __KATOA_SENTRY__?: SentryModuleShape['default'];
+  }
 }
 
 // Build stamp — referenced so the entry chunk hash always changes on emergency redeploys
 // (CF has Origin-keyed cache that can poison /assets/*.js with SPA HTML)
-export const KATOA_BUILD_STAMP = '2026-08-11-js-poison-bust-2';
-if (typeof document !== 'undefined') {
-  document.documentElement.dataset.katoaBuild = KATOA_BUILD_STAMP;
+interface SWStrings {
+  update: string;
+  refresh: string;
 }
 
-const SW_STRINGS: Record<string, { update: string; refresh: string }> = {
+const SW_STRINGS: Record<string, SWStrings> = {
   en: { update: 'Update available.', refresh: 'Refresh' },
   es: { update: 'Actualización disponible.', refresh: 'Actualizar' },
   pt: { update: 'Atualização disponível.', refresh: 'Atualizar' },
@@ -42,8 +41,8 @@ const SW_STRINGS: Record<string, { update: string; refresh: string }> = {
   zh: { update: '有可用更新。', refresh: '刷新' },
 };
 
-function swStrings() {
-  const lang = localStorage.getItem('katoa-language') ?? 'en';
+function swStrings(): SWStrings {
+  const lang = (localStorage.getItem('katoa-language') ?? 'en') as keyof typeof SW_STRINGS;
   return SW_STRINGS[lang] ?? SW_STRINGS.en;
 }
 

@@ -1,14 +1,15 @@
 # Katoa — Last Updated 2026-10-08 by Buffy
 
-Brief: Reconciled doc truth to the current repo tip, fixed a stale BTCPay client comment and a stale subscription spec reference, and added focused test coverage for the existing BTCPay proxy path.
+Brief: Settings receive-identity register and Payment Methods wallet tab, WalletAddressManager silent-payment descriptor support, `/demo` + `/demo/test` route wiring, and docs reconciled to the current build.
 
 **Done:**
-- Reconciled docs to the current repo state after the Sentry follow-up landed on `main`.
-- Corrected `src/lib/btcpay.ts` comment so it matches the current proxy-based client path; the browser still never sends a BTCPay store API key.
-- Corrected `docs/SUBSCRIPTION-FLOW-SPEC.md` so it no longer cites a missing `requestLnurlInvoice` helper in `src/lib/nostr.ts` and stays honest about webhook activation.
-- Added fake BTCPay proxy-facing request/response shapes to the existing test fixtures.
-- Added a focused test for the current BTCPay client proxy path (`createInvoice` + `getInvoice` over the server proxy shape).
+- Settings wallet tab is now labeled `Payment Methods` and the profile receive section includes a `Receive identity` register plus `Open Wallet to add on-chain or silent`.
+- `WalletAddressManager` can add a Silent Payment Descriptor (`silent:` / `sp:` placeholder, icon, and format validation).
+- `src/lib/validateAddress.ts` and `src/types/database.ts` now include silent-payment descriptor validation plus `silent` in the wallet address types.
+- `src/App.tsx` routes `/demo` and `/demo/test` to `DemoPage`; `src/pages/DemoPage.tsx` is a valid minimal stub that links to `/settings`.
+- Added `docs/STORAGE-CDN.md` to keep R2 as default and document cheap upgrade-ready alternatives.
+- Reconciled `docs/KIMI-HANDOFF.md` and `docs/LATEST-UPDATE.md` to the current tip.
 
-**Verification:** 316 tests passed across 48 files; typecheck, lint, security gate, build, 26/26 prerendered routes, and source/dist asset-reference guards passed. Existing Vite chunk-size, dynamic-import, and Browserslist warnings remain non-blocking.
+**Verification:** typecheck clean; lint clean except 4 pre-existing Navbar warnings; `npm test -- --run` **316/316 tests passed**; 48 test files.
 
-**Git state:** Latest pushed commit on `main` is `90ae447`. Remote `origin/main` matches local `main`. No Supabase functions, migrations, secrets, or deployment were changed.
+**Git state:** Changes are in-tree; this session’s work has not yet been committed and pushed. Latest pushed commit on `main` before this session was `8f58c53` (this is the v1.1.7+438.8f58c53 build the user is looking at).

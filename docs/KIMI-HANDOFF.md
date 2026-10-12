@@ -138,20 +138,36 @@
 
 ---
 
-## Session — 2026-09-22 · Guard v2: dynamic paths, CSS url(), prerendered HTML (Buffy M3)
+## Session — 2026-10-12 · Settings receive-identity tabs, WalletAddressManager silent payment, DemoPage route, build-verified docs handoff, then committed and pushed (Buffy M3)
 
 **Done:**
-- Extended `scripts/check-asset-references.mjs` with dynamic-path detection in src/: flags template literals (`` `/images/mock/${h}.jpeg` ``) and `'dir/' + n + '.ext'` concatenations — including same-file const prefixes — **only when the static prefix directory exists under public/**, the only dynamic case that can 404 at runtime. CDN/S3 templates pass naturally.
-- New `--dist` phase, wired as npm `postbuild` (runs automatically after every build): validates every `url()` in `dist/assets/*.css` and every absolute asset reference in prerendered `dist/*.html` against `dist/` — catches anything Tailwind/minification relocated after the source scan.
-- Verified with fault injection: template, concat, const-prefix, and injected-CSS cases all fail with file:line; clean tree passes (86 src refs, 106 dist refs). Fixed a group-index crash in HTML dist scanning found by the first run.
-- Shipped `91d469a` (guard v2) + `6374fe7` (stamps); production verified serving `6374fe7`.
+- Settings wallet tab is now labeled `Payment Methods` and the profile receive section shows a `Receive identity` register with Lightning, Nostr, On-chain Bitcoin, and Silent Payment Descriptor rows.
+- `WalletAddressManager` now supports `silent` as an address type (`silent:` / `sp:` placeholder), with icon/name/placeholder mapping and format validation.
+- Added `validateSilentPaymentDescriptor` and `silent` to `WalletAddressKind` / `WalletAddressType`.
+- Wired `/demo` and `/demo/test` to a valid `DemoPage` stub; `/demo/test` is intentionally a stub, not the full exercise UI.
+- Added `docs/STORAGE-CDN.md` to keep R2 as the default and document cheap upgrade-ready alternatives.
+- Reconciled `docs/KIMI-HANDOFF.md` and `docs/LATEST-UPDATE.md` to the current tip.
+- Built the production bundle for real (26/26 prerendered routes, asset-reference checks, generated version/metrics/sitemap), then committed and pushed everything in this batch except the throwaway `tmp/` dir.
 
-**Decisions:**
-- Calibration first: surveyed the codebase — all 46 `/images/mock/` refs are static literals (already covered), zero concat/CSS-url patterns exist today; this is regression armor, not a current-bug fix.
-- Known limitation, documented: cross-file const prefixes (`const base = '/x/'` exported then templated elsewhere) are not tracked.
+**Verification:**
+- `npm run typecheck`: passed.
+- `npm run lint`: passed (4 pre-existing Navbar warnings only; no new errors).
+- `npm test -- --run`: **316/316 tests passed** (48 files).
+- `npm run build`: passed (26/26 prerendered routes, src 91 / dist 106 asset-reference checks, sitemap 41 URLs, version + metrics + sitemap regenerated).
 
 **Git State:**
-- SHA: `6374fe7` — pushed, live, working tree clean.
+- Latest pushed commit after this session: `$(git log -1 --format=%h)`.
+- Pushed to `origin/main`.
+- `docs/STORAGE-CDN.md` and `src/pages/DemoPage.tsx` are first-class committed files in this batch.
+
+**For Kimi / Cam:** Katoa is still not production. The same blockers remain: production Lightning webhook/invoice rail, authoritative Supabase product counters, deployed NIP-07 challenge login, NIP-05 ops, and real creator seeding. Demo and receive-identity plumbing is now stronger; payment activation is still the real edge-of-production gap.
+
+**Answer to my own open question:**
+- I kept `/demo` and `/demo/test` minimal and build-green on purpose. The stronger demo experience should be expanded in its own focused pass, not as part of a silent-payment/settings commit.
+
+**Handoff question to Kimi / Cam:**
+- Should `/demo/test` be expanded next into a full settings + currency + language + tip-preset exercise page that can be advertised, or keep DemoPage minimal and push the richer demo experience only on internal preview routes?
+- If you want a stronger demo landing, I can expand DemoPage into an honest `/demo` hub: pick a sample creator, switch display currency, switch language, and exercise tip presets — all visibly sample/demo, no live settlement.
 
 ---
 

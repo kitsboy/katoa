@@ -92,7 +92,7 @@ export function validatePynym(value: string): string | null {
   return null;
 }
 
-export type WalletAddressKind = 'lightning' | 'xpub' | 'pynym' | 'nostr' | 'onchain';
+export type WalletAddressKind = 'lightning' | 'xpub' | 'pynym' | 'nostr' | 'onchain' | 'silent';
 
 export function validateWalletAddress(
   addressType: WalletAddressKind,
@@ -112,7 +112,28 @@ export function validateWalletAddress(
       return validateNpub(trimmed);
     case 'pynym':
       return validatePynym(trimmed);
+    case 'silent':
+      return validateSilentPaymentDescriptor(trimmed);
     default:
       return null;
   }
+}
+
+/**
+ * Silent Payment descriptor validation.
+ * We accept descriptor templates that look like real BIP352 spend descriptors.
+ * We never execute or derive keys — this is a format gate only.
+ */
+export function validateSilentPaymentDescriptor(value: string): string | null {
+  const trimmed = value.trim();
+  if (!trimmed) return 'Silent payment descriptor is required';
+  if (isDummyPaymentTarget(trimmed)) return 'That looks like a placeholder, not a real descriptor';
+
+  const lower = trimmed.toLowerCase();
+  if (!lower.startsWith('silent:') && !lower.startsWith('sp:')) {
+    return 'Silent payment descriptors must start with silent: or sp:';
+  }
+
+  if (trimmed.length < 20) return 'Silent payment descriptor looks too short';
+  return null;
 }

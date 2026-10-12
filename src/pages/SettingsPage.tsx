@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Button } from '../components/Button';
@@ -19,9 +19,10 @@ import { DemoBadge } from '../components/DemoBadge';
 import {
   User, Wallet, MapPin,
   Settings as SettingsIcon, Save, Upload, Camera, Zap, Check, AlertCircle, LayoutDashboard,
-  Heart, TrendingUp, Users, FolderOpen, Stamp, ExternalLink, MessageCircle, Trash2
+  Heart, TrendingUp, Users, FolderOpen, Stamp, ExternalLink, MessageCircle, Trash2,
+  Shield
 } from 'lucide-react';
-import { validateLightningAddress } from '../lib/validateAddress';
+import { validateLightningAddress, validateNpub } from '../lib/validateAddress';
 import {
   clearDemoAccountStorage,
   DEFAULT_THEME_ACCENT,
@@ -170,6 +171,25 @@ export function SettingsPage() {
     nostr_pubkey: '',
     preferred_currency: 'USD',
   });
+
+  const receiveIdentity = useMemo(
+    () => ({
+      lightning: profileForm.lightning_address.trim()
+        ? validateLightningAddress(profileForm.lightning_address) ?? true
+        : false,
+      nostr: profileForm.nostr_pubkey.trim()
+        ? validateNpub(profileForm.nostr_pubkey) ?? true
+        : false,
+      onchain: false,
+      silent: false,
+    }),
+    [profileForm.lightning_address, profileForm.nostr_pubkey]
+  );
+
+  const hasReceiveIdentity =
+    receiveIdentity.lightning ||
+    receiveIdentity.nostr;
+
 
   useEffect(() => {
     if (profile) {
@@ -525,8 +545,8 @@ export function SettingsPage() {
 
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="lg:w-80 flex-shrink-0">
-            <Card className=" sticky top-24 p-3">
-              <nav className="space-y-2" role="tablist" aria-label="Settings sections">
+            <Card className=" sticky top-24">
+              <nav className="divide-y divide-white/5" role="tablist" aria-label="Settings sections">
                 {tabs.map((tab) => {
                   const Icon = tab.icon;
                   const isActive = activeTab === tab.id;
@@ -539,16 +559,35 @@ export function SettingsPage() {
                       aria-selected={isActive}
                       aria-controls={`settings-panel-${tab.id}`}
                       onClick={() => setActiveTab(tab.id)}
-                      className={`w-full flex items-center gap-4 px-5 py-4 rounded-xl text-left transition-all duration-300 group min-h-[44px] ${
+                      className={`w-full flex items-center gap-4 px-5 py-4 text-left transition-colors group min-h-[52px] touch-manipulation ${
                         isActive
-                          ? `bg-gradient-to-r ${tab.color} shadow-lg text-white font-bold`
-                          : 'text-gray-400 hover:text-white hover:bg-white/5'
+                          ? 'text-white'
+                          : 'text-gray-400 hover:text-white'
                       }`}
                     >
-                      <div className={`p-2 rounded-lg ${isActive ? 'bg-white/20' : 'bg-white/5 group-hover:bg-white/10'}`} aria-hidden>
-                        <Icon size={22} />
+                      <div
+                        className={`flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 ${
+                          isActive
+                            ? `bg-gradient-to-br ${tab.color} text-white shadow-md shadow-black/30`
+                            : 'bg-white/5 group-hover:bg-white/10 text-gray-400 group-hover:text-white'
+                        }`}
+                        aria-hidden
+                      >
+                        <Icon size={20} />
                       </div>
-                      <span className="text-lg">{tab.label}</span>
+                      <span
+                        className={`text-base font-semibold tracking-tight transition-all duration-200 ${
+                          isActive ? 'text-white' : 'text-gray-400 group-hover:text-gray-200'
+                        }`}
+                      >
+                        {tab.label}
+                      </span>
+                      {isActive && (
+                        <span
+                          className={`ml-auto w-1 h-6 rounded-full bg-gradient-to-b ${tab.color} opacity-70`}
+                          aria-hidden
+                        />
+                      )}
                     </button>
                   );
                 })}
@@ -560,12 +599,12 @@ export function SettingsPage() {
             {activeTab === 'profile' && (
               <Card className=" p-8" role="tabpanel" id="settings-panel-profile" aria-labelledby="settings-tab-profile">
                 <div className="flex items-center gap-3 mb-8">
-                  <div className="p-3 bg-orange-500/20 rounded-xl">
+                  <div className={`p-3 rounded-xl bg-gradient-to-br ${activeTab === 'profile' ? 'from-orange-500/20 to-amber-600/20' : 'from-orange-500/20 to-amber-600/20'}`}>
                     <User size={28} className="text-orange-500" />
                   </div>
                   <div>
-                    <h2 className="text-3xl font-black text-white">Profile Information</h2>
-                    <p className="text-gray-400">Update your public profile and appearance</p>
+                    <h2 className="text-3xl font-black text-white">Profile</h2>
+                    <p className="text-gray-400">Who you are, how people see you, how you get paid</p>
                   </div>
                 </div>
 
@@ -781,7 +820,7 @@ export function SettingsPage() {
                         helperText="Lightning address (user@domain), lnurl, or lnbc/lntb. Katoa never settles Lightning for you."
                       />
 
-                      <div>
+                      <div className="md:col-span-2">
                         <label className="block text-sm font-bold text-gray-200 mb-3 uppercase tracking-wider">
                           Display Currency
                         </label>
@@ -798,86 +837,179 @@ export function SettingsPage() {
                       onChange={(e) => setProfileForm({ ...profileForm, nostr_pubkey: e.target.value })}
                       placeholder={t('settings.placeholder.nostr')}
                       className="bg-black border-white/10 text-white font-mono"
+                      error={
+                        profileForm.nostr_pubkey.trim()
+                          ? validateNpub(profileForm.nostr_pubkey) ?? undefined
+                          : undefined
+                      }
                     />
-                    <p className="text-xs text-gray-300 -mt-2">{t('settings.nostrHint')}</p>
-                    <div className="flex flex-col sm:flex-row flex-wrap gap-2 -mt-1">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="min-h-[44px]"
-                        disabled={nostrBusy}
-                        onClick={async () => {
-                          setNostrBusy(true);
-                          try {
-                            if (!hasNip07()) {
-                              setNip07Status('missing');
-                              toast(nip07UserMessage(new Error('Nostr extension not found')), 'error');
-                              return;
+                      <p className="text-xs text-gray-300 -mt-2">{t('settings.nostrHint')}</p>
+
+                    <div className="p-5 rounded-xl bg-black border border-white/10">
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="p-2 rounded-lg bg-bitcoin-orange-500/20">
+                          <Wallet size={18} className="text-bitcoin-orange-400" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-bold text-white">Receive identity</p>
+                          <p className="text-xs text-gray-400">Add at least one way people can send you sats.</p>
+                        </div>
+                      </div>
+
+                      <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4 space-y-3">
+                        <div className="flex items-start gap-3">
+                          <div className={`mt-1 shrink-0 p-1.5 rounded-lg ${receiveIdentity.lightning ? 'bg-emerald-500/20 text-emerald-400' : 'bg-white/5 text-gray-500'}`}>
+                            <Zap size={16} />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-semibold text-white">Lightning address</p>
+                            <p className="text-xs text-gray-400">Lud16, Lightning address, or lnbc invoice. Non-custodial — you hold the wallet.</p>
+                            {receiveIdentity.lightning && (
+                              <p className="mt-1 text-xs font-medium text-emerald-400">Added</p>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                      <div className={`mt-1 shrink-0 p-1.5 rounded-lg ${receiveIdentity.nostr ? 'bg-cyan-500/20 text-cyan-400' : 'bg-white/5 text-gray-500'}`}>
+                        <Wallet size={16} className="text-cyan-300" />
+                      </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-semibold text-white">Nostr</p>
+                            <p className="text-xs text-gray-400">Npub lets people find and zap you outside Katoa too.</p>
+                            {receiveIdentity.nostr && (
+                              <p className="mt-1 text-xs font-medium text-cyan-400">Added</p>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                          <div className="mt-1 shrink-0 p-1.5 rounded-lg bg-white/5 text-gray-500">
+                            <Wallet size={16} className="text-orange-400" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-semibold text-white">On-chain Bitcoin</p>
+                            <p className="text-xs text-gray-400">Layer-one address. Tap Wallet to add it now.</p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                          <div className="mt-1 shrink-0 p-1.5 rounded-lg bg-white/5 text-gray-500">
+                            <Shield size={16} className="text-violet-300" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-semibold text-white">Silent payment descriptor</p>
+                            <p className="text-xs text-gray-400">Privacy-preserving Bitcoin receive later, added in Wallet.</p>
+                          </div>
+                        </div>
+                        </div>
+
+                        {!hasReceiveIdentity && (
+                          <div className="mt-3 rounded-lg bg-amber-500/10 border border-amber-500/30 p-3">
+                            <p className="text-sm font-semibold text-amber-200">Add at least one receive address before sharing your profile</p>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex flex-col sm:flex-row flex-wrap gap-2 -mt-1">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="min-h-[44px]"
+                          onClick={() => setActiveTab('wallet')}
+                        >
+                          <Wallet size={18} className="mr-2" />
+                          Open Wallet to add on-chain or silent
+                        </Button>
+                      </div>
+
+                      <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4 text-sm text-gray-300 space-y-2">
+                        <p><span className="font-semibold text-white">Non-custodial.</span> Katoa does not hold your sats. You provide the destination.</p>
+                        <p>Add a Lightning address or Nostr key here to get started. On-chain and silent-payment addresses live in Wallet.</p>
+                      </div>
+
+                      <div className="flex flex-col sm:flex-row flex-wrap gap-2 -mt-1">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="min-h-[44px]"
+                          disabled={nostrBusy}
+                          onClick={async () => {
+                            setNostrBusy(true);
+                            try {
+                              if (!hasNip07()) {
+                                setNip07Status('missing');
+                                toast(nip07UserMessage(new Error('Nostr extension not found')), 'error');
+                                return;
+                              }
+                              const pk = await window.nostr!.getPublicKey();
+                              const npub = nostrService.encodeNpub(pk);
+                              setProfileForm((f) => ({ ...f, nostr_pubkey: npub }));
+                              await updateProfile({ nostr_pubkey: npub });
+                              setNip07Status('detected');
+                              toast('Linked NIP-07 public key (we never see your private key)', 'success');
+                            } catch (e) {
+                              setNip07Status(nip07StatusFromError(e));
+                              toast(nip07UserMessage(e), 'error');
+                            } finally {
+                              setNostrBusy(false);
                             }
-                            const pk = await window.nostr!.getPublicKey();
-                            const npub = nostrService.encodeNpub(pk);
-                            setProfileForm((f) => ({ ...f, nostr_pubkey: npub }));
-                            await updateProfile({ nostr_pubkey: npub });
-                            setNip07Status('detected');
-                            toast('Linked NIP-07 public key (we never see your private key)', 'success');
-                          } catch (e) {
-                            setNip07Status(nip07StatusFromError(e));
-                            toast(nip07UserMessage(e), 'error');
-                          } finally {
-                            setNostrBusy(false);
-                          }
-                        }}
-                      >
-                        Link NIP-07 extension
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="min-h-[44px]"
-                        disabled={nostrBusy}
-                        onClick={() => setConfirmImportNostr(true)}
-                      >
-                        Import from Nostr (kind-0)
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="min-h-[44px]"
-                        disabled={nostrBusy || !profileForm.lightning_address}
-                        onClick={async () => {
-                          setNostrBusy(true);
-                          try {
-                            const lud16 = profileForm.lightning_address.trim();
-                            const result = await nostrService.publishProfile({
-                              lud16,
-                              name: profileForm.username || undefined,
-                              about: profileForm.bio || undefined,
-                              picture: profileForm.avatar_url || undefined,
-                              website: 'https://katoa.org',
-                            });
-                            if (!result.ok) {
-                              toast(result.message || 'Publish failed', 'error');
-                              return;
+                          }}
+                        >
+                          Link NIP-07 extension
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="min-h-[44px]"
+                          disabled={nostrBusy}
+                          onClick={() => setConfirmImportNostr(true)}
+                        >
+                          Import from Nostr (kind-0)
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="min-h-[44px]"
+                          disabled={nostrBusy || !profileForm.lightning_address}
+                          onClick={async () => {
+                            setNostrBusy(true);
+                            try {
+                              if (!profileForm.lightning_address.trim()) {
+                                toast('Add a Lightning address first so your Nostr profile can carry a lud16.', 'error');
+                                return;
+                              }
+                              const lud16 = profileForm.lightning_address.trim();
+                              const result = await nostrService.publishProfile({
+                                lud16,
+                                name: profileForm.username || undefined,
+                                about: profileForm.bio || undefined,
+                                picture: profileForm.avatar_url || undefined,
+                                website: 'https://katoa.org',
+                              });
+                              if (!result.ok) {
+                                toast(result.message || 'Publish failed', 'error');
+                                return;
+                              }
+                              toast(`Published kind 0 with lud16 to ${result.accepted.length} relay(s)`, 'success');
+                              await nostrService.publishRelayList();
+                            } catch (e) {
+                              toast(nip07UserMessage(e), 'error');
+                            } finally {
+                              setNostrBusy(false);
                             }
-                            toast(`Published kind 0 with lud16 to ${result.accepted.length} relay(s)`, 'success');
-                            await nostrService.publishRelayList();
-                          } catch (e) {
-                            toast(nip07UserMessage(e), 'error');
-                          } finally {
-                            setNostrBusy(false);
-                          }
-                        }}
-                      >
-                        Publish lud16 + relays (NIP-65)
-                      </Button>
-                    </div>
-                    <p className="text-[11px] text-gray-600">
-                      Platform NIP-05: <span className="text-gray-400">{PLATFORM_NIP05}</span>
-                      {' · '}
-                      <span className="font-mono text-gray-300 break-all">{PLATFORM_NPUB.slice(0, 16)}…</span>
-                      {' · '}
-                      Creator handles (you@katoa.org) — see docs/NOSTR-NIP05.md
-                    </p>
+                          }}
+                        >
+                          Publish lud16 + relays (NIP-65)
+                        </Button>
+                      </div>
+                      <p className="text-[11px] text-gray-600">
+                        Platform NIP-05: <span className="text-gray-400">{PLATFORM_NIP05}</span>
+                        {' · '}
+                        <span className="font-mono text-gray-300 break-all">{PLATFORM_NPUB.slice(0, 16)}…</span>
+                        {' · '}
+                        Creator handles (you@katoa.org) — see docs/NOSTR-NIP05.md
+                      </p>
 
                     <div className="p-6 bg-black rounded-xl border border-white/10">
                       <label className="block text-sm font-bold text-gray-200 mb-2 uppercase tracking-wider">
@@ -998,8 +1130,8 @@ export function SettingsPage() {
                     <Wallet size={28} className="text-emerald-500" />
                   </div>
                   <div>
-                    <h2 className="text-3xl font-black text-white">Bitcoin Wallets</h2>
-                    <p className="text-gray-400">Manage your payment addresses and methods</p>
+                    <h2 className="text-3xl font-black text-white">Payment Methods</h2>
+                    <p className="text-gray-400">Add every address you actually receive on. Katoa never holds the funds.</p>
                   </div>
                 </div>
                 <div className="mb-6">

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Coins } from 'lucide-react';
 import { useCurrency, CURRENCY_OPTIONS, DisplayCurrency } from '../contexts/CurrencyContext';
 
@@ -6,14 +6,16 @@ export function CurrencySelector({ compact = false }: { compact?: boolean }) {
   const { displayCurrency, setDisplayCurrency } = useCurrency();
   const [open, setOpen] = useState(false);
 
+  const close = useCallback(() => setOpen(false), []);
+
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false);
+      if (e.key === 'Escape') close();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [open]);
+  }, [open, close]);
 
   const current = CURRENCY_OPTIONS.find((c) => c.code === displayCurrency) ?? CURRENCY_OPTIONS[0];
 
@@ -36,8 +38,12 @@ export function CurrencySelector({ compact = false }: { compact?: boolean }) {
 
       {open && (
         <>
-          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div role="listbox" className="absolute right-0 mt-2 w-44 bg-charcoal-900/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl py-2 z-50">
+          <div className="fixed inset-0 z-40" onClick={close} />
+          <div
+            role="listbox"
+            aria-label="Display currency"
+            className="absolute right-0 mt-2 w-48 bg-charcoal-900/98 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl py-1.5 z-50"
+          >
             {CURRENCY_OPTIONS.map((opt) => (
               <button
                 key={opt.code}
@@ -46,14 +52,21 @@ export function CurrencySelector({ compact = false }: { compact?: boolean }) {
                 aria-selected={displayCurrency === opt.code}
                 onClick={() => {
                   setDisplayCurrency(opt.code as DisplayCurrency);
-                  setOpen(false);
+                  close();
                 }}
-                className={`w-full px-4 py-2.5 text-left hover:bg-white/5 flex items-center gap-3 transition-colors ${
-                  displayCurrency === opt.code ? 'text-neon-cyan-500 bg-neon-cyan/5' : 'text-gray-200'
+                className={`w-full px-4 py-2.5 text-left flex items-center gap-3 transition-colors ${
+                  displayCurrency === opt.code
+                    ? 'text-neon-cyan-400 bg-neon-cyan-500/10'
+                    : 'text-gray-200 hover:bg-white/5'
                 }`}
               >
-                <span className="font-mono w-6">{opt.symbol}</span>
+                <span className="font-mono text-base">{opt.symbol}</span>
                 <span className="text-sm">{opt.label}</span>
+                {displayCurrency === opt.code && (
+                  <span className="ml-auto text-[10px] font-bold uppercase tracking-wider text-neon-cyan-500">
+                    selected
+                  </span>
+                )}
               </button>
             ))}
           </div>

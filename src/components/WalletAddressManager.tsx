@@ -343,6 +343,8 @@ export function WalletAddressManager() {
         return <Shield size={20} className="text-purple-400" />;
       case 'nostr':
         return <Globe size={20} className="text-cyan-400" />;
+      case 'silent':
+        return <Shield size={20} className="text-violet-400" />;
       default:
         return <Wallet size={20} />;
     }
@@ -360,6 +362,8 @@ export function WalletAddressManager() {
         return 'PYNYM Payment Code';
       case 'nostr':
         return 'Nostr Public Key';
+      case 'silent':
+        return 'Silent Payment Descriptor';
       default:
         return type;
     }
@@ -377,6 +381,8 @@ export function WalletAddressManager() {
         return 'npub1...';
       case 'pynym':
         return 'PM8T...';
+      case 'silent':
+        return 'silent:...';
       default:
         return 'Address';
     }
@@ -492,6 +498,7 @@ export function WalletAddressManager() {
                   <option value="xpub">XPUB Address</option>
                   <option value="pynym">PYNYM Payment Code</option>
                   <option value="nostr">Nostr Public Key</option>
+                  <option value="silent">Silent Payment Descriptor</option>
                 </select>
               </div>
 

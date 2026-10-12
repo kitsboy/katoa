@@ -15,7 +15,7 @@ export type PaymentMethodType =
   | 'bolt12'
   | 'onchain';
 
-export type WalletAddressType = 'lightning' | 'xpub' | 'pynym' | 'nostr' | 'onchain';
+export type WalletAddressType = 'lightning' | 'xpub' | 'pynym' | 'nostr' | 'onchain' | 'silent';
 
 type Relationships = [];
 

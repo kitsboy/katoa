@@ -39,6 +39,7 @@ const TemplatesPage = lazy(() => import('./pages/TemplatesPage').then((m) => ({ 
 const PressKitPage = lazy(() => import('./pages/PressKitPage').then((m) => ({ default: m.PressKitPage })));
 const MeetupKitPage = lazy(() => import('./pages/MeetupKitPage').then((m) => ({ default: m.MeetupKitPage })));
 const CaseStudiesPage = lazy(() => import('./pages/CaseStudiesPage').then((m) => ({ default: m.CaseStudiesPage })));
+const DemoPage = lazy(() => import('./pages/DemoPage').then((m) => ({ default: m.DemoPage })));
 const BugBountyPage = lazy(() => import('./pages/BugBountyPage').then((m) => ({ default: m.BugBountyPage })));
 const ThankYouPage = lazy(() => import('./pages/ThankYouPage').then((m) => ({ default: m.ThankYouPage })));
 const CreatorsPage = lazy(() => import('./pages/CreatorsPage').then((m) => ({ default: m.CreatorsPage })));
@@ -179,7 +180,9 @@ function AppShell() {
               <Route path="/press" element={<RouteTransition><PressKitPage /></RouteTransition>} />
               <Route path="/meetup" element={<RouteTransition><MeetupKitPage /></RouteTransition>} />
               <Route path="/case-studies" element={<RouteTransition><CaseStudiesPage /></RouteTransition>} />
+              <Route path="/demo" element={<RouteTransition><DemoPage /></RouteTransition>} />
               <Route path="/security/bounty" element={<RouteTransition><BugBountyPage /></RouteTransition>} />
+              <Route path="/demo/test" element={<RouteTransition><DemoPage /></RouteTransition>} />
               <Route path="/thank-you" element={<RouteTransition><ThankYouPage /></RouteTransition>} />
               <Route path="/creators" element={<RouteTransition><CreatorsPage /></RouteTransition>} />
               <Route path="/messages" element={<RouteTransition><MessagesPage /></RouteTransition>} />
