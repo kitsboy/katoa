@@ -1,3 +1,24 @@
+## 🚨 READ FIRST — 2026-10-13 · Security handoff (Buffy M3 → Kimi THOR)
+
+**Full detail lives in `docs/SECURITY-HANDOFF-2026-10-13.md`. Read that file before doing anything else today.** Summary of the open items, in priority order:
+
+- **P0 — rotate the wrangler OAuth token.** Buffy printed it to terminal output while auditing DNS access. It is a live Cloudflare token for `kitsboy@gmail.com` (Account ID `5135f538dd22ce5f8285773bae5f8d56`) with `workers:write`, `pages:write`, `d1:write`, `workers_kv:write`, `zone:read`. Treat as compromised. `wrangler logout` everywhere, then `wrangler login` — and preferably replace the broad OAuth grant with a scoped `Cloudflare Pages:Edit` API token. Also: add a `cfoat_`/`cfort_` detection rule to `scripts/check-secret-hygiene.mjs`.
+- **P1 — DMARC still not set.** `katoa.org` has no DMARC record. Buffy **cannot** set it: the wrangler token has `zone:read` only, and the DNS records API returns `Authentication error (code 10000)`. Record to create on `_dmarc.katoa.org` (TXT):
+  `v=DMARC1; p=quarantine; rua=mailto:dmarc@katoa.org; pct=100`
+  **Before applying:** confirm nothing legitimately sends mail as `@katoa.org` (3rd-party transactional/newsletter senders must be SPF/DKIM-aligned first or their mail gets quarantined), and confirm `dmarc@katoa.org` is a real mailbox. Consider a `p=none` → `p=quarantine` ramp.
+- **P1 — two carry-over Cloudflare findings still open:** `www` CNAME missing (does not resolve), and an origin IP exposed by an unproxied record (bypasses WAF/DDoS). Kimi should determine whether that record is a live origin or a stale one to delete.
+- **P2 — react-router 6→7.** 2 moderate advisories remain (open redirect via backslash; SSR `deserializeErrors` constructor injection). Both are **unreachable in this build** — pure CSR so no SSR path exists, and every `navigate()` target is a root-relative literal or passes through `safeNextPath`. Not forced because it is a breaking major bump. Needs its own scheduled task with a full auth/redirect regression pass. Hand back to Buffy if you would rather not take it.
+- **P2 — CSP too permissive.** `connect-src … https:` and `frame-src 'self' https:` allow any https origin. Recommend narrowing to the enumerated list. **Needs a map + Nostr regression pass first** — that is why it was not done blind.
+- **Fixed this session (no action needed):** `maplibre-gl` critical XSS (`DOM.sanitize()` bypass) patched to `^6.4.1`; stored-XSS via untrusted BTC Map/OSM `website` fields closed with `safeHttpUrl()` across all 4 `href` sinks; 54 missing SEO meta translations added for es/pt/fr/de/ja/zh; sitemap now emits 344 hreflang alternates.
+
+**Questions Kimi must answer (Buffy cannot from the repo):** (1) DMARC sender audit, (2) live origin vs stale record, (3) token rotation confirmation + whether the leaked token was used, (4) is `dmarc@` a real mailbox, (5) react-router 7 — take it or hand back, (6) approve CSP narrowing, (7) relocate `safeHttpUrl` out of `btcmap.ts` to a generic util.
+
+**Known limitations:** ja/zh translations are unreviewed by a native speaker (they ship verbatim as Google snippets); Nostr relay connectivity not exercised; Pages deploy for `81adfa9` not yet confirmed live.
+
+**Git State:** SHA `81adfa9` on `main`; `origin/main` matches; working tree clean.
+
+---
+
 ## Session — 2026-09-22 · Google PKCE hardening and staged Nostr challenge login (Buffy M3)
 
 **Done:**
