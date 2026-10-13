@@ -173,6 +173,8 @@
 - Now expanded: `/demo` is an honest protagonist demo hub around Luna — the sample video creator — with her media card, profile wishlist link, currency switcher, language switcher, and sample tip presets.
 - This was built, typechecked, tested, built, and pushed on its own green batch.
 - For the next demo pass, the clean spec is still: keep Luna as the protagonist, deepen the sample world around her, and keep everything visibly sample-only.
+- That next demo pass just shipped: two more sample Luna wishlists, a studio diaries drop and a San Francisco travel diary drop, all under the same Luna creator account and all clearly sample-only.
+- The live-money path is now documented separately for Kimi/Cam in `docs/TECHNICAL-COMPLETION-NEEDS-CAM.md`.
 
 ---
 
