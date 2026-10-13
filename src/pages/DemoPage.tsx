@@ -17,9 +17,10 @@ export function DemoPage() {
     <div className="min-h-screen bg-charcoal-950">
       <PageMeta
         title="Demo — KATOA"
-        description="Honest Katoa demo hub: meet Luna, the sample video creator. Try currency, language, and tip presets. No live settlement."
+        description="Meet Luna, KATOA’s sample video creator. This is the honest demo hub: open her profile and wishlist, switch currency and language, and try tip presets. No live settlement."
         path="/demo"
-        noindex
+        ogTitle="Meet Luna — KATOA Demo"
+        ogDescription="Luna is KATOA’s sample video creator. Open her profile and wishlist, switch currency and language, and try tip presets. This is an honest sample demo, not a live payment."
       />
       <div className="max-w-3xl mx-auto px-4 py-16">
         <Card className="p-8">
@@ -34,9 +35,18 @@ export function DemoPage() {
           </p>
           <p className="text-gray-400 mb-6 leading-relaxed">
             She makes exclusive video drops and funds them directly from viewers with Bitcoin Lightning.
-            In this demo, you can open her profile, open her wishlist, switch the display currency,
-            switch the UI language, and try tip presets — all locally, all visibly sample-only.
+            You can open her profile, open her wishlist, switch the display currency,            switch the UI language,
+            and try tip presets — all on this page, all locally, all visibly sample-only.
           </p>
+
+          <div className="rounded-xl border border-bitcoin-orange-500/30 bg-bitcoin-orange-500/5 p-4 flex items-center justify-between">
+            <p className="text-sm text-gray-300">
+              This is the public demo entry point for KATOA. It shows one sample creator and sample flows — not live payments.
+            </p>
+            <Link to="/explore" className="text-bitcoin-orange-300 text-sm font-semibold hover:text-bitcoin-orange-200">
+              Browse all demo creators
+            </Link>
+          </div>
 
           <MediaCard
             media={{
@@ -158,7 +168,7 @@ export function DemoPage() {
           </div>
 
           <p className="mt-4 text-[11px] text-gray-500">
-            Demo mode is local and sample-only. Real Lightning, real Nostr, and live creator accounts come later.
+            Public sample demo. Luna’s profile, wishlists, and flows are demonstrably sample content. Real Lightning, real Nostr, and live creator accounts come later.
           </p>
         </Card>
       </div>

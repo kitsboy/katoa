@@ -29,6 +29,10 @@ interface PageMetaProps {
   image?: string;
   /** Open Graph video URL for video wishlists / creator pages */
   ogVideo?: string;
+  /** Optional explicit Open Graph title override. Falls back to the normal title rule. */
+  ogTitle?: string;
+  /** Optional explicit Open Graph description override. Falls back to `description`. */
+  ogDescription?: string;
   noindex?: boolean;
 }
 
@@ -56,15 +60,18 @@ export function PageMeta({
   path = '',
   image = DEFAULT_OG_IMAGE,
   ogVideo,
+  ogTitle,
+  ogDescription,
   noindex = false,
 }: PageMetaProps) {
   const { language } = useLanguage();
   const absoluteImage = toAbsoluteUrl(image);
   const canonicalPath = path || '/';
+  const resolvedOgTitle = ogTitle ?? (title.includes('KATOA') ? title : `${title} | KATOA`);
+  const resolvedOgDescription = ogDescription ?? description ?? '';
 
   useEffect(() => {
-    const fullTitle = title.includes('KATOA') ? title : `${title} | KATOA`;
-    document.title = fullTitle;
+    document.title = resolvedOgTitle;
     document.documentElement.lang = language;
 
     const setMeta = (name: string, content: string, attr: 'name' | 'property' = 'name') => {
@@ -75,15 +82,23 @@ export function PageMeta({
         document.head.appendChild(el);
       }
       el.setAttribute('content', content);
-    };
-
-    if (description) {
+    };    if (description) {
       setMeta('description', description);
       setMeta('og:description', description, 'property');
       setMeta('twitter:description', description);
     }
-    setMeta('og:title', fullTitle, 'property');
-    setMeta('twitter:title', fullTitle);
+    setMeta('og:title', resolvedOgTitle, 'property');
+    setMeta('twitter:title', resolvedOgTitle);
+    if (resolvedOgDescription) {
+      setMeta('description', resolvedOgDescription);
+      setMeta('og:description', resolvedOgDescription, 'property');
+      setMeta('twitter:description', resolvedOgDescription);
+    }
+      if (resolvedOgDescription) {
+        setMeta('description', resolvedOgDescription);
+        setMeta('og:description', resolvedOgDescription, 'property');
+        setMeta('twitter:description', resolvedOgDescription);
+      }
     setMeta('og:url', `${SITE_URL}${canonicalPath}`, 'property');
     setMeta('og:image', absoluteImage, 'property');
     const imagePath = absoluteImage.split('?')[0];
@@ -97,8 +112,15 @@ export function PageMeta({
       document.querySelector('meta[property="og:image:width"]')?.remove();
       document.querySelector('meta[property="og:image:height"]')?.remove();
     }
-    setMeta('og:image:alt', fullTitle, 'property');
+    setMeta('og:image:alt', resolvedOgTitle, 'property');
     setMeta('twitter:image', absoluteImage);
+    setMeta('og:type', ogVideo ? 'video.other' : 'website', 'property');
+    setMeta('og:site_name', 'KATOA', 'property');
+    setMeta('og:locale', OG_LOCALE[language], 'property');
+    setOgLocaleAlternates(language);
+    if (noindex) {
+      setMeta('robots', 'noindex', 'name');
+    }
     setMeta('og:type', ogVideo ? 'video.other' : 'website', 'property');
     setMeta('og:site_name', 'KATOA', 'property');
     setMeta('og:locale', OG_LOCALE[language], 'property');

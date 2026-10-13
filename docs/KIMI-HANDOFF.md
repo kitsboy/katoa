@@ -170,11 +170,12 @@
 - Should `/demo` stay as this honest demo hub, or do you want it promoted to the public demo entry point and paired with a richer sample-creator world?
 - If you want the next step, the clean spec is: one sample creator becomes the demo protagonist, the demo hub previews profile + wishlist + currency + language + tip presets, and the full flow stays visibly sample-only.
 - This demo build is green, pushed, and intentionally still leaves live money + live NIP-07 + live Supabase counters to the backend/infra owner.
-- Now expanded: `/demo` is an honest protagonist demo hub around Luna — the sample video creator — with her media card, profile wishlist link, currency switcher, language switcher, and sample tip presets.
+- Now expanded: `/demo` is the public demo entry point and honest protagonist demo hub around Luna — the sample video creator — with her media card, profile wishlist link, currency switcher, language switcher, and sample tip presets.
 - This was built, typechecked, tested, built, and pushed on its own green batch.
 - For the next demo pass, the clean spec is still: keep Luna as the protagonist, deepen the sample world around her, and keep everything visibly sample-only.
 - That next demo pass just shipped: two more sample Luna wishlists, a studio diaries drop and a San Francisco travel diary drop, all under the same Luna creator account and all clearly sample-only.
 - The live-money path is now documented separately for Kimi/Cam in `docs/TECHNICAL-COMPLETION-NEEDS-CAM.md`.
+- `/demo` was promoted to the public demo entry point wording: it now states plainly that this is the public demo entry point for KATOA and that Luna’s profile, wishlists, and flows are demonstrably sample content.
 
 ---
 

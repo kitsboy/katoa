@@ -6,7 +6,7 @@ Brief: Settings receive-identity register and Payment Methods wallet tab, Wallet
 - Settings wallet tab is now labeled `Payment Methods` and the profile receive section includes a `Receive identity` register plus `Open Wallet to add on-chain or silent`.
 - `WalletAddressManager` can add a Silent Payment Descriptor (`silent:` / `sp:` placeholder, icon, and format validation).
 - `src/lib/validateAddress.ts` and `src/types/database.ts` now include silent-payment descriptor validation plus `silent` in the wallet address types.
-- `/demo` is now an honest demo hub: sample creator links, display-currency switcher, language switcher, sample tip presets, and sample-only copy. `/demo/test` routes to the same page.
+- `/demo` is now the public demo entry point and honest protagonist demo hub around Luna: her media card, her profile and wishlist links, display-currency switcher, language switcher, sample tip presets, and clear sample-only copy. `/demo/test` routes to the same page.
 - Settings uses react-router `Link`/`RouterLink` for in-app public-profile and messages shortcuts.
 - Added `docs/STORAGE-CDN.md` to keep R2 as default and document cheap upgrade-ready alternatives.
 - Reconciled `docs/KIMI-HANDOFF.md` and `docs/LATEST-UPDATE.md` to the current tip and left Kimi a demo-hub spec question.
