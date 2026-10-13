@@ -186,13 +186,13 @@ const WishlistCard = memo(function WishlistCard({
                   e.stopPropagation();
                   onToggleFavorite(wishlist.id);
                 }}
-                className="p-2 rounded-full bg-black/50 backdrop-blur-sm border border-white/10 hover:border-rose-500/50 transition-colors touch-manipulation"
+                className="p-2 rounded-full bg-black/45 backdrop-blur-md border border-white/15 hover:border-katoa-fuchsia-400/70 hover:bg-black/65 transition-colors touch-manipulation"
                 aria-label={isFavorite ? t('explore.removeFavorite') : t('explore.addFavorite')}
                 aria-pressed={isFavorite}
               >
                 <Heart
                   size={18}
-                  className={isFavorite ? 'fill-rose-500 text-rose-500' : 'text-white'}
+                  className={isFavorite ? 'fill-katoa-fuchsia-400 text-katoa-fuchsia-400' : 'text-white'}
                 />
               </button>
             </div>
@@ -216,17 +216,17 @@ const WishlistCard = memo(function WishlistCard({
 
         <div className="p-4 sm:p-5 pb-5 flex flex-col flex-1 min-h-0 gap-3">
           <div className="flex-1 min-h-0">
-            <h3 className="text-lg font-bold text-white mb-1.5 line-clamp-1 group-hover:text-neon-cyan-400 transition-colors">
+            <h3 className="text-lg font-bold text-white mb-1.5 line-clamp-1 leading-snug tracking-[-0.012em] group-hover:text-katoa-violet-200 transition-colors">
               {wishlist.title}
             </h3>
             {!compact && (
-              <p className="text-gray-400 text-sm line-clamp-2 leading-relaxed">
+              <p className="text-[#a899c0] text-sm line-clamp-2 leading-relaxed">
                 {wishlist.description}
               </p>
             )}
             {wishlist.country && (
-              <div className="flex items-center gap-1.5 text-xs text-gray-500 font-medium mt-2">
-                <MapPin size={12} className="text-bitcoin-orange-500" />
+              <div className="flex items-center gap-1.5 text-xs text-[#8b7fa5] font-medium mt-2">
+                <MapPin size={12} className="text-katoa-violet-300" />
                 <span>{wishlist.city ? `${wishlist.city}, ` : ''}{wishlist.country}</span>
               </div>
             )}
@@ -240,13 +240,13 @@ const WishlistCard = memo(function WishlistCard({
                 e.stopPropagation();
                 navigate(`/u/${wishlist.creator.username}`);
               }}
-              className="flex items-center gap-2.5 shrink-0 text-left rounded-xl hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bitcoin-orange-500/60"
+              className="flex items-center gap-2.5 shrink-0 text-left rounded-xl hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-katoa-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#160e24]"
               aria-label={`@${wishlist.creator.username}`}
             >
-              <div className="w-9 h-9 bg-gradient-to-r from-bitcoin-orange-500 to-amber-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
+              <div className="w-9 h-9 bg-gradient-to-br from-katoa-violet-500 to-katoa-fuchsia-500 rounded-full flex items-center justify-center text-white font-bold text-sm ring-2 ring-katoa-violet-400/25">
                 {wishlist.creator.username[0].toUpperCase()}
               </div>
-              <span className="text-sm text-gray-300 font-medium">{wishlist.creator.username}</span>
+              <span className="text-sm text-[#c4b8d4] font-medium">{wishlist.creator.username}</span>
             </button>
           )}
 
@@ -259,6 +259,7 @@ const WishlistCard = memo(function WishlistCard({
                 showPercentage={true}
                 showValues={false}
                 height="sm"
+                gradient="from-katoa-violet-400 to-katoa-fuchsia-400"
                 animated={true}
               />
             </div>

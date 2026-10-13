@@ -19,16 +19,16 @@ export function Button({
 }: ButtonProps) {
   const { t } = useLanguage();
   const baseStyles =
-    'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] relative overflow-hidden touch-manipulation min-h-[44px]';
+    'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] relative overflow-hidden touch-manipulation min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-katoa-violet-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0e0a18]';
 
   const variants = {
     primary:
-      'bg-neon-cyan-500 text-charcoal-950 hover:bg-neon-cyan-400 shadow-[0_0_24px_rgba(20,230,255,0.25)] hover:shadow-[0_0_36px_rgba(20,230,255,0.4)]',
+      'text-[#150b26] bg-gradient-to-b from-katoa-violet-400 to-katoa-violet-600 shadow-[0_0_0_1px_rgba(167,139,250,0.55),inset_0_1px_0_rgba(255,255,255,0.45),0_8px_24px_rgba(139,92,246,0.38)] hover:from-katoa-violet-300 hover:to-katoa-violet-500 hover:shadow-[0_0_0_1px_rgba(167,139,250,0.8),inset_0_1px_0_rgba(255,255,255,0.5),0_12px_34px_rgba(139,92,246,0.5)]',
     secondary:
-      'bg-white/10 text-white border border-white/15 hover:bg-white/15 hover:border-white/25',
+      'text-[#ece5f8] bg-white/[0.06] border border-white/15 shadow-[0_0_0_1px_rgba(167,139,250,0.2),inset_0_1px_0_rgba(255,255,255,0.12)] hover:bg-white/[0.1] hover:border-katoa-violet/45 hover:text-white',
     outline:
-      'border-2 border-neon-cyan-500/60 text-neon-cyan-500 hover:bg-neon-cyan-500/10 backdrop-blur-sm',
-    ghost: 'text-gray-100 hover:bg-white/10 hover:text-white',
+      'border border-katoa-violet-400/55 text-katoa-violet-300 bg-katoa-violet/[0.06] hover:bg-katoa-violet/15 hover:text-white hover:border-katoa-violet-400/80 backdrop-blur-sm',
+    ghost: 'text-[#c4b8d4] hover:bg-white/10 hover:text-white',
     bitcoin:
       'bg-gradient-to-r from-bitcoin-orange-400 to-bitcoin-orange-500 text-charcoal-950 hover:from-bitcoin-orange-300 hover:to-bitcoin-orange-400 shadow-[0_0_24px_rgba(247,147,26,0.35)]',
     danger:

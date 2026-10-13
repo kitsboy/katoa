@@ -70,12 +70,22 @@ html[data-katoa-build="2026-08-24-night-jewel"] {
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Fixed nav island clearance for in-page anchors */
+    scroll-padding-top: 6.5rem;
+  }
+
   body {
     @apply text-white;
+    color: var(--ink);
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-size: 16px;
     letter-spacing: -0.011em;
     line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
     background-color: var(--ember-950);
     background-image:
       radial-gradient(ellipse 80% 50% at 50% -10%, rgba(167, 139, 250, 0.14), transparent 50%),
@@ -86,17 +96,27 @@ html[data-katoa-build="2026-08-24-night-jewel"] {
     font-family: 'Space Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     @apply text-white;
     font-weight: 700;
-    letter-spacing: 0.01em;
-    line-height: 1.2;
+    letter-spacing: -0.012em;
+    line-height: 1.15;
+    text-wrap: balance;
   }
+
+  /* Body copy stays ragged-right — only headings opt into balance. */
+  p { text-wrap: pretty; }
 
   a {
     @apply transition-all duration-200;
   }
 
   :focus-visible {
-    outline: 2px solid var(--neon-cyan);
+    outline: 2px solid var(--katoa-violet);
     outline-offset: 2px;
+    box-shadow: 0 0 0 5px rgba(20, 230, 255, 0.2);
+  }
+
+  ::selection {
+    background: rgba(167, 139, 250, 0.34);
+    color: #fff;
   }
 
   button:focus:not(:focus-visible),
@@ -107,27 +127,27 @@ html[data-katoa-build="2026-08-24-night-jewel"] {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(20, 230, 255, 0.3) #070711;
+  scrollbar-color: rgba(167, 139, 250, 0.32) #120c1e;
 }
 
 *::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
 
 *::-webkit-scrollbar-track {
-  background: #070711;
-  border-radius: 8px;
+  background: #120c1e;
+  border-radius: 999px;
 }
 
 *::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, rgba(20, 230, 255, 0.35) 0%, rgba(247, 147, 26, 0.35) 100%);
-  border-radius: 8px;
-  border: 2px solid #070711;
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.4) 0%, rgba(232, 121, 249, 0.34) 100%);
+  border-radius: 999px;
+  border: 3px solid #120c1e;
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, rgba(20, 230, 255, 0.55) 0%, rgba(247, 147, 26, 0.55) 100%);
+  background: linear-gradient(135deg, rgba(167, 139, 250, 0.7) 0%, rgba(232, 121, 249, 0.6) 100%);
 }
 
 /* Mobile safe areas + touch */

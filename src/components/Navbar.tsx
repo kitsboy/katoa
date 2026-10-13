@@ -172,10 +172,10 @@ export function Navbar() {
               <Link href="/" className="flex items-center gap-2.5 hover:opacity-90 transition-opacity group min-w-0 text-white">
                 <div className="relative shrink-0">
                   <img src="/logo2.png" alt="KATOA" width={36} height={36} className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl group-hover:scale-105 transition-transform object-contain bg-charcoal-950/80 p-0.5" />
-                  <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-br from-neon-cyan-500/30 to-bitcoin-orange-500/20 blur-sm opacity-0 group-hover:opacity-100 transition-opacity -z-10" aria-hidden />
+                  <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-br from-katoa-violet-400/45 to-katoa-fuchsia-400/30 blur-sm opacity-0 group-hover:opacity-100 transition-opacity -z-10" aria-hidden />
                 </div>
                 <span className="hidden sm:inline text-base font-display font-semibold tracking-tight truncate">KATOA</span>
-                <span className="hidden md:inline text-[10px] font-medium px-2 py-0.5 rounded-md shrink-0 uppercase tracking-wider text-neon-cyan-400/90 bg-neon-cyan-500/10 border border-neon-cyan-500/20" title={t('nav.betaTitle')}>
+                <span className="hidden md:inline text-[10px] font-semibold px-2 py-0.5 rounded-md shrink-0 uppercase tracking-wider text-katoa-violet-200 bg-katoa-violet-500/15 border border-katoa-violet-400/30" title={t('nav.betaTitle')}>
                   {t('nav.beta')}
                 </span>
               </Link>
@@ -183,7 +183,7 @@ export function Navbar() {
             </div>
 
             <div className="hidden md:flex items-center gap-1 lg:gap-2 min-w-0">
-              <div className="flex items-center gap-0.5 mr-1 lg:mr-3 px-1 py-1 rounded-full border bg-white/[0.03] border-white/[0.06]">
+              <div className="flex items-center gap-0.5 mr-1 lg:mr-3 px-1 py-1 rounded-full border bg-white/[0.03] border-white/[0.08] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
                 <Link
                   href="/explore"
                   className={`nav-link-pill relative ${isActive('/explore') ? 'nav-link-pill-active' : ''}`}
@@ -353,7 +353,7 @@ export function Navbar() {
                   setShowLangMenu(false);
                 }}
                 className={`w-full px-4 py-2.5 min-h-[44px] text-left hover:bg-white/5 flex items-center gap-3 transition-colors ${
-                  language === lang ? 'text-neon-cyan-400 bg-neon-cyan/5' : 'text-gray-100'
+                  language === lang ? 'text-katoa-violet-400 bg-katoa-violet/5' : 'text-gray-100'
                 }`}
               >
                 <span className="text-xl" aria-hidden>
@@ -406,11 +406,11 @@ export function Navbar() {
               <div className="space-y-2">
                 <Link
                   href="/explore"
-                  className="flex items-center gap-3 px-5 py-4 text-white bg-white/5 hover:bg-neon-cyan/10 rounded-xl transition-all duration-200 group border border-white/10 hover:border-neon-cyan/50"
+                  className="flex items-center gap-3 px-5 py-4 text-white bg-white/5 hover:bg-katoa-violet/10 rounded-xl transition-all duration-200 group border border-white/10 hover:border-katoa-violet/50"
                   onClick={() => setShowMenu(false)}
                 >
-                  <div className="relative p-2 bg-neon-cyan/15 rounded-lg group-hover:bg-neon-cyan/25 transition-colors">
-                    <Globe size={20} className="text-neon-cyan" />
+                  <div className="relative p-2 bg-katoa-violet/15 rounded-lg group-hover:bg-katoa-violet/25 transition-colors">
+                    <Globe size={20} className="text-katoa-violet" />
                     <CreatorNewDropsBadge className="absolute -top-1 -right-1" />
                   </div>
                   <span className="font-bold text-lg">{t('nav.explore')}</span>
@@ -418,33 +418,33 @@ export function Navbar() {
 
                 <Link
                   href="/comparison"
-                  className="flex items-center gap-3 px-5 py-4 text-white bg-white/5 hover:bg-neon-cyan/10 rounded-xl transition-all duration-200 group border border-white/10 hover:border-neon-cyan/50"
+                  className="flex items-center gap-3 px-5 py-4 text-white bg-white/5 hover:bg-katoa-violet/10 rounded-xl transition-all duration-200 group border border-white/10 hover:border-katoa-violet/50"
                   onClick={() => setShowMenu(false)}
                 >
-                  <div className="p-2 bg-neon-cyan/15 rounded-lg group-hover:bg-neon-cyan/25 transition-colors">
-                    <Zap size={20} className="text-neon-cyan" />
+                  <div className="p-2 bg-katoa-violet/15 rounded-lg group-hover:bg-katoa-violet/25 transition-colors">
+                    <Zap size={20} className="text-katoa-violet" />
                   </div>
                   <span className="font-bold text-lg">{t('nav.comparison')}</span>
                 </Link>
 
                 <Link
                   href="/faq"
-                  className="flex items-center gap-3 px-5 py-4 text-white bg-white/5 hover:bg-neon-cyan/10 rounded-xl transition-all duration-200 group border border-white/10 hover:border-neon-cyan/50"
+                  className="flex items-center gap-3 px-5 py-4 text-white bg-white/5 hover:bg-katoa-violet/10 rounded-xl transition-all duration-200 group border border-white/10 hover:border-katoa-violet/50"
                   onClick={() => setShowMenu(false)}
                 >
-                  <div className="p-2 bg-neon-cyan/15 rounded-lg group-hover:bg-neon-cyan/25 transition-colors">
-                    <HelpCircle size={20} className="text-neon-cyan" />
+                  <div className="p-2 bg-katoa-violet/15 rounded-lg group-hover:bg-katoa-violet/25 transition-colors">
+                    <HelpCircle size={20} className="text-katoa-violet" />
                   </div>
                   <span className="font-bold text-lg">{t('nav.faq')}</span>
                 </Link>
 
                 <Link
                   href="/messages"
-                  className="flex items-center gap-3 px-5 py-4 text-white bg-white/5 hover:bg-neon-cyan/10 rounded-xl transition-all duration-200 group border border-white/10 hover:border-neon-cyan/50"
+                  className="flex items-center gap-3 px-5 py-4 text-white bg-white/5 hover:bg-katoa-violet/10 rounded-xl transition-all duration-200 group border border-white/10 hover:border-katoa-violet/50"
                   onClick={() => setShowMenu(false)}
                 >
-                  <div className="relative p-2 bg-neon-cyan/15 rounded-lg group-hover:bg-neon-cyan/25 transition-colors">
-                    <MessageCircle size={20} className="text-neon-cyan" />
+                  <div className="relative p-2 bg-katoa-violet/15 rounded-lg group-hover:bg-katoa-violet/25 transition-colors">
+                    <MessageCircle size={20} className="text-katoa-violet" />
                     <UnreadMessagesBadge className="absolute -top-1 -right-1" />
                   </div>
                   <span className="font-bold text-lg">{t('nav.messages')}</span>
@@ -475,7 +475,7 @@ export function Navbar() {
                       }}
                       className={`text-3xl p-4 rounded-xl transition-all duration-200 border-2 ${
                         language === lang
-                          ? 'bg-gradient-to-br from-neon-cyan to-bitcoin-orange border-neon-cyan shadow-lg shadow-neon-cyan/40 scale-105'
+                          ? 'bg-gradient-to-br from-katoa-violet-400 to-katoa-fuchsia-400 border-katoa-violet-300 shadow-lg shadow-katoa-violet/45 scale-105'
                           : 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/30'
                       }`}
                       title={languageNames[lang as keyof typeof languageNames]}
@@ -493,21 +493,21 @@ export function Navbar() {
                     <NotificationCenter variant="inline" onNavigate={() => setShowMenu(false)} />
                     <Link
                       href="/dashboard"
-                      className="flex items-center gap-3 px-5 py-4 text-white bg-white/5 hover:bg-neon-cyan/10 rounded-xl transition-all duration-200 group border border-white/10 hover:border-neon-cyan/50"
+                      className="flex items-center gap-3 px-5 py-4 text-white bg-white/5 hover:bg-katoa-violet/10 rounded-xl transition-all duration-200 group border border-white/10 hover:border-katoa-violet/50"
                       onClick={() => setShowMenu(false)}
                     >
-                      <div className="p-2 bg-neon-cyan/15 rounded-lg group-hover:bg-neon-cyan/25 transition-colors">
-                        <LayoutDashboard size={20} className="text-neon-cyan" />
+                      <div className="p-2 bg-katoa-violet/15 rounded-lg group-hover:bg-katoa-violet/25 transition-colors">
+                        <LayoutDashboard size={20} className="text-katoa-violet" />
                       </div>
                       <span className="font-bold text-lg">{t('nav.dashboard')}</span>
                     </Link>
                     <Link
                       href="/settings"
-                      className="flex items-center gap-3 px-5 py-4 text-white bg-white/5 hover:bg-neon-cyan/10 rounded-xl transition-all duration-200 group border border-white/10 hover:border-neon-cyan/50"
+                      className="flex items-center gap-3 px-5 py-4 text-white bg-white/5 hover:bg-katoa-violet/10 rounded-xl transition-all duration-200 group border border-white/10 hover:border-katoa-violet/50"
                       onClick={() => setShowMenu(false)}
                     >
-                      <div className="p-2 bg-neon-cyan/15 rounded-lg group-hover:bg-neon-cyan/25 transition-colors">
-                        <Settings size={20} className="text-neon-cyan" />
+                      <div className="p-2 bg-katoa-violet/15 rounded-lg group-hover:bg-katoa-violet/25 transition-colors">
+                        <Settings size={20} className="text-katoa-violet" />
                       </div>
                       <span className="font-bold text-lg">{t('nav.settings')}</span>
                     </Link>
@@ -515,7 +515,7 @@ export function Navbar() {
 
                   <div className="border-t border-white/10 pt-6">
                     <Link href="/settings" onClick={() => setShowMenu(false)}>
-                      <div className="bg-gradient-to-br from-charcoal-900 to-black rounded-2xl p-5 mb-4 border-2 border-white/10 hover:border-neon-cyan/50 transition-colors">
+                      <div className="bg-gradient-to-br from-charcoal-900 to-black rounded-2xl p-5 mb-4 border-2 border-white/10 hover:border-katoa-violet/50 transition-colors">
                         <div className="flex items-center gap-4">
                           {profile?.avatar_url ? (
                             <img
@@ -523,10 +523,10 @@ export function Navbar() {
                               alt={profile.username}
                               width={56}
                               height={56}
-                              className="w-14 h-14 rounded-full object-cover border-2 border-neon-cyan/60 shadow-lg"
+                              className="w-14 h-14 rounded-full object-cover border-2 border-katoa-violet/60 shadow-lg"
                             />
                           ) : (
-                            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-neon-cyan to-bitcoin-orange border-2 border-neon-cyan/60 flex items-center justify-center shadow-lg">
+                            <div className="w-14 h-14 rounded-full bg-gradient-to-br from-katoa-violet-400 to-katoa-fuchsia-400 border-2 border-katoa-violet-300/60 flex items-center justify-center shadow-lg">
                               <User size={28} className="text-white" />
                             </div>
                           )}
@@ -560,7 +560,7 @@ export function Navbar() {
                     </Button>
                   </Link>
                   <Link href="/auth" onClick={() => setShowMenu(false)}>
-                    <Button className="w-full bg-gradient-to-r from-neon-cyan to-bitcoin-orange hover:from-neon-cyan/90 hover:to-bitcoin-orange/90 text-charcoal-950 font-black text-lg py-5 shadow-lg shadow-neon-cyan/40">
+                    <Button                      className="w-full bg-gradient-to-r from-katoa-violet-400 to-katoa-fuchsia-400 hover:from-katoa-violet-300 hover:to-katoa-fuchsia-400 text-[#150b26] font-black text-lg py-5 shadow-lg shadow-katoa-violet/45">
                       {t('nav.getStarted')}
                     </Button>
                   </Link>

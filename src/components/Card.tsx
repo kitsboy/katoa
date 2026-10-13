@@ -9,8 +9,8 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
 
 const variantStyles = {
   glass:
-    'bg-white/[0.07] border-white/15 backdrop-blur-xl shadow-[0_0_0_1px_rgba(167,139,250,0.22),inset_0_1px_0_rgba(255,255,255,0.16),0_12px_36px_rgba(8,5,16,0.45)]',
-  solid: 'bg-charcoal-900 border-white/10 shadow-lg',
+    'bg-[#1a1428]/70 border-white/10 backdrop-blur-xl shadow-[0_0_0_1px_rgba(167,139,250,0.22),inset_0_1px_0_rgba(255,255,255,0.14),0_16px_44px_rgba(6,3,12,0.48)]',
+  solid: 'bg-[#160e24] border-white/10 shadow-[0_0_0_1px_rgba(167,139,250,0.12),0_12px_32px_rgba(6,3,12,0.4)]',
   outline: 'bg-transparent border-white/15',
 };
 
@@ -36,7 +36,7 @@ export function Card({
         variantStyles[variant],
         paddingStyles[padding],
         hover
-          ? 'transition-all duration-300 hover:border-katoa-violet/40 hover:shadow-[0_16px_48px_rgba(0,0,0,0.5),0_0_40px_rgba(139,92,246,0.14)] hover:-translate-y-1'
+          ? 'transition-[transform,border-color,box-shadow] duration-300 ease-out hover:border-katoa-violet/45 hover:shadow-[0_0_0_1px_rgba(167,139,250,0.4),inset_0_1px_0_rgba(255,255,255,0.18),0_20px_56px_rgba(6,3,12,0.55),0_0_44px_rgba(139,92,246,0.16)] hover:-translate-y-1'
           : '',
         className,
       ]
