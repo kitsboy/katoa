@@ -911,4 +911,78 @@ Lightning tips = instant access to drop notifications and custom thank-you clips
       bio: 'Movement artist · Premium video · 0% fee Lightning payouts',
     },
   },
+  {
+    id: 'mock-video-003',
+    title: 'Luna — Behind the Scenes: Studio Diaries',
+    description:
+      'First member-only drop from the Los Angeles studio session. Sats fund the next shoot and keep this channel independent.',
+    created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+    full_story: `This drop is part of my direct-to-fan video series.
+
+It covers one studio day: lighting setup, sound checks, wardrobe, the shoot itself, and the rough cut.
+
+I am publishing the process, not just the polished result. Supporters get early access, behind-the-scenes clips, and a vote on the next shoot theme.
+
+Everything here is funded directly by viewers. No platform holds the money and no middleman decides what can be made.
+
+If you want to keep this kind of work alive, the fastest way is to support the wishlist directly.`,
+    slug: 'luna-studio-diaries-drop',
+    card_style: 'creator',
+    category: 'creator',
+    cover_image:
+      '/images/mock/pexels-7867fa1faf.jpeg',
+    cover_video_url:
+      'https://videos.pexels.com/video-files/4058851/4058851-hd_720_1280_25fps.mp4',
+    total_sats_goal: 2500000,
+    total_sats_raised: 1840000,
+    subscriber_count: 1284,
+    country: 'United States',
+    country_code: 'US',
+    country_flag: '🇺🇸',
+    city: 'Los Angeles',
+    latitude: 34.0522,
+    longitude: -118.2437,
+    creator: {
+      username: 'luna_vip',
+      avatar_url: null,
+      bio: 'Video creator · VIP drops · Bitcoin-native monetization',
+    },
+  },
+  {
+    id: 'mock-video-004',
+    title: 'Luna — Travel Diary: San Francisco Shoot',
+    description:
+      'On-location premium video diary from a weekend shoot. Tips go straight to production, editing, and the next trip.',
+    created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+    full_story: `This is the latest member drop from the San Francisco shoot.
+
+It is a short behind-the-scenes piece: travel, setup, timing, and the final cut.
+
+I am building a small direct fan economy here. The wishlist pays for locations, lights, sound, editing time, and travel.
+
+I would rather take sats directly from viewers than hand a cut to a platform that does not know or care about the work.
+
+If you watch the final piece, the fastest way to keep the next one happening is to support the wishlist.`,
+    slug: 'luna-san-francisco-travel-diary',
+    card_style: 'creator',
+    category: 'creator',
+    cover_image:
+      '/images/mock/pexels-7867fa1faf.jpeg',
+    cover_video_url:
+      'https://videos.pexels.com/video-files/4058851/4058851-hd_720_1280_25fps.mp4',
+    total_sats_goal: 2500000,
+    total_sats_raised: 1840000,
+    subscriber_count: 1284,
+    country: 'United States',
+    country_code: 'US',
+    country_flag: '🇺🇸',
+    city: 'Los Angeles',
+    latitude: 34.0522,
+    longitude: -118.2437,
+    creator: {
+      username: 'luna_vip',
+      avatar_url: null,
+      bio: 'Video creator · VIP drops · Bitcoin-native monetization',
+    },
+  },
 ];
