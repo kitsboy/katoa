@@ -406,6 +406,18 @@ export function sanitizeImageUrl(url?: string | null): string | null {
   return trimmed;
 }
 
+/**
+ * Return a safe http(s) href, or null — guards `href="..."` sinks against
+ * `javascript:` / `data:` from untrusted OSM-sourced website fields.
+ * HTML-escaping alone does not make a URL scheme safe, so this runs first.
+ */
+export function safeHttpUrl(url?: string | null): string | null {
+  if (!url) return null;
+  const trimmed = url.trim();
+  if (!/^https?:\/\//i.test(trimmed)) return null;
+  return trimmed;
+}
+
 function getApiBaseUrl(): string {
   const configured = import.meta.env.VITE_BTCMAP_API_URL;
   if (configured) return configured;
@@ -926,10 +938,10 @@ export function buildMerchantPopupHtml(
   if (typeof place.comments === 'number' && place.comments > 0) {
     lines.push(`<p class="btcmap-popup__meta">${escapeMapPopupText(s.comment(place.comments))}</p>`);
   }
-  if (place.website) {
-    const href = escapeMapPopupText(place.website);
+  const websiteHref = safeHttpUrl(place.website);
+  if (websiteHref) {
     lines.push(
-      `<a href="${href}" target="_blank" rel="noopener noreferrer" class="btcmap-popup__link">${escapeMapPopupText(s.website)} →</a>`
+      `<a href="${escapeMapPopupText(websiteHref)}" target="_blank" rel="noopener noreferrer" class="btcmap-popup__link">${escapeMapPopupText(s.website)} →</a>`
     );
   }
   lines.push(

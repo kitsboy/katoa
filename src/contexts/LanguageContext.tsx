@@ -998,6 +998,9 @@ const navUiStrings = {
     'explore.resultsCountOne': '1 proyecto encontrado',
     'media.mute': 'Silenciar video',
     'media.unmute': 'Activar sonido del video',
+    'auth.metaTitle': 'Iniciar sesión',
+    'auth.metaDesc': 'Inicia sesión o crea tu cuenta KATOA gratis. Email, Google o Nostr — empieza a recibir Bitcoin en minutos.',
+    'security.metaDesc': 'Cómo KATOA maneja claves, fondos y datos — no custodial por diseño.',
   },
   pt: {
     'nav.comparison': 'Por que KATOA?',
@@ -1221,6 +1224,9 @@ const navUiStrings = {
     'explore.resultsCountOne': '1 projeto encontrado',
     'media.mute': 'Silenciar vídeo',
     'media.unmute': 'Ativar som do vídeo',
+    'auth.metaTitle': 'Entrar',
+    'auth.metaDesc': 'Entre ou crie sua conta KATOA grátis. Email, Google ou Nostr — comece a receber Bitcoin em minutos.',
+    'security.metaDesc': 'Como a KATOA lida com chaves, fundos e dados — não custodial por design.',
   },
   fr: {
     'nav.comparison': 'Pourquoi KATOA ?',
@@ -1444,6 +1450,9 @@ const navUiStrings = {
     'explore.resultsCountOne': '1 projet trouvé',
     'media.mute': 'Couper le son de la vidéo',
     'media.unmute': 'Activer le son de la vidéo',
+    'auth.metaTitle': 'Connexion',
+    'auth.metaDesc': 'Connectez-vous ou créez votre compte KATOA gratuit. E-mail, Google ou Nostr — recevez du Bitcoin en quelques minutes.',
+    'security.metaDesc': 'Comment KATOA gère les clés, les fonds et les données — non custodial par conception.',
   },
   de: {
     'nav.comparison': 'Warum KATOA?',
@@ -1667,6 +1676,9 @@ const navUiStrings = {
     'explore.resultsCountOne': '1 Projekt gefunden',
     'media.mute': 'Video stumm schalten',
     'media.unmute': 'Video-Ton einschalten',
+    'auth.metaTitle': 'Anmelden',
+    'auth.metaDesc': 'Melde dich an oder erstelle dein kostenloses KATOA-Konto. E-Mail, Google oder Nostr — empfange in Minuten Bitcoin.',
+    'security.metaDesc': 'Wie KATOA Schlüssel, Gelder und Daten handhabt — von Grund auf nicht-verwahrend.',
   },
   ja: {
     'nav.comparison': 'なぜKATOA？',
@@ -1890,6 +1902,9 @@ const navUiStrings = {
     'explore.resultsCountOne': '1件のプロジェクト',
     'media.mute': '動画をミュート',
     'media.unmute': '動画の音声をオン',
+    'auth.metaTitle': 'サインイン',
+    'auth.metaDesc': 'サインインするか、無料のKATOAアカウントを作成。メール、Google、Nostr対応 — 数分でBitcoinを受け取れます。',
+    'security.metaDesc': 'KATOAの鍵・資金・データの取り扱い — 設計上ノンカストディアル。',
   },
   zh: {
     'nav.comparison': '为什么选择KATOA？',
@@ -2113,6 +2128,9 @@ const navUiStrings = {
     'explore.resultsCountOne': '找到1个项目',
     'media.mute': '静音视频',
     'media.unmute': '取消视频静音',
+    'auth.metaTitle': '登录',
+    'auth.metaDesc': '登录或创建免费 KATOA 账户。支持邮箱、Google 或 Nostr — 几分钟即可开始接收比特币。',
+    'security.metaDesc': 'KATOA 如何处理密钥、资金与数据 — 设计即非托管。',
   },
 };
 
@@ -3078,6 +3096,10 @@ const pageStrings = {
     'dashboard.createTitle': 'Crear un proyecto',
     'dashboard.slugHelp': 'URL pública: katoa.org/project/${slug}',
     'dashboard.sectionShare': 'Compartir e incrustar',
+    'terms.metaTitle': 'Términos del Servicio',
+    'terms.metaDesc': 'Términos del Servicio de KATOA — reglas y directrices para usar nuestra plataforma de creadores Bitcoin sin comisiones.',
+    'explore.metaTitle': 'Explorar',
+    'explore.metaDesc': 'Descubre listas de deseos de creadores de Bitcoin en todo el mundo.',
     ...aboutComparisonEs,
   },
   pt: {
@@ -3220,6 +3242,10 @@ const pageStrings = {
     'dashboard.createTitle': 'Criar um projeto',
     'dashboard.slugHelp': 'URL pública: katoa.org/project/${slug}',
     'dashboard.sectionShare': 'Compartilhar e incorporar',
+    'terms.metaTitle': 'Termos de Serviço',
+    'terms.metaDesc': 'Termos de Serviço da KATOA — regras e diretrizes para usar nossa plataforma de criadores Bitcoin sem taxas.',
+    'explore.metaTitle': 'Explorar',
+    'explore.metaDesc': 'Navegue por listas de desejos de criadores de Bitcoin no mundo todo.',
     ...aboutComparisonPt,
   },
   fr: {
@@ -3362,6 +3388,10 @@ const pageStrings = {
     'dashboard.createTitle': 'Créer un projet',
     'dashboard.slugHelp': 'URL publique : katoa.org/project/${slug}',
     'dashboard.sectionShare': 'Partager et intégrer',
+    'terms.metaTitle': 'Conditions d’utilisation',
+    'terms.metaDesc': 'Conditions d’utilisation KATOA — règles et directives pour utiliser notre plateforme de créateurs Bitcoin sans frais.',
+    'explore.metaTitle': 'Explorer',
+    'explore.metaDesc': 'Parcourez les listes de souhaits de créateurs Bitcoin dans le monde entier.',
     ...aboutComparisonFr,
   },
   de: {
@@ -3504,6 +3534,10 @@ const pageStrings = {
     'dashboard.createTitle': 'Projekt erstellen',
     'dashboard.slugHelp': 'Öffentliche URL: katoa.org/project/${slug}',
     'dashboard.sectionShare': 'Teilen & einbetten',
+    'terms.metaTitle': 'Nutzungsbedingungen',
+    'terms.metaDesc': 'KATOA Nutzungsbedingungen — Regeln und Richtlinien für die Nutzung unserer gebührenfreien Bitcoin-Creator-Plattform.',
+    'explore.metaTitle': 'Entdecken',
+    'explore.metaDesc': 'Durchsuche Bitcoin-Creator-Wunschlisten weltweit.',
     ...aboutComparisonDe,
   },
   ja: {
@@ -3646,6 +3680,10 @@ const pageStrings = {
     'dashboard.createTitle': 'プロジェクトを作成',
     'dashboard.slugHelp': '公開URL: katoa.org/project/${slug}',
     'dashboard.sectionShare': '共有と埋め込み',
+    'terms.metaTitle': '利用規約',
+    'terms.metaDesc': 'KATOA利用規約 — 手数料ゼロのBitcoinクリエイタープラットフォームご利用のルールとガイドライン。',
+    'explore.metaTitle': '探索',
+    'explore.metaDesc': '世界中のBitcoinクリエイターのウィッシュリストを閲覧。',
     ...aboutComparisonJa,
   },
   zh: {
@@ -3788,6 +3826,10 @@ const pageStrings = {
     'dashboard.createTitle': '创建项目',
     'dashboard.slugHelp': '公开链接：katoa.org/project/${slug}',
     'dashboard.sectionShare': '分享与嵌入',
+    'terms.metaTitle': '服务条款',
+    'terms.metaDesc': 'KATOA 服务条款 — 使用我们零费用比特币创作者平台的规则与准则。',
+    'explore.metaTitle': '探索',
+    'explore.metaDesc': '浏览全球比特币创作者的心愿单。',
     ...aboutComparisonZh,
   },
 };

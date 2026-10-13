@@ -280,4 +280,37 @@ export const remainingZh = {
   'footer.donateExpand': '放大捐赠二维码',
   'footer.donateQrAlt': '捐赠二维码',
   'footer.donateFund': '你的聪资助比特币社区的免费工具。',
+
+  // Thank-you page — the real end of every conversion flow.
+  'thankyou.metaTitle': '感谢 — 接下来会发生什么 | KATOA',
+  'thankyou.metaDesc':
+    '你在 KATOA 上的操作已完成。这里准确说明发生了什么，以及接下来的三个步骤 — 先邮件确认，再绑定钱包，然后发布第一个心愿单。',
+  'thankyou.default.title': '感谢 — 操作成功。',
+  'thankyou.default.lead':
+    '你的操作已通过，现在不需要你再做任何事。以下是接下来会发生什么，以及该去哪里。',
+  'thankyou.signup.title': '感谢 — 账户已创建。',
+  'thankyou.signup.lead':
+    '欢迎来到 KATOA。我们已向你使用的邮箱发送了确认链接 — 点击后账户即生效。无需 KYC，无需银行卡，平台抽成永久为 0%。',
+  'thankyou.contact.title': '感谢 — 你的消息已在途中。',
+  'thankyou.contact.lead':
+    '我们已收到你的消息，并将副本存入剪贴板以备查。KATOA 团队会在一个工作日内回复。',
+  'thankyou.support.title': '感谢 — 你的聪让 KATOA 保持免费。',
+  'thankyou.support.lead':
+    '你的支持为比特币社区资助了免费的开源工具。没有任何中间方碰过它，以后也不会有。',
+  'thankyou.gift.title': '感谢 — 你的礼物已寄出。',
+  'thankyou.gift.lead':
+    '你的闪电支付已点对点结算。创作者直接收到款项；KATOA 从不托管资金，也不收取任何费用。',
+  'thankyou.nextTitle': '接下来会发生什么',
+  'thankyou.step1.title': '查看收件箱',
+  'thankyou.step1.body':
+    '确认你的邮箱地址，这样别人就无法占用你的用户名。链接有效期为 24 小时。',
+  'thankyou.step2.title': '添加闪电地址',
+  'thankyou.step2.body':
+    '设置 → 收款。粘贴一个闪电地址（Phoenix、Wallet of Satoshi、Muun，或你自己的 LND），礼物就能直接到账。',
+  'thankyou.step3.title': '发布你的第一个心愿单',
+  'thankyou.step3.body':
+    '创建一个心愿单，设定聪价格并分享链接。支持者会通过闪电网络即时资助各个物品。',
+  'thankyou.cta.explore': '浏览项目',
+  'thankyou.cta.dashboard': '前往我的控制台',
+  'thankyou.helpPrefix': '卡住了或有哪里不对？发邮件给我们：',
 };

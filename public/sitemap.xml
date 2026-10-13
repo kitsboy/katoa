@@ -1,259 +1,606 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml"
+>
   <url>
     <loc>https://katoa.org/</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://katoa.org/explore</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/explore"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/explore?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/explore?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/explore?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/explore?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/explore?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/explore?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/explore?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://katoa.org/about</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/about"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/about?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/about?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/about?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/about?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/about?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/about?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/about?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://katoa.org/comparison</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/comparison"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/comparison?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/comparison?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/comparison?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/comparison?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/comparison?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/comparison?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/comparison?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://katoa.org/pricing</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/pricing"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/pricing?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/pricing?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/pricing?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/pricing?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/pricing?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/pricing?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/pricing?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://katoa.org/faq</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/faq"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/faq?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/faq?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/faq?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/faq?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/faq?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/faq?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/faq?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://katoa.org/contact</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/contact"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/contact?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/contact?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/contact?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/contact?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/contact?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/contact?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/contact?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://katoa.org/security</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/security"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/security?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/security?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/security?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/security?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/security?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/security?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/security?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://katoa.org/security/bounty</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/security/bounty"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/security/bounty?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/security/bounty?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/security/bounty?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/security/bounty?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/security/bounty?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/security/bounty?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/security/bounty?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://katoa.org/verify</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/verify"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/verify?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/verify?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/verify?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/verify?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/verify?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/verify?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/verify?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://katoa.org/roadmap</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/roadmap"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/roadmap?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/roadmap?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/roadmap?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/roadmap?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/roadmap?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/roadmap?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/roadmap?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://katoa.org/templates</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/templates"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/templates?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/templates?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/templates?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/templates?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/templates?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/templates?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/templates?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://katoa.org/press</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/press"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/press?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/press?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/press?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/press?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/press?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/press?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/press?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://katoa.org/meetup</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/meetup"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/meetup?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/meetup?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/meetup?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/meetup?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/meetup?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/meetup?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/meetup?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://katoa.org/creators</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/creators"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/creators?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/creators?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/creators?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/creators?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/creators?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/creators?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/creators?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
     <loc>https://katoa.org/creators/guidelines</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/creators/guidelines"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/creators/guidelines?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/creators/guidelines?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/creators/guidelines?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/creators/guidelines?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/creators/guidelines?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/creators/guidelines?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/creators/guidelines?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://katoa.org/case-studies</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/case-studies"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/case-studies?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/case-studies?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/case-studies?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/case-studies?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/case-studies?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/case-studies?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/case-studies?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://katoa.org/terms</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/terms"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/terms?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/terms?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/terms?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/terms?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/terms?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/terms?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/terms?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://katoa.org/privacy</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/privacy"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/privacy?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/privacy?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/privacy?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/privacy?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/privacy?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/privacy?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/privacy?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://katoa.org/wishlist/guatemala-school-textbooks</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/wishlist/guatemala-school-textbooks"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/wishlist/guatemala-school-textbooks?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/wishlist/guatemala-school-textbooks?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/wishlist/guatemala-school-textbooks?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/wishlist/guatemala-school-textbooks?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/wishlist/guatemala-school-textbooks?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/wishlist/guatemala-school-textbooks?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/wishlist/guatemala-school-textbooks?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://katoa.org/wishlist/paul-artist-guitar</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/wishlist/paul-artist-guitar"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/wishlist/paul-artist-guitar?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/wishlist/paul-artist-guitar?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/wishlist/paul-artist-guitar?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/wishlist/paul-artist-guitar?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/wishlist/paul-artist-guitar?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/wishlist/paul-artist-guitar?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/wishlist/paul-artist-guitar?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://katoa.org/wishlist/kenya-medical-supplies</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/wishlist/kenya-medical-supplies"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/wishlist/kenya-medical-supplies?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/wishlist/kenya-medical-supplies?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/wishlist/kenya-medical-supplies?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/wishlist/kenya-medical-supplies?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/wishlist/kenya-medical-supplies?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/wishlist/kenya-medical-supplies?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/wishlist/kenya-medical-supplies?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://katoa.org/wishlist/maria-developer-laptop</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/wishlist/maria-developer-laptop"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/wishlist/maria-developer-laptop?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/wishlist/maria-developer-laptop?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/wishlist/maria-developer-laptop?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/wishlist/maria-developer-laptop?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/wishlist/maria-developer-laptop?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/wishlist/maria-developer-laptop?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/wishlist/maria-developer-laptop?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://katoa.org/wishlist/nigeria-clean-water</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/wishlist/nigeria-clean-water"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/wishlist/nigeria-clean-water?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/wishlist/nigeria-clean-water?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/wishlist/nigeria-clean-water?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/wishlist/nigeria-clean-water?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/wishlist/nigeria-clean-water?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/wishlist/nigeria-clean-water?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/wishlist/nigeria-clean-water?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://katoa.org/wishlist/tokyo-startup-design</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/wishlist/tokyo-startup-design"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/wishlist/tokyo-startup-design?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/wishlist/tokyo-startup-design?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/wishlist/tokyo-startup-design?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/wishlist/tokyo-startup-design?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/wishlist/tokyo-startup-design?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/wishlist/tokyo-startup-design?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/wishlist/tokyo-startup-design?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://katoa.org/wishlist/australia-wildlife-conservation</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/wishlist/australia-wildlife-conservation"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/wishlist/australia-wildlife-conservation?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/wishlist/australia-wildlife-conservation?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/wishlist/australia-wildlife-conservation?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/wishlist/australia-wildlife-conservation?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/wishlist/australia-wildlife-conservation?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/wishlist/australia-wildlife-conservation?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/wishlist/australia-wildlife-conservation?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://katoa.org/wishlist/berlin-community-garden</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/wishlist/berlin-community-garden"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/wishlist/berlin-community-garden?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/wishlist/berlin-community-garden?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/wishlist/berlin-community-garden?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/wishlist/berlin-community-garden?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/wishlist/berlin-community-garden?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/wishlist/berlin-community-garden?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/wishlist/berlin-community-garden?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://katoa.org/wishlist/medellin-skate-park</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/wishlist/medellin-skate-park"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/wishlist/medellin-skate-park?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/wishlist/medellin-skate-park?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/wishlist/medellin-skate-park?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/wishlist/medellin-skate-park?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/wishlist/medellin-skate-park?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/wishlist/medellin-skate-park?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/wishlist/medellin-skate-park?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://katoa.org/wishlist/luna-exclusive-videos</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/wishlist/luna-exclusive-videos"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/wishlist/luna-exclusive-videos?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/wishlist/luna-exclusive-videos?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/wishlist/luna-exclusive-videos?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/wishlist/luna-exclusive-videos?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/wishlist/luna-exclusive-videos?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/wishlist/luna-exclusive-videos?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/wishlist/luna-exclusive-videos?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://katoa.org/wishlist/sasha-vip-content</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/wishlist/sasha-vip-content"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/wishlist/sasha-vip-content?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/wishlist/sasha-vip-content?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/wishlist/sasha-vip-content?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/wishlist/sasha-vip-content?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/wishlist/sasha-vip-content?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/wishlist/sasha-vip-content?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/wishlist/sasha-vip-content?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://katoa.org/wishlist/luna-studio-diaries-drop</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/wishlist/luna-studio-diaries-drop"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/wishlist/luna-studio-diaries-drop?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/wishlist/luna-studio-diaries-drop?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/wishlist/luna-studio-diaries-drop?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/wishlist/luna-studio-diaries-drop?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/wishlist/luna-studio-diaries-drop?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/wishlist/luna-studio-diaries-drop?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/wishlist/luna-studio-diaries-drop?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://katoa.org/wishlist/luna-san-francisco-travel-diary</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/wishlist/luna-san-francisco-travel-diary"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/wishlist/luna-san-francisco-travel-diary?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/wishlist/luna-san-francisco-travel-diary?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/wishlist/luna-san-francisco-travel-diary?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/wishlist/luna-san-francisco-travel-diary?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/wishlist/luna-san-francisco-travel-diary?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/wishlist/luna-san-francisco-travel-diary?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/wishlist/luna-san-francisco-travel-diary?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://katoa.org/u/guatemala_education</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/u/guatemala_education"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/u/guatemala_education?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/u/guatemala_education?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/u/guatemala_education?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/u/guatemala_education?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/u/guatemala_education?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/u/guatemala_education?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/u/guatemala_education?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.65</priority>
   </url>
   <url>
     <loc>https://katoa.org/u/paul_music</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/u/paul_music"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/u/paul_music?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/u/paul_music?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/u/paul_music?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/u/paul_music?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/u/paul_music?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/u/paul_music?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/u/paul_music?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.65</priority>
   </url>
   <url>
     <loc>https://katoa.org/u/nairobi_clinic</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/u/nairobi_clinic"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/u/nairobi_clinic?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/u/nairobi_clinic?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/u/nairobi_clinic?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/u/nairobi_clinic?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/u/nairobi_clinic?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/u/nairobi_clinic?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/u/nairobi_clinic?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.65</priority>
   </url>
   <url>
     <loc>https://katoa.org/u/maria_codes</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/u/maria_codes"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/u/maria_codes?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/u/maria_codes?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/u/maria_codes?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/u/maria_codes?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/u/maria_codes?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/u/maria_codes?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/u/maria_codes?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.65</priority>
   </url>
   <url>
     <loc>https://katoa.org/u/water4life</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/u/water4life"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/u/water4life?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/u/water4life?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/u/water4life?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/u/water4life?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/u/water4life?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/u/water4life?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/u/water4life?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.65</priority>
   </url>
   <url>
     <loc>https://katoa.org/u/accessible_tech</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/u/accessible_tech"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/u/accessible_tech?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/u/accessible_tech?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/u/accessible_tech?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/u/accessible_tech?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/u/accessible_tech?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/u/accessible_tech?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/u/accessible_tech?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.65</priority>
   </url>
   <url>
     <loc>https://katoa.org/u/aussie_wildlife</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/u/aussie_wildlife"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/u/aussie_wildlife?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/u/aussie_wildlife?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/u/aussie_wildlife?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/u/aussie_wildlife?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/u/aussie_wildlife?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/u/aussie_wildlife?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/u/aussie_wildlife?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.65</priority>
   </url>
   <url>
     <loc>https://katoa.org/u/berlin_green</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/u/berlin_green"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/u/berlin_green?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/u/berlin_green?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/u/berlin_green?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/u/berlin_green?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/u/berlin_green?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/u/berlin_green?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/u/berlin_green?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.65</priority>
   </url>
   <url>
     <loc>https://katoa.org/u/skate_colombia</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/u/skate_colombia"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/u/skate_colombia?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/u/skate_colombia?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/u/skate_colombia?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/u/skate_colombia?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/u/skate_colombia?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/u/skate_colombia?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/u/skate_colombia?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.65</priority>
   </url>
   <url>
     <loc>https://katoa.org/u/luna_vip</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/u/luna_vip"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/u/luna_vip?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/u/luna_vip?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/u/luna_vip?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/u/luna_vip?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/u/luna_vip?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/u/luna_vip?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/u/luna_vip?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.65</priority>
   </url>
   <url>
     <loc>https://katoa.org/u/sasha_vip</loc>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://katoa.org/u/sasha_vip"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://katoa.org/u/sasha_vip?lang=en"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://katoa.org/u/sasha_vip?lang=es"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://katoa.org/u/sasha_vip?lang=pt"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://katoa.org/u/sasha_vip?lang=fr"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://katoa.org/u/sasha_vip?lang=de"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://katoa.org/u/sasha_vip?lang=ja"/>
+    <xhtml:link rel="alternate" hreflang="zh" href="https://katoa.org/u/sasha_vip?lang=zh"/>
     <lastmod>2026-10-13</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.65</priority>

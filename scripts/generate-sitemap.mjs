@@ -8,6 +8,13 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
 const today = new Date().toISOString().slice(0, 10);
 
+/**
+ * Languages offered in-app (src/contexts/LanguageContext.tsx `Language` type).
+ * Kept in sync with PageMeta's hreflang emission so crawler-facing and
+ * runtime-declared alternates always agree.
+ */
+const LANGUAGES = ['en', 'es', 'pt', 'fr', 'de', 'ja', 'zh'];
+
 const mockSource = readFileSync(join(root, 'src/data/mockWishlists.ts'), 'utf8');
 const extractedSlugs = [...mockSource.matchAll(/slug:\s*['"]([^'"]+)['"]/g)].map((m) => m[1]);
 const slugs = [...new Set(extractedSlugs)];
@@ -28,20 +35,55 @@ const urls = [
   })),
 ];
 
+/** Escape a URL for XML text content. */
+function xmlEscape(value) {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+/**
+ * hreflang alternates for one URL path.
+ *
+ * Mirrors src/components/PageMeta.tsx exactly: the non-English variants use the
+ * `?lang=` query parameter (the app reads it in resolveInitialLanguage), and
+ * x-default points at the clean path with no parameter.
+ */
+function hreflangBlock(path) {
+  const clean = `${SITE_URL}${path === '/' ? '/' : path}`;
+  const lines = [
+    `    <xhtml:link rel="alternate" hreflang="x-default" href="${xmlEscape(clean)}"/>`,
+  ];
+  for (const lang of LANGUAGES) {
+    const href = path === '/' ? `${SITE_URL}/?lang=${lang}` : `${clean}?lang=${lang}`;
+    lines.push(`    <xhtml:link rel="alternate" hreflang="${lang}" href="${xmlEscape(href)}"/>`);
+  }
+  return lines.join('\n');
+}
+
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml"
+>
 ${urls
-  .map(
-    (u) => `  <url>
-    <loc>${u.loc}</loc>
+  .map((u) => {
+    const path = new URL(u.loc).pathname;
+    return `  <url>
+    <loc>${xmlEscape(u.loc)}</loc>
+${hreflangBlock(path)}
     <lastmod>${today}</lastmod>
     <changefreq>${u.changefreq}</changefreq>
     <priority>${u.priority}</priority>
-  </url>`
-  )
+  </url>`;
+  })
   .join('\n')}
 </urlset>
 `;
 
 writeFileSync(join(root, 'public/sitemap.xml'), xml);
-console.log(`Generated sitemap with ${urls.length} URLs (${slugs.length} wishlists, ${usernames.length} creators)`);
+console.log(
+  `Generated sitemap with ${urls.length} URLs (${slugs.length} wishlists, ${usernames.length} creators) + ${LANGUAGES.length + 1} hreflang alternates each`
+);

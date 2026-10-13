@@ -280,4 +280,37 @@ export const remainingPt = {
   'footer.donateExpand': 'Ampliar o QR de doação',
   'footer.donateQrAlt': 'QR de doação',
   'footer.donateFund': 'Seus sats financiam ferramentas livres para a comunidade Bitcoin.',
+
+  // Thank-you page — the real end of every conversion flow.
+  'thankyou.metaTitle': 'Obrigado — o que acontece a seguir | KATOA',
+  'thankyou.metaDesc':
+    'Sua ação foi concluída na KATOA. Aqui está exatamente o que aconteceu e os três passos seguintes — confirmado por e-mail, carteira e depois sua primeira lista de desejos.',
+  'thankyou.default.title': 'Obrigado — funcionou.',
+  'thankyou.default.lead':
+    'Sua ação foi concluída e nada mais é necessário de você agora. Abaixo está o que acontece depois e para onde ir daqui.',
+  'thankyou.signup.title': 'Obrigado — sua conta foi criada.',
+  'thankyou.signup.lead':
+    'Boas-vindas à KATOA. Enviamos um link de confirmação para o e-mail que você usou — toque nele e sua conta fica ativa. Sem KYC, sem cartão, sem taxa de plataforma, para sempre.',
+  'thankyou.contact.title': 'Obrigado — sua mensagem está a caminho.',
+  'thankyou.contact.lead':
+    'Recebemos sua mensagem e uma cópia foi colocada na área de transferência como backup. Alguém da equipe KATOA responde em um dia útil.',
+  'thankyou.support.title': 'Obrigado — seus sats mantêm a KATOA gratuita.',
+  'thankyou.support.lead':
+    'Seu apoio financia ferramentas gratuitas e de código aberto para a comunidade Bitcoin. Nenhum intermediário tocou nelas, e nenhum nunca tocará.',
+  'thankyou.gift.title': 'Obrigado — seu presente foi enviado.',
+  'thankyou.gift.lead':
+    'Seu pagamento Lightning liquidou ponto a ponto. O criador recebe diretamente; a KATOA nunca custodia o dinheiro e cobra 0%.',
+  'thankyou.nextTitle': 'O que acontece a seguir',
+  'thankyou.step1.title': 'Verifique sua caixa de entrada',
+  'thankyou.step1.body':
+    'Confirme seu e-mail para que mais ninguém possa reivindicar seu nome de usuário. O link funciona por 24 horas.',
+  'thankyou.step2.title': 'Adicione um endereço Lightning',
+  'thankyou.step2.body':
+    'Configurações → Pagamentos. Cole um endereço Lightning (Phoenix, Wallet of Satoshi, Muun ou seu próprio LND) para que os presentes cheguem diretamente a você.',
+  'thankyou.step3.title': 'Publique sua primeira lista de desejos',
+  'thankyou.step3.body':
+    'Crie uma lista, defina preços em sats e compartilhe o link. Apoiadores financiam os itens na hora pelo Lightning.',
+  'thankyou.cta.explore': 'Explorar projetos',
+  'thankyou.cta.dashboard': 'Ir para o meu painel',
+  'thankyou.helpPrefix': 'Travado ou algo parece errado? Envie um e-mail:',
 };

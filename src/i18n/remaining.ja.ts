@@ -280,4 +280,37 @@ export const remainingJa = {
   'footer.donateExpand': '寄付QRを拡大',
   'footer.donateQrAlt': '寄付QR',
   'footer.donateFund': 'あなたのsatsが、Bitcoinコミュニティ向けの無料ツールを支えます。',
+
+  // Thank-you page — the real end of every conversion flow.
+  'thankyou.metaTitle': 'ありがとうございます — 次のステップ | KATOA',
+  'thankyou.metaDesc':
+    'KATOAでの操作が完了しました。何が起きたかと、次にやるべき3つのステップをご案内します — メール確認、ウォレット、そして最初のウィッシュリストです。',
+  'thankyou.default.title': 'ありがとうございます — 完了しました。',
+  'thankyou.default.lead':
+    '操作は完了し、他に必要なことはありません。次のステップと、この先どこへ行けばよいかをご案内します。',
+  'thankyou.signup.title': 'ありがとうございます — アカウントを作成しました。',
+  'thankyou.signup.lead':
+    'KATOAへようこそ。ご使用のメールアドレスに確認リンクを送信しました — タップするとアカウントが有効になります。KYC不要、カード不要、プラットフォーム手数料は永久にゼロです。',
+  'thankyou.contact.title': 'ありがとうございます — メッセージをお送りしました。',
+  'thankyou.contact.lead':
+    'メッセージを受け取り、保険としてクリップボードにもコピーを保存しました。KATOAチームの担当者が営業日以内に返信します。',
+  'thankyou.support.title': 'ありがとうございます — あなたのsatsがKATOAを無料に保っています。',
+  'thankyou.support.lead':
+    'ご支援がBitcoinコミュニティの無料オープンソースツールを支えています。仲介者は一切関わっておらず、今後も関わることはありません。',
+  'thankyou.gift.title': 'ありがとうございます — ギフトを送信しました。',
+  'thankyou.gift.lead':
+    'Lightning決済がピアツーピアで決済されました。クリエイターが直接受け取ります。KATOAが資金を預かることはなく、手数料も一切取りません。',
+  'thankyou.nextTitle': '次にやること',
+  'thankyou.step1.title': '受信トレイを確認',
+  'thankyou.step1.body':
+    'メールアドレスを確認してください。他の人がユーザー名を取得できなくなります。リンクの有効期間は24時間です。',
+  'thankyou.step2.title': 'Lightningアドレスを追加',
+  'thankyou.step2.body':
+    '設定 → 支払い。Lightningアドレス（Phoenix、Wallet of Satoshi、Muun、または自身のLND）を貼り付けると、ギフトが直接届きます。',
+  'thankyou.step3.title': '最初のウィッシュリストを公開',
+  'thankyou.step3.body':
+    'ウィッシュリストを作成し、sats価格を設定してリンクを共有。支援者がLightningで即座に各アイテムを支援します。',
+  'thankyou.cta.explore': 'プロジェクトを見る',
+  'thankyou.cta.dashboard': 'ダッシュボードへ',
+  'thankyou.helpPrefix': '詰まったり、何かおかしい場合はメールしてください：',
 };

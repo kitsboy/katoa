@@ -21,6 +21,7 @@ import {
   merchantCategoryFor,
   parseMapViewParams,
   sanitizeImageUrl,
+  safeHttpUrl,
   savePersistedPlaceDetail,
   savePersistedPlaces,
   zoomToRadiusKm,
@@ -225,6 +226,25 @@ describe('sanitizeImageUrl', () => {
     expect(sanitizeImageUrl('')).toBeNull();
     expect(sanitizeImageUrl(null)).toBeNull();
     expect(sanitizeImageUrl(undefined)).toBeNull();
+  });
+});
+
+describe('safeHttpUrl', () => {
+  it('allows http(s) urls', () => {
+    expect(safeHttpUrl('https://example.com')).toBe('https://example.com');
+    expect(safeHttpUrl('http://example.com/page')).toBe('http://example.com/page');
+    expect(safeHttpUrl('  https://example.com  ')).toBe('https://example.com');
+  });
+
+  it('rejects javascript:, data:, vbscript:, and empty values', () => {
+    expect(safeHttpUrl('javascript:alert(1)')).toBeNull();
+    expect(safeHttpUrl('JavaScript:alert(1)')).toBeNull();
+    expect(safeHttpUrl('  javascript:alert(1)')).toBeNull();
+    expect(safeHttpUrl('data:text/html,<script>')).toBeNull();
+    expect(safeHttpUrl('vbscript:msgbox(1)')).toBeNull();
+    expect(safeHttpUrl('')).toBeNull();
+    expect(safeHttpUrl(null)).toBeNull();
+    expect(safeHttpUrl(undefined)).toBeNull();
   });
 });
 

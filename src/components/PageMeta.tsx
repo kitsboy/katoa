@@ -82,11 +82,8 @@ export function PageMeta({
         document.head.appendChild(el);
       }
       el.setAttribute('content', content);
-    };    if (description) {
-      setMeta('description', description);
-      setMeta('og:description', description, 'property');
-      setMeta('twitter:description', description);
-    }
+    };
+
     setMeta('og:title', resolvedOgTitle, 'property');
     setMeta('twitter:title', resolvedOgTitle);
     if (resolvedOgDescription) {
@@ -94,11 +91,6 @@ export function PageMeta({
       setMeta('og:description', resolvedOgDescription, 'property');
       setMeta('twitter:description', resolvedOgDescription);
     }
-      if (resolvedOgDescription) {
-        setMeta('description', resolvedOgDescription);
-        setMeta('og:description', resolvedOgDescription, 'property');
-        setMeta('twitter:description', resolvedOgDescription);
-      }
     setMeta('og:url', `${SITE_URL}${canonicalPath}`, 'property');
     setMeta('og:image', absoluteImage, 'property');
     const imagePath = absoluteImage.split('?')[0];
@@ -114,13 +106,6 @@ export function PageMeta({
     }
     setMeta('og:image:alt', resolvedOgTitle, 'property');
     setMeta('twitter:image', absoluteImage);
-    setMeta('og:type', ogVideo ? 'video.other' : 'website', 'property');
-    setMeta('og:site_name', 'KATOA', 'property');
-    setMeta('og:locale', OG_LOCALE[language], 'property');
-    setOgLocaleAlternates(language);
-    if (noindex) {
-      setMeta('robots', 'noindex', 'name');
-    }
     setMeta('og:type', ogVideo ? 'video.other' : 'website', 'property');
     setMeta('og:site_name', 'KATOA', 'property');
     setMeta('og:locale', OG_LOCALE[language], 'property');

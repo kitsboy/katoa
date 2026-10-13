@@ -38,6 +38,7 @@ import {
   buildOsmPlaceUrl,
   buildShareMapUrl,
   escapeMapPopupText,
+  safeHttpUrl,
   fetchAreasAt,
   fetchBTCMapActivity,
   fetchBTCMapEvents,
@@ -414,7 +415,7 @@ export function UnifiedBTCMap({
             <p class="btcmap-popup__eyebrow">📅 ${escapeMapPopupText(t('map.events'))}</p>
             <strong class="btcmap-popup__title">${escapeMapPopupText(event.name)}</strong>
             ${dateLabel ? `<p class="btcmap-popup__meta">${escapeMapPopupText(dateLabel)}</p>` : ''}
-            ${event.website ? `<a href="${escapeMapPopupText(event.website)}" target="_blank" rel="noopener noreferrer" class="btcmap-popup__link">${escapeMapPopupText(t('map.popupWebsite'))} →</a>` : ''}
+            ${safeHttpUrl(event.website) ? `<a href="${escapeMapPopupText(safeHttpUrl(event.website)!)}" target="_blank" rel="noopener noreferrer" class="btcmap-popup__link">${escapeMapPopupText(t('map.popupWebsite'))} →</a>` : ''}
           </div>
         `;
         marker.setPopup(
@@ -1394,9 +1395,9 @@ export function UnifiedBTCMap({
                 >
                   {t('map.drawerReport')} →
                 </a>
-                {detail.website && (
+                {safeHttpUrl(detail.website) && (
                   <a
-                    href={detail.website}
+                    href={safeHttpUrl(detail.website) ?? ''}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="unified-btcmap__drawer-link"
@@ -1444,7 +1445,7 @@ export function UnifiedBTCMap({
             {areasAt.map((area) => (
               <a
                 key={area.id}
-                href={area.website_url ?? getAppBaseUrl()}
+                href={safeHttpUrl(area.website_url) ?? getAppBaseUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="unified-btcmap__areas-chip"

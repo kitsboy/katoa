@@ -33,7 +33,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4",
     "lucide-react": "^0.344.0",
-    "maplibre-gl": "^6.4.0",
+    "maplibre-gl": "^6.4.1",
     "nostr-tools": "^2.17.1",
     "qrcode.react": "^4.2.0",
     "react": "^18.3.1",
