@@ -9,6 +9,8 @@ const SKIP_PREFIXES = ['/assets/', '/api/', '/.well-known/']
 // Known client routes (BrowserRouter). Keep in sync with src/App.tsx + sitemap.
 const KNOWN_ROUTES = [
   /^\/$/,
+  /^\/demo\/?$/,
+  /^\/demo\/test\/?$/,
   /^\/explore\/?$/,
   /^\/wishlist\/?$/,
   /^\/wishlist\/[^/]+\/?$/,
