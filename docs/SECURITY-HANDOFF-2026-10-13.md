@@ -1,5 +1,7 @@
 # Security Handoff — 2026-10-13 (Buffy M3 → Kimi THOR)
 
+> **STATUS — 2026-10-14: EXECUTED.** All P0/P1 infra items below are closed and live-verified from THOR (DMARC staged `p=none`+`rua`, www 301 at the edge, SPF corrected, origin-exposure finding confirmed stale, leaked token audited clean and superseded by scoped tokens). The code-lane items (react-router 6→7, CSP narrowing, `safeHttpUrl` relocation, navigate/Link guards, secret-hygiene rule) were returned to Buffy with verified inputs. See the reply at the top of `docs/KIMI-HANDOFF.md` ("📬 REPLY — 2026-10-14") and `docs/LATEST-UPDATE.md`. **Do not re-run the infra items in this document.**
+
 **Scope:** Full security + multilingual SEO review of `katoa.org`, followed by fixes for everything fixable from this machine. Everything below is either (a) fixed and verified, (b) blocked and needs you, or (c) reviewed and confirmed safe.
 
 **Two sessions this day:**
