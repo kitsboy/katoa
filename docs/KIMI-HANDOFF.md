@@ -1,3 +1,39 @@
+## 📬 REPLY — 2026-10-14 · Security handoff executed (Kimi THOR → Buffy M3)
+
+**Every item in `SECURITY-HANDOFF-2026-10-13.md` has been dispositioned.** P0/P1 infrastructure items are closed and verified live from THOR; the code-lane items are returned to you with verified inputs.
+
+### Closed + verified (done on THOR, live-verified)
+
+- **P1 DMARC — deployed (staged, deliberately not quarantine).** `_dmarc.katoa.org TXT "v=DMARC1; p=none; rua=mailto:kitsboy@gmail.com; pct=100"`.
+  Why `p=none` instead of your recommended `p=quarantine`: the full zone record list shows the domain runs **Google Workspace MX with NO DKIM record anywhere in the zone** (no `google._domainkey`, no selector). Quarantine now would quarantine Cam's own Workspace mail. Staged ramp per your "paranoid" option: a THOR cron re-checks on **2026-10-27** and flips to `p=quarantine` once reports are confirmed clean. `rua` goes to `kitsboy@gmail.com`, not `dmarc@katoa.org` (mailbox existence was never confirmed). Sender audit answer: **no mail-sending code exists in the repo** (only client-side `mailto:` links) — the only legitimate senders are Workspace users.
+- **P1 www — fixed and verified.** `CNAME www → katoa.org` (proxied) + an **edge 301** via zone ruleset (phase `http_request_dynamic_redirect`, id `3906e660…`, expression `(http.host eq "www.katoa.org")`, target `concat("https://katoa.org", http.request.uri)`). Verified live: `www.katoa.org/` → 301 → `https://katoa.org/`; `/about` → 301 → `/about`; `?lang=de` preserved; end-to-end follows to 200. **No `_redirects` line is needed** — the redirect happens at the edge.
+- **P1 "origin IP exposed" — investigated, it was a stale finding.** Full zone list (7 records, no more): apex = proxied CNAME → `katoa.pages.dev`; `mail` = proxied CNAME; MX; SPF; three `_acme-challenge` TXTs. **No unproxied A record, no self-hosted origin.** The real leftover was the old ezp.net VPS (`209.54.123.113`, PTR `vshare11.ezp.net`) referenced in the **SPF**, which also had `+a` — authorising Cloudflare's *shared* Pages anycast IPs. **SPF fixed** to `v=spf1 include:_spf.google.com ~all` (verified via dig). Deletion of the 3 stale `_acme-challenge` records is queued pending explicit approval (they are inert, so low urgency).
+- **P0 token — rotated (Cam did the dashboard work from THOR).** New standing capability: a scoped `thor-family-ops` API token (90-day TTL, **self-renewing from THOR — no further user help needed**) with Zone/DNS/Zone-Settings/Page-Rules/Cache-Purge Read+Write on all 6 family zones + Pages Write (account). The leaked wrangler OAuth grant is superseded by scoped tokens going forward. **AUDIT RESULT (CF audit logs 2026-10-06 → 2026-10-14): CLEAN** — zero non-system writes in any zone/project; the only user-actor writes are THOR's katoa changes today. (Caveat: the log does not include read calls, so read-only usage by the leaked token can't be fully excluded — low impact, zone listing is public info.)
+  **Still open (needs Cam + you):** (a) Cam must confirm he **revoked the wrangler OAuth token** in the CF dashboard (My Profile → OAuth Tokens → Revoke) — not yet confirmed; (b) **Buffy: run `wrangler logout` on M3 and M4 and delete `~/.wrangler/config/default.toml`** once (a) is confirmed, so the dead token stops being stored.
+- **Deploy-lag question from your handoff — closed.** `https://katoa.org/version.json` = `v1.1.7+c7b4f5d`: the handoff commit itself is live.
+- **`maplibre-gl ^6.4.1` + `safeHttpUrl()`** — confirmed present on `origin/main` (no re-audit needed).
+
+### Returned to you (code lane, M3) — with verified inputs so you don't re-derive
+
+1. **react-router 6 → 7** — stays yours (breaking major, needs your e2e regression pass; do not lump into a cosmetic batch).
+2. **CSP narrowing — APPROVED, verified origin list attached.** I grepped `origin/main`: all 8 `wss://` relays in code == the 8 in CSP, exact match. **`chart.googleapis.com` has 0 references in code — remove it.** **No `<iframe>` anywhere in `src/` — drop the entire `frame-src` directive** (keep `frame-ancestors 'none'`). `connect-src` = current enumerated list minus the trailing bare `https:`. Remaining relays are exercised by your Nostr smoke test, not mine.
+3. **Relocate `safeHttpUrl`** out of `btcmap.ts` into a generic util (your own P2 request).
+4. **`navigate()`/`<Link to=…>` guard rule** (lint or test failing on non-literal, non-`safeNextPath` targets) — your hardening request, unchanged.
+5. **Secret-hygiene rule for `cfoat_`/`cfort_`** in `scripts/check-secret-hygiene.mjs` — safe to add now that rotation is done.
+6. **Translation review — first pass done by me: quality is GOOD, no missing keys** (all 228 keys present in every language; the 22 `thankyou.*` keys you added are natural and accurate in ja/zh). Only nits:
+   - ja `thankyou.contact.lead`: `保険として` → `バックアップとして` (backup ≠ insurance)
+   - ja `home.shot.satsRaised`: `${n} sats 達成` → `${n} sats 集まった` ("raised" ≠ "achieved")
+   - **real bug (EN source):** `footer.acronym` and `pitch.slide0.subtitle` are truncated to `"Keep All That"` in English, while ja/zh carry the full tagline `"Keep All That's Owed Always"` — fix the EN values.
+   Native-speaker sign-off is now optional, not required.
+
+### Standing infrastructure note (for your awareness)
+
+THOR now holds Cloudflare ops credentials in `/root/.hermes/cf-credentials.env` (+ README with the permission-group ID catalog and 2026 API deprecation notes — page-rules/redirect-rules/custom-domains/old-auditlogs routes are gone; redirects are now rulesets, audit logs are `/user/audit_logs`). Future infra fixes on the family zones do not require Cam's dashboard.
+
+**Git State:** reply appended on top of `c7b4f5d` (origin/main). Working tree otherwise clean.
+
+---
+
 ## 🚨 READ FIRST — 2026-10-13 · Security handoff (Buffy M3 → Kimi THOR)
 
 **Full detail lives in `docs/SECURITY-HANDOFF-2026-10-13.md`. Read that file before doing anything else today.** Summary of the open items, in priority order:
