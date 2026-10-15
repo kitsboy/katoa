@@ -1,46 +1,23 @@
-# Katoa — Last Updated 2026-10-14 by Kimi (THOR ops)
+# Katoa — Last Updated 2026-10-15 by Buffy (M3)
 
-Brief: executed Buffy's 2026-10-13 security handoff end to end. All infra items are **closed and live-verified from THOR**; the code-lane items are returned to Buffy with verified inputs. Full reply: top of `docs/KIMI-HANDOFF.md` ("📬 REPLY — 2026-10-14").
+Brief: English-only UI, payment channels that actually count, silent payments wired end to end, and the demo catalog deduped + modernized. Six commits, full verification run, handoff appended to `docs/KIMI-HANDOFF.md`.
 
-**Closed this session (THOR, live-verified):**
-- **P1 DMARC** — `_dmarc.katoa.org` set to `v=DMARC1; p=none; rua=mailto:kitsboy@gmail.com; pct=100`. Deliberately staged, not your recommended `p=quarantine`: the zone runs Google Workspace MX with **no DKIM record anywhere**, so hard enforcement now would quarantine Cam's own mail. A THOR cron re-checks aggregate reports on **2026-10-27** and flips to `p=quarantine`. Sender audit (your question 1): no mail-sending code exists in the repo; the only legitimate senders are Workspace users.
-- **P1 www** — `www.katoa.org` now 301s to the apex (CNAME + edge redirect ruleset). Verified: root, subpath and query-string all redirect and land on 200.
-- **P1 "origin IP exposed"** — investigated, **stale finding**. No unproxied origin record exists. The real leftover was the **SPF**, which authorised a defunct ezp.net VPS IP and Cloudflare's *shared* Pages anycast IPs (`+a +mx +ip4:209.54.123.113`) → now `v=spf1 include:_spf.google.com ~all`. Three VPS-era `_acme-challenge` TXT records deleted; the zone now holds exactly 6 records.
-- **P0 leaked wrangler token** — **audit clean**: CF audit logs 2026-10-06 → 10-14 show zero non-system writes in any zone (only Pages cert churn + THOR's katoa changes). The grant is superseded by scoped, self-renewing THOR ops tokens. **Still open:** Cam revokes the OAuth grant in the dashboard (My Profile → Access Management → Connected Applications — no API route exists), then **Buffy: `wrangler logout` on M3 and M4 and delete `~/.wrangler/config/default.toml`.**
-- **Deploy-lag question** — closed: live site is at `c7b4f5d` (the handoff commit itself).
-- **ja/zh translation first pass (your open question)** — quality is GOOD, no missing keys (228 keys in every language). Nits: ja `thankyou.contact.lead` `保険として`→`バックアップとして`; ja `home.shot.satsRaised` `sats 達成`→`sats 集まった`. **Real bug (EN source):** `footer.acronym` and `pitch.slide0.subtitle` are truncated to "Keep All That" while ja/zh carry the full tagline "Keep All That's Owed Always" — fix the EN values.
+**Shipped this session:**
 
-**Remaining for you (code lane, M3) — details + verified inputs in the KIMI-HANDOFF reply:**
-1. react-router 6→7 — your own scheduled task, e2e regression pass, not lumped into cosmetic work.
-2. CSP narrowing — **approved with a verified origin list**: all 8 wss relays in code match the CSP exactly; `chart.googleapis.com` has **0 references in code — remove it**; no `<iframe>` anywhere in `src/` — **drop the whole `frame-src` directive**; `connect-src` = current list minus the bare `https:`.
-3. Relocate `safeHttpUrl` out of `btcmap.ts` into a generic util.
-4. Lint/test guard: fail on non-literal, non-`safeNextPath` targets to `navigate()` / `<Link to=…>`.
-5. Secret-hygiene rule for `cfoat_`/`cfort_` in `scripts/check-secret-hygiene.mjs` — safe to add now that rotation is done.
-6. The ja/zh nits + EN tagline fix above.
+1. **No Chinese in the English UI.** The language picker labelled locales in their own script (`日本語` / `中文`) — visible in the Navbar menu, the mobile grid, and `/demo`. Labels are now English-only (the flag still shows the active locale), `/demo` reuses the shared map instead of a duplicate, and a guard test fails if CJK lands in component/page/lib/data code or the picker labels. The guard also caught a leftover Japanese greeting in a sample story.
+2. **Payment channels are real.** Settings hardcoded on-chain and silent payments as *absent*, so a creator who had added them saw “Not added yet” plus a warning to add a receive address they already had. The register now reads the wallet table (device-local as the honest fallback), shows “N of 3 ready”, and labels Nostr as identity, not a payout channel. The Wallet tab is now `Payment Methods`.
+3. **Silent payments end to end (receive-only, honestly).** `pickReceiveDestinations()` returned only Lightning + on-chain, so a silent descriptor reached nobody. It now returns the bare `sp1` address; the wallet manager shows it as a real channel with its own QR, and creator profiles plus the checkout trust summary list it. Katoa never claims to settle it: a BIP352 address needs a supporting wallet, and a silent-only creator is told plainly that no invoice can be created. The format gate also stopped accepting placeholders as live channels.
+4. **Demo truth pass.** Three Luna cards were near-identical clones (same cover, video, goal, raised, subscriber count) — her studio and travel drops now live in her one creator page. Thumbnails that borrowed a card cover are repointed, including Sasha's portrait sitting on one of Luna's items. The eight 2025 charity-storefront campaigns are now creator-led series with real handles, bios, recent dates and stories about why publishing funds the work. A `demoCatalog` guard pins unique covers and forbids clone cards per creator.
+5. **Approved cleanup.** CSP narrowed (`chart.googleapis.com` gone, bare `connect-src https:` gone, `frame-src` dropped). **Correction to Kimi's list:** it was missing `https://api.satohash.io` (verify/stamp/health) and `https://mempool.space` (footer block height), both only reachable via the bare `https:` hatch — narrowing as written would have silently broken the verify page and the footer. Both added, with an inline rule in `public/_headers` that any future `VITE_API_BASE_URL`/Sentry origin must be added in the same change. `cfoat_`/`cfort_` OAuth tokens are now caught by the secret gate (plaintext and base64), `safeHttpUrl` moved to `src/lib/safeUrl.ts`, and both ja nits are fixed. **Kimi's “EN tagline truncated” bug does not exist** — the full tagline is already in `remaining.en.ts`.
 
-**Standing infra note:** THOR now holds the family Cloudflare ops credentials (`/root/.hermes/cf-credentials.env` + README, 0600) — DNS/zone-settings/page-rules/cache-purge on all 6 family zones + Pages Write, 90-day, self-renewing. Future infra fixes for katoa (and siblings) run from THOR without a dashboard visit or an M3 wrangler session.
+**Verified:** `npm run check` → **344/344 tests** (51 files), typecheck clean, lint 0 errors, asset guard clean. `npm run build` → 26/26 routes prerendered, 106 dist asset references verified. Real-browser pass (Playwright vs `vite preview`): 9 routes 200, **zero CJK rendered**, zero broken images, no error boundary, picker = 7 English-only labels. Payment-channel register verified in the UI with a seeded demo session (on-chain-only → “2 of 3 ready”, no false warning; silent-only → row reads Added). Secret gate probed both ways.
+
+**Deliberately not done:** react-router 6 → 7 (breaking major, needs its own e2e regression pass — my 10-13 recommendation stands). CSP also cannot be verified locally: `vite preview` does not serve `public/_headers`, so one post-deploy check of `/verify` and the footer block height is worth doing. `wrangler logout` on M3 still waits on Cam confirming the OAuth grant is revoked.
+
+**For Kimi / Cam:** Katoa is still not production. The blockers are unchanged and all on the money/counters side: production Lightning webhook → atomic totals, authoritative Supabase counters, deployed NIP-07 challenge login, NIP-05 ops, and real creator seeding. Silent payments are receive-only until a BIP352-capable wallet integration is a deliberate decision.
 
 ---
 
-# Previous session — 2026-10-13 by Buffy (M3)
+## Previous session — 2026-10-14 by Kimi (THOR ops)
 
-Brief: exhaustive security handoff for Kimi, plus the multilingual SEO fixes and map XSS fixes that shipped alongside it. Both commits were built, verified, and pushed.
-
-**Read this first:** `docs/SECURITY-HANDOFF-2026-10-13.md` — full security detail, with open questions and priority order. Also indexed at the top of `docs/KIMI-HANDOFF.md`.
-
-**Open items (as of 10-13 — now dispositioned by the 10-14 entry above):**
-- P0 — wrangler OAuth token rotation.
-- P1 — DMARC, www CNAME, origin-IP finding.
-- P2 — react-router 6→7; CSP bare-`https:` narrowing.
-
-**Shipped that session (`806b91f`, `81adfa9`):**
-- Night-jewel design polish across `Button`, `Card`, `Navbar`, `PageHero`, `CreatorVideoCard`, Explore `WishlistCard`, and global CSS (focus rings, scrollbar, `text-wrap: balance`, selection colour).
-- `safeHttpUrl()` guards all 4 untrusted BTC Map/OSM `website` → `href` sinks (merchant popup, event popup, place drawer, area chip) — stored XSS closed. The drawer and area-chip sinks were only found on a second read-through; the area chip uses `website_url`, not `website`.
-- `maplibre-gl` patched past the critical `DOM.sanitize()` XSS bypass (`^6.4.0` → `^6.4.1`; the range floor excludes 6.4.0).
-- Sitemap generator now emits 8 hreflang alternates per URL (344 across 43 URLs), matching the runtime `?lang=` convention in `PageMeta`.
-- 54 missing SEO meta translations added for es/pt/fr/de/ja/zh, including the full 22-key `thankyou` block that was English-only end to end.
-- Removed duplicated `og:description`/`og:type`/`og:locale` setter blocks in `PageMeta`; `noindex` handling preserved.
-
-**Verification (that session):** typecheck clean; lint clean; `npx vitest run` **318/318** (48 files, +2 for `safeHttpUrl`); `check:assets` passed (94 src / 106 dist refs); `check:security` passed with 0 credential findings; production build green with 26/26 prerendered routes; `npm audit --omit=dev` shows the critical gone with 2 moderate remaining by choice. Generated sitemap parsed with a real XML parser to confirm every URL has exactly 8 unique hreflang links.
-
-**Git state at 10-13:** pushed `81adfa9` to `origin/main`; remote matches local; working tree clean.
+Executed Buffy's 2026-10-13 security handoff end to end. All infra items closed and live-verified from THOR (DMARC staged at `p=none`, `www` 301, SPF cleaned, CF audit log clean); the code-lane items were returned to Buffy. Full detail: top of `docs/KIMI-HANDOFF.md`. **That reply is now superseded by the 2026-10-15 entry above** — of its six code items, five are done and the sixth (EN tagline) did not reproduce; react-router 6→7 remains open by design.
