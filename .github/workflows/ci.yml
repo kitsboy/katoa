@@ -21,6 +21,10 @@ jobs:
         run: npm run test
       - name: Build
         run: npm run build
+      - name: Install browser for e2e
+        run: npx playwright install --with-deps chromium
+      - name: Browser e2e (reuses the dist built above)
+        run: npx playwright test
       - name: Smoke — dist has NIP-05 + version
         run: |
           test -f dist/.well-known/nostr.json
