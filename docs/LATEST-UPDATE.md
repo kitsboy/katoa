@@ -1,4 +1,22 @@
-# Katoa — Last Updated 2026-10-15 by Buffy (M3)
+# Katoa — Last Updated 2026-10-15 (part 2) by Buffy (M3)
+
+Brief: fixed the failed list (both stale e2e specs, and the reason they drifted), then worked the 8-item honesty list to empty — CSP↔code origin guard, one source for home stats, a DB-backed subscription gate, a real silent-payment handoff, follow-as-kind-3, NIP-05 generated from profile state, and per-channel earnings with settlement proof. Eight commits, verification re-run after the last edit, handoff appended to `docs/KIMI-HANDOFF.md`.
+
+**Shipped this session (part 2):**
+
+1. **The failed list — both items fixed.** `e2e/auth.spec.ts` now asserts the control that exists (`Continue with Nostr`, the promoted NIP-07 challenge login) and the sign-in labels are associated with their inputs; no product decision was needed, the button had only been renamed. `e2e/creator-profile.spec.ts` stops assuming DOM order: the wishlist link existed but sat inside a `hidden` mobile-first section, so the spec now opens the real `Goals` tab. `npm run test:e2e` is in the gate and in CI, which is why they drifted unnoticed.
+2. **CSP ↔ code origin guard.** `cspOrigins.test.ts` fails if code reaches an origin the CSP does not allow (and vice versa for relays). It caught two origins the previous narrowing would have shipped broken: `api.satohash.io` and `mempool.space`.
+3. **Home stats take one source at a time.** Live counters, or the labeled sample, or an explicit unavailable — never a live count beside a sample volume. Counters read `wishlists.total_sats_raised` (RPC-maintained), so they read **0** until real settlements exist.
+4. **Subscriber-only posts gate on DB state.** Locked posts unlocked from `localStorage`; now only active `subscriptions` rows for the signed-in fan unlock content, `subscribeLocal()` refuses where a backend exists, and the new migration gives clients **no write policy at all** — the webhook activates, `cancel_my_subscription()` can only cancel.
+5. **Silent payments got a real handoff.** The dead form for a silent-only creator is replaced by the `sp1` address, a QR, a copy button, the wallet list, and the list of things that will not happen. Also fixed the bare-`sp1` QR bug that emptied the payload.
+6. **Follow vs subscribe.** Follow publishes a NIP-02 kind-3 contact list through NIP-07 (existing list read and merged first, so a follow cannot wipe other follows); subscribe stays paid. The profile badge says `Nostr` or `This device`.
+7. **NIP-05 from profile state.** `.well-known/nostr.json` is generated during the build from `profiles.username → nostr_pubkey`; a credential-less build reproduces the committed file byte for byte. Verified the profiles path against a PostgREST stub and the served file in a browser.
+8. **Per-channel earnings with proof.** Dashboard totals split by Lightning / on-chain / Nostr zaps / silent payments. Only server-confirmed rows count as settled, and a rail Katoa can never confirm is excluded even when a row claims confirmed.
+9. **Verified:** `npm run check:fast` → 419/419 tests, typecheck clean, lint 0 errors; build → 26/26 routes + 106 dist references; `npx playwright test` → **32/32** (was 30/32).
+
+---
+
+## Previous session — 2026-10-15 (part 1) by Buffy (M3)
 
 Brief: English-only UI, payment channels that actually count, silent payments wired end to end, the demo catalog deduped + modernized, and react-router 6 → 7 (the last open security item). Seven commits, full verification run, handoff appended to `docs/KIMI-HANDOFF.md`.
 

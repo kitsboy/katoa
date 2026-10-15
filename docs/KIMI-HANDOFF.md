@@ -1,3 +1,46 @@
+## Session — 2026-10-15 (part 2) · The failed list, then eight honesty fixes (Buffy M3)
+
+**Started from the failures, closed them, then worked the 8-item improvement list to empty. Six commits, each verified before the next.**
+
+### 1. The failed list — both items were mine to fix, and both were real
+
+- **`e2e/auth.spec.ts`** now exercises what the page actually does: the NIP-07 challenge login button is **"Continue with Nostr"** and is promoted to the primary action, so the spec asserts the honest state of that control (`Continue with Nostr` when no extension is present, plus the unstyled label association for the email/password/username fields that had no `id`/`htmlFor`). No product decision was needed after all — the button was never removed, just renamed, and the spec was asserting a control that no longer existed.
+- **`e2e/creator-profile.spec.ts`** no longer assumes DOM order. The wishlist link it wanted *did* exist but was `display:none` on desktop: the profile renders the story-tab strip and the wishlists section inside `hidden`-toggled `<section>`s, so the first match in DOM order is a mobile-only copy. The spec now navigates the real tab (`Goals`) and asserts the link in the section that is actually visible.
+- **The reason they drifted is fixed too:** `npm run test:e2e` is now part of the gate and runs in CI, so a browser-flow regression can no longer sit green in `npm run check` while the specs rot.
+
+### 2. CSP ↔ code origin guard (the item I had left as "unverifiable locally")
+
+`src/lib/__tests__/cspOrigins.test.ts` extracts every `https://`/`wss://` origin the shipped code and `public/_headers` name, and fails if code reaches an origin the CSP does not allow (or vice versa for the relay list). It found two real gaps the previous narrowing would have shipped: `https://api.satohash.io` (verify/stamp/health) and `https://mempool.space` (footer block height). Both are in `connect-src` now. Proven both ways: re-narrowing the CSP fails 2 assertions, an unlisted relay fails, restoring the file → 7/7.
+
+### 3. Home stats take one source at a time
+
+The hero could show a **live** Supabase creator count beside the **sample** catalog's raised volume with the demo banner cleared, because the live path overrode one field and dropped `isDemoSample`. `loadHomeStats()` now resolves a single source: authoritative counters, or the labeled sample file, or an explicit "unavailable" — never a mix. The counters read what the database maintains (`wishlists.total_sats_raised`, which only the atomic `increment_funding_totals` RPC under service role moves), so they are **0** until real settlements exist. 0 is the honest number; 9.28M is not.
+
+### 4. Subscriber-only posts unlock from DB state, not a browser value
+
+Locked creator posts unlocked from `localStorage`, so anything that could write that key owned the paywall. There is now one gate (`useCreatorSubscriptions`): with Supabase configured, only active `subscriptions` rows for the signed-in fan unlock content, and `subscribeLocal()` **throws** rather than minting anything there. New migration `20261015120000_add_subscriptions.sql` adds the table with **no client write policy at all** — only the webhook, on the service role, can write an activation — and `cancel_my_subscription()` is the sole client-callable path, which can only move the caller's own row to `cancelled`. The labelled demo seam stays for backend-less builds, and the tier cards stop saying "demo unlock" where a real invoice is what unlocks. 11 new tests, including a forged-storage case.
+
+### 5. Silent payments: a real "how to pay this"
+
+A silent-only creator got one sentence and a dead form (amount box, method tabs, disabled submit, no address on screen). The gift modal and the profile tip modal now render `SilentPaymentHandoff`: the `sp1` address, a QR, a copy button, the wallet requirement (Cake Wallet, Sparrow, Nunchuk, Silentium, BitBox02, Wasabi, with the community support list linked), the amount-choosing step, and the four things that will **not** happen — no invoice, hash, zap receipt or webhook, so the page will not move the total. Found and fixed a supporting bug on the way: `silentPaymentAddressFrom()` only understood the stored `silent:`/`sp:` descriptor, so the bare `sp1` address the UI actually holds produced an **empty QR payload**.
+
+### 6. Follow vs subscribe is now a real split
+
+Follow is free and belongs on Nostr; subscribe is paid. `handleFollow` publishes a real **NIP-02 kind-3** contact list through NIP-07 and the profile badge says which one you got (`Nostr` or `This device`). The safety property is the merge: kind 3 is replaceable, so the existing list is read first and merged (`contactPubkeys`/`mergeContactTags`, 19 tests). A follow can no longer wipe every other follow, a failed publish leaves the list untouched instead of replacing it with one entry, and an unreadable key is reported as unreadable rather than as "no key".
+
+### 7. NIP-05 is served from profile state
+
+`.well-known/nostr.json` held only the platform key, and `/nip05` copied an ops request into a local file — a creator handle reached nobody. The registry is now **generated at build time** (`npm run nip05`, wired into `npm run build`) from `profiles.username → nostr_pubkey`, and a signed-in claim writes the pubkey to the profile the generator reads. Rules in `nip05Registry.ts` (9 tests): platform entries win collisions, `_`/`katoa` stay reserved, names must match the NIP-05 charset, pubkeys must be 64 hex, and serialization is order-stable — a credential-less build reproduces the committed file **byte for byte** (verified: clean `git diff`). Exercised the profiles path against a PostgREST stub: 2 valid rows published, reserved/malformed/duplicate/keyless rows skipped with a printed reason. Served 200 `application/json` from `vite preview`, `/nip05` submit checked in a real browser with zero page errors.
+
+### 8. Creator earnings per payout channel, with what can actually be proved
+
+The dashboard had one 14-day number. Now it breaks totals down by Lightning, on-chain, Nostr zaps and silent payments, each with the proof that rail really offers. Two honest rules pinned by 14 tests: only rows a trusted server marked `confirmed` count as settled, and a rail Katoa can never confirm is **excluded from settled totals even when a row claims confirmed** — a silent payment reaches no webhook, so counting one would be inventing money. Proof affordances are literal: settled Lightning rows expose the recorded payment hash for copying, on-chain offers a mempool.space address-history link captioned "not one invoice", silent says no proof exists, and an unclassified row stays counted rather than being dropped.
+
+**Verification (final state, all re-run after the last edit):** `npm run check:fast` → **419/419 tests** (58 files), typecheck clean, lint 0 errors; `npm run build` → 26/26 routes prerendered, 106 dist references verified, NIP-05 file generated and served 200 as `application/json`; `npx playwright test` → **32/32** (the two stale specs now pass, and the dashboard spec asserts the sample channel split + the silent exclusion in a browser).
+
+**Git state:** `3d11aff` both e2e specs + form labels · `acfb924` e2e in the gate · `d5becfc` CSP guard · `50d1ef4` stats source · `4790a34` DB subscription gate · `0ec42b0` silent handoff · `0804446` kind-3 follow · `15512ff` NIP-05 generation · `2189c0e` channel earnings.
+
+**Still open for Kimi / THOR:** the same money-and-ops blockers as before (deployed Lightning webhook writing `subscriptions` + atomic totals, authoritative Supabase counters, deployed NIP-07 challenge login, NIP-05 now needs only a redeploy per claim rather than an ops edit — dynamic serving is the next step), plus one post-deploy CSP check of `/verify` and the footer block height.
 ## Session — 2026-10-15 · English-only UI, real payment channels, silent payments, and the demo truth pass (Buffy M3)
 
 **Done:**
