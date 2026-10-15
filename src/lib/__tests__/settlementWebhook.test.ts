@@ -8,6 +8,7 @@ import {
   normalizeTxid,
   parseSettlement,
   positiveSats,
+  ppvActivation,
   SUBSCRIPTION_TERM_DAYS,
   subscriptionActivation,
   tierPriceSats,
@@ -141,6 +142,48 @@ describe('subscriptionActivation', () => {
       false,
     );
     expect(subscriptionActivation({ creator_id: CREATOR, tier_id: 'patron' }, null, now).ok).toBe(false);
+  });
+});
+
+describe('ppvActivation', () => {
+  const creator = CREATOR;
+  const fan = '33333333-3333-4333-8333-333333333333';
+  const meta = { creator_id: creator, subscriber_id: fan, post_key: 'luna-post-9', price_sats: 25000 };
+
+  it('unlocks a post when the settled amount meets the price', () => {
+    const result = ppvActivation(meta, 25_000);
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result).toMatchObject({ fanId: fan, creatorId: creator, postKey: 'luna-post-9', priceSats: 25_000 });
+  });
+
+  it('accepts an overpayment but refuses a cheaper invoice than the price', () => {
+    expect(ppvActivation(meta, 30_000).ok).toBe(true);
+    const cheap = ppvActivation(meta, 100);
+    expect(cheap.ok).toBe(false);
+    if (cheap.ok) return;
+    expect(cheap.reason).toContain('underpaid');
+  });
+
+  it('refuses a missing fan, creator, post key or price', () => {
+    expect(ppvActivation({ ...meta, subscriber_id: undefined }, 25_000).ok).toBe(false);
+    expect(ppvActivation({ ...meta, subscriber_id: 'luna_vip' }, 25_000).ok).toBe(false);
+    expect(ppvActivation({ ...meta, creator_id: 'luna_vip' }, 25_000).ok).toBe(false);
+    expect(ppvActivation({ ...meta, post_key: '' }, 25_000).ok).toBe(false);
+    expect(ppvActivation({ ...meta, price_sats: undefined }, 25_000).ok).toBe(false);
+    expect(ppvActivation(meta, null).ok).toBe(false);
+  });
+});
+
+describe('the webhook activates PPV unlocks too', () => {
+  const source = readFileSync(
+    join(process.cwd(), 'supabase/functions/btcpay-webhook/index.ts'),
+    'utf8',
+  );
+
+  it('branches on the ppv kind and writes the unlock row', () => {
+    expect(source).toContain('activatePpv');
+    expect(source).toContain('from("post_unlocks")');
   });
 });
 

@@ -183,6 +183,38 @@ export interface Database {
         wishlist_id: string;
         amount_sats: number;
       }>;
+      /** One row per (fan, post) like. Public read; own write. */
+      post_likes: TableDef<{
+        id: string;
+        user_id: string;
+        post_key: string;
+        created_at: string;
+      }, {
+        user_id: string;
+        post_key: string;
+      }>;
+      post_comments: TableDef<{
+        id: string;
+        user_id: string;
+        post_key: string;
+        body: string;
+        created_at: string;
+      }, {
+        user_id: string;
+        post_key: string;
+        body: string;
+      }>;
+      /** Paid PPV unlocks. Browser sessions can only SELECT their own rows. */
+      post_unlocks: TableDef<{
+        id: string;
+        user_id: string;
+        post_key: string;
+        price_sats: number;
+        status: 'pending' | 'active' | 'expired' | 'refunded';
+        invoice_id: string | null;
+        created_at: string;
+        updated_at: string;
+      }>;
       /** Paid subscriptions. Browser sessions can only SELECT their own rows. */
       subscriptions: TableDef<{
         id: string;

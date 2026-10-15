@@ -1150,6 +1150,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
         {creatorPosts.length > 0 && (
           <CreatorPostFeed
             creatorName={wishlist.creator.username}
+            creatorId={wishlist.creator_id}
             subscriberCount={wishlist.subscriber_count}
             posts={creatorPosts}
             subscribed={subscribed}

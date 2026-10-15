@@ -6,19 +6,17 @@ import { SatsDisplay } from './SatsDisplay';
 import { CreatorPostModal } from './CreatorPostModal';
 import { useToast } from './Toast';
 import { formatCompactCount } from '../lib/i18nFormat';
-import {
-  countUnseenNewPosts,
-  isPostLiked,
-  isPpvUnlocked,
-  markPostsSeen,
-  togglePostLike,
-  unlockPpv,
-} from '../lib/creatorEngagement';
+import { countUnseenNewPosts, markPostsSeen } from '../lib/creatorEngagement';
+import { useCreatorEngagement } from '../lib/useCreatorEngagement';
+import { createPpvInvoice } from '../lib/ppvInvoice';
 import type { CreatorPost } from '../data/mockCreatorPosts';
+import { useAuth } from '../contexts/AuthContext';
 
 interface CreatorPostFeedProps {
   creatorName: string;
   subscriberCount?: number;
+  /** Creator's profile id, needed to create a real unlock invoice. */
+  creatorId?: string | null;
   posts: CreatorPost[];
   subscribed?: boolean;
   onSubscribe?: () => void;
@@ -40,6 +38,7 @@ function openPostOnKey(e: ReactKeyboardEvent, open: () => void) {
 export function CreatorPostFeed({
   creatorName,
   subscriberCount,
+  creatorId = null,
   posts,
   subscribed = false,
   onSubscribe,
@@ -47,9 +46,11 @@ export function CreatorPostFeed({
   t,
 }: CreatorPostFeedProps) {
   const { toast } = useToast();
+  const { user } = useAuth();
+  const engagement = useCreatorEngagement(posts);
   const [selectedPost, setSelectedPost] = useState<CreatorPost | null>(null);
-  const [likedIds, setLikedIds] = useState<Record<string, boolean>>({});
-  const [ppvUnlockedIds, setPpvUnlockedIds] = useState<Record<string, boolean>>({});
+  const likedIds = engagement.liked;
+  const ppvUnlockedIds = engagement.ppvUnlocked;
   const [unseenNew, setUnseenNew] = useState(0);
 
   useEffect(() => {
@@ -65,22 +66,47 @@ export function CreatorPostFeed({
   );
 
   const handleLike = (post: CreatorPost) => {
-    const liked = togglePostLike(post.id);
-    setLikedIds((prev) => ({ ...prev, [post.id]: liked }));
-    if (liked) toast(t('creator.liked'), 'success');
+    const wasLiked = Boolean(likedIds[post.id]);
+    void engagement.toggleLike(post).then(() => {
+      if (!wasLiked) toast(t('creator.liked'), 'success');
+    });
   };
 
+  /**
+   * Paid unlock. With a backend this is an invoice the webhook settles; the demo
+   * seam is used only where no backend exists, and says so.
+   */
   const handleUnlockPpv = (post: CreatorPost) => {
     if (post.priceSats === undefined) return;
-    unlockPpv(post.id);
-    setPpvUnlockedIds((prev) => ({ ...prev, [post.id]: true }));
-    toast('Demo unlock — not a Lightning payment', 'info');
+
+    if (engagement.mode === 'demo') {
+      engagement.unlockPpvLocally(post);
+      toast('Demo unlock — not a Lightning payment', 'info');
+      return;
+    }
+
+    void (async () => {
+      const invoice = await createPpvInvoice({
+        creatorId,
+        fanId: user?.id,
+        postKey: post.id,
+        priceSats: post.priceSats,
+      });
+      if (invoice.ok && invoice.checkoutLink) {
+        window.open(invoice.checkoutLink, '_blank', 'noopener,noreferrer');
+        toast(
+          `Invoice for ${(invoice.amountSats ?? post.priceSats ?? 0).toLocaleString()} sats opened — the post unlocks when it settles.`,
+          'info'
+        );
+        return;
+      }
+      toast(invoice.error ?? 'Paid unlocks need the invoice proxy; this post stays locked.', 'error');
+    })();
   };
 
   const isPostVisible = (post: CreatorPost): boolean => {
     if (!post.isLocked) return true;
-    if (subscribed) return true;
-    if (post.priceSats !== undefined) return isPpvUnlocked(post.id) || Boolean(ppvUnlockedIds[post.id]);
+    if (subscribed) return true;      if (post.priceSats !== undefined) return Boolean(ppvUnlockedIds[post.id]);
     return false;
   };
 
@@ -135,7 +161,7 @@ export function CreatorPostFeed({
         {posts.map((post) => {
           const visible = isPostVisible(post);
           const locked = !visible;
-          const liked = Boolean(likedIds[post.id]) || isPostLiked(post.id);
+          const liked = Boolean(likedIds[post.id]);
           const isPpv = post.priceSats !== undefined;
 
           return (
@@ -263,8 +289,10 @@ export function CreatorPostFeed({
         onUnlockPpv={handleUnlockPpv}
         likedIds={likedIds}
         ppvUnlockedIds={ppvUnlockedIds}
-        onEngagementChange={(postId) => {
-          setLikedIds((prev) => ({ ...prev, [postId]: isPostLiked(postId) }));
+        comments={selectedPost ? (engagement.comments[selectedPost.id] ?? []) : []}
+        onComment={(post, body) => engagement.postComment(post, body)}
+        onEngagementChange={() => {
+          /* the engagement gate owns this state now */
         }}
       />
     </section>

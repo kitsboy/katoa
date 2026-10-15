@@ -6,8 +6,7 @@ import { MediaCard } from './MediaCard';
 import { SatsDisplay } from './SatsDisplay';
 import { useToast } from './Toast';
 import { formatCompactCount } from '../lib/i18nFormat';
-import { addPostComment, getLocalComments, isPostLiked, isPpvUnlocked } from '../lib/creatorEngagement';
-import type { CreatorPost } from '../data/mockCreatorPosts';
+import type { CreatorPost, CreatorPostComment } from '../data/mockCreatorPosts';
 
 interface CreatorPostModalProps {
   post: CreatorPost | null;
@@ -19,6 +18,10 @@ interface CreatorPostModalProps {
   onLiked?: (post: CreatorPost) => void;
   likedIds?: Record<string, boolean>;
   ppvUnlockedIds?: Record<string, boolean>;
+  /** Fan comments from the engagement gate, newest last. */
+  comments?: CreatorPostComment[];
+  /** Persist a comment. Resolves false when the write was refused. */
+  onComment?: (post: CreatorPost, body: string) => Promise<boolean>;
   onEngagementChange?: (postId: string) => void;
   t: (key: string) => string;
 }
@@ -34,6 +37,8 @@ export function CreatorPostModal({
   onLiked,
   likedIds = {},
   ppvUnlockedIds = {},
+  comments: fanComments = [],
+  onComment,
   onEngagementChange,
   t,
 }: CreatorPostModalProps) {
@@ -43,11 +48,11 @@ export function CreatorPostModal({
   if (!post) return null;
 
   const isPpv = post.priceSats !== undefined;
-  const ppvUnlocked = isPpv && (isPpvUnlocked(post.id) || Boolean(ppvUnlockedIds[post.id]));
+  const ppvUnlocked = isPpv && Boolean(ppvUnlockedIds[post.id]);
   const locked = post.isLocked && !subscribed && !ppvUnlocked;
-  const liked = Boolean(likedIds[post.id]) || isPostLiked(post.id);
-  const localComments = getLocalComments(post.id);
-  const comments = [...localComments, ...(post.comments ?? [])];
+  const liked = Boolean(likedIds[post.id]);
+  // Sample comments first, then what the fan and others actually wrote.
+  const comments = [...(post.comments ?? []), ...fanComments];
 
   const handleLike = () => {
     onLiked?.(post);
@@ -60,10 +65,20 @@ export function CreatorPostModal({
   const handleComment = () => {
     const text = commentDraft.trim();
     if (!text) return;
-    addPostComment(post.id, 'you', text);
-    setCommentDraft('');
-    onEngagementChange?.(post.id);
-    toast(t('creator.commentPosted'), 'success');
+    if (onComment) {
+      void onComment(post, text).then((ok) => {
+        if (ok) {
+          setCommentDraft('');
+          onEngagementChange?.(post.id);
+          toast(t('creator.commentPosted'), 'success');
+        } else {
+          // Nothing was stored, so nothing is cleared or claimed.
+          toast('Could not post that comment.', 'error');
+        }
+      });
+      return;
+    }
+    toast('Sign in to comment.', 'info');
   };
 
   return (
@@ -125,7 +140,7 @@ export function CreatorPostModal({
             </button>
             <span className="inline-flex items-center gap-1.5">
               <MessageCircle size={16} />
-              {post.commentCount + localComments.length} {t('creator.comments')}
+              {post.commentCount + fanComments.length} {t('creator.comments')}
             </span>
           </div>
 

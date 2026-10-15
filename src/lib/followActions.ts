@@ -1,5 +1,6 @@
 import { hasNip07, nostrService } from './nostr';
 import { followLocal, getFollow, isFollowing, unfollowLocal } from './follows';
+import { fetchFollowedUsernames, usesLocalEngagementSeam } from './engagementGate';
 
 /**
  * Follow vs subscribe, kept as two different things:
@@ -134,4 +135,25 @@ export async function unfollowCreator(target: FollowTarget): Promise<FollowResul
 export function followState(username: string): { following: boolean; source: FollowSource } {
   if (!isFollowing(username)) return { following: false, source: 'local' };
   return { following: true, source: getFollow(username)?.source ?? 'local' };
+}
+
+/**
+ * Follow state from the authoritative source.
+ *
+ * With a backend configured the `follows` rows are the truth, so a follow made
+ * on another device shows up here; the device seam is consulted only in a build
+ * with no backend. Either way the kind-3 badge is only claimed when this device
+ * itself published one.
+ */
+export async function fetchFollowState(
+  username: string,
+  userId: string | null | undefined,
+): Promise<{ following: boolean; source: FollowSource }> {
+  const local = followState(username);
+  if (usesLocalEngagementSeam() || !userId) return local;
+
+  const followed = await fetchFollowedUsernames(userId);
+  const following = Boolean(followed[username.trim().toLowerCase()]);
+  if (!following) return { following: false, source: 'local' };
+  return { following: true, source: local.source === 'nostr' ? 'nostr' : 'local' };
 }

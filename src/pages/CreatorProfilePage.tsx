@@ -42,8 +42,8 @@ import { cancelDbSubscription, subscribeLocal, subscriptionTierSats, unsubscribe
 import { createSubscriptionInvoice } from '../lib/subscriptionInvoice';
 import { useCreatorSubscriptions } from '../lib/useCreatorSubscriptions';
 import {
+  fetchFollowState,
   followCreator,
-  followState,
   unfollowCreator,
   type FollowSource,
 } from '../lib/followActions';
@@ -160,10 +160,17 @@ export function CreatorProfilePage() {
       setFollowSource('local');
       return;
     }
-    const state = followState(profile.username);
-    setFollowing(state.following);
-    setFollowSource(state.source);
-  }, [profile]);
+    let cancelled = false;
+    // The DB is the truth where a backend exists; the device seam only where none does.
+    void fetchFollowState(profile.username, user?.id).then((state) => {
+      if (cancelled) return;
+      setFollowing(state.following);
+      setFollowSource(state.source);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [profile, user?.id]);
 
   // Silent payments only ever come from the creator's wallet table, never from the profile row.
   useEffect(() => {
@@ -707,6 +714,7 @@ export function CreatorProfilePage() {
         {(storyTab === 'media' || storyTab === 'updates') && (posts.length > 0 ? (
           <CreatorPostFeed
             creatorName={profile.username}
+            creatorId={profile.id}
             subscriberCount={subscriberCount}
             posts={posts}
             subscribed={subscribed}

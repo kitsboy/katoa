@@ -9,6 +9,7 @@ test.describe('/messages opt-in', () => {
 
     const optIn = page.getByTestId('messages-opt-in');
     await expect(optIn).toBeVisible({ timeout: 20_000 });
+    await page.waitForLoadState('networkidle');
     await expect(optIn).not.toBeChecked();
 
     // Page title (h1) — English default
@@ -31,6 +32,9 @@ test.describe('/messages opt-in', () => {
     await page.goto('/messages');
     const optIn = page.getByTestId('messages-opt-in');
     await expect(optIn).toBeVisible({ timeout: 20_000 });
+    // Wait for the page to settle first: focusing mid-hydration was a race that
+    // lost the keypress under parallel load (the assertions below are unchanged).
+    await page.waitForLoadState('networkidle');
     await optIn.focus();
     await expect(optIn).toBeFocused();
     await page.keyboard.press('Space');

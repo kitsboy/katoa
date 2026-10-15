@@ -181,6 +181,49 @@ export function subscriptionActiveUntil(now: Date, termDays = SUBSCRIPTION_TERM_
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
+/* ------------------------------------------------------------------ */
+/* Pay-per-view unlocks                                                */
+/* ------------------------------------------------------------------ */
+
+export type PpvActivation =
+  | { ok: true; fanId: string; creatorId: string; postKey: string; priceSats: number }
+  | { ok: false; reason: string };
+
+/**
+ * Decide whether a settled payment unlocks one post.
+ *
+ * The price is taken from the invoice metadata but must be met by the settled
+ * amount, so a cheap invoice cannot unlock expensive media. The unlock row is
+ * keyed on (fan, post), which makes a replayed invoice harmless.
+ */
+export function ppvActivation(
+  metadata: Record<string, unknown>,
+  providerAmountSats: number | null,
+): PpvActivation {
+  const fanId =
+    asString(metadata.subscriber_id) ??
+    asString(metadata.subscriberId) ??
+    asString(metadata.fan_id) ??
+    asString(metadata.fanId);
+  if (!fanId || !UUID.test(fanId)) return { ok: false, reason: "missing or invalid fan id" };
+
+  const creatorId = asString(metadata.creator_id) ?? asString(metadata.creatorId);
+  if (!creatorId || !UUID.test(creatorId)) return { ok: false, reason: "missing or invalid creator id" };
+
+  const postKey = asString(metadata.post_key) ?? asString(metadata.postKey);
+  if (!postKey || postKey.length > 200) return { ok: false, reason: "missing or invalid post key" };
+
+  const price = positiveSats(metadata.price_sats) ?? positiveSats(metadata.priceSats);
+  if (price == null) return { ok: false, reason: "invoice has no price" };
+
+  if (providerAmountSats == null) return { ok: false, reason: "missing settled amount" };
+  if (providerAmountSats < price) {
+    return { ok: false, reason: `underpaid unlock: ${providerAmountSats} < ${price}` };
+  }
+
+  return { ok: true, fanId, creatorId, postKey, priceSats: price };
+}
+
 export type SubscriptionActivation =
   | {
       ok: true;

@@ -24,6 +24,7 @@ import {
   matchesReference,
   parseSettlement,
   positiveSats,
+  ppvActivation,
   subscriptionActivation,
   timingSafeEqual,
   type SettlementContext,
@@ -84,8 +85,54 @@ serve(async (req: Request) => {
     return await activateSubscription(supabase, context);
   }
 
+  if (context.kind === "ppv") {
+    return await activatePpv(supabase, context);
+  }
+
   return await confirmGift(supabase, context);
 });
+
+/* ------------------------------------------------------------------ */
+/* Pay-per-view unlock                                                 */
+/* ------------------------------------------------------------------ */
+
+async function activatePpv(
+  supabase: ReturnType<typeof createClient>,
+  context: SettlementContext,
+): Promise<Response> {
+  const activation = ppvActivation(context.metadata, context.providerAmountSats);
+  if (!activation.ok) {
+    console.error(`btcpay-webhook: PPV not activated — ${activation.reason}`);
+    return json(422, { ok: false, reason: activation.reason });
+  }
+
+  const { error } = await supabase.from("post_unlocks").upsert(
+    {
+      user_id: activation.fanId,
+      post_key: activation.postKey,
+      price_sats: activation.priceSats,
+      status: "active",
+      invoice_id: context.invoiceId,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "user_id,post_key" },
+  );
+
+  if (error) {
+    console.error("btcpay-webhook: PPV unlock upsert failed", error.message);
+    if (error.code === "23505") {
+      return json(200, { ok: true, updated: false, idempotent: true });
+    }
+    return text(500, "database error");
+  }
+
+  return json(200, {
+    ok: true,
+    updated: true,
+    kind: "ppv",
+    postKey: activation.postKey,
+  });
+}
 
 /* ------------------------------------------------------------------ */
 /* Subscription settlement                                             */
