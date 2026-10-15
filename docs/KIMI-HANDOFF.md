@@ -14,18 +14,23 @@
 **Verification:**
 - `npm run check`: **344/344 tests passed** (51 files), typecheck clean, lint 0 errors (5 pre-existing Navbar/PageMeta warnings), asset-reference guard clean.
 - `npm run build`: green, 26/26 routes prerendered, 106 dist asset references verified.
+- `npx playwright test`: **30/32 passed**; the 2 failures are the pre-existing ones described below, reproduced on the pre-session baseline.
+- `npm audit --omit=dev`: **0 vulnerabilities** in the shipped tree after the router bump.
 - Real-browser pass against `vite preview` (Playwright): 9 routes (`/`, `/explore`, `/demo`, `/wishlist/luna-exclusive-videos`, `/wishlist/maya-reading-club`, `/wishlist/paul-first-ep`, `/wishlist/neukoelln-garden-club`, `/u/luna_vip`, `/verify`) all 200, **zero CJK characters rendered**, zero broken images, no error boundary; the picker shows exactly 7 English-only labels.
 - Payment-channel register verified through the real UI with a seeded demo session: on-chain-only wallet → “2 of 3 ready” and **no** false warning (the reported bug), silent-only wallet → the Silent payments row reads Added.
 - Secret gate probed with plaintext and base64-wrapped `cfoat_`/`cfort_` values (both caught) and the tracked tree (clean).
 
-**Still open / deliberately deferred:**
-1. **react-router 6 → 7** — untouched on purpose. Breaking major, needs its own scheduled task with the auth/redirect e2e regression pass; do not fold it into a cosmetic batch (my 10-13 recommendation, unchanged).
-2. **CSP cannot be verified locally** — `vite preview` does not serve `public/_headers`; the tightened policy only takes effect on Cloudflare Pages after deploy. Worth one post-deploy check of `/verify` and the footer block height.
-3. **`wrangler logout` on M3** still waits on Cam confirming the OAuth grant is revoked in the dashboard (your 10-14 item).
-4. Silent payments are **receive-only by design**. Katoa never sends them: that needs a BIP352 scanner in the supporter's wallet. If we later want in-app sending, it is a wallet-integration decision, not a UI change.
+**react-router 6 → 7 is now done** (last sub-item of your 10-14 code lane, so the whole list is closed except the EN tagline no-op). I had said it needed its own scheduled task with a regression pass rather than being folded into a cosmetic batch, so it got exactly that: its own commit on top of the batch work. The app is **library mode only** — `BrowserRouter`, `Routes`, `Route`, `Navigate`, `Link`, `useLocation`, `useParams`, `useNavigate`, `useSearchParams`, `MemoryRouter`; there is no `createBrowserRouter`, loader, fetcher or blocker anywhere, so none of the data-router APIs that changed are in play. Result: `npm audit --omit=dev` reports **0 vulnerabilities for the shipped tree** (the two react-router advisories are gone).
+
+**Two e2e specs were already failing before this session — not caused by anything here.** `e2e/auth.spec.ts` (expects a “Check Nostr extension” button on `/auth`) and `e2e/creator-profile.spec.ts` (expects the first `a[href="/wishlist/luna-exclusive-videos"]` on `/u/luna_vip` to be visible; it resolves but is `hidden`, because the profile renders a mobile-only copy first in DOM order). I proved both are pre-existing by building the **pre-session commit `d0389ad` in a clean worktree** and running the same two specs against it: identical failures. They also fail identically on react-router 6, so the bump did not introduce them. I did **not** rewrite them: the auth one needs a product decision (was the Nostr check button intentionally removed?) and the profile one is a brittle assertion about DOM order, not a defect I can confirm blind. **They are stale specs and should be fixed or deleted in their own change** — worth flagging because `npm run check` (the gate CI uses) does **not** run e2e, which is why they drifted.
+
+**Still open:**
+1. **CSP cannot be verified locally** — `vite preview` does not serve `public/_headers`; the tightened policy only takes effect on Cloudflare Pages after deploy. Worth one post-deploy check of `/verify` and the footer block height.
+2. **`wrangler logout` on M3** still waits on Cam confirming the OAuth grant is revoked in the dashboard (your 10-14 item).
+3. Silent payments are **receive-only by design**. Katoa never sends them: that needs a BIP352 scanner in the supporter's wallet. If we later want in-app sending, it is a wallet-integration decision, not a UI change.
 
 **Git State:**
-- Six commits on top of `d0389ad`: `8a59072` English-only UI · `29fb463` payment channels · `76c1760` demo truth pass · `01d8940` silent payments · `38cd307` CSP/security/i18n cleanup · `5b68565` catalog guard + stamps.
+- Seven commits on top of `d0389ad`: `8a59072` English-only UI · `29fb463` payment channels · `76c1760` demo truth pass · `01d8940` silent payments · `38cd307` CSP/security/i18n cleanup · `5b68565` catalog guard + stamps · `91d011e` react-router 7.
 
 ---
 
