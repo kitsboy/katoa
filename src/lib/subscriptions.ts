@@ -29,11 +29,16 @@ export function usesLocalSubscriptionSeam(): boolean {
   return subscriptionGateMode() === 'demo';
 }
 
+/** Tier ids, in price order. The webhook's canonical table must match these. */
+export const SUBSCRIPTION_TIER_IDS = ['supporter', 'patron', 'champion'] as const;
+
+export type SubscriptionTierId = (typeof SUBSCRIPTION_TIER_IDS)[number];
+
 /**
  * Tier prices in sats — one source of truth for the tier cards and the invoice
  * path (`SubscriptionTiers` renders these, the subscribe flow prices them).
  */
-export const SUBSCRIPTION_TIER_SATS: Record<string, number> = {
+export const SUBSCRIPTION_TIER_SATS: Record<SubscriptionTierId, number> = {
   supporter: 21000,
   patron: 42000,
   champion: 105000,
@@ -41,7 +46,7 @@ export const SUBSCRIPTION_TIER_SATS: Record<string, number> = {
 
 /** Sats for a tier id, falling back to the entry tier (never 0 — a paid tier). */
 export function subscriptionTierSats(tierId: string): number {
-  return SUBSCRIPTION_TIER_SATS[tierId] ?? SUBSCRIPTION_TIER_SATS.supporter;
+  return SUBSCRIPTION_TIER_SATS[tierId as SubscriptionTierId] ?? SUBSCRIPTION_TIER_SATS.supporter;
 }
 
 /** Build the canonical payment intent used when real subscription settlement is enabled. */

@@ -11,11 +11,27 @@ This endpoint is Katoa's first Family Payment Core provider plug. The client ada
 1. `POST` only (BTCPay server-to-server — no CORS).
 2. If `BTCPAY_WEBHOOK_SECRET` is missing → **501** `not configured`.
 3. Verify `BTCPay-Sig` as HMAC-SHA256 of the **raw body**, header format `sha256=<hex>`.
-4. On `InvoiceSettled` / `InvoicePaymentSettled` (or `invoiceStatus === Settled`):
+4. On `InvoiceSettled` / `InvoicePaymentSettled` (or `invoiceStatus === Settled`), branch on `metadata.kind`:
+
+**Gift / tip / PPV (`kind` absent or `gift`):**
    - Resolve the row via `metadata.katoa_tx_id` / `metadata.transactionId` / `orderId`, or `payment_hash` matching `invoiceId`.
-   - `UPDATE transactions SET status = 'confirmed'`.
-   - If `item_id` / `wishlist_id` are present (metadata or the row), increment `wishlist_items.sats_raised` and `wishlists.total_sats_raised` by the tx amount.
-   - Idempotent: already `confirmed` / `completed` rows are not incremented again.
+   - Append a `payment_events` row keyed by the provider event id (idempotency).
+   - `UPDATE transactions SET status = 'confirmed'`, plus the on-chain `txid` when the payload carries a real 64-hex one, and the settled amount.
+   - **Recompute** funding totals with `recompute_funding_totals(p_wishlist_id, p_item_id)` — never add the amount.
+   - Idempotent: an already `confirmed` row returns `{ updated: false, idempotent: true }`.
+
+**Subscription (`metadata.kind === 'subscription'`):**
+   - Requires `metadata.subscriber_id` (uuid) and `metadata.creator_id` (uuid); a slug is rejected.
+   - The tier price comes from the canonical table in `_shared/settlement.ts` (`supporter` 21k / `patron` 42k / `champion` 105k sats, 30-day term) — the payload can never discount it. An overpayment is accepted; an underpayment is rejected with 422.
+   - Upserts the `subscriptions` row (`status = 'active'`, `active_until = now + term`, `invoice_id`), which is the paid feed gate read by `useCreatorSubscriptions`.
+
+### Why recompute and not increment
+
+`transactions` used to have two writers with different maths: the `trg_update_funding` trigger recomputed `total_sats_raised` from confirmed rows while this function also called the additive `increment_funding_totals(...)`. One settled gift therefore moved the counter **twice**. Migration `20261015130000_settlement_totals_and_txid.sql` gives the column one semantics: `recompute_funding_totals` is the implementation, the legacy additive RPC now recomputes and ignores its amount argument (so an older deploy cannot double-count), and the trigger delegates to the same function. A test asserts this function never calls the additive RPC again.
+
+### On-chain txid
+
+`transactions.txid` (unique when present) holds the settled on-chain transaction id, so the creator dashboard can link **one payment** instead of an address history. A collision returns 409 rather than silently overwriting another row's payment.
 
 ## Deploy
 

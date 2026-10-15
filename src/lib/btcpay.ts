@@ -242,4 +242,22 @@ export async function initializeBTCPay(): Promise<BTCPayService | null> {
   });
 }
 
-export const btcPayService = await initializeBTCPay();
+let servicePromise: Promise<BTCPayService | null> | null = null;
+
+/**
+ * Lazy accessor for the configured client.
+ *
+ * Deliberately not a module-scope `await`: a top-level await cannot be bundled
+ * for the app's browser target (it broke the production build the moment this
+ * module was pulled into a page chunk), and constructing the client at import
+ * time would run it for every visitor whether or not anything pays.
+ */
+export function getBtcPayService(): Promise<BTCPayService | null> {
+  servicePromise ??= initializeBTCPay();
+  return servicePromise;
+}
+
+/** Drop the memoized client (tests, or after changing provider env). */
+export function resetBtcPayService(): void {
+  servicePromise = null;
+}

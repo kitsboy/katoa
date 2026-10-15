@@ -13,6 +13,7 @@ import { supabase } from '../lib/supabase';
 import { mockWishlists, mockWishlistItems } from '../data/mockWishlists';
 import { mockCreatorPosts } from '../data/mockCreatorPosts';
 import { cancelDbSubscription, subscribeLocal, subscriptionTierSats, unsubscribe } from '../lib/subscriptions';
+import { createSubscriptionInvoice } from '../lib/subscriptionInvoice';
 import { useCreatorSubscriptions } from '../lib/useCreatorSubscriptions';
 import { getStorage, setStorage, removeStorage, STORAGE_KEYS } from '../lib/storage';
 import { copyToClipboard } from '../lib/clipboard';
@@ -873,7 +874,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
     Boolean(user && wishlist?.creator_id && user.id === wishlist.creator_id) ||
     Boolean(user && profile?.username && wishlist?.creator?.username === profile.username);
 
-  const handleSubscribe = (tierId = 'supporter') => {
+  const handleSubscribe = async (tierId = 'supporter') => {
     if (!wishlist) return;
     if (subscriptionMode === 'demo') {
       subscribeLocal(wishlist.slug, tierId);
@@ -881,13 +882,26 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
       toast('Unlocks on this device until Lightning webhooks exist', 'info');
       return;
     }
-    // Real gate: nothing unlocks here. The fan pays a Lightning invoice and the
-    // webhook writes the subscription row that unlocks the feed.
-    openGiftFor(
-      subscriptionTierSats(tierId),
-      `Subscription (${tierId}) for ${wishlist.title}`
-    );
-    toast('Subscriptions activate once the Lightning invoice settles — server-side.', 'info');
+    // Real gate: the fan pays an invoice tagged for the webhook, and only the
+    // settled invoice writes the subscription row that unlocks the feed.
+    const invoice = await createSubscriptionInvoice({
+      creatorId: wishlist.creator_id,
+      subscriberId: user?.id,
+      tierId,
+      creatorSlug: wishlist.creator.username,
+    });
+    if (invoice.ok && invoice.checkoutLink) {
+      window.open(invoice.checkoutLink, '_blank', 'noopener,noreferrer');
+      toast(
+        `Invoice for ${(invoice.amountSats ?? subscriptionTierSats(tierId)).toLocaleString()} sats opened — the feed unlocks when it settles.`,
+        'info'
+      );
+      return;
+    }
+    // No invoice proxy on this deployment: offer the creator's own Lightning
+    // address instead of pretending a click subscribed anyone.
+    openGiftFor(subscriptionTierSats(tierId), `Subscription (${tierId}) for ${wishlist.title}`);
+    toast(invoice.error ?? 'Subscriptions activate once the Lightning invoice settles.', 'info');
   };
 
   const isCreatorSurface = wishlist.card_style === 'creator';
@@ -1139,7 +1153,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             subscriberCount={wishlist.subscriber_count}
             posts={creatorPosts}
             subscribed={subscribed}
-            onSubscribe={() => handleSubscribe()}
+            onSubscribe={() => void handleSubscribe()}
             onTip={() => handleGiftClick()}
             t={t}
           />

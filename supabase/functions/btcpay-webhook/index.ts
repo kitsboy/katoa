@@ -1,17 +1,35 @@
 /**
  * Family Payment Core: BTCPay server plug.
  * BTCPay → Katoa settlement webhook.
- * Confirms pending gifts server-side. The browser never marks payments complete.
- * Keep this endpoint as the sole writer of settled gift rows; do not duplicate
- * this contract in another provider-specific frontend flow.
+ *
+ * This endpoint is the only writer of settled payment state:
+ *  - gift/tip/PPV  → `transactions.status = 'confirmed'` + a totals recompute
+ *  - subscription  → an active `subscriptions` row (the paid feed gate)
+ * It also records the on-chain `txid` when the provider supplies one, so the
+ * creator dashboard can link one specific payment.
+ *
+ * The browser never marks a payment complete. Decisions live in
+ * `../_shared/settlement.ts` (pure, tested in `src/lib/__tests__/`).
  *
  * Secrets (Supabase Edge env / `supabase secrets set`, never VITE_* or git):
  *   BTCPAY_WEBHOOK_SECRET, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
  */
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import {
+  asRecord,
+  asString,
+  btcpaySignature,
+  isConfirmedStatus,
+  matchesReference,
+  parseSettlement,
+  positiveSats,
+  subscriptionActivation,
+  timingSafeEqual,
+  type SettlementContext,
+} from "../_shared/settlement.ts";
 
-const SETTLED_TYPES = new Set(["InvoiceSettled", "InvoicePaymentSettled"]);
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 type TxRow = {
   id: string;
@@ -38,8 +56,7 @@ serve(async (req: Request) => {
 
   const rawBody = await req.text();
   const signature = (req.headers.get("btcpay-sig") ?? "").toLowerCase();
-  const expected = `sha256=${await hmacSha256Hex(secret, rawBody)}`;
-  if (!timingSafeEqual(signature, expected)) {
+  if (!timingSafeEqual(signature, await btcpaySignature(secret, rawBody))) {
     return text(401, "invalid signature");
   }
 
@@ -50,10 +67,8 @@ serve(async (req: Request) => {
     return text(400, "invalid json");
   }
 
-  const type = asString(payload.type);
-  const invoiceStatus = asString(payload.invoiceStatus);
-  const settled = (type != null && SETTLED_TYPES.has(type)) || invoiceStatus === "Settled";
-  if (!settled) {
+  const context = parseSettlement(payload);
+  if (!context.settled) {
     return json(200, { ok: true, ignored: true });
   }
 
@@ -63,48 +78,122 @@ serve(async (req: Request) => {
     return text(501, "not configured");
   }
 
-  const metadata = asRecord(payload.metadata);
-  const invoiceId = asString(payload.invoiceId) ?? asString(payload.invoice_id);
-  const txId =
-    asString(metadata.katoa_tx_id) ??
-    asString(metadata.transactionId) ??
-    asString(metadata.transaction_id) ??
-    asString(payload.orderId) ??
-    asString(payload.order_id) ??
-    asString(metadata.orderId) ??
-    asString(metadata.order_id);
-
   const supabase = createClient(supabaseUrl, serviceKey);
-  const tx = await findTransaction(supabase, txId, invoiceId);
+
+  if (context.kind === "subscription") {
+    return await activateSubscription(supabase, context);
+  }
+
+  return await confirmGift(supabase, context);
+});
+
+/* ------------------------------------------------------------------ */
+/* Subscription settlement                                             */
+/* ------------------------------------------------------------------ */
+
+async function activateSubscription(
+  supabase: ReturnType<typeof createClient>,
+  context: SettlementContext,
+): Promise<Response> {
+  const subscriberId =
+    asString(context.metadata.subscriber_id) ?? asString(context.metadata.subscriberId);
+  if (!subscriberId || !UUID.test(subscriberId)) {
+    return json(422, { ok: false, reason: "missing or invalid subscriber id" });
+  }
+
+  // Priced from the canonical tier table, never from the payload.
+  const activation = subscriptionActivation(context.metadata, context.providerAmountSats);
+  if (!activation.ok) {
+    console.error(`btcpay-webhook: subscription not activated — ${activation.reason}`);
+    return json(422, { ok: false, reason: activation.reason });
+  }
+
+  const { error } = await supabase.from("subscriptions").upsert(
+    {
+      subscriber_id: subscriberId,
+      creator_id: activation.creatorId,
+      tier_id: activation.tierId,
+      price_sats: activation.priceSats,
+      status: "active",
+      active_until: activation.activeUntil,
+      invoice_id: context.invoiceId,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "subscriber_id,creator_id" },
+  );
+
+  if (error) {
+    console.error("btcpay-webhook: subscription upsert failed", error.message);
+    // A duplicate invoice is a replay, not a failure.
+    if (error.code === "23505") {
+      return json(200, { ok: true, updated: false, idempotent: true });
+    }
+    return text(500, "database error");
+  }
+
+  return json(200, {
+    ok: true,
+    updated: true,
+    kind: "subscription",
+    tierId: activation.tierId,
+    activeUntil: activation.activeUntil,
+  });
+}
+
+/* ------------------------------------------------------------------ */
+/* Gift settlement                                                     */
+/* ------------------------------------------------------------------ */
+
+async function confirmGift(
+  supabase: ReturnType<typeof createClient>,
+  context: SettlementContext,
+): Promise<Response> {
+  const tx = await findTransaction(supabase, context.reference, context.invoiceId);
   if (!tx) {
     return json(200, { ok: true, updated: false, reason: "transaction not found" });
   }
 
-  const amount = positiveSats(tx.amount_sats) ?? parseAmountSats(payload, metadata);
-  const providerAmount = parseAmountSats(payload, metadata);
-  if (providerAmount && tx.amount_sats && providerAmount !== tx.amount_sats) {
+  const amount = positiveSats(tx.amount_sats) ?? context.providerAmountSats;
+  if (context.providerAmountSats && tx.amount_sats && context.providerAmountSats !== tx.amount_sats) {
     return json(422, { ok: false, reason: "amount mismatch" });
   }
+  if (amount == null) {
+    return json(422, { ok: false, reason: "amount unavailable" });
+  }
 
-  const itemId = asString(metadata.item_id) ?? asString(metadata.itemId) ?? tx.item_id;
+  const itemId = asString(context.metadata.item_id) ?? asString(context.metadata.itemId) ?? tx.item_id;
   const wishlistId =
-    asString(metadata.wishlist_id) ?? asString(metadata.wishlistId) ?? tx.wishlist_id;
-  if (!matchesReference(metadata.wishlist_id ?? metadata.wishlistId, tx.wishlist_id)
-    || !matchesReference(metadata.item_id ?? metadata.itemId, tx.item_id)
-    || (tx.intent_id && txId && tx.intent_id !== txId && tx.id !== txId)) {
+    asString(context.metadata.wishlist_id) ??
+    asString(context.metadata.wishlistId) ??
+    tx.wishlist_id;
+
+  if (
+    !matchesReference(context.metadata.wishlist_id ?? context.metadata.wishlistId, tx.wishlist_id) ||
+    !matchesReference(context.metadata.item_id ?? context.metadata.itemId, tx.item_id) ||
+    (tx.intent_id &&
+      context.reference &&
+      tx.intent_id !== context.reference &&
+      tx.id !== context.reference)
+  ) {
     return json(422, { ok: false, reason: "intent context mismatch" });
   }
 
-  const eventId = asString(payload.id) ?? asString(payload.eventId) ?? `${type ?? "settled"}:${invoiceId ?? tx.id}`;
+  const eventId = context.eventId ?? `${context.type ?? "settled"}:${context.invoiceId ?? tx.id}`;
+
   const { error: eventError } = await supabase.from("payment_events").insert({
     id: eventId,
     transaction_id: tx.id,
     provider: "btcpay",
-    event_type: type ?? "InvoiceSettled",
+    event_type: context.type ?? "InvoiceSettled",
     state: "settled",
     amount_sats: amount,
-    external_id: invoiceId,
-    payload,
+    external_id: context.invoiceId,
+    payload: {
+      txid: context.txid,
+      kind: context.kind,
+      invoiceId: context.invoiceId,
+      metadata: context.metadata,
+    },
   });
   if (eventError) {
     if (eventError.code === "23505") {
@@ -114,54 +203,65 @@ serve(async (req: Request) => {
     return text(500, "event ledger error");
   }
 
+  const patch: Record<string, unknown> = {
+    status: "confirmed",
+    confirmed_at: new Date().toISOString(),
+    external_id: context.invoiceId,
+  };
+  // Only a real 64-hex txid is written; a bogus one would poison the proof link.
+  if (context.txid) patch.txid = context.txid;
+  if (context.providerAmountSats) patch.amount_sats = context.providerAmountSats;
+
   const { data: updatedRows, error: updateError } = await supabase
     .from("transactions")
-    .update({ status: "confirmed", confirmed_at: new Date().toISOString(), external_id: invoiceId })
+    .update(patch)
     .eq("id", tx.id)
     .eq("status", "pending")
     .select("id");
 
   if (updateError) {
     console.error("btcpay-webhook: failed to confirm transaction", updateError.message);
+    // A txid collision means another row already claims this on-chain payment.
+    if (updateError.code === "23505") {
+      return json(409, { ok: false, reason: "txid already recorded on another transaction" });
+    }
     return text(500, "database error");
   }
   if (!updatedRows?.length && isConfirmedStatus(tx.status)) {
     return json(200, { ok: true, updated: false, transactionId: tx.id, idempotent: true });
   }
 
-  const { error: totalsError } = await supabase.rpc("increment_funding_totals", {
+  // Recompute, never add: the same implementation the funding trigger uses, so a
+  // provider retry cannot inflate a counter.
+  const { error: totalsError } = await supabase.rpc("recompute_funding_totals", {
     p_wishlist_id: wishlistId,
     p_item_id: itemId,
-    p_amount_sats: amount,
   });
   if (totalsError) {
-    console.error("btcpay-webhook: failed to update funding totals", totalsError.message);
+    console.error("btcpay-webhook: failed to recompute funding totals", totalsError.message);
     return text(500, "funding totals error");
   }
 
-  return json(200, { ok: true, updated: true, transactionId: tx.id });
-});
-
-function matchesReference(value: unknown, expected: string | null): boolean {
-  if (value == null || expected == null) return true;
-  return String(value) === expected;
-}
-
-function isConfirmedStatus(status: string | null): boolean {
-  return status === "confirmed" || status === "completed";
+  return json(200, { ok: true, updated: true, transactionId: tx.id, txid: context.txid });
 }
 
 async function findTransaction(
   supabase: ReturnType<typeof createClient>,
-  txId: string | null,
+  reference: string | null,
   invoiceId: string | null,
 ): Promise<TxRow | null> {
-  if (txId) {
-    const byId = await supabase.from("transactions").select(TX_SELECT).eq("id", txId).maybeSingle();
+  if (reference) {
+    const byId = await supabase.from("transactions").select(TX_SELECT).eq("id", reference).maybeSingle();
     if (byId.data) return byId.data as TxRow;
+    const byIntent = await supabase
+      .from("transactions")
+      .select(TX_SELECT)
+      .eq("intent_id", reference)
+      .maybeSingle();
+    if (byIntent.data) return byIntent.data as TxRow;
   }
 
-  for (const hash of [invoiceId, txId]) {
+  for (const hash of [invoiceId, reference]) {
     if (!hash) continue;
     const byHash = await supabase
       .from("transactions")
@@ -172,81 +272,6 @@ async function findTransaction(
   }
 
   return null;
-}
-
-/* Kept for compatibility with older deployments; new settlement uses the atomic RPC. */
-async function incrementColumn(
-  supabase: ReturnType<typeof createClient>,
-  table: "wishlist_items" | "wishlists",
-  column: "sats_raised" | "total_sats_raised",
-  id: string,
-  amount: number,
-): Promise<void> {
-  const { data, error } = await supabase.from(table).select(column).eq("id", id).maybeSingle();
-  if (error || !data) {
-    if (error) console.error(`btcpay-webhook: read ${table}.${column} failed`, error.message);
-    return;
-  }
-  const current = positiveSats((data as Record<string, unknown>)[column]) ?? 0;
-  const { error: writeError } = await supabase
-    .from(table)
-    .update({ [column]: current + amount })
-    .eq("id", id);
-  if (writeError) {
-    console.error(`btcpay-webhook: increment ${table}.${column} failed`, writeError.message);
-  }
-}
-
-function parseAmountSats(
-  payload: Record<string, unknown>,
-  metadata: Record<string, unknown>,
-): number | null {
-  return (
-    positiveSats(metadata.amount_sats) ??
-    positiveSats(metadata.amountSats) ??
-    positiveSats(payload.amount_sats) ??
-    positiveSats(payload.amountSats)
-  );
-}
-
-function positiveSats(value: unknown): number | null {
-  const n = typeof value === "number" ? value : typeof value === "string" ? Number(value) : NaN;
-  if (!Number.isFinite(n) || n <= 0) return null;
-  return Math.round(n);
-}
-
-function asRecord(value: unknown): Record<string, unknown> {
-  return value && typeof value === "object" && !Array.isArray(value)
-    ? (value as Record<string, unknown>)
-    : {};
-}
-
-function asString(value: unknown): string | null {
-  if (typeof value === "string" && value.trim()) return value.trim();
-  return null;
-}
-
-async function hmacSha256Hex(secret: string, payload: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const key = await crypto.subtle.importKey(
-    "raw",
-    encoder.encode(secret),
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"],
-  );
-  const sig = await crypto.subtle.sign("HMAC", key, encoder.encode(payload));
-  return [...new Uint8Array(sig)].map((b) => b.toString(16).padStart(2, "0")).join("");
-}
-
-function timingSafeEqual(a: string, b: string): boolean {
-  const encoder = new TextEncoder();
-  const left = encoder.encode(a);
-  const right = encoder.encode(b);
-  if (left.byteLength !== right.byteLength) return false;
-  let out = 0;
-  for (let i = 0; i < left.byteLength; i += 1) out |= left[i] ^ right[i];
-  return out === 0;
 }
 
 function json(status: number, body: Record<string, unknown>): Response {

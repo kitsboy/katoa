@@ -39,6 +39,7 @@ import {
 } from '../lib/creatorProfile';
 import { usablePaymentAddress } from '../lib/validateAddress';
 import { cancelDbSubscription, subscribeLocal, subscriptionTierSats, unsubscribe } from '../lib/subscriptions';
+import { createSubscriptionInvoice } from '../lib/subscriptionInvoice';
 import { useCreatorSubscriptions } from '../lib/useCreatorSubscriptions';
 import {
   followCreator,
@@ -244,9 +245,27 @@ export function CreatorProfilePage() {
       toast('Unlocks on this device until Lightning webhooks exist', 'info');
       return;
     }
-    // Real gate: pay the creator directly and let the webhook activate the row.
-    void handleTip(subscriptionTierSats(tierId));
-    toast('Subscriptions activate once the Lightning invoice settles — server-side.', 'info');
+    // Real gate: pay an invoice tagged for the webhook; only the settled invoice
+    // writes the subscription row that unlocks the feed.
+    void (async () => {
+      const invoice = await createSubscriptionInvoice({
+        creatorId: profile.id,
+        subscriberId: user?.id,
+        tierId,
+        creatorSlug: profile.username,
+      });
+      if (invoice.ok && invoice.checkoutLink) {
+        window.open(invoice.checkoutLink, '_blank', 'noopener,noreferrer');
+        toast(
+          `Invoice for ${(invoice.amountSats ?? subscriptionTierSats(tierId)).toLocaleString()} sats opened — posts unlock when it settles.`,
+          'info'
+        );
+        return;
+      }
+      // No invoice proxy here: tip the creator directly rather than pretend.
+      void handleTip(subscriptionTierSats(tierId));
+      toast(invoice.error ?? 'Subscriptions activate once the Lightning invoice settles.', 'info');
+    })();
   };
 
   const handleUnsubscribe = async () => {
@@ -589,7 +608,7 @@ export function CreatorProfilePage() {
               </Button>
               <Button
                 variant="bitcoin"
-                onClick={() => (subscribed ? undefined : handleSubscribe())}
+                onClick={() => void handleSubscribe()}
                 disabled={subscribed}
                 className="min-h-[44px]"
               >
