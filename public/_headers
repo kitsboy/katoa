@@ -16,13 +16,21 @@
   Cross-Origin-Resource-Policy: same-site
   Permissions-Policy: geolocation=(), microphone=(), camera=()
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
-  # connect-src is an explicit allowlist — no bare `https:`. Every origin below is
-  # called from src/: api.satohash.io (verify/stamp/health), mempool.space (footer
-  # block height), the 8 relay websockets, Supabase, price APIs, BTC Map, tiles.
-  # If you enable VITE_API_BASE_URL (BTCPay proxy, a separate origin) or a Sentry
-  # DSN, add that origin here in the same change or the call is silently blocked.
+  # connect-src keeps the bare `https:` on purpose. Two payment paths cannot be
+  # enumerated here: a tip invoice is fetched from
+  # https://<lightning-address-host>/.well-known/lnurlp/<name> and then from the
+  # callback URL that address returns, and the BTCPay proxy (VITE_API_BASE_URL) is
+  # per-deploy. Both hosts are chosen outside this repo, so a closed list silently
+  # blocks payments — narrowing connect-src to the enumeration below did exactly
+  # that. The enumerations are kept as the reviewable record of every *fixed*
+  # origin in use: api.satohash.io (verify/stamp/health), mempool.space (footer
+  # block height), api.btcmap.org + tiles.openfreemap.org (map), price APIs,
+  # api.allorigins.win (product-link import), Supabase, analytics. Relay websockets
+  # stay closed (no bare `wss:`) because every relay lives in src/lib/nostr.ts.
+  # Add any new fixed origin (Sentry DSN, another API) in the same change —
+  # src/lib/__tests__/cspOrigins.test.ts fails when code gains one this file lacks.
   # frame-src is intentionally absent: nothing in src/ renders an iframe.
-  Content-Security-Policy: default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://analytics.giveabit.io https://satohash.io; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https://analytics.giveabit.io https://*.supabase.co wss://*.supabase.co https://api.coingecko.com https://api.coinbase.com https://api.btcmap.org https://api.satohash.io https://mempool.space https://tiles.openfreemap.org wss://relay.damus.io wss://relay.nostr.band wss://nos.lol wss://relay.snort.social wss://nostr.wine wss://relay.primal.net wss://purplepag.es wss://relay.nostr.bg; frame-ancestors 'none'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; form-action 'self'; object-src 'none'; script-src 'self' 'unsafe-inline' https://analytics.giveabit.io https://satohash.io; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:; connect-src 'self' https: https://analytics.giveabit.io https://*.supabase.co wss://*.supabase.co https://api.coingecko.com https://api.coinbase.com https://api.btcmap.org https://api.satohash.io https://mempool.space https://tiles.openfreemap.org https://api.allorigins.win wss://relay.damus.io wss://relay.nostr.band wss://nos.lol wss://relay.snort.social wss://nostr.wine wss://relay.primal.net wss://purplepag.es wss://relay.nostr.bg; frame-ancestors 'none'; upgrade-insecure-requests
 
 # NIP-05 — must be fetchable cross-origin by Nostr clients
 /.well-known/nostr.json
