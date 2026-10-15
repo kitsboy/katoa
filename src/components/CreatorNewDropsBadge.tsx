@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
 import { mockCreatorPosts } from '../data/mockCreatorPosts';
-import { getSubscriptions } from '../lib/subscriptions';
+import { useSubscribedCreatorSlugs } from '../lib/useCreatorSubscriptions';
 import { countUnseenNewPosts } from '../lib/creatorEngagement';
 
 /** Small badge for nav — count of unseen new drops from subscribed creators. */
 export function CreatorNewDropsBadge({ className = '' }: { className?: string }) {
   const [n, setN] = useState(0);
+  const subscribedSlugs = useSubscribedCreatorSlugs();
 
   useEffect(() => {
     const refresh = () => {
-      const subs = getSubscriptions();
-      const total = Object.keys(subs).reduce((sum, slug) => {
+      const total = subscribedSlugs.reduce((sum, slug) => {
         const posts = mockCreatorPosts[slug] ?? [];
         return sum + countUnseenNewPosts(posts);
       }, 0);
@@ -19,7 +19,7 @@ export function CreatorNewDropsBadge({ className = '' }: { className?: string })
     refresh();
     const t = window.setInterval(refresh, 30_000);
     return () => window.clearInterval(t);
-  }, []);
+  }, [subscribedSlugs]);
 
   if (n <= 0) return null;
   return (

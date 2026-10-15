@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
@@ -12,7 +12,8 @@ import { Link } from '../components/Link';
 import { supabase } from '../lib/supabase';
 import { mockWishlists, mockWishlistItems } from '../data/mockWishlists';
 import { mockCreatorPosts } from '../data/mockCreatorPosts';
-import { isSubscribed, subscribeLocal, unsubscribe } from '../lib/subscriptions';
+import { cancelDbSubscription, subscribeLocal, subscriptionTierSats, unsubscribe } from '../lib/subscriptions';
+import { useCreatorSubscriptions } from '../lib/useCreatorSubscriptions';
 import { getStorage, setStorage, removeStorage, STORAGE_KEYS } from '../lib/storage';
 import { copyToClipboard } from '../lib/clipboard';
 import { bitcoinQrData, getQrImageUrl, isBolt11Invoice, isDummyPaymentTarget, lightningQrData } from '../lib/qr';
@@ -156,7 +157,6 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
   const [zapBusy, setZapBusy] = useState(false);
   const [zapInvoice, setZapInvoice] = useState<string | null>(null);
   const [zapError, setZapError] = useState<string | null>(null);
-  const [subscribed, setSubscribed] = useState(false);
   const [onchainAddress, setOnchainAddress] = useState<string | null>(null);
   const [silentAddress, setSilentAddress] = useState<string | null>(null);
   const [paymentUri, setPaymentUri] = useState('');
@@ -164,12 +164,29 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
   const [giftIntent, setGiftIntent] = useState<{ amount: number; method: PaymentTab } | null>(null);
   const [showDraftBanner, setShowDraftBanner] = useState(false);
 
-  useEffect(() => {
-    setThemeColor(getStorage<string>(STORAGE_KEYS.wishlistTheme(slug), '#f97316'));
-  }, [slug]);
+  /**
+   * Subscriber-only content unlocks from the `subscriptions` table whenever a
+   * backend is configured. The labelled device seam is consulted only in a build
+   * with no authoritative source, so a browser-writable value cannot bypass the
+   * paywall on a real deployment.
+   */
+  const subscriptionKeyList = useMemo(
+    () =>
+      Array.from(
+        new Set([wishlist?.creator?.username, slug].filter((key): key is string => Boolean(key)))
+      ),
+    [wishlist?.creator?.username, slug]
+  );
+  const {
+    subscribed,
+    mode: subscriptionMode,
+    activeKey: subscribedKey,
+    state: subscriptionState,
+    refresh: refreshSubscription,
+  } = useCreatorSubscriptions(subscriptionKeyList);
 
   useEffect(() => {
-    setSubscribed(isSubscribed(slug));
+    setThemeColor(getStorage<string>(STORAGE_KEYS.wishlistTheme(slug), '#f97316'));
   }, [slug]);
 
   useEffect(() => {
@@ -436,6 +453,14 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
       ...prev,
       amount,
     }));
+    setShowGiftModal(true);
+  }
+
+  /** Open the payment flow pre-filled for a subscription tier (real invoice path). */
+  function openGiftFor(amountSats: number, message: string) {
+    setSelectedItem(null);
+    setAmountPreset('custom');
+    setGiftForm((prev) => ({ ...prev, amount: String(amountSats), message }));
     setShowGiftModal(true);
   }
 
@@ -849,9 +874,19 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
 
   const handleSubscribe = (tierId = 'supporter') => {
     if (!wishlist) return;
-    subscribeLocal(wishlist.slug, tierId);
-    setSubscribed(true);
-    toast('Unlocks on this device until Lightning webhooks exist', 'info');
+    if (subscriptionMode === 'demo') {
+      subscribeLocal(wishlist.slug, tierId);
+      refreshSubscription();
+      toast('Unlocks on this device until Lightning webhooks exist', 'info');
+      return;
+    }
+    // Real gate: nothing unlocks here. The fan pays a Lightning invoice and the
+    // webhook writes the subscription row that unlocks the feed.
+    openGiftFor(
+      subscriptionTierSats(tierId),
+      `Subscription (${tierId}) for ${wishlist.title}`
+    );
+    toast('Subscriptions activate once the Lightning invoice settles — server-side.', 'info');
   };
 
   const isCreatorSurface = wishlist.card_style === 'creator';
@@ -872,11 +907,20 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
   const submitBlocked = noPayDestinations || methodBlocked;
   const invoiceExpired = paymentCountdown === 0 && !isDemoWishlist && showPaymentModal;
 
-  const handleUnsubscribe = () => {
+  const handleUnsubscribe = async () => {
     if (!wishlist) return;
-    unsubscribe(wishlist.slug);
-    setSubscribed(false);
-    toast(t('creator.unsubscribed'), 'info');
+    if (subscriptionMode === 'demo') {
+      unsubscribe(subscribedKey ?? wishlist.slug);
+      refreshSubscription();
+      toast(t('creator.unsubscribed'), 'info');
+      return;
+    }
+    const cancelled = await cancelDbSubscription(subscribedKey ?? wishlist.slug);
+    refreshSubscription();
+    toast(
+      cancelled ? t('creator.unsubscribed') : 'Could not cancel the subscription — try again.',
+      cancelled ? 'info' : 'error'
+    );
   };
 
   async function handleOwnerImportProduct(product: ParsedProduct) {
@@ -1079,7 +1123,8 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
 
         {subscribed && (
           <ManageSubscriptionPanel
-            creatorSlug={wishlist.slug}
+            creatorSlug={subscribedKey ?? wishlist.slug}
+            state={subscriptionState}
             onUnsubscribe={handleUnsubscribe}
             t={t}
           />

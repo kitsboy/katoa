@@ -183,12 +183,29 @@ export interface Database {
         wishlist_id: string;
         amount_sats: number;
       }>;
+      /** Paid subscriptions. Browser sessions can only SELECT their own rows. */
+      subscriptions: TableDef<{
+        id: string;
+        subscriber_id: string;
+        creator_id: string;
+        tier_id: string;
+        price_sats: number;
+        status: 'pending' | 'active' | 'expired' | 'cancelled';
+        active_until: string | null;
+        invoice_id: string | null;
+        created_at: string;
+        updated_at: string;
+      }>;
     };
     Views: Record<string, never>;
     Functions: {
       get_wishlist_by_slug: {
         Args: { p_slug: string };
         Returns: Database['public']['Tables']['wishlists']['Row'][];
+      };
+      cancel_my_subscription: {
+        Args: { p_creator_username: string };
+        Returns: boolean;
       };
     };
     Enums: Record<string, never>;

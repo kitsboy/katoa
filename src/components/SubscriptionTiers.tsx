@@ -3,6 +3,7 @@ import { Check, Zap, Crown, Rocket, Star, type LucideIcon } from 'lucide-react';
 import { Card } from './Card';
 import { Button } from './Button';
 import { DemoBadge } from './DemoBadge';
+import { SUBSCRIPTION_TIER_SATS, usesLocalSubscriptionSeam } from '../lib/subscriptions';
 
 interface Tier {
   id: string;
@@ -34,7 +35,7 @@ export function SubscriptionTiers({
     {
       id: 'supporter',
       name: 'Supporter',
-      price_sats: 21000,
+      price_sats: SUBSCRIPTION_TIER_SATS.supporter,
       price_usd: 5,
       description: 'Support the journey',
       features: [
@@ -50,7 +51,7 @@ export function SubscriptionTiers({
     {
       id: 'patron',
       name: 'Patron',
-      price_sats: 42000,
+      price_sats: SUBSCRIPTION_TIER_SATS.patron,
       price_usd: 10,
       description: 'Be a true patron',
       features: [
@@ -68,7 +69,7 @@ export function SubscriptionTiers({
     {
       id: 'champion',
       name: 'Champion',
-      price_sats: 105000,
+      price_sats: SUBSCRIPTION_TIER_SATS.champion,
       price_usd: 25,
       description: 'Champion level support',
       features: [
@@ -87,6 +88,9 @@ export function SubscriptionTiers({
 
   const tiers = customTiers || defaultTiers;
   const unlocked = selectedTier ? tiers.find((t) => t.id === selectedTier) : null;
+  // Where no backend gate exists the unlock is the labelled device seam; where
+  // one does, this panel must not claim an unlock at all.
+  const demoSeam = usesLocalSubscriptionSeam();
 
   const handleSubscribe = (tierId: string) => {
     setSelectedTier(tierId);
@@ -106,12 +110,19 @@ export function SubscriptionTiers({
           Choose a Lightning tier. 0% platform fees — when invoices settle, 100% goes to the creator.
         </p>
         <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-bitcoin-orange-500/10 border border-bitcoin-orange-500/25 rounded-full">
-          <DemoBadge
-            label="Demo"
-            title="Local unlock on this device until Lightning webhooks exist"
-          />
+          {demoSeam ? (
+            <DemoBadge
+              label="Demo"
+              title="Local unlock on this device until Lightning webhooks exist"
+            />
+          ) : (
+            <DemoBadge
+              label="Invoice"
+              title="Content unlocks only after the Lightning webhook confirms payment"
+            />
+          )}
           <span className="text-bitcoin-orange-200 font-semibold text-xs">
-            Local seam · not a live invoice
+            {demoSeam ? 'Local seam · not a live invoice' : 'Activates on settlement · no local unlock'}
           </span>
         </div>
       </div>
@@ -179,7 +190,9 @@ export function SubscriptionTiers({
                   Subscribe with Lightning
                 </Button>
                 <p className="mt-3 text-center text-[11px] text-gray-500">
-                  DEMO · Unlocks on this device until Lightning webhooks exist
+                  {demoSeam
+                    ? 'DEMO · Unlocks on this device until Lightning webhooks exist'
+                    : 'Pay from your wallet — the feed unlocks after the webhook confirms'}
                 </p>
               </Card>
             </div>
@@ -195,20 +208,34 @@ export function SubscriptionTiers({
             </div>
 
             <div className="flex items-center justify-center gap-2 mb-2">
-              <h3 className="text-xl font-bold text-white">{unlocked.name} unlocked on this device</h3>
-              <DemoBadge label="Demo" title="Local seam — not a Lightning payment" />
+              <h3 className="text-xl font-bold text-white">{unlocked.name} selected</h3>
+              {demoSeam ? (
+                <DemoBadge label="Demo" title="Local seam — not a Lightning payment" />
+              ) : (
+                <DemoBadge label="Unpaid" title="No payment confirmed yet" />
+              )}
             </div>
             <p className="text-gray-400 text-sm mb-6">
-              Unlocks on this device until Lightning webhooks exist. This is not a live invoice or BOLT 12 offer.
+              {demoSeam
+                ? 'Unlocks on this device until Lightning webhooks exist. This is not a live invoice or BOLT 12 offer.'
+                : 'Nothing unlocks from this click. Pay the invoice from your wallet; the subscription row the webhook writes is what unlocks the feed.'}
             </p>
 
             <ul className="space-y-2 text-sm text-gray-400 text-left mb-5">
-              {[
-                'Content unlock is stored in this browser only',
-                'No Lightning payment was sent',
-                'When webhooks ship, the same button will request a real invoice',
-                '0% platform fees — all settled funds go to the creator',
-              ].map((line) => (
+              {(demoSeam
+                ? [
+                    'Content unlock is stored in this browser only',
+                    'No Lightning payment was sent',
+                    'When webhooks ship, the same button will request a real invoice',
+                    '0% platform fees — all settled funds go to the creator',
+                  ]
+                : [
+                    'A settled Lightning invoice is required',
+                    'The webhook writes an active subscription row, nothing else does',
+                    'Expired or cancelled tiers re-lock the feed',
+                    '0% platform fees — all settled funds go to the creator',
+                  ]
+              ).map((line) => (
                 <li key={line} className="flex items-center gap-2">
                   <Check size={16} className="text-emerald-400 shrink-0" />
                   <span>{line}</span>
@@ -228,7 +255,7 @@ export function SubscriptionTiers({
       )}
 
       <p className="text-center text-gray-500 text-xs">
-        Local demo seam · Lightning subscribe requires invoice → webhook → subscriptions row
+        Subscribe = Lightning invoice → webhook → a subscriptions row with status active
       </p>
     </section>
   );

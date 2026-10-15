@@ -39,7 +39,7 @@ Rebuild KATOA's creator surface around the OnlyFans *model* — subscription cre
 ### P2 — Subscription paywall (server spec: `docs/SUBSCRIPTION-FLOW-SPEC.md`)
 - [x] Client subscription seam (localStorage) + "Subscribed" unlock state + button state
 - [ ] Real subscribe flow: tier → Lightning invoice (BTCPay/LNbits/LND) → webhook → `subscriptions` row
-- [ ] Subscriber-only feed gated by DB state (replace the local seam)
+- [x] Subscriber-only feed gated by DB state — `useCreatorSubscriptions` reads `subscriptions` rows (migration `20261015120000_add_subscriptions.sql`); the local seam is disabled where Supabase is configured, tier list and subscribe CTA route to a real Lightning invoice, and `cancel_my_subscription()` is the only client-writable path (cancel only, never activate)
 - [x] "You're subscribed" manage-subscription UI — `ManageSubscriptionPanel` (tier, since, unsubscribe, local seam)
 - [x] PPV unlock demo flow — per-post unlock persisted locally + toast (real flow = Lightning invoice)
 

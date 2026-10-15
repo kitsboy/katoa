@@ -1,31 +1,39 @@
 import { Check, Crown } from 'lucide-react';
 import { Button } from './Button';
 import { DemoBadge } from './DemoBadge';
-import { getSubscription } from '../lib/subscriptions';
+import type { SubscriptionState } from '../lib/subscriptions';
 import { formatRelativeTime } from '../lib/i18nFormat';
 
 interface ManageSubscriptionPanelProps {
   creatorSlug: string;
+  /** The active subscription as the gate resolved it (DB row, or the demo seam). */
+  state: SubscriptionState | null;
   onUnsubscribe: () => void;
   t: (key: string) => string;
 }
 
 /**
- * "You're subscribed" manage panel — local device seam until Lightning webhooks exist.
+ * "You're subscribed" manage panel.
+ *
+ * The state comes from the caller's subscription gate, so a DB-confirmed row and
+ * the labelled demo seam are not confused: only `source === 'invoice'` says a
+ * Lightning payment settled.
  */
 export function ManageSubscriptionPanel({
   creatorSlug,
+  state,
   onUnsubscribe,
   t,
 }: ManageSubscriptionPanelProps) {
-  const sub = getSubscription(creatorSlug);
-  if (!sub) return null;
+  if (!state || state.creatorSlug !== creatorSlug) return null;
 
   const since =
-    sub.subscribedAt > 0
-      ? formatRelativeTime(new Date(sub.subscribedAt))
-      : '—';
-  const isLocal = sub.source !== 'invoice';
+    state.subscribedAt > 0 ? formatRelativeTime(new Date(state.subscribedAt)) : '—';
+  const isLocal = state.source !== 'invoice';
+  const expires =
+    state.activeUntil && state.activeUntil > 0
+      ? new Date(state.activeUntil).toLocaleDateString()
+      : null;
 
   return (
     <div className="mb-6 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 sm:p-5">
@@ -47,12 +55,15 @@ export function ManageSubscriptionPanel({
               )}
             </p>
             <p className="text-xs text-gray-400 mt-0.5">
-              {t('creator.tier')}: <span className="text-emerald-300 font-semibold capitalize">{sub.tierId}</span>
+              {t('creator.tier')}: <span className="text-emerald-300 font-semibold capitalize">{state.tierId}</span>
               {' · '}
               {t('creator.since')} {since}
               {' · '}
-              source {sub.source}
+              {isLocal ? 'source local (demo seam)' : 'source invoice (webhook confirmed)'}
             </p>
+            {expires && (
+              <p className="text-[11px] text-gray-400 mt-1">Renews or re-locks after {expires}</p>
+            )}
             {isLocal && (
               <p className="text-[11px] text-gray-500 mt-1">
                 Unlocks on this device until Lightning webhooks exist.

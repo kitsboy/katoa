@@ -37,7 +37,8 @@ import {
   type ProfileWishlist,
 } from '../lib/creatorProfile';
 import { usablePaymentAddress } from '../lib/validateAddress';
-import { isSubscribed, subscribeLocal, unsubscribe } from '../lib/subscriptions';
+import { cancelDbSubscription, subscribeLocal, subscriptionTierSats, unsubscribe } from '../lib/subscriptions';
+import { useCreatorSubscriptions } from '../lib/useCreatorSubscriptions';
 import { followLocal, isFollowing, unfollowLocal } from '../lib/follows';
 import { toJsonLdScript } from '../lib/jsonLd';
 import { copyToClipboard } from '../lib/clipboard';
@@ -68,10 +69,6 @@ function subscriptionKeys(profile: CreatorProfile): string[] {
   return [profile.username, ...profile.wishlists.map((w) => w.slug)];
 }
 
-function isProfileSubscribed(profile: CreatorProfile): boolean {
-  return subscriptionKeys(profile).some((key) => isSubscribed(key));
-}
-
 function displayNpub(pubkey: string | null | undefined): string | null {
   const v = pubkey?.trim();
   if (!v) return null;
@@ -91,7 +88,6 @@ export function CreatorProfilePage() {
   const { user, isDemoUser, profile: sessionProfile } = useAuth();
   const [profile, setProfile] = useState<CreatorProfile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [subscribed, setSubscribed] = useState(false);
   const [following, setFollowing] = useState(false);
   const [showTip, setShowTip] = useState(false);
   const [showDonateQr, setShowDonateQr] = useState(false);
@@ -133,13 +129,28 @@ export function CreatorProfilePage() {
     };
   }, [loadProfile]);
 
+  /**
+   * Subscriber-only posts and the manage panel read the authoritative gate: a
+   * `subscriptions` row while a backend is configured, the labelled device seam
+   * only where there is none.
+   */
+  const subscriptionKeyList = useMemo(
+    () => (profile ? subscriptionKeys(profile) : []),
+    [profile]
+  );
+  const {
+    subscribed,
+    mode: subscriptionMode,
+    activeKey: subscribedKey,
+    state: subscriptionState,
+    refresh: refreshSubscription,
+  } = useCreatorSubscriptions(subscriptionKeyList);
+
   useEffect(() => {
     if (!profile) {
-      setSubscribed(false);
       setFollowing(false);
       return;
     }
-    setSubscribed(isProfileSubscribed(profile));
     setFollowing(isFollowing(profile.username));
   }, [profile]);
 
@@ -215,20 +226,35 @@ export function CreatorProfilePage() {
 
   const handleSubscribe = (tierId = 'supporter') => {
     if (!profile) return;
-    for (const key of subscriptionKeys(profile)) {
-      subscribeLocal(key, tierId);
+    if (subscriptionMode === 'demo') {
+      for (const key of subscriptionKeys(profile)) {
+        subscribeLocal(key, tierId);
+      }
+      refreshSubscription();
+      toast('Unlocks on this device until Lightning webhooks exist', 'info');
+      return;
     }
-    setSubscribed(true);
-    toast('Unlocks on this device until Lightning webhooks exist', 'info');
+    // Real gate: pay the creator directly and let the webhook activate the row.
+    void handleTip(subscriptionTierSats(tierId));
+    toast('Subscriptions activate once the Lightning invoice settles — server-side.', 'info');
   };
 
-  const handleUnsubscribe = () => {
+  const handleUnsubscribe = async () => {
     if (!profile) return;
-    for (const key of subscriptionKeys(profile)) {
-      unsubscribe(key);
+    if (subscriptionMode === 'demo') {
+      for (const key of subscriptionKeys(profile)) {
+        unsubscribe(key);
+      }
+      refreshSubscription();
+      toast(t('creator.unsubscribed'), 'info');
+      return;
     }
-    setSubscribed(false);
-    toast(t('creator.unsubscribed'), 'info');
+    const cancelled = await cancelDbSubscription(subscribedKey ?? profile.username);
+    refreshSubscription();
+    toast(
+      cancelled ? t('creator.unsubscribed') : 'Could not cancel the subscription — try again.',
+      cancelled ? 'info' : 'error'
+    );
   };
 
   const handleFollow = async () => {
@@ -617,7 +643,8 @@ export function CreatorProfilePage() {
 
         {subscribed && (
           <ManageSubscriptionPanel
-            creatorSlug={subscriptionKeys(profile).find((key) => isSubscribed(key)) ?? profile.username}
+            creatorSlug={subscribedKey ?? profile.username}
+            state={subscriptionState}
             onUnsubscribe={handleUnsubscribe}
             t={t}
           />
