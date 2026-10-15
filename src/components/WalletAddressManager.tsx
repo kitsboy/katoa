@@ -17,41 +17,13 @@ import {
   validateWalletAddress,
 } from '../lib/validateAddress';
 import { bitcoinQrData, getQrImageUrl, lightningQrData } from '../lib/qr';
-import { getStorage, setStorage, STORAGE_KEYS } from '../lib/storage';
+import {
+  loadLocalWalletAddresses,
+  newLocalWalletAddress,
+  persistLocalWalletAddresses,
+} from '../lib/receiveChannels';
 
 type WalletAddress = DbWalletAddress;
-
-function loadLocalWallets(userId: string): WalletAddress[] {
-  const all = getStorage<WalletAddress[]>(STORAGE_KEYS.walletAddresses, []);
-  return all.filter((w) => w.user_id === userId);
-}
-
-function persistLocalWallets(userId: string, nextForUser: WalletAddress[]): void {
-  const all = getStorage<WalletAddress[]>(STORAGE_KEYS.walletAddresses, []);
-  const others = all.filter((w) => w.user_id !== userId);
-  setStorage(STORAGE_KEYS.walletAddresses, [...others, ...nextForUser]);
-}
-
-function newLocalWallet(
-  userId: string,
-  address_type: WalletAddressType,
-  address_value: string,
-  label: string
-): WalletAddress {
-  const id =
-    typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
-      ? crypto.randomUUID()
-      : `local-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
-  return {
-    id,
-    user_id: userId,
-    address_type,
-    address_value,
-    label,
-    is_active: true,
-    created_at: new Date().toISOString(),
-  };
-}
 
 type PrimaryReceiveQr = {
   kind: 'lightning' | 'onchain';
@@ -111,7 +83,7 @@ export function WalletAddressManager() {
   const persistLocal = useCallback(
     (next: WalletAddress[]) => {
       if (!user?.id) return;
-      persistLocalWallets(user.id, next);
+      persistLocalWalletAddresses(user.id, next);
       setAddresses(next);
     },
     [user?.id]
@@ -122,7 +94,7 @@ export function WalletAddressManager() {
     const preferLocal = isDemoUser || !isSupabaseConfigured();
     if (preferLocal) {
       setUseLocal(true);
-      setAddresses(loadLocalWallets(user.id));
+      setAddresses(loadLocalWalletAddresses(user.id));
       setLoading(false);
       return;
     }
@@ -140,7 +112,7 @@ export function WalletAddressManager() {
     } catch (error) {
       console.error('Error loading addresses:', error);
       setUseLocal(true);
-      setAddresses(loadLocalWallets(user.id));
+      setAddresses(loadLocalWalletAddresses(user.id));
     } finally {
       setLoading(false);
     }
@@ -205,7 +177,7 @@ export function WalletAddressManager() {
         const { error } = await supabase.from('wallet_addresses').insert(payload);
         if (error) throw error;
       } else {
-        persistLocal([newLocalWallet(user.id, payload.address_type, payload.address_value, payload.label), ...addresses]);
+        persistLocal([newLocalWalletAddress(user.id, payload.address_type, payload.address_value, payload.label), ...addresses]);
       }
 
       if (!useLocal) await loadAddresses();
@@ -231,7 +203,7 @@ export function WalletAddressManager() {
           )
         );
       } else {
-        persistLocal([newLocalWallet(user.id, payload.address_type, payload.address_value, payload.label), ...addresses]);
+        persistLocal([newLocalWalletAddress(user.id, payload.address_type, payload.address_value, payload.label), ...addresses]);
       }
       setUseLocal(true);
       setFormData({ address_type: 'lightning', address_value: '', label: '' });
@@ -363,7 +335,7 @@ export function WalletAddressManager() {
       case 'nostr':
         return 'Nostr Public Key';
       case 'silent':
-        return 'Silent Payment Descriptor';
+        return 'Silent Payments (BIP352)';
       default:
         return type;
     }
@@ -382,7 +354,7 @@ export function WalletAddressManager() {
       case 'pynym':
         return 'PM8T...';
       case 'silent':
-        return 'silent:...';
+        return 'silent:sp1...';
       default:
         return 'Address';
     }

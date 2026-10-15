@@ -50,8 +50,28 @@ import {
   PLATFORM_NPUB,
 } from '../lib/nostr';
 import { getCreatorTipPresets, setCreatorTipPresets } from '../lib/dmPrefs';
+import {
+  emptyReceiveChannels,
+  loadEstablishedReceiveChannels,
+  type ReceiveChannelStatus,
+} from '../lib/receiveChannels';
 
 type Tab = 'profile' | 'wallet' | 'projects' | 'shipping' | 'advanced';
+
+/** Honest state chip for one payment channel in the receive register. */
+function ReceiveChannelChip({ ready }: { ready: boolean }) {
+  return (
+    <span
+      className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${
+        ready
+          ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+          : 'bg-white/5 text-gray-400 border-white/10'
+      }`}
+    >
+      {ready ? 'Added' : 'Not added yet'}
+    </span>
+  );
+}
 
 const TIP_PRESET_OPTIONS = [21_000, 50_000, 100_000] as const;
 const MAX_AVATAR_BYTES = 5 * 1024 * 1024;
@@ -173,23 +193,49 @@ export function SettingsPage() {
     preferred_currency: 'USD',
   });
 
+  const [savedChannels, setSavedChannels] = useState<ReceiveChannelStatus>(emptyReceiveChannels);
+
+  // Reload whenever the profile tab is opened so wallet edits made in the
+  // Payment Methods tab are reflected here without a page reload.
+  useEffect(() => {
+    if (!user?.id) {
+      setSavedChannels(emptyReceiveChannels());
+      return;
+    }
+    let cancelled = false;
+    loadEstablishedReceiveChannels(user.id, {
+      preferLocal: isDemoUser || !isSupabaseConfigured(),
+      profileLightning: profile?.lightning_address,
+    }).then((next) => {
+      if (!cancelled) setSavedChannels(next);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [user?.id, isDemoUser, profile?.lightning_address, activeTab]);
+
   const receiveIdentity = useMemo(
     () => ({
-      lightning: profileForm.lightning_address.trim()
-        ? validateLightningAddress(profileForm.lightning_address) ?? true
-        : false,
+      lightning:
+        savedChannels.lightning ||
+        (profileForm.lightning_address.trim()
+          ? validateLightningAddress(profileForm.lightning_address) === null
+          : false),
       nostr: profileForm.nostr_pubkey.trim()
-        ? validateNpub(profileForm.nostr_pubkey) ?? true
+        ? validateNpub(profileForm.nostr_pubkey) === null
         : false,
-      onchain: false,
-      silent: false,
+      onchain: savedChannels.onchain,
+      silent: savedChannels.silent,
     }),
-    [profileForm.lightning_address, profileForm.nostr_pubkey]
+    [profileForm.lightning_address, profileForm.nostr_pubkey, savedChannels]
   );
 
-  const hasReceiveIdentity =
-    receiveIdentity.lightning ||
-    receiveIdentity.nostr;
+  // Payment channels are wallet-backed; Nostr is an identity channel, not a payout channel.
+  const readyChannelCount =
+    (receiveIdentity.lightning ? 1 : 0) +
+    (receiveIdentity.onchain ? 1 : 0) +
+    (receiveIdentity.silent ? 1 : 0);
+
 
 
   useEffect(() => {
@@ -518,7 +564,7 @@ export function SettingsPage() {
 
   const tabs = [
     { id: 'profile' as Tab, label: 'Profile', icon: User, color: 'from-orange-500 to-amber-600' },
-    { id: 'wallet' as Tab, label: 'Wallet', icon: Wallet, color: 'from-emerald-500 to-cyan-600' },
+    { id: 'wallet' as Tab, label: 'Payment Methods', icon: Wallet, color: 'from-emerald-500 to-cyan-600' },
     { id: 'projects' as Tab, label: 'Projects', icon: LayoutDashboard, color: 'from-cyan-500 to-blue-600' },
     { id: 'shipping' as Tab, label: 'Shipping', icon: MapPin, color: 'from-purple-500 to-pink-600' },
     { id: 'advanced' as Tab, label: 'Advanced', icon: SettingsIcon, color: 'from-gray-500 to-gray-700' },
@@ -858,56 +904,70 @@ export function SettingsPage() {
                       </div>
 
                       <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4 space-y-3">
+                        <div className="flex items-center justify-between gap-3 pb-2 border-b border-white/10">
+                          <p className="text-xs font-bold uppercase tracking-wider text-gray-400">Payment channels</p>
+                          <p className={`text-xs font-semibold ${readyChannelCount > 0 ? 'text-emerald-400' : 'text-amber-300'}`}>
+                            {readyChannelCount} of 3 ready
+                          </p>
+                        </div>
+
                         <div className="flex items-start gap-3">
                           <div className={`mt-1 shrink-0 p-1.5 rounded-lg ${receiveIdentity.lightning ? 'bg-emerald-500/20 text-emerald-400' : 'bg-white/5 text-gray-500'}`}>
                             <Zap size={16} />
                           </div>
                           <div className="min-w-0 flex-1">
-                            <p className="text-sm font-semibold text-white">Lightning address</p>
+                            <div className="flex flex-wrap items-center gap-2">
+                              <p className="text-sm font-semibold text-white">Lightning</p>
+                              <ReceiveChannelChip ready={receiveIdentity.lightning} />
+                            </div>
                             <p className="text-xs text-gray-400">Lud16, Lightning address, or lnbc invoice. Non-custodial — you hold the wallet.</p>
-                            {receiveIdentity.lightning && (
-                              <p className="mt-1 text-xs font-medium text-emerald-400">Added</p>
-                            )}
                           </div>
                         </div>
 
                         <div className="flex items-start gap-3">
-                      <div className={`mt-1 shrink-0 p-1.5 rounded-lg ${receiveIdentity.nostr ? 'bg-cyan-500/20 text-cyan-400' : 'bg-white/5 text-gray-500'}`}>
-                        <Wallet size={16} className="text-cyan-300" />
-                      </div>
-                          <div className="min-w-0 flex-1">
-                            <p className="text-sm font-semibold text-white">Nostr</p>
-                            <p className="text-xs text-gray-400">Npub lets people find and zap you outside Katoa too.</p>
-                            {receiveIdentity.nostr && (
-                              <p className="mt-1 text-xs font-medium text-cyan-400">Added</p>
-                            )}
-                          </div>
-                        </div>
-
-                        <div className="flex items-start gap-3">
-                          <div className="mt-1 shrink-0 p-1.5 rounded-lg bg-white/5 text-gray-500">
+                          <div className={`mt-1 shrink-0 p-1.5 rounded-lg ${receiveIdentity.onchain ? 'bg-emerald-500/20 text-emerald-400' : 'bg-white/5 text-gray-500'}`}>
                             <Wallet size={16} className="text-orange-400" />
                           </div>
                           <div className="min-w-0 flex-1">
-                            <p className="text-sm font-semibold text-white">On-chain Bitcoin</p>
-                            <p className="text-xs text-gray-400">Layer-one address. Tap Wallet to add it now.</p>
+                            <div className="flex flex-wrap items-center gap-2">
+                              <p className="text-sm font-semibold text-white">On-chain Bitcoin</p>
+                              <ReceiveChannelChip ready={receiveIdentity.onchain} />
+                            </div>
+                            <p className="text-xs text-gray-400">Layer-one address for larger one-off support. Added in Payment Methods.</p>
                           </div>
                         </div>
 
                         <div className="flex items-start gap-3">
-                          <div className="mt-1 shrink-0 p-1.5 rounded-lg bg-white/5 text-gray-500">
+                          <div className={`mt-1 shrink-0 p-1.5 rounded-lg ${receiveIdentity.silent ? 'bg-emerald-500/20 text-emerald-400' : 'bg-white/5 text-gray-500'}`}>
                             <Shield size={16} className="text-violet-300" />
                           </div>
                           <div className="min-w-0 flex-1">
-                            <p className="text-sm font-semibold text-white">Silent payment descriptor</p>
-                            <p className="text-xs text-gray-400">Privacy-preserving Bitcoin receive later, added in Wallet.</p>
+                            <div className="flex flex-wrap items-center gap-2">
+                              <p className="text-sm font-semibold text-white">Silent payments</p>
+                              <ReceiveChannelChip ready={receiveIdentity.silent} />
+                            </div>
+                            <p className="text-xs text-gray-400">BIP352 private on-chain receive. Add a silent: or sp: descriptor in Payment Methods.</p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-3">
+                          <div className={`mt-1 shrink-0 p-1.5 rounded-lg ${receiveIdentity.nostr ? 'bg-cyan-500/20 text-cyan-400' : 'bg-white/5 text-gray-500'}`}>
+                            <Wallet size={16} className="text-cyan-300" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <p className="text-sm font-semibold text-white">Nostr</p>
+                              <ReceiveChannelChip ready={receiveIdentity.nostr} />
+                            </div>
+                            <p className="text-xs text-gray-400">Identity, not a payout channel. Npub lets people find and zap you outside Katoa too.</p>
                           </div>
                         </div>
                         </div>
 
-                        {!hasReceiveIdentity && (
+                        {readyChannelCount === 0 && (
                           <div className="mt-3 rounded-lg bg-amber-500/10 border border-amber-500/30 p-3">
-                            <p className="text-sm font-semibold text-amber-200">Add at least one receive address before sharing your profile</p>
+                            <p className="text-sm font-semibold text-amber-200">Add at least one payment channel before sharing your profile</p>
+                            <p className="text-xs text-amber-100/80 mt-1">Supporters can only pay a channel that exists — Lightning, on-chain, or silent payments.</p>
                           </div>
                         )}
                       </div>
@@ -920,13 +980,13 @@ export function SettingsPage() {
                           onClick={() => setActiveTab('wallet')}
                         >
                           <Wallet size={18} className="mr-2" />
-                          Open Wallet to add on-chain or silent
+                          Add a payment channel
                         </Button>
                       </div>
 
                       <div className="rounded-xl border border-white/10 bg-white/[0.02] p-4 text-sm text-gray-300 space-y-2">
                         <p><span className="font-semibold text-white">Non-custodial.</span> Katoa does not hold your sats. You provide the destination.</p>
-                        <p>Add a Lightning address or Nostr key here to get started. On-chain and silent-payment addresses live in Wallet.</p>
+                        <p>Add a Lightning address here, or open Payment Methods for on-chain and silent-payment channels. Nostr is identity only.</p>
                       </div>
 
                       <div className="flex flex-col sm:flex-row flex-wrap gap-2 -mt-1">

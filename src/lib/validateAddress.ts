@@ -120,8 +120,18 @@ export function validateWalletAddress(
 }
 
 /**
+ * BIP352 silent payment addresses are long bech32m strings: `sp1` followed by
+ * the data part. A short or non-bech32 value is a placeholder, not a channel.
+ * The checksum is deliberately NOT verified here — this is a shape gate only, and
+ * nothing in the UI may claim a descriptor is verified from this result alone.
+ */
+const SILENT_PAYMENT_ADDRESS = /^sp1[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{80,}$/;
+
+const SILENT_PAYMENT_PREFIXES = ['silent:', 'sp:'] as const;
+
+/**
  * Silent Payment descriptor validation.
- * We accept descriptor templates that look like real BIP352 spend descriptors.
+ * Accepts `silent:sp1…`, `sp:sp1…`, and the `sp(sp1…)` descriptor wrapper.
  * We never execute or derive keys — this is a format gate only.
  */
 export function validateSilentPaymentDescriptor(value: string): string | null {
@@ -130,10 +140,17 @@ export function validateSilentPaymentDescriptor(value: string): string | null {
   if (isDummyPaymentTarget(trimmed)) return 'That looks like a placeholder, not a real descriptor';
 
   const lower = trimmed.toLowerCase();
-  if (!lower.startsWith('silent:') && !lower.startsWith('sp:')) {
+  const prefix = SILENT_PAYMENT_PREFIXES.find((p) => lower.startsWith(p));
+  if (!prefix) {
     return 'Silent payment descriptors must start with silent: or sp:';
   }
 
-  if (trimmed.length < 20) return 'Silent payment descriptor looks too short';
+  const body = lower.slice(prefix.length).trim();
+  const wrapped = body.match(/^sp\(([^)]+)\)$/);
+  const address = (wrapped ? wrapped[1] : body).trim();
+
+  if (!SILENT_PAYMENT_ADDRESS.test(address)) {
+    return 'That does not look like a BIP352 silent payment address (expected sp1…)';
+  }
   return null;
 }
