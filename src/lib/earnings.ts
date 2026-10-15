@@ -200,6 +200,52 @@ export async function fetchLiveEarnings(userId?: string | null): Promise<Earning
   }
 }
 
+/** Transaction row with the fields the per-channel breakdown needs. */
+export type LiveChannelRow = {
+  id: string;
+  amount_sats: number | null;
+  status: string | null;
+  payment_method: string | null;
+  payment_hash: string | null;
+  created_at: string | null;
+  wishlist_id: string | null;
+};
+
+/**
+ * Every gift row for a creator's wishlists, whatever its status, so the channel
+ * view can separate settled from pending instead of only reading confirmed rows.
+ * Returns null when Supabase is absent/unconfigured (the caller must then show a
+ * labelled sample or an honest empty state, never zeros dressed as live data).
+ */
+export async function fetchLiveChannelRows(
+  userId?: string | null,
+): Promise<LiveChannelRow[] | null> {
+  if (!userId || !isSupabaseConfigured()) return null;
+
+  try {
+    const { data: wishlists, error: wishlistError } = await supabase
+      .from('wishlists')
+      .select('id')
+      .eq('creator_id', userId);
+    if (wishlistError) return null;
+
+    const ids = ((wishlists ?? []) as Array<{ id: string }>).map((row) => row.id);
+    if (!ids.length) return [];
+
+    const { data: rows, error } = await supabase
+      .from('transactions')
+      .select('id, amount_sats, status, payment_method, payment_hash, created_at, wishlist_id')
+      .in('wishlist_id', ids)
+      .order('created_at', { ascending: false })
+      .limit(500);
+    if (error) return null;
+
+    return (rows ?? []) as LiveChannelRow[];
+  } catch {
+    return null;
+  }
+}
+
 function isConfirmedStatus(status?: string | null): boolean {
   if (!status) return false;
   return (LIVE_EARNINGS_STATUSES as readonly string[]).includes(status.toLowerCase());

@@ -38,6 +38,15 @@ test.describe('creator dashboard', () => {
     await page.getByRole('tab', { name: /Total Raised/i }).click();
     await expect(page.getByText(/live totals update after confirmed Lightning/i)).toBeVisible();
 
+    // Per-channel split: sample totals settle Lightning/on-chain/zaps, and the
+    // silent-payment row is listed but never counted as settled.
+    await expect(page.getByRole('heading', { name: /earnings by channel/i })).toBeVisible();
+    await expect(page.getByText(/excluded from settled totals/i)).toBeVisible();
+    await expect(page.getByText('3,250,000').first()).toBeVisible();
+    await expect(page.getByText('150,000').first()).toBeVisible();
+    await expect(page.getByText(/no invoice, hash or receipt/i)).toBeVisible();
+    await expect(page.getByText(/only rows a trusted server confirmed/i)).toBeVisible();
+
     await page.screenshot({ path: 'test-results/dashboard-desktop.png', fullPage: true });
   });
 

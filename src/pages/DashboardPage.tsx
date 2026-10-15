@@ -41,6 +41,7 @@ import { OnboardingChecklist } from '../components/OnboardingChecklist';
 import { GlassCallout } from '../components/GlassCallout';
 import { CardSkeleton } from '../components/Skeleton';
 import { EarningsPanel } from '../components/EarningsPanel';
+import { EarningsChannelBreakdown } from '../components/EarningsChannelBreakdown';
 import { CoverImageUpload } from '../components/CoverImageUpload';
 import { PreviewReadinessPanel } from '../components/PreviewReadinessPanel';
 import { PaymentAuditPanel } from '../components/PaymentAuditPanel';
@@ -909,6 +910,7 @@ export function DashboardPage() {
                 <div id="dashboard-earnings">
                   <SectionHeader size="md" align="left" title={t('dashboard.raised')} />
                   <EarningsPanel isDemo={isDemoUser} userId={user?.id} />
+                  <EarningsChannelBreakdown isDemo={isDemoUser} userId={user?.id} className="mt-5" />
                   <PaymentAuditPanel
                     items={[]}
                     health={createPaymentHealth({
