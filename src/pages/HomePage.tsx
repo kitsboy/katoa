@@ -4,8 +4,7 @@ import { LandingHero } from '../components/LandingHero';
 import { TrustProofStrip } from '../components/TrustProofStrip';
 import { PageMeta } from '../components/PageMeta';
 import { useLanguage } from '../contexts/LanguageContext';
-import { supabase, isSupabaseConfigured } from '../lib/supabase';
-import { fetchProductMetrics, homeStatsFromMetrics, type HomeStats } from '../lib/productMetrics';
+import { loadHomeStats, type HomeStats } from '../lib/productMetrics';
 import { ArrowRight } from 'lucide-react';
 import { CreatorDiscoveryGrid } from '../components/CreatorDiscoveryGrid';
 import { DemoExperience } from '../components/DemoExperience';
@@ -35,24 +34,10 @@ export function HomePage() {
   }, []);
 
   async function loadStats() {
-    const metrics = await fetchProductMetrics();
-    if (metrics) setStats(homeStatsFromMetrics(metrics));
-
-    if (!isSupabaseConfigured()) return;
-
-    try {
-      const { count } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
-      if (typeof count === 'number' && count > 0) {
-        setStats((prev) => ({
-          ...prev,
-          creators: count >= 1000 ? `${(count / 1000).toFixed(1)}K` : String(count),
-          source: 'supabase',
-          isDemoSample: false,
-        }));
-      }
-    } catch {
-      // Keep the honest sample or unavailable state.
-    }
+    // Live Supabase counters when they are configured, otherwise the labeled sample file.
+    // Never a blend: the sample volume must not survive into a live view with the demo
+    // banner cleared. See loadHomeStats().
+    setStats(await loadHomeStats());
   }
 
   return (
