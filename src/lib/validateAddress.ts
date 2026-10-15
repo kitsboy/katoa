@@ -130,6 +130,26 @@ const SILENT_PAYMENT_ADDRESS = /^sp1[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{80,}$/;
 const SILENT_PAYMENT_PREFIXES = ['silent:', 'sp:'] as const;
 
 /**
+ * Bare BIP352 address (`sp1…`) from a stored `silent:`/`sp:` descriptor.
+ * Wallets exchange the bare address, so QR payloads must strip our prefix.
+ * Null when the value is empty, a placeholder, or not shaped like an address.
+ */
+export function silentPaymentAddressFrom(value: string | null | undefined): string | null {
+  const trimmed = (value ?? '').trim();
+  if (!trimmed || isDummyPaymentTarget(trimmed)) return null;
+
+  const lower = trimmed.toLowerCase();
+  const prefix = SILENT_PAYMENT_PREFIXES.find((p) => lower.startsWith(p));
+  if (!prefix) return null;
+
+  const body = lower.slice(prefix.length).trim();
+  const wrapped = body.match(/^sp\(([^)]+)\)$/);
+  const address = (wrapped ? wrapped[1] : body).trim();
+
+  return SILENT_PAYMENT_ADDRESS.test(address) ? address : null;
+}
+
+/**
  * Silent Payment descriptor validation.
  * Accepts `silent:sp1…`, `sp:sp1…`, and the `sp(sp1…)` descriptor wrapper.
  * We never execute or derive keys — this is a format gate only.
@@ -140,16 +160,11 @@ export function validateSilentPaymentDescriptor(value: string): string | null {
   if (isDummyPaymentTarget(trimmed)) return 'That looks like a placeholder, not a real descriptor';
 
   const lower = trimmed.toLowerCase();
-  const prefix = SILENT_PAYMENT_PREFIXES.find((p) => lower.startsWith(p));
-  if (!prefix) {
+  if (!SILENT_PAYMENT_PREFIXES.some((p) => lower.startsWith(p))) {
     return 'Silent payment descriptors must start with silent: or sp:';
   }
 
-  const body = lower.slice(prefix.length).trim();
-  const wrapped = body.match(/^sp\(([^)]+)\)$/);
-  const address = (wrapped ? wrapped[1] : body).trim();
-
-  if (!SILENT_PAYMENT_ADDRESS.test(address)) {
+  if (!silentPaymentAddressFrom(trimmed)) {
     return 'That does not look like a BIP352 silent payment address (expected sp1…)';
   }
   return null;

@@ -16,7 +16,7 @@ import {
   validateLightningAddress,
   validateWalletAddress,
 } from '../lib/validateAddress';
-import { bitcoinQrData, getQrImageUrl, lightningQrData } from '../lib/qr';
+import { bitcoinQrData, getQrImageUrl, lightningQrData, silentPaymentQrData } from '../lib/qr';
 import {
   loadLocalWalletAddresses,
   newLocalWalletAddress,
@@ -26,9 +26,15 @@ import {
 type WalletAddress = DbWalletAddress;
 
 type PrimaryReceiveQr = {
-  kind: 'lightning' | 'onchain';
+  kind: 'lightning' | 'onchain' | 'silent';
   value: string;
   uri: string;
+};
+
+const RECEIVE_QR_ALT: Record<PrimaryReceiveQr['kind'], string> = {
+  lightning: 'Lightning receive QR',
+  onchain: 'BIP-21 Bitcoin receive QR',
+  silent: 'Silent payments receive QR (BIP352 sp1 address)',
 };
 
 function primaryReceiveQr(
@@ -45,6 +51,11 @@ function primaryReceiveQr(
   if (on) {
     const value = decodePaymentUri(on.address_value);
     return { kind: 'onchain', value, uri: bitcoinQrData(value) };
+  }
+  const silent = active.find((a) => a.address_type === 'silent');
+  const silentUri = silent ? silentPaymentQrData(silent.address_value) : '';
+  if (silent && silentUri) {
+    return { kind: 'silent', value: silentUri, uri: silentUri };
   }
   const profileLn = profileLightning?.trim();
   if (profileLn) {
@@ -421,7 +432,7 @@ export function WalletAddressManager() {
           <p className="mt-1 text-xs leading-relaxed text-gray-300">
             {readyToReceive
               ? 'Your primary address is valid and can be shown on your public profile. Katoa never holds your funds.'
-              : 'Add and activate a valid Lightning or Bitcoin address before sharing your profile.'}
+              : 'Add and activate a valid Lightning, on-chain, or silent-payment address before sharing your profile.'}
           </p>
         </div>
 
@@ -430,7 +441,7 @@ export function WalletAddressManager() {
             <div className="bg-white p-3 rounded-lg shrink-0">
               <img
                 src={getQrImageUrl(receiveQr.uri, 180)}
-                alt={receiveQr.kind === 'onchain' ? 'BIP-21 Bitcoin receive QR' : 'Lightning receive QR'}
+                alt={RECEIVE_QR_ALT[receiveQr.kind]}
                 className="w-36 h-36"
                 width={144}
                 height={144}
@@ -438,11 +449,18 @@ export function WalletAddressManager() {
             </div>
             <div className="min-w-0 text-center sm:text-left">
               <p className="text-sm font-bold text-white">
-                {receiveQr.kind === 'onchain' ? 'BIP-21 receive QR' : 'Lightning receive QR'}
+                {receiveQr.kind === 'onchain'
+                  ? 'BIP-21 receive QR'
+                  : receiveQr.kind === 'silent'
+                    ? 'Silent payments receive QR'
+                    : 'Lightning receive QR'}
               </p>
               <p className="text-xs text-gray-300 mt-1 leading-relaxed">
-                Primary {receiveQr.kind === 'onchain' ? 'on-chain' : 'Lightning'} address.
-                Katoa never settles Lightning for you — scan pays this address in your wallet.
+                {receiveQr.kind === 'onchain'
+                  ? 'Primary on-chain address. Katoa never settles Bitcoin for you — scan pays this address in your wallet.'
+                  : receiveQr.kind === 'silent'
+                    ? 'Primary silent-payment address (BIP352). The sender\u2019s wallet must support silent payments, and Katoa cannot confirm this payment type — share it anywhere you publish.'
+                    : 'Primary Lightning address. Katoa never settles Lightning for you — scan pays this address in your wallet.'}
               </p>
               <code className="mt-2 block text-[11px] text-gray-200 break-all">{receiveQr.uri}</code>
             </div>

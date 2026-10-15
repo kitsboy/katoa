@@ -5,14 +5,17 @@ export function SupporterTrustSummary({
   username,
   lightning,
   onchain,
+  silent = null,
   isDemo,
 }: {
   username: string;
   lightning: string | null;
   onchain: string | null;
+  /** Public BIP352 silent-payment address, shown as an extra destination when published. */
+  silent?: string | null;
   isDemo: boolean;
 }) {
-  const destination = lightning || onchain;
+  const destination = lightning || onchain || silent;
 
   return (
     <section
@@ -39,6 +42,11 @@ export function SupporterTrustSummary({
           <p className="mt-2 truncate font-mono text-[11px] text-gray-400">{destination || 'No public wallet published'}</p>
           {lightning && <p className="mt-1 inline-flex items-center gap-1 text-[10px] text-bitcoin-orange-300"><Zap size={11} /> Lightning</p>}
           {!lightning && onchain && <p className="mt-1 text-[10px] text-gray-500">Bitcoin on-chain</p>}
+          {silent && (
+            <p className="mt-1 text-[10px] text-gray-500">
+              Silent payments (BIP352) — needs a wallet that supports it, and Katoa cannot confirm this payment type.
+            </p>
+          )}
         </div>
         <div className="rounded-xl border border-white/10 bg-black/20 p-3">
           <div className="flex items-center gap-2 text-xs font-bold text-gray-200">

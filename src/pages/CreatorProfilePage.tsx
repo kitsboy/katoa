@@ -21,6 +21,7 @@ import { ZapTotals } from '../components/ZapTotals';
 import { DemoBadge } from '../components/DemoBadge';
 import { DemoPreviewBadge } from '../components/DemoPreviewBadge';
 import { TrustFirstCreatorCard } from '../components/TrustFirstCreatorCard';
+import { fetchCreatorSilentAddress } from '../lib/creatorProfile';
 import { CreatorStoryChapters, type StoryChapter } from '../components/CreatorStoryChapters';
 import { CreatorPresentation } from '../components/CreatorPresentation';
 import { CreatorImpactDashboard, type ImpactGoal, type ImpactUpdate } from '../components/CreatorImpactDashboard';
@@ -142,6 +143,22 @@ export function CreatorProfilePage() {
     setFollowing(isFollowing(profile.username));
   }, [profile]);
 
+  // Silent payments only ever come from the creator's wallet table, never from the profile row.
+  useEffect(() => {
+    const creatorId = profile?.id;
+    if (!creatorId) {
+      setSilentAddress(null);
+      return;
+    }
+    let cancelled = false;
+    void fetchCreatorSilentAddress(creatorId).then((address) => {
+      if (!cancelled) setSilentAddress(address);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [profile?.id]);
+
   const posts: CreatorPost[] = useMemo(() => {
     if (!profile) return [];
     return profile.wishlists.flatMap((w) => mockCreatorPosts[w.slug] || []);
@@ -172,6 +189,7 @@ export function CreatorProfilePage() {
   const npub = displayNpub(profile?.nostr_pubkey);
   const lightning = usablePaymentAddress(profile?.lightning_address);
   const onchain = usablePaymentAddress(profile?.bitcoin_address);
+  const [silentAddress, setSilentAddress] = useState<string | null>(null);
   const isOwner = Boolean(
     profile &&
       ((profile.id && user?.id && profile.id === user.id) ||
@@ -593,7 +611,7 @@ export function CreatorProfilePage() {
 
         {storyTab === 'goals' && <section className="mb-12"><div className="mb-5 flex items-center justify-between gap-3"><div><p className="text-[10px] font-black uppercase tracking-[0.18em] text-bitcoin-orange-400">Goals</p><h2 className="mt-1 text-2xl font-black text-white">What support changes</h2></div><button type="button" onClick={() => setPresentationIndex(1)} className="min-h-[44px] rounded-xl border border-white/10 px-3 text-xs font-bold text-gray-300 hover:text-white">Present story</button></div><div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-sm leading-relaxed text-gray-300">{profile.wishlists[0]?.description || 'This creator has not added a goal description yet.'}</div></section>}
 
-        {storyTab === 'proof' && <section className="mb-12"><TrustFirstCreatorCard username={profile.username} lightning={lightning} onchain={onchain} onCopy={handleCopy} onSupport={() => setShowTip(true)} /></section>}
+        {storyTab === 'proof' && <section className="mb-12"><TrustFirstCreatorCard username={profile.username} lightning={lightning} onchain={onchain} silent={silentAddress} onCopy={handleCopy} onSupport={() => setShowTip(true)} /></section>}
 
         {presentationIndex !== null && <CreatorPresentation chapters={storyChapters} index={presentationIndex} onIndexChange={setPresentationIndex} onClose={() => setPresentationIndex(null)} demo={Boolean(profile.fromMock)} />}
 
@@ -702,6 +720,7 @@ export function CreatorProfilePage() {
           username={profile.username}
           lightning={lightning}
           onchain={onchain}
+          silent={silentAddress}
           onCopy={handleCopy}
           onSupport={() => setShowTip(true)}
         />}

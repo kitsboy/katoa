@@ -8,16 +8,19 @@ export function TrustFirstCreatorCard({
   username,
   lightning,
   onchain,
+  silent = null,
   onCopy,
   onSupport,
 }: {
   username: string;
   lightning: string | null;
   onchain: string | null;
+  /** Public BIP352 silent-payment address (bare `sp1…`), when the creator published one. */
+  silent?: string | null;
   onCopy: (value: string, label: string) => void;
   onSupport: () => void;
 }) {
-  const hasDestination = Boolean(lightning || onchain);
+  const hasDestination = Boolean(lightning || onchain || silent);
 
   return (
     <Card
@@ -45,7 +48,7 @@ export function TrustFirstCreatorCard({
             className="min-h-[48px] shrink-0"
             onClick={onSupport}
             disabled={!hasDestination}
-            title={hasDestination ? `Support @${username}` : 'This creator has not connected a public wallet yet'}
+            title={hasDestination ? `Support @${username}` : 'This creator has not published a payment channel yet'}
           >
             <Zap size={17} className="mr-2" />
             {hasDestination ? `Support @${username}` : 'Not ready to receive'}
@@ -58,17 +61,21 @@ export function TrustFirstCreatorCard({
               <Wallet size={16} className="text-bitcoin-orange-300" aria-hidden />
               Creator wallet destination
             </div>
-            {lightning || onchain ? (
+            {hasDestination ? (
               <div className="mt-3 space-y-2">
                 {lightning ? <WalletLine icon={<Zap size={13} />} label="Lightning" value={lightning} onCopy={onCopy} /> : null}
                 {onchain ? <WalletLine icon={<Bitcoin size={13} />} label="Bitcoin" value={onchain} onCopy={onCopy} /> : null}
+                {silent ? <WalletLine icon={<ShieldCheck size={13} />} label="Silent payments" value={silent} onCopy={onCopy} /> : null}
               </div>
             ) : (
               <div className="mt-3 rounded-xl border border-amber-400/25 bg-amber-500/10 p-3" role="status" aria-live="polite">
                 <p className="text-sm font-bold text-amber-200">Not ready to receive yet</p>
-                <p className="mt-1 text-xs leading-relaxed text-amber-100/75">This creator has not connected a public Lightning or Bitcoin address. No payment button is enabled.</p>
+                <p className="mt-1 text-xs leading-relaxed text-amber-100/75">This creator has not published a Lightning, on-chain, or silent-payment address. No payment button is enabled.</p>
               </div>
             )}
+            {silent ? (
+              <p className="mt-3 text-[11px] leading-relaxed text-gray-500">A silent-payment address needs a BIP352-capable wallet to pay, and Katoa cannot confirm that payment type. Copy it into your own wallet.</p>
+            ) : null}
             <p className="mt-3 text-[11px] leading-relaxed text-gray-500">{hasDestination ? 'This address is public so supporters can verify the destination before paying.' : 'The creator can add a wallet in Settings when ready.'}</p>
           </div>
 

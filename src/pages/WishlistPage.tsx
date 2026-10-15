@@ -158,6 +158,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
   const [zapError, setZapError] = useState<string | null>(null);
   const [subscribed, setSubscribed] = useState(false);
   const [onchainAddress, setOnchainAddress] = useState<string | null>(null);
+  const [silentAddress, setSilentAddress] = useState<string | null>(null);
   const [paymentUri, setPaymentUri] = useState('');
   const [copiedPayment, setCopiedPayment] = useState(false);
   const [giftIntent, setGiftIntent] = useState<{ amount: number; method: PaymentTab } | null>(null);
@@ -370,6 +371,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
       if (isCancelled()) return;
       setWishlist(wishlistRow as unknown as Wishlist);
       if (!isCancelled()) setOnchainAddress(dest.onchain);
+      if (!isCancelled()) setSilentAddress(dest.silent);
 
       const { data: itemsData, error: itemsError } = await supabase
         .from('wishlist_items')
@@ -859,6 +861,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
   const lightningAddr = wishlist.creator.lightning_address?.trim() || '';
   const hasLightning = Boolean(lightningAddr) && !isDummyPaymentTarget(lightningAddr);
   const hasOnchain = Boolean(onchainAddress?.trim()) && !isDummyPaymentTarget(onchainAddress || '');
+  const hasSilent = Boolean(silentAddress?.trim());
   const hasNostrKey = Boolean(wishlist.creator.nostr_pubkey?.trim());
   const noPayDestinations = !isDemoWishlist && !hasLightning && !hasOnchain;
   const methodBlocked =
@@ -1515,8 +1518,10 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
           )}
           {noPayDestinations && (
             <p className="text-sm text-amber-300" role="alert">
-              This creator has no Lightning or on-chain address yet.
-              {selectedItem?.merchant_link ? ' You can still buy the product for them.' : ''}
+              {hasSilent
+                ? 'This creator accepts silent payments only, so Katoa cannot create an invoice. Copy the address below into a BIP352-capable wallet to pay.'
+                : 'This creator has no Lightning or on-chain address yet.'}
+              {!hasSilent && selectedItem?.merchant_link ? ' You can still buy the product for them.' : ''}
             </p>
           )}
           <div id="payment-method-panel" role="tabpanel" aria-labelledby={`payment-tab-${paymentTab}`}>
@@ -1634,6 +1639,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
             username={wishlist.creator.username}
             lightning={hasLightning ? lightningAddr : null}
             onchain={hasOnchain ? onchainAddress : null}
+            silent={hasSilent ? silentAddress : null}
             isDemo={isDemoWishlist}
           />
           <PaymentDetailDisclosure

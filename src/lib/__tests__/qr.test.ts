@@ -1,5 +1,31 @@
 import { describe, expect, it } from 'vitest';
-import { bitcoinQrData, getQrImageUrl, isBolt11Invoice, isDummyPaymentTarget, lightningQrData } from '../qr';
+import {
+  bitcoinQrData,
+  getQrImageUrl,
+  isBolt11Invoice,
+  isDummyPaymentTarget,
+  lightningQrData,
+  silentPaymentQrData,
+} from '../qr';
+
+/** Realistic-length BIP352 address: sp1 + 116 bech32m characters. Shape only, no checksum claim. */
+const SP1_ADDRESS =
+  'sp1qqgste7k9hx0qed2qzx0n4y3nr6xr3k3v4x5xr0q9k5jv0qk4z9k0qed2qzx0n4y3nr6qpzry9x8gf2tvdw0s3jn54khce6mua7lqpzry9x8gf2tvdw0';
+
+describe('silentPaymentQrData', () => {
+  it('strips the descriptor prefix so wallets receive the bare sp1 address', () => {
+    expect(silentPaymentQrData(`silent:${SP1_ADDRESS}`)).toBe(SP1_ADDRESS);
+    expect(silentPaymentQrData(`sp:${SP1_ADDRESS}`)).toBe(SP1_ADDRESS);
+    expect(silentPaymentQrData(`silent:sp(${SP1_ADDRESS})`)).toBe(SP1_ADDRESS);
+  });
+
+  it('returns an empty payload for empty, placeholder, or wrong-shape descriptors', () => {
+    expect(silentPaymentQrData('')).toBe('');
+    expect(silentPaymentQrData('silent:')).toBe('');
+    expect(silentPaymentQrData('silent:sp1placeholder000000000')).toBe('');
+    expect(silentPaymentQrData('bc1qhm5ndfjhqxdk3cx0pngyps4f5nnwdckulmge6c8keyf2pk0neqtshjn8ad')).toBe('');
+  });
+});
 
 describe('bitcoinQrData', () => {
   it('returns bare address without amount', () => {

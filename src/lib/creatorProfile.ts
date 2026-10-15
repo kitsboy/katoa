@@ -1,6 +1,6 @@
 import { mockWishlists } from '../data/mockWishlists';
 import { asRow, asRows, isSupabaseConfigured, supabase } from './supabase';
-import { usablePaymentAddress } from './validateAddress';
+import { silentPaymentAddressFrom, usablePaymentAddress } from './validateAddress';
 
 export interface ProfileWishlist {
   id: string;
@@ -269,19 +269,21 @@ export type WalletReceiveRow = {
 
 /**
  * Gift/tip destinations: active wallet_addresses win over a stale profiles.lightning_address.
- * Dummy/placeholder values never win.
+ * Dummy/placeholder values never win. Silent payments only ever come from the wallet table.
  */
 export function pickReceiveDestinations(
   profileLightning: string | null | undefined,
   wallets: WalletReceiveRow[]
-): { lightning: string | null; onchain: string | null } {
+): { lightning: string | null; onchain: string | null; silent: string | null } {
   const active = wallets.filter((w) => w.is_active !== false);
   const lnWallet = active.find((w) => w.address_type === 'lightning');
   const onWallet = active.find((w) => w.address_type === 'onchain');
+  const silentWallet = active.find((w) => w.address_type === 'silent');
   return {
     lightning:
       usablePaymentAddress(lnWallet?.address_value) ?? usablePaymentAddress(profileLightning),
     onchain: usablePaymentAddress(onWallet?.address_value),
+    silent: silentPaymentAddressFrom(silentWallet?.address_value),
   };
 }
 
@@ -294,19 +296,35 @@ async function fetchCreatorWalletRows(userId: string): Promise<WalletReceiveRow[
   return asRows<WalletReceiveRow>(data);
 }
 
-/** Lightning + on-chain a supporter should pay. Wallet Lightning overrides profile lud16. */
+/** Lightning + on-chain + silent payments a supporter can pay. Wallet Lightning overrides profile lud16. */
 export async function fetchCreatorReceiveDestinations(
   userId: string | null | undefined,
   profileLightning?: string | null
-): Promise<{ lightning: string | null; onchain: string | null }> {
+): Promise<{ lightning: string | null; onchain: string | null; silent: string | null }> {
   if (!userId || !isSupabaseConfigured()) {
-    return { lightning: usablePaymentAddress(profileLightning), onchain: null };
+    return { lightning: usablePaymentAddress(profileLightning), onchain: null, silent: null };
   }
   try {
     const rows = await fetchCreatorWalletRows(userId);
     return pickReceiveDestinations(profileLightning, rows);
   } catch {
-    return { lightning: usablePaymentAddress(profileLightning), onchain: null };
+    return { lightning: usablePaymentAddress(profileLightning), onchain: null, silent: null };
+  }
+}
+
+/**
+ * The creator's published BIP352 silent-payment address, or null.
+ * Bare `sp1…` form, ready for a QR or a copy button.
+ */
+export async function fetchCreatorSilentAddress(
+  userId: string | null | undefined
+): Promise<string | null> {
+  if (!userId || !isSupabaseConfigured()) return null;
+  try {
+    const rows = await fetchCreatorWalletRows(userId);
+    return pickReceiveDestinations(null, rows).silent;
+  } catch {
+    return null;
   }
 }
 

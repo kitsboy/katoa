@@ -1,4 +1,4 @@
-import { isDummyPaymentTarget } from './validateAddress';
+import { isDummyPaymentTarget, silentPaymentAddressFrom } from './validateAddress';
 
 export { isDummyPaymentTarget } from './validateAddress';
 
@@ -21,6 +21,15 @@ export function bitcoinQrData(address: string, amountSats?: number): string {
     return `bitcoin:${trimmed}?amount=${amount}`;
   }
   return `bitcoin:${trimmed}`;
+}
+
+/**
+ * QR payload for a BIP352 silent payment address.
+ * Wallets exchange the bare `sp1…` address, so the descriptor prefix is stripped
+ * and no URI scheme is invented. Empty string when the descriptor is invalid.
+ */
+export function silentPaymentQrData(address: string): string {
+  return silentPaymentAddressFrom(address) ?? '';
 }
 
 export function lightningQrData(invoice: string): string {

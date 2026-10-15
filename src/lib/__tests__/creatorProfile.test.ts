@@ -14,6 +14,10 @@ import {
   type LiveProfileRow,
 } from '../creatorProfile';
 
+/** Realistic-length BIP352 address: sp1 + 116 bech32m characters. Shape only, no checksum claim. */
+const SP1_ADDRESS =
+  'sp1qqgste7k9hx0qed2qzx0n4y3nr6xr3k3v4x5xr0q9k5jv0qk4z9k0qed2qzx0n4y3nr6qpzry9x8gf2tvdw0s3jn54khce6mua7lqpzry9x8gf2tvdw0';
+
 vi.mock('../supabase', () => ({
   asRow: (data: unknown) => data ?? null,
   asRows: (data: unknown) => data ?? [],
@@ -189,6 +193,36 @@ describe('pickReceiveDestinations', () => {
       { address_type: 'lightning', address_value: 'stale@getalby.com', is_active: false },
     ]);
     expect(dest.lightning).toBe('keep@getalby.com');
+  });
+
+  it('exposes a wallet silent-payment descriptor as a bare sp1 address', () => {
+    const dest = pickReceiveDestinations(null, [
+      { address_type: 'silent', address_value: `silent:${SP1_ADDRESS}`, is_active: true },
+    ]);
+    expect(dest.silent).toBe(SP1_ADDRESS);
+    expect(dest.lightning).toBeNull();
+    expect(dest.onchain).toBeNull();
+  });
+
+  it('never treats a silent descriptor as a Lightning or on-chain destination', () => {
+    const dest = pickReceiveDestinations('creator@getalby.com', [
+      { address_type: 'silent', address_value: `sp:${SP1_ADDRESS}`, is_active: true },
+    ]);
+    expect(dest.lightning).toBe('creator@getalby.com');
+    expect(dest.silent).toBe(SP1_ADDRESS);
+  });
+
+  it('ignores an inactive or placeholder silent descriptor', () => {
+    expect(
+      pickReceiveDestinations(null, [
+        { address_type: 'silent', address_value: `silent:${SP1_ADDRESS}`, is_active: false },
+      ]).silent
+    ).toBeNull();
+    expect(
+      pickReceiveDestinations(null, [
+        { address_type: 'silent', address_value: 'silent:sp1placeholder000', is_active: true },
+      ]).silent
+    ).toBeNull();
   });
 });
 
