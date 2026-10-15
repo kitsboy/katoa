@@ -709,7 +709,7 @@ Every contribution brings us closer to breaking ground on this well. Join us in 
     title: 'Tokyo Startup Needs Design Tools',
     description: 'Small tech startup building accessibility tools for visually impaired users. Need design software licenses to complete our MVP.',
     created_at: '2025-11-05T08:00:00Z',
-    full_story: `こんにちは (Konnichiwa)! We are AccessTech Tokyo, a small startup team of three developers passionate about making technology more accessible for people with visual impairments. Our flagship product, VoiceNav, is a screen reader that uses AI to provide more natural and context-aware audio descriptions of digital content.
+    full_story: `Hello! We are AccessTech Tokyo, a small startup team of three developers passionate about making technology more accessible for people with visual impairments. Our flagship product, VoiceNav, is a screen reader that uses AI to provide more natural and context-aware audio descriptions of digital content.
 
 Our team includes Yuki (our lead developer who is herself visually impaired), Hiroshi (AI specialist), and Kenji (UX researcher). We've been working on VoiceNav for the past year, mostly after our day jobs and on weekends. We've built a functional prototype that's already being tested by 50 beta users, and the feedback has been overwhelmingly positive.
 
@@ -719,7 +719,7 @@ We're bootstrapping this startup without venture capital because we want to keep
 
 Our vision is to launch VoiceNav as a free basic tool with premium features for sustainable revenue. But first, we need to finish the product. Your support will help us obtain the professional tools we need to complete development and launch within the next three months.
 
-Every contribution brings us closer to making the internet a more accessible place for everyone. ありがとうございます (Arigatou gozaimasu - Thank you very much)!`,
+Every contribution brings us closer to making the internet a more accessible place for everyone. Thank you very much!`,
     slug: 'tokyo-startup-design',
     cover_image: '/images/mock/pexels-02110df489.jpeg',
     total_sats_goal: 800000,

@@ -1,5 +1,5 @@
 import { useCurrency } from '../contexts/CurrencyContext';
-import { useLanguage } from '../contexts/LanguageContext';
+import { languageNames, useLanguage, type Language } from '../contexts/LanguageContext';
 import { PageMeta } from '../components/PageMeta';
 import { Card } from '../components/Card';
 import { Link } from '../components/Link';
@@ -109,19 +109,11 @@ export function DemoPage() {
                 <p className="text-sm font-bold text-white mb-2">Language</p>
                 <p className="text-xs text-gray-400 mb-2">Changes the demo UI copy. No account, no server call.</p>
                 <div className="flex flex-wrap gap-2">
-                  {Object.entries({
-                    en: 'English',
-                    es: 'Español',
-                    pt: 'Português',
-                    fr: 'Français',
-                    de: 'Deutsch',
-                    ja: '日本語',
-                    zh: '中文',
-                  }).map(([code, label]) => (
+                  {Object.entries(languageNames).map(([code, label]) => (
                     <button
                       key={code}
                       type="button"
-                      onClick={() => setLanguage(code as 'en'|'es'|'pt'|'fr'|'de'|'ja'|'zh')}
+                      onClick={() => setLanguage(code as Language)}
                       className={`min-h-[44px] px-4 rounded-xl border text-sm font-semibold transition-colors ${
                         'en' === code
                           ? 'border-bitcoin-orange-500/50 bg-bitcoin-orange-500/20 text-bitcoin-orange-200'

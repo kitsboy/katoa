@@ -4487,14 +4487,20 @@ export const languageFlags: Record<Language, string> = {
   zh: '🇨🇳',
 };
 
+/**
+ * Picker labels are English-only on purpose.
+ * Never put CJK (or any non-Latin script) here: the label shows in the English UI
+ * and the product rule is that English never displays Chinese characters.
+ * The active locale is still shown by the flag + aria-selected state.
+ */
 export const languageNames: Record<Language, string> = {
   en: 'English',
-  es: 'Español',
-  pt: 'Português',
-  fr: 'Français',
-  de: 'Deutsch',
-  ja: '日本語',
-  zh: '中文',
+  es: 'Spanish',
+  pt: 'Portuguese',
+  fr: 'French',
+  de: 'German',
+  ja: 'Japanese',
+  zh: 'Chinese',
 };
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
