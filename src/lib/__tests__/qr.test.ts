@@ -19,6 +19,10 @@ describe('silentPaymentQrData', () => {
     expect(silentPaymentQrData(`silent:sp(${SP1_ADDRESS})`)).toBe(SP1_ADDRESS);
   });
 
+  it('passes through an already-bare sp1 address (what the UI holds)', () => {
+    expect(silentPaymentQrData(SP1_ADDRESS)).toBe(SP1_ADDRESS);
+  });
+
   it('returns an empty payload for empty, placeholder, or wrong-shape descriptors', () => {
     expect(silentPaymentQrData('')).toBe('');
     expect(silentPaymentQrData('silent:')).toBe('');

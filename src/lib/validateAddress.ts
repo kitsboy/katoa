@@ -130,15 +130,21 @@ const SILENT_PAYMENT_ADDRESS = /^sp1[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{80,}$/;
 const SILENT_PAYMENT_PREFIXES = ['silent:', 'sp:'] as const;
 
 /**
- * Bare BIP352 address (`sp1…`) from a stored `silent:`/`sp:` descriptor.
- * Wallets exchange the bare address, so QR payloads must strip our prefix.
- * Null when the value is empty, a placeholder, or not shaped like an address.
+ * Bare BIP352 address (`sp1…`) from a stored `silent:`/`sp:` descriptor, or from
+ * an already-bare address. Wallets exchange the bare address, so QR payloads
+ * must strip our prefix. Null when the value is empty, a placeholder, or not
+ * shaped like an address.
  */
 export function silentPaymentAddressFrom(value: string | null | undefined): string | null {
   const trimmed = (value ?? '').trim();
   if (!trimmed || isDummyPaymentTarget(trimmed)) return null;
 
   const lower = trimmed.toLowerCase();
+
+  // A bare `sp1…` address is the form wallets exchange and the form
+  // `pickReceiveDestinations` hands to the UI, so accept it directly too.
+  if (SILENT_PAYMENT_ADDRESS.test(lower)) return lower;
+
   const prefix = SILENT_PAYMENT_PREFIXES.find((p) => lower.startsWith(p));
   if (!prefix) return null;
 

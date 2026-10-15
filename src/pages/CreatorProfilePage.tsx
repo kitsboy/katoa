@@ -21,6 +21,7 @@ import { ZapTotals } from '../components/ZapTotals';
 import { DemoBadge } from '../components/DemoBadge';
 import { DemoPreviewBadge } from '../components/DemoPreviewBadge';
 import { TrustFirstCreatorCard } from '../components/TrustFirstCreatorCard';
+import { SilentPaymentHandoff } from '../components/SilentPaymentHandoff';
 import { fetchCreatorSilentAddress } from '../lib/creatorProfile';
 import { CreatorStoryChapters, type StoryChapter } from '../components/CreatorStoryChapters';
 import { CreatorPresentation } from '../components/CreatorPresentation';
@@ -758,7 +759,11 @@ export function CreatorProfilePage() {
       </div>
 
       <Modal isOpen={showTip} onClose={resetTip} title={t('creator.tip')} size="sm">
-        <TipMenu onSelect={(sats) => void handleTip(sats)} />
+        {silentAddress && !lightning && !onchain ? (
+          <SilentPaymentHandoff address={silentAddress} creatorUsername={profile.username} />
+        ) : (
+          <TipMenu onSelect={(sats) => void handleTip(sats)} />
+        )}
         {tipBusy && <p className="mt-3 text-xs text-gray-400 text-center">Fetching Lightning invoice…</p>}
         {tipSats && (tipQrUrl || tipInvoice) && (
           <div className="mt-4 space-y-3">

@@ -51,6 +51,7 @@ import { PaymentStatusStepper } from '../components/PaymentStatusStepper';
 import { PaymentActivityTimeline } from '../components/PaymentActivityTimeline';
 import { MobileCheckoutSummary } from '../components/MobileCheckoutSummary';
 import { SupporterTrustSummary } from '../components/SupporterTrustSummary';
+import { SilentPaymentHandoff } from '../components/SilentPaymentHandoff';
 import { PaymentDetailDisclosure } from '../components/PaymentDetailDisclosure';
 import { CinematicCheckout } from '../components/CinematicCheckout';
 
@@ -899,6 +900,8 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
   const hasSilent = Boolean(silentAddress?.trim());
   const hasNostrKey = Boolean(wishlist.creator.nostr_pubkey?.trim());
   const noPayDestinations = !isDemoWishlist && !hasLightning && !hasOnchain;
+  // A silent-only creator can still be paid — just not by an invoice Katoa builds.
+  const silentOnly = noPayDestinations && hasSilent;
   const methodBlocked =
     !isDemoWishlist &&
     ((paymentTab === 'onchain' && !hasOnchain) ||
@@ -1520,6 +1523,13 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
         }}
         title={selectedItem ? `Fund ${selectedItem.title}` : 'Send a Gift'}
       >
+        {silentOnly && silentAddress ? (
+          <SilentPaymentHandoff
+            address={silentAddress}
+            creatorUsername={wishlist.creator.username}
+            amountSats={Number.parseInt(giftForm.amount, 10) || null}
+          />
+        ) : (
         <form onSubmit={handleGiftSubmit} className="space-y-4">
           {selectedItem?.merchant_link && (
             <a
@@ -1663,6 +1673,7 @@ export function WishlistPage({ slug, breadcrumbItems = [] }: { slug: string; bre
                 : 'Continue to Pay'}
           </Button>
         </form>
+        )}
       </Modal>
 
       <Modal

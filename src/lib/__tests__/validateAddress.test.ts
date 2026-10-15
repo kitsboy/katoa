@@ -2,14 +2,40 @@ import { describe, expect, it } from 'vitest';
 import {
   decodePaymentUri,
   isDummyPaymentTarget,
+  silentPaymentAddressFrom,
   usablePaymentAddress,
   validateBitcoinAddress,
   validateLightningAddress,
   validateNpub,
   validatePynym,
+  validateSilentPaymentDescriptor,
   validateWalletAddress,
   validateXpub,
 } from '../validateAddress';
+
+/** Shape-valid BIP352 address (the gate checks shape, not the checksum). */
+const SP1_ADDRESS = `sp1${'q'.repeat(100)}`;
+
+describe('silent payment descriptors', () => {
+  it('returns the bare address from a descriptor or from an already-bare address', () => {
+    expect(silentPaymentAddressFrom(`silent:${SP1_ADDRESS}`)).toBe(SP1_ADDRESS);
+    expect(silentPaymentAddressFrom(`sp:${SP1_ADDRESS}`)).toBe(SP1_ADDRESS);
+    expect(silentPaymentAddressFrom(`silent:sp(${SP1_ADDRESS})`)).toBe(SP1_ADDRESS);
+    expect(silentPaymentAddressFrom(SP1_ADDRESS)).toBe(SP1_ADDRESS);
+  });
+
+  it('still refuses placeholders and unknown shapes', () => {
+    expect(silentPaymentAddressFrom('')).toBeNull();
+    expect(silentPaymentAddressFrom('https://bitcoin.org/donate')).toBeNull();
+    expect(silentPaymentAddressFrom('bc1qhm5ndfjhqxdk3cx0pngyps4f5nnwdckulmge6c8keyf2pk0neqtshjn8ad')).toBeNull();
+    expect(silentPaymentAddressFrom('sp1qq1')).toBeNull();
+  });
+
+  it('accepts a stored descriptor but requires the prefix on save', () => {
+    expect(validateSilentPaymentDescriptor(`silent:${SP1_ADDRESS}`)).toBeNull();
+    expect(validateSilentPaymentDescriptor(SP1_ADDRESS)).toMatch(/silent: or sp:/);
+  });
+});
 
 describe('decodePaymentUri', () => {
   it('strips bitcoin: and query amount', () => {
