@@ -3,8 +3,12 @@ import { getStorage, setStorage, STORAGE_KEYS } from './storage';
 export interface FollowState {
   username: string;
   followedAt: number;
-  /** Local device seam — not Nostr kind-3. Optional live `follows` row write is best-effort. */
-  source: 'local';
+  /**
+   * How this follow exists:
+   * - `nostr` — a NIP-02 kind-3 contact list event carries it.
+   * - `local` — this device only (no extension, or the target has no Nostr key).
+   */
+  source: 'local' | 'nostr';
 }
 
 function normalizeKey(username: string): string {
@@ -21,14 +25,14 @@ export function isFollowing(username: string): boolean {
   return Boolean(getFollows()[key]);
 }
 
-export function followLocal(username: string): FollowState | null {
+export function followLocal(username: string, source: FollowState['source'] = 'local'): FollowState | null {
   const key = normalizeKey(username);
   if (!key) return null;
   const follows = getFollows();
   const state: FollowState = {
     username: key,
     followedAt: Date.now(),
-    source: 'local',
+    source,
   };
   follows[key] = state;
   setStorage(STORAGE_KEYS.creatorFollows, follows);
@@ -41,6 +45,17 @@ export function unfollowLocal(username: string): void {
   const follows = getFollows();
   delete follows[key];
   setStorage(STORAGE_KEYS.creatorFollows, follows);
+}
+
+export function getFollow(username: string): FollowState | undefined {
+  const key = normalizeKey(username);
+  if (!key) return undefined;
+  return getFollows()[key];
+}
+
+/** True when a Nostr kind-3 contact list (not just this device) carries the follow. */
+export function isFollowingOnNostr(username: string): boolean {
+  return getFollow(username)?.source === 'nostr';
 }
 
 export function toggleFollowLocal(username: string): boolean {

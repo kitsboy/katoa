@@ -3,6 +3,7 @@
  *
  * NIPs touched:
  * - NIP-01  events, kind 0/1
+ * - NIP-02  contact list (kind 3) — follow / unfollow
  * - NIP-04  encrypted DMs (compat; NIP-17 preferred long-term)
  * - NIP-07  browser extension
  * - NIP-19  bech32
@@ -11,6 +12,7 @@
  * - NIP-78  parameterized replaceable wishlist (kind 30078)
  */
 import { SimplePool, type Event, type Filter, nip19, type UnsignedEvent } from 'nostr-tools';
+import { applyFollow, applyUnfollow, contactPubkeys, mergeContactTags } from './nostrContactList';
 
 /** Original five — always allowed in CSP; never remove without migration. */
 export const LEGACY_RELAYS = [
@@ -326,6 +328,137 @@ export class NostrService {
     } catch (error) {
       console.error('Error publishing relay list:', error);
       return { ok: false, accepted: [], failed: [], message: nip07UserMessage(error) };
+    }
+  }
+
+  /**
+   * NIP-02 kind-3 contact list for a pubkey — the latest event we can reach.
+   * `tags` is the raw tag array so a follow can be merged into it.
+   */
+  async getContactList(pubkey: string): Promise<{ tags: string[][]; createdAt: number } | null> {
+    const relays = await this.resolveReadRelays(pubkey);
+    const events = await this.pool.querySync(relays, {
+      kinds: [3],
+      authors: [pubkey],
+      limit: 5,
+    } as Filter);
+    if (!events.length) return null;
+    const latest = events.sort((a, b) => b.created_at - a.created_at)[0];
+    return { tags: (latest.tags ?? []) as string[][], createdAt: latest.created_at };
+  }
+
+  /**
+   * Publish a kind-3 contact list.
+   *
+   * Kind 3 is replaceable: the event we publish *is* the whole list, so this
+   * reads the current one first and merges. `onConflictMessage` is returned when
+   * no existing list could be reached, so the caller can say so instead of
+   * silently replacing a list it never saw.
+   */
+  async publishContactList(
+    tags: string[][],
+    options: { readExisting?: boolean } = {}
+  ): Promise<PublishResult & { existingListFound: boolean }> {
+    try {
+      const ext = await requireNip07();
+      const pubkey = await ext.getPublicKey();
+
+      let existing: string[][] = [];
+      let existingListFound = false;
+      if (options.readExisting !== false) {
+        const current = await this.getContactList(pubkey);
+        if (current) {
+          existing = current.tags;
+          existingListFound = true;
+        }
+      }
+
+      const merged = existing.length ? mergeContactTags(existing, contactPubkeys(tags)) : tags;
+
+      const event: UnsignedEvent = {
+        kind: 3,
+        created_at: Math.floor(Date.now() / 1000),
+        tags: merged,
+        content: '',
+        pubkey,
+      };
+
+      const signedEvent = await ext.signEvent(event);
+      const relays = await this.resolveWriteRelays(pubkey);
+      const result = await this.publishToRelays(signedEvent as Event, relays);
+      return { ...result, existingListFound };
+    } catch (error) {
+      console.error('Error publishing contact list:', error);
+      return {
+        ok: false,
+        accepted: [],
+        failed: [],
+        message: nip07UserMessage(error),
+        existingListFound: false,
+      };
+    }
+  }
+
+  /**
+   * Follow a pubkey on Nostr (NIP-02). Merges into the existing contact list so
+   * other follows survive, and refuses to follow yourself.
+   */
+  async followPubkey(pubkey: string): Promise<PublishResult & { existingListFound: boolean }> {
+    try {
+      const ext = await requireNip07();
+      const me = await ext.getPublicKey();
+      const target = pubkey.trim().toLowerCase();
+      if (target === me.toLowerCase()) {
+        return {
+          ok: false,
+          accepted: [],
+          failed: [],
+          message: 'You cannot follow your own Nostr key.',
+          existingListFound: false,
+        };
+      }
+      if (!/^[0-9a-f]{64}$/.test(target)) {
+        return {
+          ok: false,
+          accepted: [],
+          failed: [],
+          message: 'That is not a hex Nostr public key.',
+          existingListFound: false,
+        };
+      }
+
+      const current = await this.getContactList(me);
+      const delta = applyFollow(current?.tags ?? [], target);
+      return this.publishContactList(delta.tags, { readExisting: false });
+    } catch (error) {
+      console.error('Error publishing follow:', error);
+      return {
+        ok: false,
+        accepted: [],
+        failed: [],
+        message: nip07UserMessage(error),
+        existingListFound: false,
+      };
+    }
+  }
+
+  /** Unfollow a pubkey on Nostr; every other follow in the list is preserved. */
+  async unfollowPubkey(pubkey: string): Promise<PublishResult & { existingListFound: boolean }> {
+    try {
+      const ext = await requireNip07();
+      const me = await ext.getPublicKey();
+      const current = await this.getContactList(me);
+      const delta = applyUnfollow(current?.tags ?? [], pubkey.trim().toLowerCase());
+      return this.publishContactList(delta.tags, { readExisting: false });
+    } catch (error) {
+      console.error('Error publishing unfollow:', error);
+      return {
+        ok: false,
+        accepted: [],
+        failed: [],
+        message: nip07UserMessage(error),
+        existingListFound: false,
+      };
     }
   }
 

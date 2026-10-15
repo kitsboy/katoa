@@ -40,7 +40,12 @@ import {
 import { usablePaymentAddress } from '../lib/validateAddress';
 import { cancelDbSubscription, subscribeLocal, subscriptionTierSats, unsubscribe } from '../lib/subscriptions';
 import { useCreatorSubscriptions } from '../lib/useCreatorSubscriptions';
-import { followLocal, isFollowing, unfollowLocal } from '../lib/follows';
+import {
+  followCreator,
+  followState,
+  unfollowCreator,
+  type FollowSource,
+} from '../lib/followActions';
 import { toJsonLdScript } from '../lib/jsonLd';
 import { copyToClipboard } from '../lib/clipboard';
 import { formatCompactCount, formatNumber } from '../lib/i18nFormat';
@@ -90,6 +95,7 @@ export function CreatorProfilePage() {
   const [profile, setProfile] = useState<CreatorProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [following, setFollowing] = useState(false);
+  const [followSource, setFollowSource] = useState<FollowSource>('local');
   const [showTip, setShowTip] = useState(false);
   const [showDonateQr, setShowDonateQr] = useState(false);
   const [showIdentityQr, setShowIdentityQr] = useState<'lightning' | 'onchain' | null>(null);
@@ -150,9 +156,12 @@ export function CreatorProfilePage() {
   useEffect(() => {
     if (!profile) {
       setFollowing(false);
+      setFollowSource('local');
       return;
     }
-    setFollowing(isFollowing(profile.username));
+    const state = followState(profile.username);
+    setFollowing(state.following);
+    setFollowSource(state.source);
   }, [profile]);
 
   // Silent payments only ever come from the creator's wallet table, never from the profile row.
@@ -260,27 +269,35 @@ export function CreatorProfilePage() {
 
   const handleFollow = async () => {
     if (!profile) return;
+    const target = { username: profile.username, nostrPubkey: profile.nostr_pubkey };
+
     if (following) {
-      unfollowLocal(profile.username);
-      setFollowing(false);
-      if (user && profile.id && isSupabaseConfigured() && !isDemoUser) {
+      const result = await unfollowCreator(target);
+      setFollowing(result.following);
+      setFollowSource(result.source);
+      if (!result.following && user && profile.id && isSupabaseConfigured() && !isDemoUser) {
         void supabase.from('follows').delete().eq('follower_id', user.id).eq('following_id', profile.id);
       }
-      toast('Unfollowed on this device', 'info');
+      toast(result.message, result.ok ? 'info' : 'error');
       return;
     }
-    followLocal(profile.username);
-    setFollowing(true);
+
+    // A free follow is a Nostr kind-3 contact list entry. The site's own
+    // `follows` row is a convenience mirror, never the source of truth.
+    const result = await followCreator(target);
+    setFollowing(result.following);
+    setFollowSource(result.source);
+    toast(result.message, result.ok ? 'success' : 'info');
+
     if (user && profile.id && isSupabaseConfigured() && !isDemoUser) {
       const { error } = await supabase.from('follows').insert({
         follower_id: user.id,
         following_id: profile.id,
       });
-      if (error) {
-        /* local follow still stands — do not pretend kind-3 */
+      if (error && !/duplicate|unique/i.test(error.message)) {
+        toast('Follow saved on Nostr, but this site could not record it.', 'info');
       }
     }
-    toast('Following on this device — not a Nostr kind-3 follow', 'success');
   };
 
   const handleCopy = async (value: string, label: string) => {
@@ -582,6 +599,22 @@ export function CreatorProfilePage() {
               <Button variant="secondary" onClick={() => void handleFollow()} className="min-h-[44px]">
                 {following ? <UserCheck size={18} className="mr-2" /> : <UserPlus size={18} className="mr-2" />}
                 {following ? t('dashboard.following') : 'Follow'}
+                {following && (
+                  <span
+                    className={`ml-2 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
+                      followSource === 'nostr'
+                        ? 'bg-neon-cyan-500/20 text-neon-cyan-200'
+                        : 'bg-white/10 text-gray-300'
+                    }`}
+                    title={
+                      followSource === 'nostr'
+                        ? 'Published as a Nostr kind-3 contact list'
+                        : 'This device only — no Nostr kind-3 was published'
+                    }
+                  >
+                    {followSource === 'nostr' ? 'Nostr' : 'This device'}
+                  </span>
+                )}
               </Button>
               <Link
                 href={messageHref}
@@ -601,7 +634,8 @@ export function CreatorProfilePage() {
             </div>
           </div>
           <p className="mt-4 text-xs text-gray-200 leading-relaxed">
-            Follow is free on this device. Subscribe is a local demo until Lightning webhooks exist. Tips go to this
+            Follow is free: it is published as a Nostr kind-3 contact list when you have a NIP-07 extension, and stays
+            on this device otherwise. Subscribe is paid — it unlocks when a Lightning invoice settles. Tips go to this
             creator&apos;s wallet — Katoa does not KYC you and never holds sats.
           </p>
 
