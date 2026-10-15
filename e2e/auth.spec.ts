@@ -1,5 +1,11 @@
 import { test, expect } from '@playwright/test';
 
+/**
+ * The Nostr entry point changed from a passive "Check Nostr extension" probe to a
+ * real NIP-07 challenge login. This spec pins that behaviour: the button exists,
+ * it needs an extension, and without one it reports the truth instead of opening
+ * a session. Rendered copy is asserted here, so keep it in sync when it changes.
+ */
 test.describe('auth', () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
@@ -7,17 +13,30 @@ test.describe('auth', () => {
     });
   });
 
-  test('email, Google, and Nostr-check are present — Nostr is not a session login', async ({ page }) => {
+  test('sign-in offers email, Google, and an honest NIP-07 challenge', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto('/auth');
 
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible({ timeout: 30_000 });
     await expect(page.getByRole('button', { name: /Continue with Google/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Check Nostr extension/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Continue with Nostr/i })).toHaveCount(0);
-    await expect(page.getByLabel(/email/i)).toBeVisible();
-    await expect(page.getByText(/server challenge missing/i)).toBeVisible();
-    await expect(page.getByRole('link', { name: /^Terms$/i })).toHaveCount(0);
+    const form = page.locator('form');
+    await expect(form.getByLabel(/^Email$/i)).toBeVisible();
+    await expect(form.getByLabel(/^Password$/i)).toBeVisible();
+
+    // Status is truthful in a clean browser profile: no extension installed.
+    await expect(page.locator('span', { hasText: /NIP-07/i })).toHaveText(/Missing/i);
+
+    const nostrButton = page.getByRole('button', { name: /Continue with Nostr/i });
+    await expect(nostrButton).toBeVisible();
+    await expect(page.getByText(/never sees your private key/i)).toBeVisible();
+
+    // No extension: the button must report that, stay on /auth, and open no session.
+    await nostrButton.click();
+    await expect(page.getByText(/Install a Nostr extension/i)).toBeVisible();
+    await expect(page).toHaveURL(/\/auth/);
+
+    // Terms consent is required to sign up, not to sign in.
+    await expect(form.getByRole('link', { name: /^Terms$/i })).toHaveCount(0);
   });
 
   test('sign up shows terms and privacy links', async ({ page }) => {

@@ -373,12 +373,13 @@ export function AuthPage() {
           <form onSubmit={handleEmailAuth} className="space-y-4">
             {isSignUp && (
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label htmlFor="auth-username" className="block text-sm font-medium text-gray-300 mb-2">
                   Username
                 </label>
                 <div className="relative">
                   <User size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
                   <input
+                    id="auth-username"
                     type="text"
                     value={formData.username}
                     onChange={(e) => setFormData({ ...formData, username: e.target.value })}
@@ -392,12 +393,13 @@ export function AuthPage() {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label htmlFor="auth-email" className="block text-sm font-medium text-gray-300 mb-2">
                 Email
               </label>
               <div className="relative">
                 <Mail size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
                 <input
+                  id="auth-email"
                   type="email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -410,12 +412,13 @@ export function AuthPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <label htmlFor="auth-password" className="block text-sm font-medium text-gray-300 mb-2">
                 Password
               </label>
               <div className="relative">
                 <Lock size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" />
                 <input
+                  id="auth-password"
                   type={showPassword ? 'text' : 'password'}
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
