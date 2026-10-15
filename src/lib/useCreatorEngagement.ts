@@ -22,6 +22,13 @@ import {
 } from './creatorEngagement';
 import type { CreatorPost, CreatorPostComment } from '../data/mockCreatorPosts';
 
+const DB_COMMENT_RATELIMIT_TITLE = 'Too many comments right now';
+const DB_COMMENT_RATELIMIT_PREFIX = 'Too many comments lately';
+
+function isCommentRateLimited(err: string): boolean {
+  return err.includes(DB_COMMENT_RATELIMIT_TITLE) || err.includes(DB_COMMENT_RATELIMIT_PREFIX);
+}
+
 export interface CreatorEngagement {
   mode: EngagementGateMode;
   liked: Record<string, boolean>;
@@ -140,7 +147,21 @@ export function useCreatorEngagement(posts: CreatorPost[]): CreatorEngagement {
       setSaving(true);
       const result = await addPostComment(user.id, key, body);
       setSaving(false);
-      if (!result.ok || !result.body) return false;
+      if (!result.ok) {
+        if (isCommentRateLimited(result.error ?? '')) {
+          throw new Error('Too many comments — wait a moment and try again.');
+        }
+        return false;
+      }
+          const result = await addPostComment(user.id, key, body);
+      setSaving(false);
+      if (!result.ok) {
+        if (isCommentRateLimited(result.error ?? '')) {
+          throw new Error('Too many comments — wait a moment and try again.');
+        }
+        return false;
+      }
+      if (!result.body) return false;
       const comment: CreatorPostComment = { user: displayName, text: result.body };
       setDbComments((prev) => ({ ...prev, [key]: [...(prev[key] ?? []), comment] }));
       return true;
