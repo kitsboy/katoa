@@ -14,10 +14,10 @@ import type { CreatorVideoWishlist } from '../components/CreatorVideoCard';
 
 const discoveryCreators: CreatorVideoWishlist[] = [
   mockWishlists.find((w) => w.slug === 'luna-exclusive-videos'),
-  mockWishlists.find((w) => w.slug === 'luna-studio-diaries-drop'),
+  mockWishlists.find((w) => w.slug === 'maria-codes-live'),
   mockWishlists.find((w) => w.slug === 'medellin-skate-park'),
   mockWishlists.find((w) => w.slug === 'sasha-vip-content'),
-  mockWishlists.find((w) => w.slug === 'paul-artist-guitar'),
+  mockWishlists.find((w) => w.slug === 'paul-first-ep'),
 ].filter(Boolean) as CreatorVideoWishlist[];
 
 export function HomePage() {

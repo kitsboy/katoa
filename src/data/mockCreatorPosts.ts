@@ -187,10 +187,10 @@ export const mockCreatorPosts: Record<string, CreatorPost[]> = {
       ],
     },
   ],
-  'paul-artist-guitar': [
+  'paul-first-ep': [
     {
       id: 'paul-post-1',
-      creatorSlug: 'paul-artist-guitar',
+      creatorSlug: 'paul-first-ep',
       mediaUrl: '/images/mock/pexels-5e89e84d08.jpeg',
       mediaType: 'image',
       caption: 'Broadway at golden hour — road-tested songs, one worn-out guitar.',
@@ -202,7 +202,7 @@ export const mockCreatorPosts: Record<string, CreatorPost[]> = {
     },
     {
       id: 'paul-post-2',
-      creatorSlug: 'paul-artist-guitar',
+      creatorSlug: 'paul-first-ep',
       mediaUrl: '/images/mock/pexels-fae5ab023a.jpeg',
       mediaType: 'image',
       caption: 'The next guitar fund update: one step closer to recording the first EP.',
@@ -214,7 +214,7 @@ export const mockCreatorPosts: Record<string, CreatorPost[]> = {
     },
     {
       id: 'paul-post-3',
-      creatorSlug: 'paul-artist-guitar',
+      creatorSlug: 'paul-first-ep',
       mediaUrl: '/images/mock/pexels-beab903d8f.jpeg',
       mediaType: 'image',
       caption: 'Small goal, real milestone: strings and a case are fully funded.',

@@ -24,7 +24,7 @@ export const mockWishlistItems: Record<string, MockWishlistItem[]> = {
       product_url: '',
       merchant: 'Creator',
       image_url:
-        '/images/mock/pexels-7867fa1faf.jpeg',
+        '/images/mock/pexels-85f247453c.jpeg',
       currency: 'USD',
       original_price: 0,
       is_funded: false,
@@ -39,7 +39,7 @@ export const mockWishlistItems: Record<string, MockWishlistItem[]> = {
       product_url: '',
       merchant: 'Creator',
       image_url:
-        '/images/mock/pexels-b7f18dd14d.jpeg',
+        '/images/mock/pexels-d47f70ba4e.jpeg',
       currency: 'USD',
       original_price: 0,
       is_funded: true,
@@ -54,9 +54,7 @@ export const mockWishlistItems: Record<string, MockWishlistItem[]> = {
       price_sats: 42000,
       sats_raised: 28000,
       product_url: '',
-      merchant: 'Creator',
-      image_url:
-        '/images/mock/pexels-b7f18dd14d.jpeg',
+      merchant: 'Creator',      image_url: '/images/mock/pexels-48d0ca31b5.jpeg',
       currency: 'USD',
       original_price: 0,
       is_funded: false,
@@ -348,7 +346,7 @@ export const mockWishlistItems: Record<string, MockWishlistItem[]> = {
       sats_raised: 800000,
       product_url: '',
       merchant: 'Industrial Supply Co',
-      image_url: '/images/mock/pexels-d47f70ba4e.jpeg',
+      image_url: '/images/mock/pexels-986cc82443.jpeg',
       currency: 'USD',
       original_price: 1500,
       is_funded: false,
@@ -562,17 +560,17 @@ export const mockWishlistItems: Record<string, MockWishlistItem[]> = {
 export const mockWishlists = [
   {
     id: 'mock-001',
-    title: 'School in Guatemala Needs Textbooks',
-    description: 'Help provide educational materials for 50 students in rural Guatemala. These textbooks will enable children to continue their education and build a better future.',
-    created_at: '2025-10-15T10:00:00Z',
-    full_story: `Our school, Escuela Esperanza, serves a rural community in the highlands near Antigua, Guatemala. For the past three years, our 50 students have been sharing 10 outdated textbooks between them. Many children cannot complete their homework because they don't have access to the materials they need.
+    title: 'Maya — Reading Club, Antigua',
+    description: 'Weekly read-along videos from a highland classroom. Sats buy the book sets my students share and fund the next episode.',
+    created_at: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000).toISOString(),
+    full_story: `I teach 50 students in the highlands outside Antigua, Guatemala, and every week I film a read-along with them.
 
-The children here are incredibly motivated to learn. They wake up at 5 AM and walk up to two hours through mountain paths to reach our school. They deserve to have the proper tools to succeed. With your help, we can purchase 25 mathematics textbooks, 25 science books, reading materials for all grade levels, and essential writing supplies.
+We started posting the sessions so families who had moved away could still follow along. The videos now reach a few thousand viewers, and that is the whole business: people watch, and if it is useful to them they send sats.
 
-This investment will directly impact 50 children this year, and these books will serve hundreds more students in the years to come. Education is the key to breaking the cycle of poverty in our community. Every satoshi you contribute brings these children one step closer to a brighter future.
+This wishlist pays for the books we read on camera. Right now our 50 students share ten outdated textbooks between them, and many of them walk up to two hours to reach the school. Funded items go straight into the classroom library, and the next read-along happens the following week.
 
-Our teacher, María López, has been teaching here for 15 years with minimal resources. She says, "These children have so much potential. All they need is the chance to learn." Your support will give them that chance.`,
-    slug: 'guatemala-school-textbooks',
+Nothing here needs a bank, an advertiser, or a platform that takes a cut of the work. Every sat a viewer sends arrives in my own wallet, and every funded book shows up in the next episode.`,
+    slug: 'maya-reading-club',
     cover_image: '/images/mock/pexels-b67b196f53.jpeg',
     total_sats_goal: 1600000,
     total_sats_raised: 450000,
@@ -583,23 +581,24 @@ Our teacher, María López, has been teaching here for 15 years with minimal res
     latitude: 14.5586,
     longitude: -90.7339,
     creator: {
-      username: 'guatemala_education',
+      username: 'maya_reads',
       avatar_url: null,
+      bio: 'Teacher · reading club · filming the classroom in Antigua, Guatemala.',
     },
   },
   {
     id: 'mock-002',
-    title: 'Paul the Artist Needs a Guitar',
-    description: 'I am a street musician in Nashville trying to save up for a quality acoustic guitar. Music is my passion and livelihood. Any support appreciated!',
-    created_at: '2025-10-18T14:30:00Z',
-    full_story: `Hey there! My name is Paul Henderson, and I've been playing music on the streets of Nashville for the past five years. Music has always been my calling, but my current guitar is falling apart after years of daily use. The neck is warped, several frets are worn down, and it barely stays in tune anymore.
+    title: 'Paul — First Independent EP',
+    description: 'Six days a week on Broadway, recording a first EP between sets. Funding the instrument, the studio days, and the release.',
+    created_at: new Date(Date.now() - 9 * 24 * 60 * 60 * 1000).toISOString(),
+    full_story: `I play six days a week on Broadway in Nashville. I have been busking for five years and posting the sets online for two, and that audience is the reason recording is possible at all.
 
-I perform six days a week on Broadway, sharing original songs and classic covers with tourists and locals alike. Music is not just my passion—it's how I make my living and connect with people. I've played through rain, snow, and scorching heat because I believe in the power of live music to bring joy to people's lives.
+The EP is half written. What it needs now is an instrument that holds tuning, a few proper studio days, and someone to mix it. This wishlist is that budget, item by item.
 
-A quality Yamaha FG800 acoustic guitar would be a game-changer for me. It's known for its rich tone, durability, and excellent projection—perfect for street performance. With a reliable instrument, I could finally record my original songs properly and maybe even release an album.
+I would rather take support directly from the people listening than hand a fifth of it to a distributor that does not know or care about the songs. Sats land in my wallet, and backers get the rough cuts and stems as they are finished.
 
-I'm not asking for handouts—I work hard every single day. But saving up while paying rent and living expenses in Nashville has been nearly impossible. Your support would mean the world to me and help keep live music alive on these streets. Thank you for considering helping a fellow musician chase their dream.`,
-    slug: 'paul-artist-guitar',
+Nothing here is a handout request. I play every day. This is the cheapest honest way to get the songs recorded properly.`,
+    slug: 'paul-first-ep',
     cover_image: '/images/mock/pexels-5e89e84d08.jpeg',
     total_sats_goal: 1000000,
     total_sats_raised: 650000,
@@ -612,24 +611,22 @@ I'm not asking for handouts—I work hard every single day. But saving up while 
     creator: {
       username: 'paul_music',
       avatar_url: null,
-      bio: 'Street musician building a first independent EP, one song and one supporter at a time.',
+      bio: 'Street musician recording a first independent EP, funded one song at a time.',
     },
   },
   {
     id: 'mock-003',
-    title: 'Medical Supplies for Kenya Clinic',
-    description: 'Our rural clinic serves 2,000 families but lacks basic medical supplies. Help us stock essential medicines and equipment.',
-    created_at: '2025-10-20T09:15:00Z',
-    full_story: `Jambo! The Tumaini Health Clinic serves a rural community of over 2,000 families in the outskirts of Nairobi, Kenya. We are the only medical facility within a 30-kilometer radius, and families often walk for hours to reach us. Despite the tremendous need, we operate with critically low supplies.
+    title: 'Dr. Omondi — Field Diaries',
+    description: 'Documentary shorts from a rural clinic outside Nairobi. Funding clinic supplies on camera, one patient story at a time.',
+    created_at: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000).toISOString(),
+    full_story: `I run a clinic outside Nairobi that is the only medical facility within 30 kilometres. We see around 80 patients a day, and for the past year I have been filming what that actually looks like.
 
-Our clinic sees an average of 80 patients per day, ranging from children with malaria to mothers in labor to elderly patients with chronic conditions. Too often, we must turn patients away or provide inadequate care because we lack basic medicines, first aid supplies, and diagnostic equipment.
+The Field Diaries are short documentary pieces: a mother in labour, a child with malaria, the week we ran out of antibiotics. Nothing staged and nothing softened.
 
-With your support, we will purchase: 10 comprehensive first aid kits, essential medicines including antibiotics and pain relievers, and basic medical equipment like thermometers, blood pressure monitors, and stethoscopes. These supplies will enable us to treat thousands of patients over the next year.
+Publishing them changed something. Viewers started asking how to help, so this wishlist is the answer: first aid kits, thermometers, monitors, stethoscopes. Everything funded here goes into the clinic, and the delivery shows up in the next episode.
 
-Dr. James Omondi, our lead physician, works tirelessly with a small staff of nurses and volunteers. "We see miracles happen here every day despite our limitations," he says. "With proper supplies, we could save so many more lives."
-
-Your contribution will directly impact the health and wellbeing of an entire community. In rural Kenya, access to basic medical care can mean the difference between life and death. Thank you for helping us continue our mission of healing and hope.`,
-    slug: 'kenya-medical-supplies',
+100% of what you send reaches the clinic. Our small volunteer staff do not take a share of the supplies.`,
+    slug: 'omondi-field-diaries',
     cover_image: '/images/mock/pexels-1e4c9eed79.jpeg',
     total_sats_goal: 2400000,
     total_sats_raised: 890000,
@@ -640,25 +637,24 @@ Your contribution will directly impact the health and wellbeing of an entire com
     latitude: -1.2864,
     longitude: 36.8172,
     creator: {
-      username: 'nairobi_clinic',
+      username: 'omondi_field',
       avatar_url: null,
+      bio: 'Rural clinic doctor · documentary shorts from outside Nairobi, Kenya.',
     },
   },
   {
     id: 'mock-004',
-    title: 'Maria Dreams of Becoming a Developer',
-    description: 'I am a 19-year-old from Brazil learning to code. I need a laptop to complete my studies and start freelancing. This will change my life!',
-    created_at: '2025-10-25T16:45:00Z',
-    full_story: `Olá! My name is Maria Silva, and I'm a 19-year-old aspiring software developer from São Paulo, Brazil. I discovered programming two years ago at a free community coding workshop, and it completely changed my life. For the first time, I felt like I had found something I was truly good at and passionate about.
+    title: 'Maria Codes — Live Build Series',
+    description: 'Learning in public from São Paulo: live build streams, free notes and code, and a workstation so I can ship daily.',
+    created_at: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000).toISOString(),
+    full_story: `I am 19 and I learned to code at a free workshop in Sao Paulo. Two years later I stream the builds I am learning from, because that is how I learned in the first place.
 
-Since then, I've been learning everything I can through free online resources, completing courses on freeCodeCamp, and practicing coding challenges. But I've been doing all of this on borrowed computers at the public library and internet cafes, which limits my learning time to just a few hours per week.
+Until now I have worked from the public library and internet cafes, which caps me at a few hours a week. This wishlist is the workstation: a laptop, a bag to move it in, a mouse, and the small things that let me stream consistently.
 
-I recently completed a full-stack web development course and earned my certificate, but without a laptop, I can't build a portfolio or take on freelance projects. A reliable laptop would allow me to code every day, build real projects, contribute to open source, and eventually support my family through tech work.
+Every stream is free to watch, and I publish the notes and the code afterwards. If the builds are useful to you, send sats and the next one happens sooner.
 
-I come from a low-income family. My mother works as a housecleaner, and my father drives a bus. They've supported my education as much as possible, but a laptop is beyond our means right now. I'm not asking for a high-end machine—just a dependable Dell Inspiron that can run my development tools.
-
-This isn't just about getting a laptop. It's about breaking the cycle of poverty through technology and education. Your support would give me the tool I need to build a career and eventually give back to my community by teaching others to code. Muito obrigada for believing in my dream!`,
-    slug: 'maria-developer-laptop',
+Sample content: this is a demo creator profile used to show how Katoa works.`,
+    slug: 'maria-codes-live',
     cover_image: '/images/mock/pexels-a413517b26.jpeg',
     total_sats_goal: 1200000,
     total_sats_raised: 320000,
@@ -671,25 +667,22 @@ This isn't just about getting a laptop. It's about breaking the cycle of poverty
     creator: {
       username: 'maria_codes',
       avatar_url: null,
+      bio: 'Building in public from São Paulo · live streams, notes, and open code.',
     },
   },
   {
     id: 'mock-005',
-    title: 'Clean Water Project - Nigeria',
-    description: 'Building a well to provide clean drinking water for a village of 300 people. Every satoshi brings us closer to clean water for all.',
-    created_at: '2025-11-01T11:20:00Z',
-    full_story: `Welcome! Water For Life Nigeria is a community-led initiative working to bring clean drinking water to rural villages. Our current project focuses on Oke Village, home to approximately 300 people who currently have no access to clean water.
+    title: 'Water4Life — Well Documentary',
+    description: 'Filming a village borehole from survey to first water. Sats fund the drilling and the crew that documents it.',
+    created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+    full_story: `Oke Village has 300 people and no clean water. The nearest source is five kilometres away, and mostly it is women and children who walk it twice a day.
 
-The nearest clean water source is 5 kilometers away, and villagers—mostly women and children—make this journey twice a day carrying heavy containers. This exhausting routine prevents children from attending school regularly and exposes everyone to dangers along the route. Many families resort to drinking from contaminated streams, leading to frequent outbreaks of waterborne diseases.
+We are filming the whole project: the survey, the drilling to 60 metres, the hand pump going in, and the village committee we train to maintain it. The documentaries are how the work gets funded.
 
-We have partnered with local drilling experts and water engineers to install a sustainable borehole well with a hand pump. The well will be drilled to 60 meters depth to access clean groundwater, and a maintenance committee of village members will be trained to ensure its long-term operation.
+This wishlist is the drilling and documentation budget - equipment, storage, and the crew time to keep filming until water is flowing. Everything funded is shown on camera, and supporters can follow the build to the day the pump is tested.
 
-The impact of this project cannot be overstated. Clean water means children can attend school consistently. It means women can use their time for education or income-generating activities. It means fewer illnesses and deaths from preventable diseases. One well will serve this community for decades to come.
-
-Our project manager, Chinwe Okafor, grew up in a village without clean water. "I know what it's like to wake up at 4 AM to fetch water instead of going to school," she says. "No child should have to make that choice in 2025."
-
-Every contribution brings us closer to breaking ground on this well. Join us in giving the gift of clean water—the foundation of health, education, and prosperity. Thank you!`,
-    slug: 'nigeria-clean-water',
+No middleman holds this money. Sats arrive, the crew films the next stage, and the village keeps the well.`,
+    slug: 'water4life-well-documentary',
     cover_image: '/images/mock/pexels-8dcf89cf64.jpeg',
     total_sats_goal: 3000000,
     total_sats_raised: 1450000,
@@ -702,25 +695,22 @@ Every contribution brings us closer to breaking ground on this well. Join us in 
     creator: {
       username: 'water4life',
       avatar_url: null,
+      bio: 'Documenting a village well from survey to first water, for Oke Village.',
     },
   },
   {
     id: 'mock-006',
-    title: 'Tokyo Startup Needs Design Tools',
-    description: 'Small tech startup building accessibility tools for visually impaired users. Need design software licenses to complete our MVP.',
-    created_at: '2025-11-05T08:00:00Z',
-    full_story: `Hello! We are AccessTech Tokyo, a small startup team of three developers passionate about making technology more accessible for people with visual impairments. Our flagship product, VoiceNav, is a screen reader that uses AI to provide more natural and context-aware audio descriptions of digital content.
+    title: 'AccessTech Tokyo — Build in Public',
+    description: 'Three developers building a screen reader and streaming the process. Sats fund the design tools and the path to release.',
+    created_at: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
+    full_story: `We are three developers in Tokyo building VoiceNav, a screen reader that describes digital content in plain language. Our lead developer is blind, and she is the reason the product exists at all.
 
-Our team includes Yuki (our lead developer who is herself visually impaired), Hiroshi (AI specialist), and Kenji (UX researcher). We've been working on VoiceNav for the past year, mostly after our day jobs and on weekends. We've built a functional prototype that's already being tested by 50 beta users, and the feedback has been overwhelmingly positive.
+We stream the build: design reviews, accessibility testing, and the parts that do not work the first time. 50 beta users are already on it, and their feedback has been overwhelmingly positive.
 
-To complete our MVP and launch publicly, we need professional design software licenses—specifically Adobe Creative Cloud for UI mockups and Figma for collaborative design work. While we're developers at heart, we've learned that good visual design is crucial even (especially!) for accessibility tools, as many low-vision users still have some sight and benefit from thoughtful visual design.
+This wishlist covers the studio costs - design software, a drawing tablet, and a reference display for design reviews. There is no venture money here and no platform taking a cut of it.
 
-We're bootstrapping this startup without venture capital because we want to keep our tool affordable and accessible to everyone who needs it. In Japan alone, there are over 300,000 people with visual impairments, and worldwide the need is in the millions.
-
-Our vision is to launch VoiceNav as a free basic tool with premium features for sustainable revenue. But first, we need to finish the product. Your support will help us obtain the professional tools we need to complete development and launch within the next three months.
-
-Every contribution brings us closer to making the internet a more accessible place for everyone. Thank you very much!`,
-    slug: 'tokyo-startup-design',
+In Japan alone there are over 300,000 people with visual impairments. Every funded tool moves the public release closer.`,
+    slug: 'accesstech-build-in-public',
     cover_image: '/images/mock/pexels-02110df489.jpeg',
     total_sats_goal: 800000,
     total_sats_raised: 560000,
@@ -733,25 +723,22 @@ Every contribution brings us closer to making the internet a more accessible pla
     creator: {
       username: 'accessible_tech',
       avatar_url: null,
+      bio: 'Building VoiceNav in public · accessibility first, from Tokyo.',
     },
   },
   {
     id: 'mock-007',
-    title: 'Wildlife Conservation in Australia',
-    description: 'Protecting endangered species in the Outback. Funds will go toward camera equipment for monitoring wildlife populations.',
-    created_at: '2025-11-08T13:30:00Z',
-    full_story: `G'day! I'm Steve Morrison, a wildlife conservationist working in the Australian Outback for the past 12 years. My team and I are dedicated to protecting endangered species in one of the most remote and harsh environments on Earth.
+    title: 'Steve — Outback Camera Traps',
+    description: 'Twelve years of wildlife monitoring, filmed in the field. Sats fund the cameras watching 50,000 acres.',
+    created_at: new Date(Date.now() - 11 * 24 * 60 * 60 * 1000).toISOString(),
+    full_story: `I have worked wildlife in the Australian Outback for twelve years, and for the last three I have been filming the field work. Camera traps are how we see almost everything: Bilbies, Stick-nest Rats, and the bird populations behind them.
 
-The Australian Outback is home to incredible biodiversity, but many species are under threat from climate change, habitat loss, and invasive species. We focus on monitoring and protecting several critically endangered species including the Bilby, the Greater Stick-nest Rat, and various native bird species.
+Posting the footage made the work visible, and viewers started funding replacement cameras. This wishlist is that, line by line: twelve traps with night vision, cards, solar, and cases rated for the heat.
 
-Our primary method of monitoring wildlife populations is through camera traps—motion-activated cameras placed throughout the territory that capture images of animals without disturbing them. However, our current equipment is outdated and failing. Many cameras no longer work, which means we have huge gaps in our data and can't effectively track population changes or identify threats.
+Last year the traps caught a new threat to the local Bilbies early enough to intervene. That is what this buys: eyes on 50,000 acres, all year round.
 
-We need to purchase 12 new wildlife camera traps with night vision, weatherproof housing, and SD cards for data storage. These cameras will be placed at strategic locations across 50,000 acres of protected land, allowing us to monitor wildlife 24/7 throughout the year.
-
-The data we collect isn't just for research—it directly informs our conservation strategies. For example, last year our cameras revealed a new threat to local Bilbies, and we were able to intervene before the population was seriously impacted. This kind of real-time monitoring is crucial for protecting vulnerable species.
-
-We're a small nonprofit running on passion and minimal funding. Every dollar goes directly to conservation work. Your support will help us continue protecting the unique wildlife of the Australian Outback for future generations. Thank you, mate!`,
-    slug: 'australia-wildlife-conservation',
+We are a small crew running on passion and minimal funding. Every sat goes to the equipment, and the footage is free for anyone to watch.`,
+    slug: 'outback-camera-traps',
     cover_image: '/images/mock/pexels-2f3dc89a68.jpeg',
     total_sats_goal: 1500000,
     total_sats_raised: 1100000,
@@ -764,25 +751,22 @@ We're a small nonprofit running on passion and minimal funding. Every dollar goe
     creator: {
       username: 'aussie_wildlife',
       avatar_url: null,
+      bio: 'Wildlife field work in the Australian Outback, filmed as it happens.',
     },
   },
   {
     id: 'mock-008',
-    title: 'Community Garden in Berlin',
-    description: 'Creating an urban garden to teach kids about sustainability and healthy eating. Need seeds, tools, and supplies to get started.',
-    created_at: '2025-11-10T10:00:00Z',
-    full_story: `Guten Tag! I'm Anna Schmidt, a community organizer in Berlin, Germany. For the past three years, I've been working with local families to transform an abandoned lot in our neighborhood into a thriving community garden where children can learn about sustainable food production and healthy eating.
+    title: 'Anna — Neukölln Garden Club',
+    description: 'A grow-along series from a Berlin community plot. Sats buy the seeds, tools, and beds 30 families plant in.',
+    created_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+    full_story: `I organise a community garden in Neukoelln with 30 families. We have a 500 square metre plot and a waiting list, and last spring I started filming the whole season as a grow-along.
 
-Our neighborhood, Neukölln, is a vibrant multicultural area with many young families, but it's heavily urbanized with limited green space. Children here grow up surrounded by concrete, with little understanding of where their food comes from or how to grow it themselves.
+The series is practical: what to plant when, what failed, and how to keep a compost going in an apartment block. Kids who have never pulled a carrot out of soil are in most of the episodes.
 
-We've secured permission to use a 500 square meter plot, and over 30 families have signed up to participate. Our vision is to create raised garden beds where children and families can grow vegetables, herbs, and flowers. We'll also include a small greenhouse for year-round growing, a composting station to teach about waste reduction, and a community gathering space.
+This wishlist pays for the season - seeds, tools, timber for the raised beds, the greenhouse, and the teaching materials. Funded items appear in the episodes they were bought for.
 
-The funds we're raising will purchase: organic seeds and seedlings for initial planting, essential gardening tools (shovels, rakes, watering cans), lumber and materials for building 15 raised beds, a small greenhouse structure, composting bins, and educational materials about sustainable gardening.
-
-This project is about more than just growing vegetables. It's about bringing our diverse community together, teaching children valuable life skills, promoting healthy eating habits, and creating a green oasis in our urban environment. Studies show that children who grow their own food are much more likely to eat vegetables and develop lifelong healthy eating habits.
-
-We've already organized volunteer teams for construction and maintenance. All we need now are the supplies to get started. Your support will help create a lasting resource for our community and inspire the next generation of urban gardeners. Vielen Dank (Thank you very much)!`,
-    slug: 'berlin-community-garden',
+The garden is a shared resource, not a shop. Sats cover the supplies, and the harvest goes to the families who planted it.`,
+    slug: 'neukoelln-garden-club',
     cover_image: '/images/mock/pexels-5b9562dd2f.jpeg',
     total_sats_goal: 600000,
     total_sats_raised: 480000,
@@ -795,6 +779,7 @@ We've already organized volunteer teams for construction and maintenance. All we
     creator: {
       username: 'berlin_green',
       avatar_url: null,
+      bio: 'Community garden organiser · grow-along series from Neukölln, Berlin.',
     },
   },
   {
@@ -909,80 +894,6 @@ Lightning tips = instant access to drop notifications and custom thank-you clips
       username: 'sasha_vip',
       avatar_url: null,
       bio: 'Movement artist · Premium video · 0% fee Lightning payouts',
-    },
-  },
-  {
-    id: 'mock-video-003',
-    title: 'Luna — Behind the Scenes: Studio Diaries',
-    description:
-      'First member-only drop from the Los Angeles studio session. Sats fund the next shoot and keep this channel independent.',
-    created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-    full_story: `This drop is part of my direct-to-fan video series.
-
-It covers one studio day: lighting setup, sound checks, wardrobe, the shoot itself, and the rough cut.
-
-I am publishing the process, not just the polished result. Supporters get early access, behind-the-scenes clips, and a vote on the next shoot theme.
-
-Everything here is funded directly by viewers. No platform holds the money and no middleman decides what can be made.
-
-If you want to keep this kind of work alive, the fastest way is to support the wishlist directly.`,
-    slug: 'luna-studio-diaries-drop',
-    card_style: 'creator',
-    category: 'creator',
-    cover_image:
-      '/images/mock/pexels-7867fa1faf.jpeg',
-    cover_video_url:
-      'https://videos.pexels.com/video-files/4058851/4058851-hd_720_1280_25fps.mp4',
-    total_sats_goal: 2500000,
-    total_sats_raised: 1840000,
-    subscriber_count: 1284,
-    country: 'United States',
-    country_code: 'US',
-    country_flag: '🇺🇸',
-    city: 'Los Angeles',
-    latitude: 34.0522,
-    longitude: -118.2437,
-    creator: {
-      username: 'luna_vip',
-      avatar_url: null,
-      bio: 'Video creator · VIP drops · Bitcoin-native monetization',
-    },
-  },
-  {
-    id: 'mock-video-004',
-    title: 'Luna — Travel Diary: San Francisco Shoot',
-    description:
-      'On-location premium video diary from a weekend shoot. Tips go straight to production, editing, and the next trip.',
-    created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-    full_story: `This is the latest member drop from the San Francisco shoot.
-
-It is a short behind-the-scenes piece: travel, setup, timing, and the final cut.
-
-I am building a small direct fan economy here. The wishlist pays for locations, lights, sound, editing time, and travel.
-
-I would rather take sats directly from viewers than hand a cut to a platform that does not know or care about the work.
-
-If you watch the final piece, the fastest way to keep the next one happening is to support the wishlist.`,
-    slug: 'luna-san-francisco-travel-diary',
-    card_style: 'creator',
-    category: 'creator',
-    cover_image:
-      '/images/mock/pexels-7867fa1faf.jpeg',
-    cover_video_url:
-      'https://videos.pexels.com/video-files/4058851/4058851-hd_720_1280_25fps.mp4',
-    total_sats_goal: 2500000,
-    total_sats_raised: 1840000,
-    subscriber_count: 1284,
-    country: 'United States',
-    country_code: 'US',
-    country_flag: '🇺🇸',
-    city: 'Los Angeles',
-    latitude: 34.0522,
-    longitude: -118.2437,
-    creator: {
-      username: 'luna_vip',
-      avatar_url: null,
-      bio: 'Video creator · VIP drops · Bitcoin-native monetization',
     },
   },
 ];

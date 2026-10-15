@@ -32,10 +32,10 @@ export const DEMO_SCENARIOS: DemoScenario[] = [
   {
     id: 'music',
     label: 'Independent music',
-    shortLabel: 'Paul’s guitar fund',
-    description: 'A personal funding journey broken into practical gear milestones.',
-    slug: 'paul-artist-guitar',
-    href: '/wishlist/paul-artist-guitar',
+    shortLabel: 'Paul’s first EP',
+    description: 'A recording journey broken into practical gear and studio milestones.',
+    slug: 'paul-first-ep',
+    href: '/wishlist/paul-first-ep',
   },
 ];
 
