@@ -2,11 +2,11 @@
   "schema": "gab.product-metrics.v1",
   "productId": "katoa",
   "name": "Katoa",
-  "updatedAt": "2026-10-15T21:54:20.141Z",
+  "updatedAt": "2026-10-15T21:59:26.046Z",
   "window": {
     "label": "30d",
-    "from": "2026-09-15T21:54:20.141Z",
-    "to": "2026-10-15T21:54:20.141Z"
+    "from": "2026-09-15T21:59:26.046Z",
+    "to": "2026-10-15T21:59:26.046Z"
   },
   "health": {
     "status": "green",

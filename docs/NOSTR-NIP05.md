@@ -26,15 +26,29 @@ Buzz’s useful ideas for this future layer are signed event history, separate k
 
 MotoPass passport references and Satohash timestamps should be optional, separate proof layers. NIP-05 says “this domain controls this mapping”; it does not say “this person passed KYC.”
 
-## Creator handles (future)
+## Creator handles — generated from profile state (2026-10-15)
 
 Claiming `alice@katoa.org`:
 
-1. Creator links NIP-07 pubkey in Settings (hex or npub).
-2. Ops (or a future Edge Function) appends `"alice": "<hex>"` to `names` and relay hints under `relays`.
-3. Redeploy static file **or** serve dynamic JSON from a worker keyed by Supabase `profiles.username` → `nostr_pubkey`.
+1. Creator links an NIP-07 pubkey in **Settings → Link NIP-07**, or on `/nip05` while signed in
+   (that page writes `profiles.nostr_pubkey`; the local claim copy is only the signed-out fallback).
+2. `npm run nip05` (`scripts/generate-nip05.ts`, run by `npm run build`) reads profile state and
+   writes `public/.well-known/nostr.json`:
+   - `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` (or the `SUPABASE_*` names) present → mode
+     `profiles`: rows with a valid NIP-05 name and a 64-hex pubkey are published, each skip is logged
+     with its reason.
+   - No credentials → mode `baseline`: the committed file is reproduced **byte for byte** (verified), so
+     a credential-less build never dirties the tree or drops the platform identity.
+3. Deploy serves the generated file from `dist/.well-known/nostr.json`.
 
-Until automation exists, open a GitHub issue / ops request with username + npub.
+Rules enforced by `src/lib/nip05Registry.ts` (9 tests): the committed platform entries always win a name
+collision, `_` and `katoa` are reserved, names must match the NIP-05 local-part charset (lowercase,
+`a-z0-9-_.`, ≤63 chars), pubkeys must be 64 hex, and duplicates collapse.
+
+### Still open (ops / THOR)
+
+A claim only appears **after a deploy**. Serving the registry dynamically (a Pages Function or Worker keyed
+to the same profile state) removes that lag; until then a claim is a profile write plus the next build.
 
 ## Relays (client defaults)
 

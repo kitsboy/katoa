@@ -7,6 +7,8 @@ import { Link } from '../components/Link';
 import { copyToClipboard } from '../lib/clipboard';
 import { useToast } from '../components/Toast';
 import { hasNip07, nostrService } from '../lib/nostr';
+import { useAuth } from '../contexts/AuthContext';
+import { isSupabaseConfigured } from '../lib/supabase';
 
 /**
  * Scaffold for creator@katoa.org claims.
@@ -14,6 +16,7 @@ import { hasNip07, nostrService } from '../lib/nostr';
  */
 export function Nip05ClaimPage() {
   const { toast } = useToast();
+  const { user, profile, updateProfile } = useAuth();
   const [username, setUsername] = useState('');
   const [npub, setNpub] = useState('');
 
@@ -58,11 +61,31 @@ export function Nip05ClaimPage() {
     } catch {
       /* ignore */
     }
+    // The served registry is generated from profile state at build time, so the
+    // mapping has to live on the profile — a browser-local claim reaches nobody.
+    let publishedToProfile = false;
+    if (isSupabaseConfigured() && user) {
+      const result = await updateProfile({ nostr_pubkey: hex });
+      publishedToProfile = !result.error;
+      if (!publishedToProfile) {
+        toast('Could not save your pubkey to your profile — add it in Settings instead.', 'error');
+      }
+    } else if (profile) {
+      // Preview user, or the profile write is unavailable: in-memory only, and the
+      // panel below says nothing was published.
+      await updateProfile({ nostr_pubkey: hex });
+    }
+
     const snippet = JSON.stringify({ [u]: hex }, null, 2);
     await copyToClipboard(
       `NIP-05 claim for ops:\n${JSON.stringify(request, null, 2)}\n\nAdd to names in nostr.json:\n${snippet}`
     );
-    toast('Claim saved locally and copied for ops / GitHub issue', 'success');
+    toast(
+      publishedToProfile
+        ? `Pubkey saved to your profile. ${u}@katoa.org is served after the next deploy.`
+        : 'Claim saved locally and copied for ops / GitHub issue',
+      'success'
+    );
   }
 
   return (
@@ -102,12 +125,22 @@ export function Nip05ClaimPage() {
             Submit claim request
           </Button>
           <p className="text-[11px] text-gray-500 leading-relaxed">
-            Automation is not live yet — this copies a request for ops. See{' '}
+            <code className="text-gray-400">/.well-known/nostr.json</code> is generated from profile state at build
+            time, so a signed-in claim saves your pubkey to your profile and is served as{' '}
+            <span className="text-gray-300">{username || 'yourname'}@katoa.org</span> after the next deploy — it is a
+            domain mapping, not KYC. Signed out (or when the profile write fails) this copies an ops request instead.
+            See{' '}
             <Link href="/security" className="text-neon-cyan-400 hover:underline">
               security
             </Link>{' '}
             and docs/NOSTR-NIP05.md.
           </p>
+          {!isSupabaseConfigured() && (
+            <p className="text-[11px] text-amber-200/90 leading-relaxed">
+              This build has no live backend, so nothing can be published from here — the button above only prepares
+              the request for ops.
+            </p>
+          )}
         </div>
       </div>
     </div>

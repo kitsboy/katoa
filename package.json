@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run check:assets && npm run sitemap && vite build && node scripts/warm-legal-chunks.mjs && node scripts/prerender.mjs",
+    "build": "npm run check:assets && npm run sitemap && npm run nip05 && vite build && node scripts/warm-legal-chunks.mjs && node scripts/prerender.mjs",
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -19,6 +19,7 @@
     "db:setup": "supabase db push && npm run db:types",
     "env:cf": "bash scripts/print-cloudflare-env.sh",
     "sitemap": "node scripts/generate-sitemap.mjs",
+    "nip05": "npx tsx scripts/generate-nip05.ts",
     "test:coverage": "vitest run --coverage",
     "generate-metrics": "npx tsx scripts/generate-metrics.ts",
     "version:write": "node scripts/write-version.mjs",
