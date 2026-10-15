@@ -21,11 +21,11 @@ import {
   merchantCategoryFor,
   parseMapViewParams,
   sanitizeImageUrl,
-  safeHttpUrl,
   savePersistedPlaceDetail,
   savePersistedPlaces,
   zoomToRadiusKm,
 } from '../btcmap';
+import { safeHttpUrl } from '../safeUrl';
 
 describe('escapeMapPopupText', () => {
   it('escapes HTML special characters', () => {

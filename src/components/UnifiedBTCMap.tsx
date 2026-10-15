@@ -38,7 +38,6 @@ import {
   buildOsmPlaceUrl,
   buildShareMapUrl,
   escapeMapPopupText,
-  safeHttpUrl,
   fetchAreasAt,
   fetchBTCMapActivity,
   fetchBTCMapEvents,
@@ -61,6 +60,7 @@ import {
   searchBTCMap,
   zoomToRadiusKm,
 } from '../lib/btcmap';
+import { safeHttpUrl } from '../lib/safeUrl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
 type MapLibre = typeof import('maplibre-gl');

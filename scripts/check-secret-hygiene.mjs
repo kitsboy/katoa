@@ -160,6 +160,11 @@ const RULES = [
   ['nostr-secret-key', /\bnsec1[0-9a-z]{20,}/],
   ['cloudflare-token', /\bcfut_[A-Za-z0-9_-]{20,}/],
   ['cloudflare-global-key', /\bcfk_[A-Za-z0-9_-]{20,}/],
+  // Cloudflare OAuth grants (t_20261014): the 2026-10-13 audit printed a live
+  // wrangler OAuth token to terminal output that no rule could see. `cfoat_` is
+  // the access token, `cfort_` the refresh token, `cfat_` the older spelling.
+  // A leaked one is a full-account grant, so it gets its own rule.
+  ['cloudflare-oauth-token', /\bcf(?:o?at|ort)_[A-Za-z0-9_-]{20,}/],
   ['github-token', /\bgh[pousr]_[A-Za-z0-9]{20,}/],
   ['openai-key', /\bsk-[A-Za-z0-9_-]{24,}/],
   ['aws-access-key', /\bAKIA[0-9A-Z]{16}\b/],
@@ -219,7 +224,7 @@ const STRUCTURAL_RULES = [
 ];
 
 /** A credential hidden by encoding still reveals itself when decoded. */
-const DECODED_SENSITIVE = /\b(?:cfut_|cfk_|gh[pousr]_|sk-|AKIA|xox[baprs]-|nsec1)[A-Za-z0-9_-]{16,}|-----BEGIN [A-Z ]*PRIVATE KEY-----/;
+const DECODED_SENSITIVE = /\b(?:cfut_|cfk_|cf(?:o?at|ort)_|gh[pousr]_|sk-|AKIA|xox[baprs]-|nsec1)[A-Za-z0-9_-]{16,}|-----BEGIN [A-Z ]*PRIVATE KEY-----/;
 
 const base64Candidates = (line) =>
   line.match(/[A-Za-z0-9+/]{20,}={0,2}/g) || [];

@@ -4,6 +4,7 @@
  * @see https://github.com/teambtcmap/btcmap-api
  * @see https://gitea.btcmap.org/teambtcmap/btcmap-general/wiki/API-Overview
  */
+import { safeHttpUrl } from './safeUrl';
 
 export const BTCMAP_ATTRIBUTION =
   'Map data © BTC Map · © OpenStreetMap · © OpenFreeMap';
@@ -399,23 +400,9 @@ export function escapeMapPopupText(text: string): string {
 }
 
 /** Return a safe http(s) image URL, or null — guards against `javascript:` in inline styles. */
+/** Image `src` guard — same scheme rule as safeHttpUrl. */
 export function sanitizeImageUrl(url?: string | null): string | null {
-  if (!url) return null;
-  const trimmed = url.trim();
-  if (!/^https?:\/\//i.test(trimmed)) return null;
-  return trimmed;
-}
-
-/**
- * Return a safe http(s) href, or null — guards `href="..."` sinks against
- * `javascript:` / `data:` from untrusted OSM-sourced website fields.
- * HTML-escaping alone does not make a URL scheme safe, so this runs first.
- */
-export function safeHttpUrl(url?: string | null): string | null {
-  if (!url) return null;
-  const trimmed = url.trim();
-  if (!/^https?:\/\//i.test(trimmed)) return null;
-  return trimmed;
+  return safeHttpUrl(url);
 }
 
 function getApiBaseUrl(): string {

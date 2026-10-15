@@ -185,7 +185,7 @@ export const remainingJa = {
   'home.shot.title': 'メデジンの若者のためのスケートパーク',
   'home.shot.description':
     'スケートボードで人生を変える。500人以上の若者が滑り、学び、成長できる安全なコミュニティ空間をつくる。',
-  'home.shot.satsRaised': '${n} sats 達成',
+  'home.shot.satsRaised': '${n} sats 集まった',
   'home.shot.ofGoal': '目標 ${n} sats のうち',
   'home.shot.sendGift': 'ギフトを送る',
   'home.shot.fundedPct': '${pct}% 達成',
@@ -293,7 +293,7 @@ export const remainingJa = {
     'KATOAへようこそ。ご使用のメールアドレスに確認リンクを送信しました — タップするとアカウントが有効になります。KYC不要、カード不要、プラットフォーム手数料は永久にゼロです。',
   'thankyou.contact.title': 'ありがとうございます — メッセージをお送りしました。',
   'thankyou.contact.lead':
-    'メッセージを受け取り、保険としてクリップボードにもコピーを保存しました。KATOAチームの担当者が営業日以内に返信します。',
+    'メッセージを受け取り、バックアップとしてクリップボードにもコピーを保存しました。KATOAチームの担当者が営業日以内に返信します。',
   'thankyou.support.title': 'ありがとうございます — あなたのsatsがKATOAを無料に保っています。',
   'thankyou.support.lead':
     'ご支援がBitcoinコミュニティの無料オープンソースツールを支えています。仲介者は一切関わっておらず、今後も関わることはありません。',
