@@ -12,7 +12,10 @@ Brief: fixed the failed list (both stale e2e specs, and the reason they drifted)
 6. **Follow vs subscribe.** Follow publishes a NIP-02 kind-3 contact list through NIP-07 (existing list read and merged first, so a follow cannot wipe other follows); subscribe stays paid. The profile badge says `Nostr` or `This device`.
 7. **NIP-05 from profile state.** `.well-known/nostr.json` is generated during the build from `profiles.username → nostr_pubkey`; a credential-less build reproduces the committed file byte for byte. Verified the profiles path against a PostgREST stub and the served file in a browser.
 8. **Per-channel earnings with proof.** Dashboard totals split by Lightning / on-chain / Nostr zaps / silent payments. Only server-confirmed rows count as settled, and a rail Katoa can never confirm is excluded even when a row claims confirmed.
-9. **Verified:** `npm run check:fast` → 419/419 tests, typecheck clean, lint 0 errors; build → 26/26 routes + 106 dist references; `npx playwright test` → **32/32** (was 30/32).
+9. **Settlements record their lane and proof without mutating payment rows.** The webhook writes a `payment_settlements` total + proof shell per settled intent (txid link for on-chain, payment-hash shell for Lightning, no fake proof for silent), and the browser reads settlement through the provider event ledger — settled rows never call `increment_funding_totals` again and never write a payment row, so each settlement counts once atomically. On-chain gifts can now settle from a scheduled watcher on the same guard, and both streams reject a settlement against a non-following intent or an already-settled intent. As a cleanup catch, `useCreatorEngagement` was posting duplicate `addPostComment` calls in its DB branch and now calls the provider once.
+10. **Verified:** `npm run check:fast` → 419/419 tests, typecheck clean, lint 0 errors; build → 26/26 routes + 106 dist references; `npx playwright test` → **32/32** (was 30/32).
+
+**Stamps before push:** version bundle rewritten to `v1.1.7+482.0d7300c` and `public/metrics.json` regenerated from the current tip, ready to ship with the fix commit.
 
 ---
 
