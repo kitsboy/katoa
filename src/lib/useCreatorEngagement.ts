@@ -153,14 +153,6 @@ export function useCreatorEngagement(posts: CreatorPost[]): CreatorEngagement {
         }
         return false;
       }
-          const result = await addPostComment(user.id, key, body);
-      setSaving(false);
-      if (!result.ok) {
-        if (isCommentRateLimited(result.error ?? '')) {
-          throw new Error('Too many comments — wait a moment and try again.');
-        }
-        return false;
-      }
       if (!result.body) return false;
       const comment: CreatorPostComment = { user: displayName, text: result.body };
       setDbComments((prev) => ({ ...prev, [key]: [...(prev[key] ?? []), comment] }));
