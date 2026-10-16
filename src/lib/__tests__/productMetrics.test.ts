@@ -120,3 +120,19 @@ describe('loadHomeStats', () => {
     expect(stats.volume).toBe('—');
   });
 });
+
+/**
+ * Counter-readiness guard — the doc-comment rule above should never become a code path.
+ *
+ * The live path is allowed to read 0 sats from an authoritative source and then fall
+ * through to the labeled sample file. What it must not do is invent volume from the
+ * sample catalog inside the live path just because the number is small.
+ */
+describe('counter readiness', () => {
+  it('keeps the live path authoritative at 0 rather than mixing in sample volume', async () => {
+    const liveAtZero = await loadHomeStats(fakeClient({ creators: 9, rows: [{ total_sats_raised: 0, total_sats_goal: 21000 }] }));
+    expect(liveAtZero.source).toBe('supabase');
+    expect(liveAtZero.isDemoSample).toBe(false);
+    expect(liveAtZero.volume).toBe('0 sats');
+  });
+});

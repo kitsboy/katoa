@@ -173,6 +173,15 @@ export function homeStatsFromMetrics(m: ProductMetricsEnvelope): HomeStats {
  * Home stats from one source at a time: live Supabase counters, else the labeled sample file,
  * else an explicit "unavailable". Mixing them (a real creator count beside a sample volume with
  * the demo banner cleared) is the failure this replaces.
+ *
+ * COUNTER READINESS NOTE (Next 10, item 1):
+ * The live path reads `wishlists.total_sats_raised`, which only the atomic funding totals RPC
+ * under service role moves. Until the deployed Lightning webhook + on-chain watcher are settling
+ * real payments, `satsRaised` is 0 and the UI falls through to the labeled sample file — which is
+ * the honest behavior, not a bug. Do not wire client-side arithmetic or a cached sample into the
+ * live path to "make it look populated". The moment real settlements exist, this read naturally
+ * becomes authoritative without a code path change; the work then is infra (webhook deploy + 
+ * watcher trigger + real creator seeding), not another stats module.
  */
 export async function loadHomeStats(client?: CountersClient): Promise<HomeStats> {
   const live = await fetchLiveCounters(client);
