@@ -47,10 +47,16 @@ export interface PostCommentRow {
 }
 
 const UNLOCK_ACTIVE_STATUSES = ['active'] as const;
+const UNLOCK_PENDING_STATUSES = ['pending'] as const;
 
 /** Only an active unlock opens paid media; pending is not paid. */
 export function isActiveUnlockRow(row: Pick<PostUnlockRow, 'status'>): boolean {
   return (UNLOCK_ACTIVE_STATUSES as readonly string[]).includes(row.status);
+}
+
+/** Pending unlocks are not yet paid; only active can open media. */
+export function isPendingUnlockRow(row: Pick<PostUnlockRow, 'status'>): boolean {
+  return (UNLOCK_PENDING_STATUSES as readonly string[]).includes(row.status);
 }
 
 export function keysFrom<T extends { post_key: string }>(

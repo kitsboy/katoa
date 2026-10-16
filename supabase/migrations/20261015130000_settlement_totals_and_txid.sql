@@ -33,11 +33,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS transactions_txid_unique
   ON public.transactions (txid)
   WHERE txid IS NOT NULL;
 
--- One implementation of "what does this campaign have raised?"
-CREATE OR REPLACE FUNCTION public.recompute_funding_totals(
-  p_wishlist_id uuid,
-  p_item_id uuid
-)
+-- One implementation of "what does this campaign have raised?"CREATE OR REPLACE FUNCTION public.recompute_funding_totals(p_wishlist_id uuid, p_item_id uuid)
 RETURNS void
 LANGUAGE plpgsql
 SECURITY DEFINER
@@ -72,6 +68,15 @@ $$;
 
 REVOKE ALL ON FUNCTION public.recompute_funding_totals(uuid, uuid) FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.recompute_funding_totals(uuid, uuid) TO service_role;
+
+ DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_proc WHERE proname = 'recompute_funding_totals') THEN
+    RAISE EXCEPTION 'The funding totals function this migration depends on is not present. Run the earlier migration that creates it first.';
+  END IF;
+END $$;
+
+
 
 -- Deprecated: keep the signature, drop the additive maths.
 CREATE OR REPLACE FUNCTION public.increment_funding_totals(
