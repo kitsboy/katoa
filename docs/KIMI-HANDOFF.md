@@ -14,7 +14,9 @@
 
 ### 3. Home stats take one source at a time
 
-The hero could show a **live** Supabase creator count beside the **sample** catalog's raised volume with the demo banner cleared, because the live path overrode one field and dropped `isDemoSample`. `loadHomeStats()` now resolves a single source: authoritative counters, or the labeled sample file, or an explicit "unavailable" — never a mix. The counters read what the database maintains (`wishlists.total_sats_raised`, which only the atomic `increment_funding_totals` RPC under service role moves), so they are **0** until real settlements exist. 0 is the honest number; 9.28M is not.
+The hero could show a **live** Supabase creator count beside the **sample** catalog's raised volume with the demo banner cleared, because the live path overrode one field and dropped `isDemoSample`. `loadHomeStats()` now resolves a single source: authoritative counters, or the labeled sample file, or an explicit "unavailable" — never a mix. The counters read what the database maintains (`wishlists.total_sats_raised`, which only the atomic `recompute_funding_totals` RPC under service role moves), so they are **0** until real settlements exist. 0 is the honest number; 9.28M is not.
+
+The same boundary got a guard this session: `src/lib/productMetrics.ts` now carries an explicit counter-readiness note on `loadHomeStats`, and `src/lib/__tests__/productMetrics.test.ts` has a guard test proving the live path stays authoritative at `0 sats` instead of mixing sample volume into it. Guard landed as `68c2fe9`.
 
 ### 4. Subscriber-only posts unlock from DB state, not a browser value
 
@@ -41,6 +43,8 @@ The dashboard had one 14-day number. Now it breaks totals down by Lightning, on-
 **Git state:** `3d11aff` both e2e specs + form labels · `acfb924` e2e in the gate · `d5becfc` CSP guard · `50d1ef4` stats source · `4790a34` DB subscription gate · `0ec42b0` silent handoff · `0804446` kind-3 follow · `15512ff` NIP-05 generation · `2189c0e` channel earnings.
 
 **Still open for Kimi / THOR:** the same money-and-ops blockers as before (deployed Lightning webhook writing `subscriptions` + atomic totals, authoritative Supabase counters, deployed NIP-07 challenge login, NIP-05 now needs only a redeploy per claim rather than an ops edit — dynamic serving is the next step), plus one post-deploy CSP check of `/verify` and the footer block height.
+
+**This session (2026-10-16, the comment fix + settlement docs + counter-guard):** four commits on top of the 10-15 batch: `0d7300c` removed a duplicated `addPostComment` branch in `useCreatorEngagement`; `5a0a30d` rebuilt version/metrics stamps and refreshed the handoff note; `e8043d4` fixed a typecheck regression in `engagementGate.ts` (missing `const` on `UNLOCK_PENDING_STATUSES`) and a whitespace glitch in the settlement totals migration; `68c2fe9` added a counter-readiness guard in `productMetrics.ts` + a guard test. Final gate re-run on the pushed tip: `npm run check:fast` → 63 test files / 474 tests, typecheck clean, lint clean, asset guard clean. One doc correction during the item-2 reread: item 9’s shorthand says the webhook writes a `payment_settlements` table, but the current repo has **no such table** — the real staged webhook settles through `payment_events` + `transactions.txid` + `recompute_funding_totals`. Item 2’s pre-deploy checklist was rewritten to match that actual path.
 ## Session — 2026-10-15 · English-only UI, real payment channels, silent payments, and the demo truth pass (Buffy M3)
 
 **Done:**
