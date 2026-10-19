@@ -1,0 +1,109 @@
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": "Katoa \u2014 zero-fee creator support",
+  "home_page_url": "https://katoa.org",
+  "feed_url": "https://katoa.org/feed.json",
+  "description": "Creator pages and the rules around them. Own pages only. Sibling news is not mixed in.",
+  "items": [
+    {
+      "id": "https://katoa.org/",
+      "url": "https://katoa.org/",
+      "title": "Katoa",
+      "content_text": "Zero-fee creator support on Bitcoin Lightning. No bank account. No KYC.",
+      "date_published": "Mon, 19 Oct 2026 12:00:00 GMT",
+      "tags": [
+        "own-page"
+      ]
+    },
+    {
+      "id": "https://katoa.org/explore",
+      "url": "https://katoa.org/explore",
+      "title": "Explore",
+      "content_text": "Creators you can support, listed in the open.",
+      "date_published": "Mon, 19 Oct 2026 12:00:00 GMT",
+      "tags": [
+        "own-page"
+      ]
+    },
+    {
+      "id": "https://katoa.org/about",
+      "url": "https://katoa.org/about",
+      "title": "About",
+      "content_text": "What Katoa is, and what it refuses to charge.",
+      "date_published": "Mon, 19 Oct 2026 12:00:00 GMT",
+      "tags": [
+        "own-page"
+      ]
+    },
+    {
+      "id": "https://katoa.org/pricing",
+      "url": "https://katoa.org/pricing",
+      "title": "Pricing",
+      "content_text": "The fee is zero. This page says what that means.",
+      "date_published": "Mon, 19 Oct 2026 12:00:00 GMT",
+      "tags": [
+        "own-page"
+      ]
+    },
+    {
+      "id": "https://katoa.org/faq",
+      "url": "https://katoa.org/faq",
+      "title": "FAQ",
+      "content_text": "Plain answers: fees, KYC, and how a payment lands.",
+      "date_published": "Mon, 19 Oct 2026 12:00:00 GMT",
+      "tags": [
+        "own-page"
+      ]
+    },
+    {
+      "id": "https://katoa.org/creators",
+      "url": "https://katoa.org/creators",
+      "title": "For creators",
+      "content_text": "How a creator receives support.",
+      "date_published": "Mon, 19 Oct 2026 12:00:00 GMT",
+      "tags": [
+        "own-page"
+      ]
+    },
+    {
+      "id": "https://katoa.org/creators/guidelines",
+      "url": "https://katoa.org/creators/guidelines",
+      "title": "Creator guidelines",
+      "content_text": "The rules a creator page has to follow.",
+      "date_published": "Mon, 19 Oct 2026 12:00:00 GMT",
+      "tags": [
+        "own-page"
+      ]
+    },
+    {
+      "id": "https://katoa.org/verify",
+      "url": "https://katoa.org/verify",
+      "title": "Verify",
+      "content_text": "Check a creator page before you pay.",
+      "date_published": "Mon, 19 Oct 2026 12:00:00 GMT",
+      "tags": [
+        "own-page"
+      ]
+    },
+    {
+      "id": "https://katoa.org/comparison",
+      "url": "https://katoa.org/comparison",
+      "title": "Comparison",
+      "content_text": "How Katoa sits next to a platform that takes a cut.",
+      "date_published": "Mon, 19 Oct 2026 12:00:00 GMT",
+      "tags": [
+        "own-page"
+      ]
+    },
+    {
+      "id": "https://katoa.org/security",
+      "url": "https://katoa.org/security",
+      "title": "Security",
+      "content_text": "How the site treats keys and payments.",
+      "date_published": "Mon, 19 Oct 2026 12:00:00 GMT",
+      "tags": [
+        "own-page"
+      ]
+    }
+  ]
+}

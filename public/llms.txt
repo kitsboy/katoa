@@ -42,3 +42,5 @@ Public creator profiles: `/u/:username`. Wishlists: `/wishlist/:slug`.
 - Keywords: zero fee creator platform bitcoin; bitcoin lightning wishlist; nostr creator support; keep 100% creator earnings; non-custodial lightning tips.
 - Avoid: donation widget, OnlyFans alternative (as public SEO), crypto/web3.
 - Source: https://github.com/kitsboy/katoa
+- Feed: https://katoa.org/feed.xml
+- Feed (JSON): https://katoa.org/feed.json
