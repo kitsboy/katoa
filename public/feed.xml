@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <atom:link href="https://katoa.org/feed.xml" rel="self" type="application/rss+xml"/>
+    <title>Katoa — zero-fee creator support</title>
+    <link>https://katoa.org</link>
+    <description>Creator pages and the rules around them. Own pages only. Sibling news is not mixed in.</description>
+    <language>en</language>
+    <lastBuildDate>Mon, 19 Oct 2026 07:11:47 GMT</lastBuildDate>
+    <item>
+      <title>Katoa</title>
+      <link>https://katoa.org/</link>
+      <guid isPermaLink="true">https://katoa.org/</guid>
+      <pubDate>Mon, 19 Oct 2026 12:00:00 GMT</pubDate>
+      <category>own-page</category>
+      <description>Zero-fee creator support on Bitcoin Lightning. No bank account. No KYC.</description>
+    </item>
+    <item>
+      <title>Explore</title>
+      <link>https://katoa.org/explore</link>
+      <guid isPermaLink="true">https://katoa.org/explore</guid>
+      <pubDate>Mon, 19 Oct 2026 12:00:00 GMT</pubDate>
+      <category>own-page</category>
+      <description>Creators you can support, listed in the open.</description>
+    </item>
+    <item>
+      <title>About</title>
+      <link>https://katoa.org/about</link>
+      <guid isPermaLink="true">https://katoa.org/about</guid>
+      <pubDate>Mon, 19 Oct 2026 12:00:00 GMT</pubDate>
+      <category>own-page</category>
+      <description>What Katoa is, and what it refuses to charge.</description>
+    </item>
+    <item>
+      <title>Pricing</title>
+      <link>https://katoa.org/pricing</link>
+      <guid isPermaLink="true">https://katoa.org/pricing</guid>
+      <pubDate>Mon, 19 Oct 2026 12:00:00 GMT</pubDate>
+      <category>own-page</category>
+      <description>The fee is zero. This page says what that means.</description>
+    </item>
+    <item>
+      <title>FAQ</title>
+      <link>https://katoa.org/faq</link>
+      <guid isPermaLink="true">https://katoa.org/faq</guid>
+      <pubDate>Mon, 19 Oct 2026 12:00:00 GMT</pubDate>
+      <category>own-page</category>
+      <description>Plain answers: fees, KYC, and how a payment lands.</description>
+    </item>
+    <item>
+      <title>For creators</title>
+      <link>https://katoa.org/creators</link>
+      <guid isPermaLink="true">https://katoa.org/creators</guid>
+      <pubDate>Mon, 19 Oct 2026 12:00:00 GMT</pubDate>
+      <category>own-page</category>
+      <description>How a creator receives support.</description>
+    </item>
+    <item>
+      <title>Creator guidelines</title>
+      <link>https://katoa.org/creators/guidelines</link>
+      <guid isPermaLink="true">https://katoa.org/creators/guidelines</guid>
+      <pubDate>Mon, 19 Oct 2026 12:00:00 GMT</pubDate>
+      <category>own-page</category>
+      <description>The rules a creator page has to follow.</description>
+    </item>
+    <item>
+      <title>Verify</title>
+      <link>https://katoa.org/verify</link>
+      <guid isPermaLink="true">https://katoa.org/verify</guid>
+      <pubDate>Mon, 19 Oct 2026 12:00:00 GMT</pubDate>
+      <category>own-page</category>
+      <description>Check a creator page before you pay.</description>
+    </item>
+    <item>
+      <title>Comparison</title>
+      <link>https://katoa.org/comparison</link>
+      <guid isPermaLink="true">https://katoa.org/comparison</guid>
+      <pubDate>Mon, 19 Oct 2026 12:00:00 GMT</pubDate>
+      <category>own-page</category>
+      <description>How Katoa sits next to a platform that takes a cut.</description>
+    </item>
+    <item>
+      <title>Security</title>
+      <link>https://katoa.org/security</link>
+      <guid isPermaLink="true">https://katoa.org/security</guid>
+      <pubDate>Mon, 19 Oct 2026 12:00:00 GMT</pubDate>
+      <category>own-page</category>
+      <description>How the site treats keys and payments.</description>
+    </item>
+  </channel>
+</rss>

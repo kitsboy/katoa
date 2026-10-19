@@ -18,7 +18,7 @@
     "db:types": "supabase gen types typescript --linked > src/types/database.generated.ts",
     "db:setup": "supabase db push && npm run db:types",
     "env:cf": "bash scripts/print-cloudflare-env.sh",
-    "sitemap": "node scripts/generate-sitemap.mjs",
+    "sitemap": "node scripts/generate-sitemap.mjs && node scripts/build-rss.mjs",
     "nip05": "npx tsx scripts/generate-nip05.ts",
     "test:coverage": "vitest run --coverage",
     "generate-metrics": "npx tsx scripts/generate-metrics.ts",
