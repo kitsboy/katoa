@@ -14,7 +14,7 @@ export function DemoPage() {
   const { isDemoUser } = useAuth();
 
   return (
-    <div className="min-h-screen bg-charcoal-950">
+    <article className="lp-page" data-theme="dark" aria-labelledby="demo-hero-title">
       <PageMeta
         title="Demo — KATOA"
         description="Meet Luna, KATOA’s sample video creator. This is the honest demo hub: open her profile and wishlist, switch currency and language, and try tip presets. No live settlement."
@@ -22,6 +22,7 @@ export function DemoPage() {
         ogTitle="Meet Luna — KATOA Demo"
         ogDescription="Luna is KATOA’s sample video creator. Open her profile and wishlist, switch currency and language, and try tip presets. This is an honest sample demo, not a live payment."
       />
+      <span id="demo-hero-title" className="sr-only">Meet Luna — KATOA Demo</span>
       <div className="max-w-3xl mx-auto px-4 py-16">
         <Card className="p-8">
           <div className="flex flex-wrap items-center gap-3 mb-3">
@@ -164,7 +165,7 @@ export function DemoPage() {
           </p>
         </Card>
       </div>
-    </div>
+    </article>
   );
 }
 
