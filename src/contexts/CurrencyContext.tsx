@@ -10,7 +10,20 @@ interface CurrencyContextType {
   loading: boolean;
   satsToDisplay: (sats: number) => string;
   fiatToSats: (amount: number, currency: DisplayCurrency) => number;
+  btcPriceForCurrency: (currency: DisplayCurrency) => number;
+  formatPerUnitBitcoinPrice: (currency: DisplayCurrency) => string;
 }
+
+/** Display code -> ISO 4217 code used for formatting. */
+const ISO_CURRENCY_CODES: Record<string, string> = {
+  USD: 'USD',
+  EUR: 'EUR',
+  GBP: 'GBP',
+  JPY: 'JPY',
+  BRL: 'BRL',
+  CAD: 'CAD',
+  RIA: 'RON',
+};
 
 const FIAT_RATES: Record<string, number> = {
   USD: 1,
@@ -44,6 +57,31 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
 
   const setDisplayCurrency = (c: DisplayCurrency) => setDisplayCurrencyState(c);
 
+  const btcPriceForCurrency = useCallback(
+    (currency: DisplayCurrency): number => {
+      if (!btcUsdPrice) return 0;
+      if (currency === 'BTC') return btcUsdPrice;
+      if (currency === 'SATS') return btcUsdPrice;
+      return btcUsdPrice * (FIAT_RATES[currency] ?? 1);
+    },
+    [btcUsdPrice]
+  );
+
+  const formatPerUnitBitcoinPrice = useCallback(
+    (currency: DisplayCurrency): string => {
+      if (currency === 'SATS') return '100,000,000 sats';
+      if (currency === 'BTC') return '₿1';
+      const price = btcPriceForCurrency(currency);
+      if (price <= 0) return '—';
+      return new Intl.NumberFormat(undefined, {
+        style: 'currency',
+        currency: ISO_CURRENCY_CODES[currency] ?? 'USD',
+        maximumFractionDigits: currency === 'JPY' ? 0 : 2,
+      }).format(price);
+    },
+    [btcPriceForCurrency]
+  );
+
   const satsToDisplay = useCallback(
     (sats: number): string => {
       const btc = sats / 100_000_000;
@@ -65,7 +103,7 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
           const fiat = usd * (FIAT_RATES[displayCurrency] ?? 1);
           return new Intl.NumberFormat(undefined, {
             style: 'currency',
-            currency: displayCurrency,
+            currency: ISO_CURRENCY_CODES[displayCurrency] ?? 'USD',
             maximumFractionDigits: displayCurrency === 'JPY' ? 0 : 2,
           }).format(fiat);
         }
@@ -91,7 +129,7 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
 
   return (
     <CurrencyContext.Provider
-      value={{ displayCurrency, setDisplayCurrency, btcUsdPrice, loading, satsToDisplay, fiatToSats }}
+      value={{ displayCurrency, setDisplayCurrency, btcUsdPrice, loading, satsToDisplay, fiatToSats, btcPriceForCurrency, formatPerUnitBitcoinPrice }}
     >
       {children}
     </CurrencyContext.Provider>

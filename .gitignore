@@ -50,3 +50,6 @@ playwright/.cache/
 # Netlify CLI local state (not used — deploy via Cloudflare Pages)
 .netlify/
 supabase/.temp/
+
+# Test scratch file written by swCacheNameWithVersionStub.test.ts
+public/sw-cache-name-stub-for-test.js

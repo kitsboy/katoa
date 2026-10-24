@@ -1,4 +1,4 @@
-import { useCurrency } from '../contexts/CurrencyContext';
+import { useCurrency, CURRENCY_OPTIONS } from '../contexts/CurrencyContext';
 import { languageNames, useLanguage, type Language } from '../contexts/LanguageContext';
 import { PageMeta } from '../components/PageMeta';
 import { Card } from '../components/Card';
@@ -10,7 +10,7 @@ import { useAuth } from '../contexts/AuthContext';
 
 export function DemoPage() {
   const { setLanguage } = useLanguage();
-  const { displayCurrency, setDisplayCurrency, satsToDisplay } = useCurrency();
+  const { displayCurrency, setDisplayCurrency, satsToDisplay, formatPerUnitBitcoinPrice } = useCurrency();
   const { isDemoUser } = useAuth();
 
   return (
@@ -84,13 +84,15 @@ export function DemoPage() {
             <div className="grid grid-cols-1 gap-5">
               <div>
                 <p className="text-sm font-bold text-white mb-2">Display currency</p>
-                <p className="text-xs text-gray-400 mb-2">All amounts are stored in sats. This is only how they are shown.</p>
+                <p className="text-xs text-gray-400 mb-2">
+                  All amounts are stored in sats. Fiat values are display-only — nothing is settled in fiat.
+                </p>
                 <div className="inline-flex rounded-xl border border-white/10 bg-black/40 p-1" role="group" aria-label="Display currency">
-                  {['SATS','BTC','USD','EUR','GBP','JPY','BRL','CAD','RIA'].map((code) => (
+                  {CURRENCY_OPTIONS.map(({ code }) => (
                     <button
                       key={code}
                       type="button"
-                      onClick={() => setDisplayCurrency(code as 'SATS'|'BTC'|'USD'|'EUR'|'GBP'|'JPY'|'BRL'|'CAD'|'RIA')}
+                      onClick={() => setDisplayCurrency(code)}
                       className={`min-h-[44px] px-4 rounded-lg text-sm font-semibold transition-colors ${
                         displayCurrency === code
                           ? 'bg-bitcoin-orange-500/20 text-bitcoin-orange-200'
@@ -103,6 +105,9 @@ export function DemoPage() {
                 </div>
                 <p className="mt-2 text-xs text-gray-400">
                   Sample: {satsToDisplay(72500)}
+                </p>
+                <p className="mt-1 text-xs text-gray-400">
+                  Per-unit Bitcoin price: {formatPerUnitBitcoinPrice(displayCurrency)}
                 </p>
               </div>
 
