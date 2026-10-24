@@ -103,7 +103,15 @@ writeFileSync(
 
 const swPath = join(root, 'public', 'sw.js');
 const swSrc = readFileSync(swPath, 'utf8');
-const sw = swSrc.replace('@BUILD_COMMIT@', gitSha);
+// Always rewrite the CACHE_NAME line so the shipped SW carries the current
+// deploy sha, whether the committed seed still contains the @BUILD_COMMIT@
+// placeholder or an already-filled sha from a previous run. A plain
+// .replace('@BUILD_COMMIT@', ...) is a no-op once the seed has been filled,
+// which leaves sw.js stale after every commit.
+const sw = swSrc.replace(
+  /^const CACHE_NAME = '.*?';\n/,
+  `const CACHE_NAME = 'katoa-static-${gitSha}';\n`
+);
 writeFileSync(swPath, sw, 'utf8');
 
 console.log(`version: ${previous}${shouldBump ? ` → ${next}` : ''}  footer: ${fullLabel}  sw: katoa-static-${gitSha}`);
