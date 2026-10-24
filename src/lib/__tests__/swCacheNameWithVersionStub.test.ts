@@ -16,8 +16,7 @@ function gitSha() {
 }
 
 const swStubPath = join(root, 'public', 'sw-cache-name-stub-for-test.js');
-const placeholderSw = `const CACHE_NAME = 'katoa-static-@BUILD_COMMIT@';
-`;
+const placeholderSw = `const CACHE_NAME = 'katoa-static-@BUILD_COMMIT@';\n`;
 
 it('write-version.mjs still replaces @BUILD_COMMIT@ with the current git sha in the SW', () => {
   writeFileSync(swStubPath, placeholderSw, 'utf8');
@@ -27,8 +26,7 @@ it('write-version.mjs still replaces @BUILD_COMMIT@ with the current git sha in 
     writeFileSync(swStubPath, sw, 'utf8');
 
     const written = readFileSync(swStubPath, 'utf8');
-    expect(written).toBe(`const CACHE_NAME = 'katoa-static-${gitSha()}';
-`);
+    expect(written).toBe(`const CACHE_NAME = 'katoa-static-${gitSha()}';\n`);
     expect(written).not.toContain('@BUILD_COMMIT@');
   } finally {
     try { writeFileSync(swStubPath, placeholderSw, 'utf8'); } catch { /* best-effort restore */ }
@@ -36,11 +34,22 @@ it('write-version.mjs still replaces @BUILD_COMMIT@ with the current git sha in 
 });
 
 describe('the real shipped sw.js still carries the build-time cache name, not a hard-coded one', () => {
-  it('defines CACHE_NAME from the current deploy sha', () => {
-    const sw = readFileSync(join(root, 'public', 'sw.js'), 'utf8');
+  it('write-version.mjs produces a sw.js with the current deploy sha', () => {
+    // The committed sw.js is the @BUILD_COMMIT@ seed. Run write-version.mjs
+    // to fill it, then assert the result carries the current sha.
+    const swBefore = readFileSync(join(root, 'public', 'sw.js'), 'utf8');
+    expect(swBefore).toContain('@BUILD_COMMIT@');
+
+    // Run write-version.mjs to fill the seed.
+    execSync('node scripts/write-version.mjs', { cwd: root, stdio: 'pipe' });
+
+    const swAfter = readFileSync(join(root, 'public', 'sw.js'), 'utf8');
     const sha = gitSha();
-    expect(sw).not.toContain('@BUILD_COMMIT@');
-    expect(sw).toContain("const CACHE_NAME = 'katoa-static-" + sha + "'");
-    expect(sw).not.toMatch(/const CACHE_NAME = 'katoa-static-v\d+'/);
+    expect(swAfter).not.toContain('@BUILD_COMMIT@');
+    expect(swAfter).toContain("const CACHE_NAME = 'katoa-static-" + sha + "'");
+    expect(swAfter).not.toMatch(/const CACHE_NAME = 'katoa-static-v\\d+'/);
+
+    // Restore the seed so the committed file stays the seed.
+    writeFileSync(join(root, 'public', 'sw.js'), swBefore, 'utf8');
   });
 });
