@@ -41,7 +41,7 @@ export function HomePage() {
   }
 
   return (
-    <div className="lp-page" data-theme="dark">
+    <article className="lp-page" data-theme="dark" aria-labelledby="home-hero-title">
       <PageMeta title={t('home.metaTitle')} description={t('home.metaDesc')} path="/" />
 
       {stats.source === 'unavailable' && (
@@ -73,6 +73,7 @@ export function HomePage() {
           countriesLabel: t('home.stats.countries'),
         }}
       />
+      <span id="home-hero-title" className="sr-only">{t('home.metaTitle')}</span>
 
       <section className="lp-section lp-section-muted py-12 sm:py-16" aria-labelledby="home-discovery-heading">
         <div className="lp-container">
@@ -125,6 +126,6 @@ export function HomePage() {
           </div>
         </div>
       </section>
-    </div>
+    </article>
   );
 }
