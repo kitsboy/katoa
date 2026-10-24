@@ -5,17 +5,23 @@ import { Link } from './Link';
 import { Button } from './Button';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage, languageFlags, languageNames, type Language } from '../contexts/LanguageContext';
-import { Menu, X, User, LogOut, LayoutDashboard, Settings, Zap, Globe, HelpCircle, Bitcoin, MessageCircle } from 'lucide-react';
+import { Menu, X, User, LogOut, LayoutDashboard, Settings, Zap, Globe, HelpCircle, Bitcoin, MessageCircle, ChevronDown } from 'lucide-react';
 import { CurrencySelector } from './CurrencySelector';
 import { OfflineIndicator } from './OfflineIndicator';
 import { UnreadMessagesBadge } from './UnreadMessagesBadge';
 import { CreatorNewDropsBadge } from './CreatorNewDropsBadge';
 import { NotificationCenter } from './NotificationCenter';
 import { getBitcoinPrice, formatUsd, BtcFiatCurrency, buildBtcHistoryPoints, BTC_HISTORY_CURRENCIES } from '../lib/bitcoinPrice';
-import { TrendingUp } from 'lucide-react';
-void TrendingUp;
 
 type LangMenuPos = { top: number; left: number; maxHeight: number };
+
+const ACTIVE_LINK_CLASS = 'nav-link-pill-active';
+const INACTIVE_PILL_CLASS = 'nav-link-pill-inactive';
+
+function pillHref(href: string) {
+  if (href.startsWith('http')) return href;
+  return href;
+}
 
 export function Navbar() {
   const { user, profile, signOut } = useAuth();
@@ -180,34 +186,36 @@ export function Navbar() {
                 </span>
               </Link>
               <OfflineIndicator />
-            </div>
-
-            <div className="hidden md:flex items-center gap-1 lg:gap-2 min-w-0">
-              <div className="flex items-center gap-0.5 mr-1 lg:mr-3 px-1 py-1 rounded-full border bg-white/[0.03] border-white/[0.08] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+            </div>              <div className="hidden md:flex items-center gap-1 lg:gap-2 min-w-0">
+              <div className="flex items-center gap-0.5 mr-1 lg:mr-3 px-1 py-1 rounded-full border bg-white/[0.03] border-white/[0.08] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]" role="group" aria-label="Discover">
                 <Link
-                  href="/explore"
-                  className={`nav-link-pill relative ${isActive('/explore') ? 'nav-link-pill-active' : ''}`}
+                  href={pillHref('/explore')}
+                  className={`nav-link-pill relative ${isActive('/explore') ? ACTIVE_LINK_CLASS : INACTIVE_PILL_CLASS}`}
+                  aria-current={isActive('/explore') ? 'page' : undefined}
                 >
                   {t('nav.explore')}
                   <CreatorNewDropsBadge className="absolute -top-1.5 -right-2.5" />
                 </Link>
                 <Link
-                  href="/comparison"
-                  className={`nav-link-pill hidden lg:inline-flex ${isActive('/comparison') ? 'nav-link-pill-active' : ''}`}
+                  href={pillHref('/comparison')}
+                  className={`nav-link-pill hidden lg:inline-flex ${isActive('/comparison') ? ACTIVE_LINK_CLASS : INACTIVE_PILL_CLASS}`}
+                  aria-current={isActive('/comparison') ? 'page' : undefined}
                 >
                   {t('nav.comparison')}
                 </Link>
                 <Link
-                  href="/faq"
-                  className={`nav-link-pill hidden xl:inline-flex ${isActive('/faq') ? 'nav-link-pill-active' : ''}`}
+                  href={pillHref('/faq')}
+                  className={`nav-link-pill hidden xl:inline-flex ${isActive('/faq') ? ACTIVE_LINK_CLASS : INACTIVE_PILL_CLASS}`}
+                  aria-current={isActive('/faq') ? 'page' : undefined}
                 >
                   {t('nav.faq')}
                 </Link>
                 <Link
-                  href="/messages"
+                  href={pillHref('/messages')}
                   className={`nav-link-pill relative hidden xl:inline-flex items-center gap-1.5 ${
-                    location.pathname.startsWith('/messages') ? 'nav-link-pill-active' : ''
+                    location.pathname.startsWith('/messages') ? ACTIVE_LINK_CLASS : INACTIVE_PILL_CLASS
                   }`}
+                  aria-current={location.pathname.startsWith('/messages') ? 'page' : undefined}
                 >
                   <MessageCircle size={14} aria-hidden />
                   {t('nav.messages')}
@@ -243,12 +251,12 @@ export function Navbar() {
 
               {user ? (
                 <>
-                  <Link href="/dashboard" className={`nav-link-pill flex items-center gap-1.5 ${isActive('/dashboard') ? 'nav-link-pill-active' : ''}`}>
-                    <LayoutDashboard size={16} />
+                  <Link href={pillHref('/dashboard')} className={`nav-link-pill flex items-center gap-1.5 ${isActive('/dashboard') ? ACTIVE_LINK_CLASS : INACTIVE_PILL_CLASS}`} aria-current={isActive('/dashboard') ? 'page' : undefined}>
+                    <LayoutDashboard size={16} aria-hidden />
                     {t('nav.dashboard')}
                   </Link>
-                  <Link href="/settings" className={`nav-link-pill flex items-center gap-1.5 ${isActive('/settings') ? 'nav-link-pill-active' : ''}`}>
-                    <Settings size={16} />
+                  <Link href={pillHref('/settings')} className={`nav-link-pill flex items-center gap-1.5 ${isActive('/settings') ? ACTIVE_LINK_CLASS : INACTIVE_PILL_CLASS}`} aria-current={isActive('/settings') ? 'page' : undefined}>
+                    <Settings size={16} aria-hidden />
                     {t('nav.settings')}
                   </Link>
                   <NotificationCenter />
@@ -256,18 +264,19 @@ export function Navbar() {
                   <div className="flex items-center gap-3">
                     <Link
                       href={profile?.username ? `/u/${encodeURIComponent(profile.username)}` : '/settings'}
-                      className="flex items-center gap-2 hover:opacity-90 transition-opacity"
+                      className="flex items-center gap-2 hover:opacity-90 transition-opacity focus-visible:ring-2 focus-visible:ring-katoa-violet focus-visible:ring-offset-2 focus-visible:ring-offset-charcoal-950 rounded-full -mr-2"
                     >
                       {profile?.avatar_url ? (
                         <img
                           src={profile.avatar_url}
-                          alt={profile.username}
+                          alt={`${profile.username} avatar`}
                           width={32}
                           height={32}
                           className="w-8 h-8 rounded-full object-cover border-2 border-katoa-violet-400/50"
+                          loading="lazy"
                         />
                       ) : (
-                        <div className="w-8 h-8 rounded-full bg-white/5 border-2 border-white/10 flex items-center justify-center">
+                        <div className="w-8 h-8 rounded-full bg-white/5 border-2 border-white/10 flex items-center justify-center" aria-hidden="true">
                           <User size={16} className="text-gray-100" />
                         </div>
                       )}
@@ -305,21 +314,20 @@ export function Navbar() {
                   </Link>
                 </>
               )}
-            </div>
-
-            <div className="md:hidden flex items-center gap-2">
+            </div>              <div className="md:hidden flex items-center gap-2">
               {btcPrice !== null && (
-                <span className="text-xs font-mono text-bitcoin-orange-300 px-2 py-1 rounded-full bg-bitcoin-orange-500/10 border border-bitcoin-orange-500/15" aria-label={`BTC ${formatUsd(btcPrice)}`}>
+                <span className="text-xs font-mono text-bitcoin-orange-300 px-2 py-1 rounded-full bg-bitcoin-orange-500/10 border border-bitcoin-orange-500/15 select-none" aria-label={`BTC ${formatUsd(btcPrice)}`} title={t('nav.btcPrice')}>
                   ₿ {btcPrice >= 1000 ? `${(btcPrice / 1000).toFixed(1)}k` : btcPrice}
                 </span>
               )}
               <button
-                className="p-2 rounded-xl transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center border text-white hover:bg-white/[0.06] border-white/[0.08]"
+                type="button"
+                className="p-2 rounded-xl transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center border text-white hover:bg-white/[0.06] border-white/[0.08] focus-visible:ring-2 focus-visible:ring-katoa-violet focus-visible:ring-offset-2 focus-visible:ring-offset-charcoal-950"
                 onClick={() => setShowMenu(!showMenu)}
-                aria-label="Toggle menu"
+                aria-label={showMenu ? t('nav.closeMenu') : t('nav.menu')}
                 aria-expanded={showMenu}
               >
-                {showMenu ? <X size={22} /> : <Menu size={22} />}
+                {showMenu ? <X size={22} aria-hidden="true" /> : <Menu size={22} aria-hidden="true" />}
               </button>
             </div>
           </div>
@@ -334,6 +342,7 @@ export function Navbar() {
             id="lang-menu-list"
             ref={langListRef}
             role="listbox"
+            aria-label={t('nav.chooseLanguage')}
             className="fixed w-48 rounded-xl py-2 shadow-2xl border border-white/10 bg-charcoal-950/95 backdrop-blur-xl overflow-y-auto overscroll-contain"
             style={{
               top: langMenuPos.top,
@@ -362,6 +371,9 @@ export function Navbar() {
                 <span className="text-sm font-semibold">
                   {languageNames[lang as keyof typeof languageNames]}
                 </span>
+                {language === lang && (
+                  <ChevronDown size={14} className="ml-auto text-katoa-violet-400" aria-hidden />
+                )}
               </button>
             ))}
           </div>,
