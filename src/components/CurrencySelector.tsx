@@ -42,7 +42,7 @@ export function CurrencySelector({ compact = false }: { compact?: boolean }) {
           <div
             role="listbox"
             aria-label="Display currency"
-            className="absolute right-0 mt-2 w-48 bg-charcoal-900/98 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl py-1.5 z-50"
+            className="absolute right-0 mt-2 w-48 bg-charcoal-950 border border-white/10 backdrop-blur-sm rounded-xl shadow-2xl py-2 z-50"
           >
             {CURRENCY_OPTIONS.map((opt) => (
               <button
@@ -53,15 +53,16 @@ export function CurrencySelector({ compact = false }: { compact?: boolean }) {
                 onClick={() => {
                   setDisplayCurrency(opt.code as DisplayCurrency);
                   close();
-                }}
-                className={`w-full px-4 py-2.5 text-left flex items-center gap-3 transition-colors ${
-                  displayCurrency === opt.code
-                    ? 'text-neon-cyan-400 bg-neon-cyan-500/10'
-                    : 'text-gray-200 hover:bg-white/5'
-                }`}
+                }}                className={
+                  `w-full px-4 py-2.5 text-left flex items-center gap-3 transition-colors cursor-pointer ${
+                    displayCurrency === opt.code
+                      ? 'text-neon-cyan-400 bg-neon-cyan-500/10'
+                      : 'text-gray-100 hover:bg-white/8'
+                  }`
+                }
               >
                 <span className="font-mono text-base">{opt.symbol}</span>
-                <span className="text-sm">{opt.label}</span>
+                <span className="text-sm font-medium">{opt.label}</span>
                 {displayCurrency === opt.code && (
                   <span className="ml-auto text-[10px] font-bold uppercase tracking-wider text-neon-cyan-500">
                     selected
