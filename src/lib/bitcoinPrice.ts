@@ -20,7 +20,7 @@ async function fetchFromCoinbase(): Promise<number> {
   return parseFloat(data.data.amount);
 }
 
-export type BtcFiatCurrency = 'USD' | 'EUR' | 'GBP' | 'JPY' | 'BRL' | 'CAD';
+export type BtcFiatCurrency = 'USD' | 'EUR' | 'GBP' | 'JPY' | 'BRL' | 'CAD' | 'RIA';
 
 export const BTC_FIAT_LABELS: Record<BtcFiatCurrency, string> = {
   USD: 'US Dollar',
@@ -29,9 +29,10 @@ export const BTC_FIAT_LABELS: Record<BtcFiatCurrency, string> = {
   JPY: 'Japanese Yen',
   BRL: 'Brazilian Real',
   CAD: 'Canadian Dollar',
+  RIA: 'Romanian Leu',
 };
 
-export const BTC_HISTORY_CURRENCIES: BtcFiatCurrency[] = ['USD', 'EUR', 'CAD', 'JPY', 'BRL'];
+export const BTC_HISTORY_CURRENCIES: BtcFiatCurrency[] = ['USD', 'EUR', 'CAD', 'JPY', 'BRL', 'RIA'];
 
 const FIAT_RATES: Record<BtcFiatCurrency, number> = {
   USD: 1,
@@ -40,6 +41,7 @@ const FIAT_RATES: Record<BtcFiatCurrency, number> = {
   JPY: 149,
   BRL: 5.1,
   CAD: 1.38,
+  RIA: 11.50,
 };
 
 export async function getBitcoinPrice(): Promise<number> {

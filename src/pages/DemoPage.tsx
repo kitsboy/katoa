@@ -86,11 +86,11 @@ export function DemoPage() {
                 <p className="text-sm font-bold text-white mb-2">Display currency</p>
                 <p className="text-xs text-gray-400 mb-2">All amounts are stored in sats. This is only how they are shown.</p>
                 <div className="inline-flex rounded-xl border border-white/10 bg-black/40 p-1" role="group" aria-label="Display currency">
-                  {['SATS','BTC','USD','EUR','GBP','JPY','BRL'].map((code) => (
+                  {['SATS','BTC','USD','EUR','GBP','JPY','BRL','CAD','RIA'].map((code) => (
                     <button
                       key={code}
                       type="button"
-                      onClick={() => setDisplayCurrency(code as 'SATS'|'BTC'|'USD'|'EUR'|'GBP'|'JPY'|'BRL')}
+                      onClick={() => setDisplayCurrency(code as 'SATS'|'BTC'|'USD'|'EUR'|'GBP'|'JPY'|'BRL'|'CAD'|'RIA')}
                       className={`min-h-[44px] px-4 rounded-lg text-sm font-semibold transition-colors ${
                         displayCurrency === code
                           ? 'bg-bitcoin-orange-500/20 text-bitcoin-orange-200'

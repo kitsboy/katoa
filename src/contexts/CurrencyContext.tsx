@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { fetchBtcUsdPrice } from '../lib/api/client';
 
-export type DisplayCurrency = 'BTC' | 'SATS' | 'USD' | 'EUR' | 'GBP' | 'JPY' | 'BRL';
+export type DisplayCurrency = 'BTC' | 'SATS' | 'USD' | 'EUR' | 'GBP' | 'JPY' | 'BRL' | 'CAD' | 'RIA';
 
 interface CurrencyContextType {
   displayCurrency: DisplayCurrency;
@@ -18,6 +18,8 @@ const FIAT_RATES: Record<string, number> = {
   GBP: 0.79,
   JPY: 149,
   BRL: 5.1,
+  CAD: 1.38,
+  RIA: 11.50,
 };
 
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined);
@@ -55,7 +57,9 @@ export function CurrencyProvider({ children }: { children: ReactNode }) {
         case 'EUR':
         case 'GBP':
         case 'JPY':
-        case 'BRL': {
+        case 'BRL':
+        case 'CAD':
+        case 'RIA': {
           if (!btcUsdPrice) return `${new Intl.NumberFormat().format(sats)} sats`;
           const usd = btc * btcUsdPrice;
           const fiat = usd * (FIAT_RATES[displayCurrency] ?? 1);
@@ -108,4 +112,6 @@ export const CURRENCY_OPTIONS: { code: DisplayCurrency; label: string; symbol: s
   { code: 'GBP', label: 'British Pound', symbol: '£' },
   { code: 'JPY', label: 'Japanese Yen', symbol: '¥' },
   { code: 'BRL', label: 'Brazilian Real', symbol: 'R$' },
+  { code: 'CAD', label: 'Canadian Dollar', symbol: 'CA$' },
+  { code: 'RIA', label: 'Romanian Leu', symbol: 'lei' },
 ];
