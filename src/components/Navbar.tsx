@@ -11,7 +11,8 @@ import { OfflineIndicator } from './OfflineIndicator';
 import { UnreadMessagesBadge } from './UnreadMessagesBadge';
 import { CreatorNewDropsBadge } from './CreatorNewDropsBadge';
 import { NotificationCenter } from './NotificationCenter';
-import { getBitcoinPrice, formatUsd, BtcFiatCurrency, buildBtcHistoryPoints, BTC_HISTORY_CURRENCIES } from '../lib/bitcoinPrice';
+import { getBitcoinPrice, formatUsd, BtcFiatCurrency, buildBtcHistoryPoints, BTC_HISTORY_CURRENCIES, BTC_FIAT_LABELS } from '../lib/bitcoinPrice';
+import { useCurrency } from '../contexts/CurrencyContext';
 
 type LangMenuPos = { top: number; left: number; maxHeight: number };
 
@@ -32,6 +33,8 @@ export function Navbar() {
   const [langMenuPos, setLangMenuPos] = useState<LangMenuPos | null>(null);
   const [btcPrice, setBtcPrice] = useState<number | null>(null);
   const [btcCurrency, setBtcCurrency] = useState<BtcFiatCurrency>('USD');
+  const { displayCurrency } = useCurrency();
+  const btcPriceCurrency = displayCurrency === 'BTC' || displayCurrency === 'SATS' ? 'USD' : displayCurrency;
   const [, setBtcCurrencyMenuOpen] = useState(false); // eslint-disable-line @typescript-eslint/no-unused-vars
   const [btcHistoryOpen, setBtcHistoryOpen] = useState(false);
   const [, setBtcHistoryPoints] = useState<{ month: string; value: number }[]>([]);
@@ -228,11 +231,11 @@ export function Navbar() {
               {btcPrice !== null && (
                 <div
                   className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-bitcoin-orange-500/8 border border-bitcoin-orange-500/15 text-xs font-mono"
-                  title="Bitcoin USD price"
-                  aria-label={`Bitcoin price ${formatUsd(btcPrice)}`}
+                  title={`Bitcoin price in ${BTC_FIAT_LABELS[btcPriceCurrency as BtcFiatCurrency] ?? 'US Dollar'}`}
+                  aria-label={`Bitcoin price ${formatUsd(btcPrice, btcPriceCurrency as BtcFiatCurrency)}`}
                 >
                   <Bitcoin size={13} className="text-bitcoin-orange-500" aria-hidden />
-                  <span className="text-bitcoin-orange-400/90 font-medium">{formatUsd(btcPrice)}</span>
+                  <span className="text-bitcoin-orange-400/90 font-medium">{formatUsd(btcPrice, btcPriceCurrency as BtcFiatCurrency)}</span>
                 </div>
               )}
 
@@ -316,7 +319,7 @@ export function Navbar() {
               )}
             </div>              <div className="md:hidden flex items-center gap-2">
               {btcPrice !== null && (
-                <span className="text-xs font-mono text-bitcoin-orange-300 px-2 py-1 rounded-full bg-bitcoin-orange-500/10 border border-bitcoin-orange-500/15 select-none" aria-label={`BTC ${formatUsd(btcPrice)}`} title={t('nav.btcPrice')}>
+                <span className="text-xs font-mono text-bitcoin-orange-300 px-2 py-1 rounded-full bg-bitcoin-orange-500/10 border border-bitcoin-orange-500/15 select-none"                aria-label={`BTC price ${formatUsd(btcPrice, btcPriceCurrency as BtcFiatCurrency)}`} title={t('nav.btcPrice')}>
                   ₿ {btcPrice >= 1000 ? `${(btcPrice / 1000).toFixed(1)}k` : btcPrice}
                 </span>
               )}
@@ -468,7 +471,7 @@ export function Navbar() {
                   <Bitcoin size={20} className="text-bitcoin-orange-500" />
                   <div>
                     <p className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">{t('nav.btcPrice')}</p>
-                    <p className="text-white font-bold font-mono">{formatUsd(btcPrice)}</p>
+                    <p className="text-white font-bold font-mono">{formatUsd(btcPrice, btcPriceCurrency as BtcFiatCurrency)}</p>
                   </div>
                 </div>
               )}

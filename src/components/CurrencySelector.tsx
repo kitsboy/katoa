@@ -1,10 +1,13 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef, useId } from 'react';
 import { Coins } from 'lucide-react';
 import { useCurrency, CURRENCY_OPTIONS, DisplayCurrency } from '../contexts/CurrencyContext';
 
 export function CurrencySelector({ compact = false }: { compact?: boolean }) {
   const { displayCurrency, setDisplayCurrency } = useCurrency();
   const [open, setOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const panelId = useId();
 
   const close = useCallback(() => setOpen(false), []);
 
@@ -12,6 +15,21 @@ export function CurrencySelector({ compact = false }: { compact?: boolean }) {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') close();
+      if (e.key === 'Tab' && panelRef.current) {
+        const focusable = panelRef.current.querySelectorAll<HTMLElement>('button:not([disabled])');
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -24,12 +42,15 @@ export function CurrencySelector({ compact = false }: { compact?: boolean }) {
       <button
         type="button"
         onClick={() => setOpen(!open)}
+        ref={triggerRef}
         className={`flex items-center gap-1.5 text-gray-200 hover:text-neon-cyan transition-colors touch-manipulation ${
           compact ? 'text-sm px-2 py-1' : 'px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:border-neon-cyan/30'
         }`}
         aria-label="Select display currency"
         aria-expanded={open}
         aria-haspopup="listbox"
+        aria-controls={open ? panelId : undefined}
+        aria-labelledby={panelId}
       >
         <Coins size={compact ? 16 : 18} className="text-bitcoin-orange-500" />
         <span className="font-mono font-semibold">{current.symbol}</span>
@@ -41,8 +62,10 @@ export function CurrencySelector({ compact = false }: { compact?: boolean }) {
           <div className="fixed inset-0 z-40" onClick={close} />
           <div
             role="listbox"
+            id={panelId}
             aria-label="Display currency"
             className="absolute right-0 mt-2 w-48 bg-charcoal-950 border border-white/10 backdrop-blur-sm rounded-xl shadow-2xl py-2 z-50"
+            ref={panelRef}
           >
             {CURRENCY_OPTIONS.map((opt) => (
               <button
