@@ -101,4 +101,9 @@ writeFileSync(
   'utf8'
 );
 
-console.log(`version: ${previous}${shouldBump ? ` → ${next}` : ''}  footer: ${fullLabel}`);
+const swPath = join(root, 'public', 'sw.js');
+const swSrc = readFileSync(swPath, 'utf8');
+const sw = swSrc.replace('@BUILD_COMMIT@', gitSha);
+writeFileSync(swPath, sw, 'utf8');
+
+console.log(`version: ${previous}${shouldBump ? ` → ${next}` : ''}  footer: ${fullLabel}  sw: katoa-static-${gitSha}`);
