@@ -71,7 +71,7 @@ const FEATURE_SECTIONS = [
     categoryKey: 'comparison.cat.payout',
     icon: null,
     items: [
-      { featureKey: 'comparison.feat.payoutTime', katoa: 'Instant', throne: '7 days', linktree: 'Varies', onlyfans: '7 days rolling', kickstarter: '14+ days', indiegogo: '14 days' },
+      { featureKey: 'comparison.feat.payoutTime', katoa: 'Fast (Roadmap)', throne: '7 days', linktree: 'Varies', onlyfans: '7 days rolling', kickstarter: '14+ days', indiegogo: '14 days' },
       { featureKey: 'comparison.feat.instantSettlement', katoa: true, throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: false },
       { featureKey: 'comparison.feat.holdback', katoa: false, throne: false, linktree: false, onlyfans: false, kickstarter: false, indiegogo: '5% until delivery' },
     ],

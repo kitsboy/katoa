@@ -182,14 +182,14 @@ const steps = [
   {
     step: '04',
     title: 'Receive Bitcoin',
-    description: 'Donations land instantly in your wallet. Zero platform cut. Minimal Lightning network fees only.',
+    description: 'Donations land in seconds once Lightning receive ships (Roadmap: In progress). Zero platform cut. Minimal Lightning network fees only.',
   },
 ];
 
 const pricingFaqs = [
   {
     question: 'Are there really zero platform fees?',
-    answer: 'Yes — forever. KATOA charges 0% on every donation. You only pay tiny Lightning network fees, typically fractions of a cent.',
+    answer: 'Yes — through 31 Dec 2026. KATOA charges 0% on every donation. You only pay tiny Lightning network fees, typically fractions of a cent.',
   },
   {
     question: 'Do I need a bank account or KYC?',

@@ -192,7 +192,7 @@ export const remainingEn = {
   'verticals.education.label': 'Coach & educator',
   'verticals.education.blurb': 'Courses, workshops, classroom supplies. Teach freely, earn fully.',
   'verticals.creator.label': 'Any creator',
-  'verticals.creator.blurb': 'If you create value, KATOA is your tip jar + wishlist. Zero cut. Forever.',
+  'verticals.creator.blurb': 'If you create value, KATOA is your tip jar + wishlist. Zero cut through 31 Dec 2026.',
 
   // Fee comparison
   'fee.bestValue': 'BEST VALUE',
@@ -201,7 +201,7 @@ export const remainingEn = {
   'fee.lostPct': '-${pct}% lost',
   'fee.yours': '100% yours',
   'fee.trueCost': 'The True Cost of Platform Fees',
-  'fee.trueCostSub': "See how much you're losing to competitors' fees. KATOA keeps it simple: 0% forever.",
+  'fee.trueCostSub': "See how much you're losing to competitors' fees. KATOA keeps it simple: 0% through 31 Dec 2026.",
   'fee.monthlyGoal': "What's your monthly project goal?",
   'fee.currency': 'Currency',
   'fee.convertedUsd': 'Amounts converted to USD for comparison',
@@ -212,8 +212,8 @@ export const remainingEn = {
   'fee.startKeeping': 'Start Keeping 100% Today',
   'fee.countries': '195+ Countries',
   'fee.throneCountries': 'Throne: ~10 countries with 0% fees',
-  'fee.katoaCountries': 'KATOA: All countries, always 0%',
-  'fee.instant': 'Instant Settlement',
+  'fee.katoaCountries': 'KATOA: All countries, 0% through 31 Dec 2026',
+  'fee.instant': 'Fast settlement (Roadmap: In progress)',
   'fee.onlyfansPayout': 'OnlyFans: 7-day rolling payout',
   'fee.katoaLightning': 'KATOA: Instant Lightning Network (with Lightning receive — see Roadmap)',
   'fee.privacy': 'True Privacy',
@@ -228,9 +228,9 @@ export const remainingEn = {
   'fee.graphTip':
     'Hover a bar to compare how much of each dollar actually reaches you. KATOA is the only platform where 100% is yours — every other platform takes a cut before you ever see it.',
   'fee.barTip': '${platform}: you keep ${pct}% of every dollar.',
-  'fee.barTipKatoa': '${platform}: you keep ${pct}% of every dollar — zero fees, ever.',
+  'fee.barTipKatoa': '${platform}: you keep ${pct}% of every dollar — zero fees through 31 Dec 2026.',
   'fee.tipKatoa':
-    '0% fees forever. Built on Bitcoin Lightning Network. Every dollar you earn is yours to keep. No hidden costs, no platform taxes, no surprise charges.',
+    '0% platform fees through 31 Dec 2026. Built on Bitcoin Lightning Network. Every dollar you earn is yours to keep. No hidden costs, no platform taxes, no surprise charges.',
   'fee.tipOnlyFans':
     'OnlyFans charges 20% platform fee on all earnings. If you earn $10,000, they take $2,000. Plus payment processing fees and currency conversion costs.',
   'fee.tipThrone':
@@ -238,7 +238,7 @@ export const remainingEn = {
   'fee.tipLinktree':
     'Linktree charges 9-10% in fees plus $40/month subscription for Commerce features. Payment processing fees vary by region. Requires bank account.',
   'fee.feesTipKatoa':
-    'Zero fees forever. KATOA never takes a cut of your earnings. No monthly subscriptions. No transaction fees. No payment processing fees. What you earn is what you keep.',
+    'Zero platform fees through 31 Dec 2026. KATOA never takes a cut of your earnings. No monthly subscriptions. No transaction fees. No payment processing fees. What you earn is what you keep.',
   'fee.feesTipOnlyFans':
     'OnlyFans takes 20% of everything you earn. From ${earned}, they extract ${fees}. This applies to subscriptions, tips, PPV, and all other revenue.',
   'fee.feesTipThrone':
@@ -246,7 +246,7 @@ export const remainingEn = {
   'fee.feesTipLinktree':
     'Linktree charges approximately 9% in fees plus $40/month subscription. From ${earned}, total cost is ${fees}. Payment processor fees vary by location.',
   'fee.keepTipKatoa':
-    "Your actual take-home: ${net} from ${earned} earned. That's 100% of your earnings. Instant settlement via Bitcoin Lightning Network.",
+    "Your actual take-home: ${net} from ${earned} earned. That's 100% of your earnings. Fast settlement via the Bitcoin Lightning Network once receive ships.",
   'fee.keepTipOther':
     'Your actual take-home after ${platform} takes their cut: ${net} from ${earned} earned. You lose ${fees} to platform fees. Payouts take 7-14 days.',
 
@@ -279,7 +279,7 @@ export const remainingEn = {
     'Your action went through and nothing else is required from you right now. Below is what happens next and where to go from here.',
   'thankyou.signup.title': 'Thank you — your account is created.',
   'thankyou.signup.lead':
-    'Welcome to KATOA. We sent a confirmation link to the email address you used — tap it and your account is live. No KYC, no card, no platform fee, ever.',
+    'Welcome to KATOA. We sent a confirmation link to the email address you used — tap it and your account is live. No KYC, no card, no platform fee through 31 Dec 2026.',
   'thankyou.contact.title': 'Thank you — your message is on its way.',
   'thankyou.contact.lead':
     'We received your message and a copy was placed on your clipboard as a backup. A human on the KATOA team replies within one business day.',
@@ -298,7 +298,7 @@ export const remainingEn = {
     'Settings → Payouts. Paste a Lightning address (Phoenix, Wallet of Satoshi, Muun, or your own LND) so gifts reach you directly.',
   'thankyou.step3.title': 'Publish your first wishlist',
   'thankyou.step3.body':
-    'Create a wishlist, set sat prices, and share the link. Supporters fund items instantly over Lightning.',
+    'Create a wishlist, set sat prices, and share the link. Supporters fund items over Lightning in seconds once receive ships.',
   'thankyou.cta.explore': 'Explore projects',
   'thankyou.cta.dashboard': 'Go to my dashboard',
   'thankyou.helpPrefix': 'Stuck or something looks wrong? Email us:',
