@@ -129,7 +129,7 @@ export const remainingZh = {
     '粉丝购买商品或资助目标时，请沟通。更新进度。在合适时把项目标为已资助。',
   'guidelines.4.title': '私信默认关闭，需主动开启',
   'guidelines.4.body':
-    '只有想收私信时才开启消息。随时可以关掉。永远不要向粉丝索要助记词或远程钱包权限。',
+    '只有想收私信时才开启消息。随时可以关掉。绝不要向粉丝索要助记词或远程钱包权限。',
   'guidelines.5.title': '禁止冒充',
   'guidelines.5.body':
     '使用你自己的身份。绑定 Nostr（NIP-07）能增强信任。不要冒充品牌或他人。',
@@ -206,7 +206,7 @@ export const remainingZh = {
   'verticals.education.label': '教练与教育者',
   'verticals.education.blurb': '课程、工作坊、教室用品。自由教学，全额收入。',
   'verticals.creator.label': '任何创作者',
-  'verticals.creator.blurb': '只要你创造价值，KATOA 就是小费罐 + 心愿单。零抽成。永远。',
+  'verticals.creator.blurb': '只要你创造价值，KATOA 就是小费罐 + 心愿单。零抽成（至2026年12月31日）。',
 
   'fee.bestValue': '最超值',
   'fee.monthlyFees': '月度费用',
@@ -214,7 +214,7 @@ export const remainingZh = {
   'fee.lostPct': '-${pct}% 损失',
   'fee.yours': '100% 归你',
   'fee.trueCost': '平台费的真实代价',
-  'fee.trueCostSub': '看看你在竞品费用上丢掉多少。KATOA 很简单：永远 0%。',
+  'fee.trueCostSub': '看看你在竞品费用上丢掉多少。KATOA 很简单：至2026年12月31日 0%。',
   'fee.monthlyGoal': '你的每月项目目标是多少？',
   'fee.currency': '货币',
   'fee.convertedUsd': '金额已换算为美元以便比较',
@@ -225,8 +225,8 @@ export const remainingZh = {
   'fee.startKeeping': '从今天开始留下 100%',
   'fee.countries': '195+ 个国家',
   'fee.throneCountries': 'Throne：约 10 个国家有 0% 费用',
-  'fee.katoaCountries': 'KATOA：所有国家，始终 0%',
-  'fee.instant': '即时结算',
+  'fee.katoaCountries': 'KATOA：所有国家，0%（至2026年12月31日）',
+  'fee.instant': '快速结算（路线图：进行中）',
   'fee.onlyfansPayout': 'OnlyFans：7 天滚动打款',
   'fee.katoaLightning': 'KATOA：即时闪电网络（支持闪电网络接收 — 见路线图）',
   'fee.privacy': '真正的隐私',
@@ -241,9 +241,9 @@ export const remainingZh = {
   'fee.graphTip':
     '悬停柱状图，比较每一美元真正到你手里的比例。只有 KATOA 是 100% 归你 — 其他平台在你看到钱之前就抽走一部分。',
   'fee.barTip': '${platform}：每一美元你留下 ${pct}%。',
-  'fee.barTipKatoa': '${platform}：每一美元你留下 ${pct}% — 永远零费用。',
+  'fee.barTipKatoa': '${platform}：每一美元你留下 ${pct}% — 至2026年12月31日零费用。',
   'fee.tipKatoa':
-    '永远 0% 费用。建立在比特币闪电网络上。你赚到的每一美元都归你。没有隐藏成本、没有平台税、没有突然收费。',
+    '平台费用 0%（至2026年12月31日）。建立在比特币闪电网络上。你赚到的每一美元都归你。没有隐藏成本、没有平台税、没有突然收费。',
   'fee.tipOnlyFans':
     'OnlyFans 对所有收入收取 20% 平台费。若你赚 10,000 美元，他们拿走 2,000 美元。另加支付处理费和换汇成本。',
   'fee.tipThrone':
@@ -251,7 +251,7 @@ export const remainingZh = {
   'fee.tipLinktree':
     'Linktree 收取 9–10% 费用，外加每月 40 美元的 Commerce 订阅。处理费因地区而异。需要银行账户。',
   'fee.feesTipKatoa':
-    '永远零费用。KATOA 从不抽成。没有月费、没有交易费、没有支付处理费。你赚多少就留多少。',
+    '平台费用至2026年12月31日为零。KATOA 从不抽成。没有月费、没有交易费、没有支付处理费。你赚多少就留多少。',
   'fee.feesTipOnlyFans':
     'OnlyFans 拿走你所赚一切的 20%。从 ${earned} 中抽出 ${fees}。适用于订阅、打赏、PPV 及其他收入。',
   'fee.feesTipThrone':
@@ -259,7 +259,7 @@ export const remainingZh = {
   'fee.feesTipLinktree':
     'Linktree 大约 9% 外加每月 40 美元订阅。从 ${earned} 计，总成本为 ${fees}。处理商费用因地而异。',
   'fee.keepTipKatoa':
-    '实际到手：从赚到的 ${earned} 中留下 ${net}。那是收入的 100%。经比特币闪电网络即时结算。',
+    '实际到手：从赚到的 ${earned} 中留下 ${net}。那是收入的 100%。Lightning 收款上线后，经比特币闪电网络快速结算。',
   'fee.keepTipOther':
     '${platform} 抽成后的到手：从赚到的 ${earned} 中留下 ${net}。你因平台费损失 ${fees}。打款需要 7–14 天。',
 
@@ -290,7 +290,7 @@ export const remainingZh = {
     '你的操作已通过，现在不需要你再做任何事。以下是接下来会发生什么，以及该去哪里。',
   'thankyou.signup.title': '感谢 — 账户已创建。',
   'thankyou.signup.lead':
-    '欢迎来到 KATOA。我们已向你使用的邮箱发送了确认链接 — 点击后账户即生效。无需 KYC，无需银行卡，平台抽成永久为 0%。',
+    '欢迎来到 KATOA。我们已向你使用的邮箱发送了确认链接 — 点击后账户即生效。无需 KYC，无需银行卡，平台抽成至2026年12月31日为 0%。',
   'thankyou.contact.title': '感谢 — 你的消息已在途中。',
   'thankyou.contact.lead':
     '我们已收到你的消息，并将副本存入剪贴板以备查。KATOA 团队会在一个工作日内回复。',
@@ -309,7 +309,7 @@ export const remainingZh = {
     '设置 → 收款。粘贴一个闪电地址（Phoenix、Wallet of Satoshi、Muun，或你自己的 LND），礼物就能直接到账。',
   'thankyou.step3.title': '发布你的第一个心愿单',
   'thankyou.step3.body':
-    '创建一个心愿单，设定聪价格并分享链接。支持者会通过闪电网络即时资助各个物品。',
+    '创建一个心愿单，设定聪价格并分享链接。Lightning 收款上线后，支持者即可通过闪电网络在数秒内资助各个物品。',
   'thankyou.cta.explore': '浏览项目',
   'thankyou.cta.dashboard': '前往我的控制台',
   'thankyou.helpPrefix': '卡住了或有哪里不对？发邮件给我们：',

@@ -206,7 +206,7 @@ export const remainingJa = {
   'verticals.education.label': 'コーチと教育者',
   'verticals.education.blurb': '講座、ワークショップ、教材。自由に教え、満額を得る。',
   'verticals.creator.label': 'あらゆるクリエイター',
-  'verticals.creator.blurb': '価値を生むなら、KATOAはチップ箱＋リスト。取り分ゼロ。ずっと。',
+  'verticals.creator.blurb': '価値を生むなら、KATOAはチップ箱＋リスト。取り分ゼロ（2026年12月31日まで）。',
 
   'fee.bestValue': '最もお得',
   'fee.monthlyFees': '月額手数料',
@@ -214,7 +214,7 @@ export const remainingJa = {
   'fee.lostPct': '-${pct}% の損失',
   'fee.yours': '100%あなたのもの',
   'fee.trueCost': 'プラットフォーム手数料の本当のコスト',
-  'fee.trueCostSub': '競合の手数料でいくら失うかを見てください。KATOAは単純です。ずっと0%。',
+  'fee.trueCostSub': '競合の手数料でいくら失うかを見てください。KATOAは単純です。0%（2026年12月31日まで）。',
   'fee.monthlyGoal': '毎月のプロジェクト目標は？',
   'fee.currency': '通貨',
   'fee.convertedUsd': '比較のため金額はUSD換算です',
@@ -225,8 +225,8 @@ export const remainingJa = {
   'fee.startKeeping': '今日から100%を手元に',
   'fee.countries': '195か国以上',
   'fee.throneCountries': 'Throne: 手数料0%は約10か国',
-  'fee.katoaCountries': 'KATOA: すべての国で常に0%',
-  'fee.instant': '即時決済',
+  'fee.katoaCountries': 'KATOA: すべての国で0%（2026年12月31日まで）',
+  'fee.instant': '高速決済（Roadmap: 進行中）',
   'fee.onlyfansPayout': 'OnlyFans: 7日ローリング払い出し',
   'fee.katoaLightning': 'KATOA: 即時Lightning Network（Lightning受信対応 — ロードマップ参照）',
   'fee.privacy': '本当のプライバシー',
@@ -241,9 +241,9 @@ export const remainingJa = {
   'fee.graphTip':
     'バーにカーソルを合わせて、1ドルのうち実際に手元へ来る額を比べてください。100%があなたのものなのはKATOAだけです。他社は見る前に取り分を取ります。',
   'fee.barTip': '${platform}: 1ドルのうち ${pct}% が手元に残ります。',
-  'fee.barTipKatoa': '${platform}: 1ドルのうち ${pct}% が手元に残ります — 手数料は常にゼロ。',
+  'fee.barTipKatoa': '${platform}: 1ドルのうち ${pct}% が手元に残ります — 手数料は2026年12月31日までゼロ。',
   'fee.tipKatoa':
-    '手数料はずっと0%。Bitcoin Lightning上に構築。稼いだドルはすべてあなたのもの。隠れたコストもプラットフォーム税もサプライズ課金もありません。',
+    'プラットフォーム手数料は0%（2026年12月31日まで）。Bitcoin Lightning上に構築。稼いだドルはすべてあなたのもの。隠れたコストもプラットフォーム税もサプライズ課金もありません。',
   'fee.tipOnlyFans':
     'OnlyFansは全収益に20%のプラットフォーム手数料を取ります。1万ドル稼ぐと2,000ドル持っていきます。さらに決済手数料と為替コスト。',
   'fee.tipThrone':
@@ -251,7 +251,7 @@ export const remainingJa = {
   'fee.tipLinktree':
     'Linktreeは9–10%の手数料に加え、Commerce機能で月40ドル。決済手数料は地域で異なります。銀行口座が必要です。',
   'fee.feesTipKatoa':
-    '手数料はずっとゼロ。KATOAは取り分を取りません。月額課金も、取引手数料も、決済手数料もありません。稼いだ額が手元に残ります。',
+    'プラットフォーム手数料は2026年12月31日までゼロ。KATOAは取り分を取りません。月額課金も、取引手数料も、決済手数料もありません。稼いだ額が手元に残ります。',
   'fee.feesTipOnlyFans':
     'OnlyFansは稼いだすべての20%を取ります。${earned}から${fees}を抜き取ります。サブスク、チップ、PPV、その他すべてに適用。',
   'fee.feesTipThrone':
@@ -259,7 +259,7 @@ export const remainingJa = {
   'fee.feesTipLinktree':
     'Linktreeは約9%に加え月40ドル。${earned}に対する総コストは${fees}。決済代行の手数料は場所で異なります。',
   'fee.keepTipKatoa':
-    '実際の手取り: 稼いだ${earned}のうち${net}。収益の100%です。Bitcoin Lightningで即時決済。',
+    '実際の手取り: 稼いだ${earned}のうち${net}。収益の100%です。Lightning受信の提供開始後、Bitcoin Lightningで高速決済。',
   'fee.keepTipOther':
     '${platform}が取り分を取ったあとの手取り: 稼いだ${earned}のうち${net}。プラットフォーム手数料で${fees}失います。払い出しは7–14日。',
 
@@ -290,7 +290,7 @@ export const remainingJa = {
     '操作は完了し、他に必要なことはありません。次のステップと、この先どこへ行けばよいかをご案内します。',
   'thankyou.signup.title': 'ありがとうございます — アカウントを作成しました。',
   'thankyou.signup.lead':
-    'KATOAへようこそ。ご使用のメールアドレスに確認リンクを送信しました — タップするとアカウントが有効になります。KYC不要、カード不要、プラットフォーム手数料は永久にゼロです。',
+    'KATOAへようこそ。ご使用のメールアドレスに確認リンクを送信しました — タップするとアカウントが有効になります。KYC不要、カード不要、プラットフォーム手数料は2026年12月31日までゼロです。',
   'thankyou.contact.title': 'ありがとうございます — メッセージをお送りしました。',
   'thankyou.contact.lead':
     'メッセージを受け取り、バックアップとしてクリップボードにもコピーを保存しました。KATOAチームの担当者が営業日以内に返信します。',
@@ -309,7 +309,7 @@ export const remainingJa = {
     '設定 → 支払い。Lightningアドレス（Phoenix、Wallet of Satoshi、Muun、または自身のLND）を貼り付けると、ギフトが直接届きます。',
   'thankyou.step3.title': '最初のウィッシュリストを公開',
   'thankyou.step3.body':
-    'ウィッシュリストを作成し、sats価格を設定してリンクを共有。支援者がLightningで即座に各アイテムを支援します。',
+    'ウィッシュリストを作成し、sats価格を設定してリンクを共有。支援者は受信機能の提供開始後、Lightningで数秒で各アイテムを支援します。',
   'thankyou.cta.explore': 'プロジェクトを見る',
   'thankyou.cta.dashboard': 'ダッシュボードへ',
   'thankyou.helpPrefix': '詰まったり、何かおかしい場合はメールしてください：',

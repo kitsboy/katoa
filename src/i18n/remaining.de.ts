@@ -206,7 +206,7 @@ export const remainingDe = {
   'verticals.education.label': 'Coach & Educator',
   'verticals.education.blurb': 'Kurse, Workshops, Klassenmaterial. Frei unterrichten, voll verdienen.',
   'verticals.creator.label': 'Jeder Creator',
-  'verticals.creator.blurb': 'Wenn du Wert schaffst, ist KATOA dein Tip-Glas + Wunschliste. Null Cut. Für immer.',
+  'verticals.creator.blurb': 'Wenn du Wert schaffst, ist KATOA dein Tip-Glas + Wunschliste. Null Cut bis zum 31. Dez. 2026.',
 
   'fee.bestValue': 'BESTER WERT',
   'fee.monthlyFees': 'Monatliche Gebühren',
@@ -214,7 +214,7 @@ export const remainingDe = {
   'fee.lostPct': '-${pct} % verloren',
   'fee.yours': '100 % deins',
   'fee.trueCost': 'Die wahren Kosten von Plattformgebühren',
-  'fee.trueCostSub': 'Sieh, wie viel du an Konkurrenzgebühren verlierst. KATOA bleibt simpel: 0 % für immer.',
+  'fee.trueCostSub': 'Sieh, wie viel du an Konkurrenzgebühren verlierst. KATOA bleibt simpel: 0 % bis zum 31. Dez. 2026.',
   'fee.monthlyGoal': 'Was ist das monatliche Projektziel?',
   'fee.currency': 'Währung',
   'fee.convertedUsd': 'Beträge zum Vergleich in USD umgerechnet',
@@ -225,8 +225,8 @@ export const remainingDe = {
   'fee.startKeeping': 'Heute 100 % behalten',
   'fee.countries': '195+ Länder',
   'fee.throneCountries': 'Throne: ~10 Länder mit 0 % Gebühren',
-  'fee.katoaCountries': 'KATOA: alle Länder, immer 0 %',
-  'fee.instant': 'Sofort-Settlement',
+  'fee.katoaCountries': 'KATOA: alle Länder, 0 % bis zum 31. Dez. 2026',
+  'fee.instant': 'Schnelles Settlement (Roadmap: in Arbeit)',
   'fee.onlyfansPayout': 'OnlyFans: 7-Tage-Rolling-Payout',
   'fee.katoaLightning': 'KATOA: Instant Lightning Network (mit Lightning-Empfang — siehe Roadmap)',
   'fee.privacy': 'Echte Privatsphäre',
@@ -241,9 +241,9 @@ export const remainingDe = {
   'fee.graphTip':
     'Über einen Balken hovern, um zu vergleichen, wie viel von jedem Dollar wirklich bei dir ankommt. KATOA ist die einzige Plattform, bei der 100 % dir gehören — alle anderen nehmen einen Cut, bevor du ihn siehst.',
   'fee.barTip': '${platform}: du behältst ${pct} % von jedem Dollar.',
-  'fee.barTipKatoa': '${platform}: du behältst ${pct} % von jedem Dollar — null Gebühren, immer.',
+  'fee.barTipKatoa': '${platform}: du behältst ${pct} % von jedem Dollar — null Gebühren bis zum 31. Dez. 2026.',
   'fee.tipKatoa':
-    '0 % Gebühren für immer. Gebaut auf Bitcoin Lightning. Jeder verdiente Dollar bleibt deiner. Keine versteckten Kosten, keine Plattformsteuer, keine Überraschungen.',
+    '0 % Plattformgebühren bis zum 31. Dez. 2026. Gebaut auf Bitcoin Lightning. Jeder verdiente Dollar bleibt deiner. Keine versteckten Kosten, keine Plattformsteuer, keine Überraschungen.',
   'fee.tipOnlyFans':
     'OnlyFans nimmt 20 % Plattformgebühr auf alle Einnahmen. Bei 10.000 $ nehmen sie 2.000 $. Plus Processing- und Wechselkursgebühren.',
   'fee.tipThrone':
@@ -251,7 +251,7 @@ export const remainingDe = {
   'fee.tipLinktree':
     'Linktree nimmt 9–10 % plus 40 $/Monat Commerce-Abo. Processing variiert je Region. Bankkonto nötig.',
   'fee.feesTipKatoa':
-    'Null Gebühren für immer. KATOA nimmt nie einen Cut. Keine Monatsabos. Keine Transaktions- oder Processing-Gebühren. Was du verdienst, behältst du.',
+    'Null Plattformgebühren bis zum 31. Dez. 2026. KATOA nimmt nie einen Cut. Keine Monatsabos. Keine Transaktions- oder Processing-Gebühren. Was du verdienst, behältst du.',
   'fee.feesTipOnlyFans':
     'OnlyFans nimmt 20 % von allem, was du verdienst. Von ${earned} ziehen sie ${fees} ab. Gilt für Abos, Tips, PPV und den Rest.',
   'fee.feesTipThrone':
@@ -259,7 +259,7 @@ export const remainingDe = {
   'fee.feesTipLinktree':
     'Linktree nimmt etwa 9 % plus 40 $/Monat Abo. Von ${earned} ist die Gesamtkosten ${fees}. Processor-Gebühren variieren nach Standort.',
   'fee.keepTipKatoa':
-    'Dein tatsächliches Netto: ${net} von ${earned} verdient. Das sind 100 % deiner Einnahmen. Sofort-Settlement über Bitcoin Lightning.',
+    'Dein tatsächliches Netto: ${net} von ${earned} verdient. Das sind 100 % deiner Einnahmen. Schnelles Settlement über das Bitcoin-Lightning-Netzwerk, sobald der Empfang live ist.',
   'fee.keepTipOther':
     'Dein Netto, nachdem ${platform} den Cut genommen hat: ${net} von ${earned} verdient. Du verlierst ${fees} an Plattformgebühren. Auszahlungen dauern 7–14 Tage.',
 
@@ -290,7 +290,7 @@ export const remainingDe = {
     'Deine Aktion ist durchgegangen und es ist sonst nichts weiter von dir nötig. Hier steht, was als Nächstes passiert und wo es weitergeht.',
   'thankyou.signup.title': 'Danke — dein Konto wurde erstellt.',
   'thankyou.signup.lead':
-    'Willkommen bei KATOA. Wir haben einen Bestätigungslink an deine E-Mail-Adresse gesendet — tippe darauf und dein Konto ist aktiv. Kein KYC, keine Karte, keine Plattformgebühr, nie.',
+    'Willkommen bei KATOA. Wir haben einen Bestätigungslink an deine E-Mail-Adresse gesendet — tippe darauf und dein Konto ist aktiv. Kein KYC, keine Karte, keine Plattformgebühr bis zum 31. Dez. 2026.',
   'thankyou.contact.title': 'Danke — deine Nachricht ist unterwegs.',
   'thankyou.contact.lead':
     'Wir haben deine Nachricht erhalten und eine Kopie als Sicherung in deine Zwischenablage gelegt. Jemand aus dem KATOA-Team antwortet innerhalb eines Werktags.',
@@ -309,7 +309,7 @@ export const remainingDe = {
     'Einstellungen → Auszahlungen. Füge eine Lightning-Adresse ein (Phoenix, Wallet of Satoshi, Muun oder dein eigenes LND), damit Geschenke direkt bei dir ankommen.',
   'thankyou.step3.title': 'Erste Wunschliste veröffentlichen',
   'thankyou.step3.body':
-    'Erstelle eine Wunschliste, setze Sat-Preise und teile den Link. Unterstützer finanzieren Artikel sofort über Lightning.',
+    'Erstelle eine Wunschliste, setze Sat-Preise und teile den Link. Unterstützer finanzieren Artikel über Lightning in Sekunden, sobald der Empfang live ist.',
   'thankyou.cta.explore': 'Projekte entdecken',
   'thankyou.cta.dashboard': 'Zu meinem Dashboard',
   'thankyou.helpPrefix': 'Hakt es oder stimmt etwas nicht? Schreib uns:',

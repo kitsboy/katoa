@@ -206,7 +206,7 @@ export const remainingFr = {
   'verticals.education.label': 'Coach et éducateur',
   'verticals.education.blurb': 'Cours, ateliers, fournitures de classe. Enseignez librement, gagnez entièrement.',
   'verticals.creator.label': 'Tout créateur',
-  'verticals.creator.blurb': 'Si vous créez de la valeur, KATOA est votre pot + liste. Zéro coupe. Pour toujours.',
+  'verticals.creator.blurb': 'Si vous créez de la valeur, KATOA est votre pot + liste. Zéro coupe jusqu’au 31 déc. 2026.',
 
   'fee.bestValue': 'MEILLEURE OFFRE',
   'fee.monthlyFees': 'Frais mensuels',
@@ -214,7 +214,7 @@ export const remainingFr = {
   'fee.lostPct': '-${pct} % perdu',
   'fee.yours': '100 % à vous',
   'fee.trueCost': 'Le vrai coût des frais de plateforme',
-  'fee.trueCostSub': 'Voyez ce que vous perdez aux frais des concurrents. KATOA reste simple : 0 % pour toujours.',
+  'fee.trueCostSub': 'Voyez ce que vous perdez aux frais des concurrents. KATOA reste simple : 0 % jusqu’au 31 déc. 2026.',
   'fee.monthlyGoal': 'Quel est l’objectif mensuel de votre projet ?',
   'fee.currency': 'Devise',
   'fee.convertedUsd': 'Montants convertis en USD pour comparaison',
@@ -225,8 +225,8 @@ export const remainingFr = {
   'fee.startKeeping': 'Gardez 100 % dès aujourd’hui',
   'fee.countries': '195+ pays',
   'fee.throneCountries': 'Throne : ~10 pays à 0 % de frais',
-  'fee.katoaCountries': 'KATOA : tous les pays, toujours 0 %',
-  'fee.instant': 'Règlement instantané',
+  'fee.katoaCountries': 'KATOA : tous les pays, 0 % jusqu’au 31 déc. 2026',
+  'fee.instant': 'Règlement rapide (Roadmap : en cours)',
   'fee.onlyfansPayout': 'OnlyFans : paiement glissant à 7 jours',
   'fee.katoaLightning': 'KATOA : Lightning Network instantané (avec réception Lightning — voir Roadmap)',
   'fee.privacy': 'Vraie vie privée',
@@ -241,9 +241,9 @@ export const remainingFr = {
   'fee.graphTip':
     'Survolez une barre pour comparer combien de chaque dollar vous atteint vraiment. KATOA est la seule plateforme où 100 % est à vous — les autres prennent une coupe avant que vous ne voyiez l’argent.',
   'fee.barTip': '${platform} : vous gardez ${pct} % de chaque dollar.',
-  'fee.barTipKatoa': '${platform} : vous gardez ${pct} % de chaque dollar — zéro frais, toujours.',
+  'fee.barTipKatoa': '${platform} : vous gardez ${pct} % de chaque dollar — zéro frais jusqu’au 31 déc. 2026.',
   'fee.tipKatoa':
-    '0 % de frais pour toujours. Construit sur Bitcoin Lightning. Chaque dollar gagné est à vous. Pas de coûts cachés, pas de taxe plateforme, pas de surprises.',
+    '0 % de frais de plateforme jusqu’au 31 déc. 2026. Construit sur Bitcoin Lightning. Chaque dollar gagné est à vous. Pas de coûts cachés, pas de taxe plateforme, pas de surprises.',
   'fee.tipOnlyFans':
     'OnlyFans prélève 20 % de frais de plateforme sur tous les revenus. Sur 10 000 $, ils prennent 2 000 $. Plus les frais de traitement et de change.',
   'fee.tipThrone':
@@ -251,7 +251,7 @@ export const remainingFr = {
   'fee.tipLinktree':
     'Linktree prélève 9–10 % plus 40 $/mois d’abonnement Commerce. Les frais de traitement varient selon la région. Compte bancaire requis.',
   'fee.feesTipKatoa':
-    'Zéro frais pour toujours. KATOA ne prend jamais de coupe. Pas d’abonnement mensuel. Pas de frais de transaction ni de traitement. Ce que vous gagnez, vous le gardez.',
+    'Zéro frais de plateforme jusqu’au 31 déc. 2026. KATOA ne prend jamais de coupe. Pas d’abonnement mensuel. Pas de frais de transaction ni de traitement. Ce que vous gagnez, vous le gardez.',
   'fee.feesTipOnlyFans':
     'OnlyFans prend 20 % de tout ce que vous gagnez. Sur ${earned}, ils extraient ${fees}. Valable pour abonnements, pourboires, PPV et le reste.',
   'fee.feesTipThrone':
@@ -259,7 +259,7 @@ export const remainingFr = {
   'fee.feesTipLinktree':
     'Linktree prélève environ 9 % plus 40 $/mois d’abonnement. Sur ${earned}, le coût total est ${fees}. Les frais du processeur varient selon le lieu.',
   'fee.keepTipKatoa':
-    'Votre net réel : ${net} sur ${earned} gagnés. C’est 100 % de vos revenus. Règlement instantané via Bitcoin Lightning.',
+    'Votre net réel : ${net} sur ${earned} gagnés. C’est 100 % de vos revenus. Règlement rapide via le réseau Bitcoin Lightning dès que la réception sera en ligne.',
   'fee.keepTipOther':
     'Votre net après la coupe de ${platform} : ${net} sur ${earned} gagnés. Vous perdez ${fees} en frais de plateforme. Les paiements prennent 7–14 jours.',
 
@@ -290,7 +290,7 @@ export const remainingFr = {
     'Votre action est passée et rien d’autre n’est requis de votre part pour l’instant. Voici ce qui se passe ensuite et où aller à partir d’ici.',
   'thankyou.signup.title': 'Merci — votre compte est créé.',
   'thankyou.signup.lead':
-    'Bienvenue sur KATOA. Nous avons envoyé un lien de confirmation à l’adresse e-mail utilisée — touchez-le et votre compte est actif. Pas de KYC, pas de carte, pas de frais de plateforme, jamais.',
+    'Bienvenue sur KATOA. Nous avons envoyé un lien de confirmation à l’adresse e-mail utilisée — touchez-le et votre compte est actif. Pas de KYC, pas de carte, pas de frais de plateforme jusqu’au 31 déc. 2026.',
   'thankyou.contact.title': 'Merci — votre message est en route.',
   'thankyou.contact.lead':
     'Nous avons reçu votre message et une copie a été placée dans votre presse-papiers par sécurité. Un membre de l’équipe KATOA répond sous un jour ouvré.',
@@ -309,7 +309,7 @@ export const remainingFr = {
     'Paramètres → Paiements. Collez une adresse Lightning (Phoenix, Wallet of Satoshi, Muun ou votre propre LND) pour recevoir les cadeaux directement.',
   'thankyou.step3.title': 'Publiez votre première liste de souhaits',
   'thankyou.step3.body':
-    'Créez une liste, fixez des prix en sats et partagez le lien. Les soutiens financent les articles instantanément via Lightning.',
+    'Créez une liste, fixez des prix en sats et partagez le lien. Les soutiens financent les articles via Lightning en quelques secondes dès que la réception sera en ligne.',
   'thankyou.cta.explore': 'Explorer les projets',
   'thankyou.cta.dashboard': 'Aller à mon tableau de bord',
   'thankyou.helpPrefix': 'Bloqué ou quelque chose ne va pas ? Écrivez-nous :',
