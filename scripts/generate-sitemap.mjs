@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync, mkdirSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { SITE_URL } from './site-config.mjs';
@@ -6,6 +6,12 @@ import { SITEMAP_STATIC_ROUTES } from './prerender-routes.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const root = join(__dirname, '..');
+
+function resolveOutDir(argv) {
+  const i = argv.indexOf('--out');
+  return i !== -1 && argv[i + 1] ? join(root, argv[i + 1]) : join(root, 'dist');
+}
+const OUT_DIR = resolveOutDir(process.argv.slice(2));
 const today = new Date().toISOString().slice(0, 10);
 
 /**
@@ -83,7 +89,8 @@ ${hreflangBlock(path)}
 </urlset>
 `;
 
-writeFileSync(join(root, 'public/sitemap.xml'), xml);
+mkdirSync(OUT_DIR, { recursive: true });
+writeFileSync(join(OUT_DIR, 'sitemap.xml'), xml);
 console.log(
-  `Generated sitemap with ${urls.length} URLs (${slugs.length} wishlists, ${usernames.length} creators) + ${LANGUAGES.length + 1} hreflang alternates each`
+  `Generated sitemap with ${urls.length} URLs (${slugs.length} wishlists, ${usernames.length} creators) + ${LANGUAGES.length + 1} hreflang alternates each → ${join(OUT_DIR, 'sitemap.xml')}`
 );

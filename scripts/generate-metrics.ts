@@ -2,17 +2,27 @@
  * scripts/generate-metrics.ts — Katoa
  *
  * Reads app data (wishlists, creators) and writes gab.product-metrics.v1
- * envelope to public/metrics.json. Called by `npm run generate-metrics`
- * and runs on prebuild so CF Pages deploys stay current.
+ * envelope to <target>/metrics.json (default dist/). Called by
+ * `npm run generate-metrics` and from scripts/fill-dist-artifacts.mjs after
+ * `vite build`, so the shipped file carries a fresh updatedAt stamp.
  *
- * Run: npx tsx scripts/generate-metrics.ts
+ * The committed public/metrics.json is a stable seed and is never rewritten.
+ *
+ * Run: npx tsx scripts/generate-metrics.ts [--out <dir>]
  */
 import fs from 'fs';
 import path from 'path';
 import { mockWishlistItems } from '../src/data/mockWishlists';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const OUT = path.join(ROOT, 'public', 'metrics.json');
+
+function resolveOutDir(argv: string[]): string {
+  const i = argv.indexOf('--out');
+  return i !== -1 && argv[i + 1]
+    ? path.resolve(ROOT, argv[i + 1])
+    : path.join(ROOT, 'dist');
+}
+const OUT_DIR = resolveOutDir(process.argv.slice(2));
 
 interface KPI { key: string; label: string; value: number; format: string; priority: number; hint?: string; }
 
@@ -59,8 +69,9 @@ function main() {
       note: 'Sample catalog metrics until Supabase product counters are wired. UI labels these as demo/sample.',
     },
   };
-  fs.writeFileSync(OUT, JSON.stringify(envelope, null, 2) + '\n', 'utf-8');
-  process.stdout.write('public/metrics.json written\n');
+  fs.mkdirSync(OUT_DIR, { recursive: true });
+  fs.writeFileSync(path.join(OUT_DIR, 'metrics.json'), JSON.stringify(envelope, null, 2) + '\n', 'utf-8');
+  process.stdout.write(`${path.join(OUT_DIR, 'metrics.json')} written\n`);
 }
 
 main();

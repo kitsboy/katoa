@@ -1,13 +1,24 @@
 #!/usr/bin/env node
 /**
- * Write public/feed.xml from the public pages already in the sitemap list.
- * Dates are the file mtime of this generator's first ship — not fake news dates.
+ * Write <target>/feed.xml (default dist/) from the public pages already in
+ * the sitemap list. Dates are the file mtime of this generator's first ship —
+ * not fake news dates.
+ *
+ * The committed public/feed.xml is a stable seed and is never rewritten.
+ *
+ * Run: node scripts/build-rss.mjs [--out <dir>]
  */
-import { writeFileSync } from 'node:fs'
+import { writeFileSync, mkdirSync } from 'node:fs'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
+
+function resolveOutDir(argv) {
+  const i = argv.indexOf('--out')
+  return i !== -1 && argv[i + 1] ? join(ROOT, argv[i + 1]) : join(ROOT, 'dist')
+}
+const OUT_DIR = resolveOutDir(process.argv.slice(2))
 const SITE = 'https://katoa.org'
 const DAY = '2026-10-19'
 const PAGES = [
@@ -50,5 +61,6 @@ ${items}
   </channel>
 </rss>
 `
-writeFileSync(join(ROOT, 'public', 'feed.xml'), xml)
-console.log(`feed.xml ${PAGES.length} items`)
+mkdirSync(OUT_DIR, { recursive: true })
+writeFileSync(join(OUT_DIR, 'feed.xml'), xml)
+console.log(`feed.xml ${PAGES.length} items → ${join(OUT_DIR, 'feed.xml')}`)

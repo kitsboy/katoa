@@ -4,8 +4,8 @@
   "version": "1.1.7",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "npm run check:assets && npm run sitemap && npm run nip05 && vite build && node scripts/warm-legal-chunks.mjs && node scripts/prerender.mjs",
+    "dev": "node scripts/ensure-app-version.mjs && vite",
+    "build": "npm run check:assets && npm run nip05 && vite build && node scripts/fill-dist-artifacts.mjs && node scripts/warm-legal-chunks.mjs && node scripts/prerender.mjs",
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -24,7 +24,10 @@
     "generate-metrics": "npx tsx scripts/generate-metrics.ts",
     "version:write": "node scripts/write-version.mjs",
     "version:bump": "node scripts/write-version.mjs --bump",
-    "prebuild": "npm run version:write && npm run generate-metrics",
+    "prebuild": "npm run version:write",
+    "pretest": "node scripts/ensure-app-version.mjs",
+    "pretest:watch": "node scripts/ensure-app-version.mjs",
+    "pretypecheck": "node scripts/ensure-app-version.mjs",
     "postbuild": "node scripts/check-asset-references.mjs --dist",
     "check:security": "node scripts/check-secret-hygiene.mjs",
     "check:assets": "node scripts/check-asset-references.mjs"

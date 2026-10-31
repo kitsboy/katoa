@@ -51,5 +51,10 @@ playwright/.cache/
 .netlify/
 supabase/.temp/
 
+# Generated at build time (scripts/write-version.mjs); compile input only,
+# never committed. Fresh-clone entry points regenerate it via
+# scripts/ensure-app-version.mjs (dev/typecheck/test hooks).
+src/generated/
+
 # Test scratch file written by swCacheNameWithVersionStub.test.ts
 public/sw-cache-name-stub-for-test.js
