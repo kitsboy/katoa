@@ -228,7 +228,7 @@ export const remainingJa = {
   'fee.katoaCountries': 'KATOA: すべての国で常に0%',
   'fee.instant': '即時決済',
   'fee.onlyfansPayout': 'OnlyFans: 7日ローリング払い出し',
-  'fee.katoaLightning': 'KATOA: 即時Lightning Network',
+  'fee.katoaLightning': 'KATOA: 即時Lightning Network（Lightning受信対応 — ロードマップ参照）',
   'fee.privacy': '本当のプライバシー',
   'fee.competitorsData': '競合: サーバー側でのデータ収集',
   'fee.katoaZk': 'KATOA: ゼロ知識証明（ロードマップ）',
@@ -264,7 +264,7 @@ export const remainingJa = {
     '${platform}が取り分を取ったあとの手取り: 稼いだ${earned}のうち${net}。プラットフォーム手数料で${fees}失います。払い出しは7–14日。',
 
   'footer.movement':
-    'Bitcoinで「与える」を民主化する動きです。スマホがあれば、世界中の活動を、すぐ、私的に、直接支えられます。プラットフォーム手数料はゼロ。ずっと。',
+    'Bitcoinで「与える」を民主化する動きです。スマホがあれば、世界中の活動を、すぐ、私的に、直接支えられます。プラットフォーム手数料0%（2026年12月31日まで）— Give A Bitが負担。',
   'footer.acronym': 'Keep All That’s Owed Always',
   'footer.openRoles': '募集中の役割',
   'footer.giveABit': 'Give A Bitプロジェクト',

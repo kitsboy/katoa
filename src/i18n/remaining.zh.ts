@@ -228,7 +228,7 @@ export const remainingZh = {
   'fee.katoaCountries': 'KATOA：所有国家，始终 0%',
   'fee.instant': '即时结算',
   'fee.onlyfansPayout': 'OnlyFans：7 天滚动打款',
-  'fee.katoaLightning': 'KATOA：即时闪电网络',
+  'fee.katoaLightning': 'KATOA：即时闪电网络（支持闪电网络接收 — 见路线图）',
   'fee.privacy': '真正的隐私',
   'fee.competitorsData': '竞品：服务器端收集数据',
   'fee.katoaZk': 'KATOA：零知识证明（路线图）',
@@ -264,7 +264,7 @@ export const remainingZh = {
     '${platform} 抽成后的到手：从赚到的 ${earned} 中留下 ${net}。你因平台费损失 ${fees}。打款需要 7–14 天。',
 
   'footer.movement':
-    '一场用比特币让给予民主化的运动 — 只要有一部智能手机，任何人都能即时、私密、直接地支持世界各地的事业。零平台费。永远。',
+    '一场用比特币让给予民主化的运动 — 只要有一部智能手机，任何人都能即时、私密、直接地支持世界各地的事业。零平台费（截至2026年12月31日），由 Give A Bit 承担。',
   'footer.acronym': 'Keep All That’s Owed Always',
   'footer.openRoles': '开放职位',
   'footer.giveABit': 'Give A Bit 项目',

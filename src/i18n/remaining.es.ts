@@ -228,7 +228,7 @@ export const remainingEs = {
   'fee.katoaCountries': 'KATOA: todos los países, siempre 0%',
   'fee.instant': 'Liquidación instantánea',
   'fee.onlyfansPayout': 'OnlyFans: pago rodante a 7 días',
-  'fee.katoaLightning': 'KATOA: Lightning Network instantáneo',
+  'fee.katoaLightning': 'KATOA: Lightning Network instantáneo (con recepción Lightning — ver Roadmap)',
   'fee.privacy': 'Privacidad de verdad',
   'fee.competitorsData': 'Competencia: recolección de datos en servidor',
   'fee.katoaZk': 'KATOA: pruebas de conocimiento cero (hoja de ruta)',
@@ -264,7 +264,7 @@ export const remainingEs = {
     'Tu neto después del recorte de ${platform}: ${net} de ${earned} ganados. Pierdes ${fees} en comisiones de plataforma. Los pagos tardan 7–14 días.',
 
   'footer.movement':
-    'Un movimiento para democratizar el dar con Bitcoin: cualquiera con un smartphone puede apoyar causas en todo el mundo, al instante, en privado y en directo. Cero comisiones de plataforma. Para siempre.',
+    'Un movimiento para democratizar el dar con Bitcoin: cualquiera con un smartphone puede apoyar causas en todo el mundo, al instante, en privado y en directo. Cero comisiones de plataforma hasta el 31 dic 2026, absorbidas por Give A Bit.',
   'footer.acronym': 'Keep All That’s Owed Always',
   'footer.openRoles': 'Vacantes',
   'footer.giveABit': 'Un proyecto Give A Bit',

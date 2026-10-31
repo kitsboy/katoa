@@ -215,7 +215,7 @@ export const remainingEn = {
   'fee.katoaCountries': 'KATOA: All countries, always 0%',
   'fee.instant': 'Instant Settlement',
   'fee.onlyfansPayout': 'OnlyFans: 7-day rolling payout',
-  'fee.katoaLightning': 'KATOA: Instant Lightning Network',
+  'fee.katoaLightning': 'KATOA: Instant Lightning Network (with Lightning receive — see Roadmap)',
   'fee.privacy': 'True Privacy',
   'fee.competitorsData': 'Competitors: Server-based data collection',
   'fee.katoaZk': 'KATOA: Zero-knowledge proofs (roadmap)',
@@ -252,7 +252,7 @@ export const remainingEn = {
 
   // Footer leftovers
   'footer.movement':
-    'A movement to democratize giving using Bitcoin—anyone with a smartphone can support causes worldwide, instantly, privately, and directly. Zero platform fees. Forever.',
+    'A movement to democratize giving using Bitcoin—anyone with a smartphone can support causes worldwide, instantly, privately, and directly. Zero platform fees through 31 Dec 2026 — absorbed by Give A Bit.',
   'footer.acronym': "Keep All That's Owed Always",
   'footer.openRoles': 'Open Roles',
   'footer.giveABit': 'A Give A Bit project',
