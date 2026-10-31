@@ -2599,6 +2599,8 @@ const pricingPageStrings = {
   en: {
     'pricing.metaTitle': 'Pricing',
     'pricing.metaDesc': 'KATOA pricing: $0/month, 0% platform fees through 31 Dec 2026. Keep 100% of your Bitcoin earnings on Lightning.',
+    'pricing.hero.fees': '0% platform fees through 31 December 2026',
+    'pricing.hero.body': 'For every creator, nonprofit and cause — absorbed by Give A Bit and community support; Lightning/network fees paid by supporters.',
     'pricing.feat.zeroFees.title': '0% Platform Fees',
     'pricing.feat.zeroFees.desc': 'Keep every sat you earn. No tiers, no upsells, no surprises—ever.',
     'pricing.feat.lightning.title': 'Bitcoin Lightning',
@@ -2623,6 +2625,8 @@ const pricingPageStrings = {
   es: {
     'pricing.metaTitle': 'Precios',
     'pricing.metaDesc': 'Precios de KATOA: 0 $/mes, 0% de comisión de plataforma hasta el 31 dic 2026. Quédate el 100% de tus ganancias Bitcoin en Lightning.',
+    'pricing.hero.fees': '0% de comisión de plataforma hasta el 31 de diciembre de 2026',
+    'pricing.hero.body': 'Para cada creador, ONG y causa — absorbido por Give A Bit y el apoyo de la comunidad; las comisiones de Lightning las pagan los seguidores.',
     'pricing.feat.zeroFees.title': '0% de comisión de plataforma',
     'pricing.feat.zeroFees.desc': 'Quédate cada sat que ganes. Sin niveles, sin upsells, sin sorpresas — nunca.',
     'pricing.feat.lightning.title': 'Bitcoin Lightning',
@@ -2647,6 +2651,8 @@ const pricingPageStrings = {
   pt: {
     'pricing.metaTitle': 'Preços',
     'pricing.metaDesc': 'Preços da KATOA: US$ 0/mês, 0% de taxa da plataforma até 31 dez 2026. Fique com 100% dos ganhos em Bitcoin via Lightning.',
+    'pricing.hero.fees': '0% de taxa da plataforma até 31 de dezembro de 2026',
+    'pricing.hero.body': 'Para cada criador, ONG e causa — absorvido pela Give A Bit e pelo apoio da comunidade; as taxas da Lightning são pagas pelos apoiadores.',
     'pricing.feat.zeroFees.title': '0% de taxa da plataforma',
     'pricing.feat.zeroFees.desc': 'Fique com cada sat que ganhar. Sem níveis, sem upsells, sem surpresas — nunca.',
     'pricing.feat.lightning.title': 'Bitcoin Lightning',
@@ -2671,6 +2677,8 @@ const pricingPageStrings = {
   fr: {
     'pricing.metaTitle': 'Tarifs',
     'pricing.metaDesc': 'Tarifs KATOA : 0 $/mois, 0 % de frais de plateforme jusqu’au 31 déc. 2026. Gardez 100 % de vos revenus Bitcoin via Lightning.',
+    'pricing.hero.fees': '0 % de frais de plateforme jusqu’au 31 décembre 2026',
+    'pricing.hero.body': 'Pour chaque créateur, association et cause — pris en charge par Give A Bit et le soutien de la communauté ; les frais Lightning sont payés par les soutiens.',
     'pricing.feat.zeroFees.title': '0 % de frais de plateforme',
     'pricing.feat.zeroFees.desc': 'Gardez chaque sat gagné. Pas de paliers, pas d’upsell, pas de surprise — jamais.',
     'pricing.feat.lightning.title': 'Bitcoin Lightning',
@@ -2695,6 +2703,8 @@ const pricingPageStrings = {
   de: {
     'pricing.metaTitle': 'Preise',
     'pricing.metaDesc': 'KATOA-Preise: 0 $/Monat, 0 % Plattformgebühr bis zum 31. Dez. 2026. Behalte 100 % deiner Bitcoin-Einnahmen über Lightning.',
+    'pricing.hero.fees': '0 % Plattformgebühr bis zum 31. Dezember 2026',
+    'pricing.hero.body': 'Für jeden Creator, jede Organisation und jede Sache — getragen von Give A Bit und Community-Unterstützung; Lightning-/Netzwerkgebühren zahlen die Unterstützer.',
     'pricing.feat.zeroFees.title': '0 % Plattformgebühr',
     'pricing.feat.zeroFees.desc': 'Behalte jeden Sat, den du verdienst. Keine Stufen, kein Upsell, keine Überraschungen — nie.',
     'pricing.feat.lightning.title': 'Bitcoin Lightning',
@@ -2719,6 +2729,8 @@ const pricingPageStrings = {
   ja: {
     'pricing.metaTitle': '料金',
     'pricing.metaDesc': 'KATOAの料金：月額$0、プラットフォーム手数料0%（2026年12月31日まで）。LightningでBitcoin収益の100%を手元に。',
+    'pricing.hero.fees': 'プラットフォーム手数料0%（2026年12月31日まで）',
+    'pricing.hero.body': 'すべてのクリエイター・非営利団体・活動のために — Give A Bit とコミュニティの支援で負担。Lightning／ネットワーク手数料は支援者が負担します。',
     'pricing.feat.zeroFees.title': 'プラットフォーム手数料0%',
     'pricing.feat.zeroFees.desc': '稼いだsatsはすべて手元に。段階課金もアップセルも、サプライズもありません。',
     'pricing.feat.lightning.title': 'Bitcoin Lightning',
@@ -2743,6 +2755,8 @@ const pricingPageStrings = {
   zh: {
     'pricing.metaTitle': '定价',
     'pricing.metaDesc': 'KATOA 定价：每月 $0，平台抽成 0%（至2026年12月31日）。通过闪电网络保留比特币收入的 100%。',
+    'pricing.hero.fees': '平台抽成 0%（至2026年12月31日）',
+    'pricing.hero.body': '面向每位创作者、公益组织与项目——由 Give A Bit 与社区支持承担；闪电网络手续费由支持者支付。',
     'pricing.feat.zeroFees.title': '平台抽成 0%',
     'pricing.feat.zeroFees.desc': '赚到的每一聪都归你。没有档位、没有加价、没有意外。',
     'pricing.feat.lightning.title': '比特币闪电网络',

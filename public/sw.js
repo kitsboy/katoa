@@ -1,4 +1,4 @@
-const CACHE_NAME = 'katoa-static-3508fb3';
+const CACHE_NAME = 'katoa-static-35da3c0';
 const TILE_CACHE_NAME = 'katoa-map-tiles-v1';
 const TILE_MAX_ENTRIES = 3000;
 const OFFLINE_URL = '/offline.html';

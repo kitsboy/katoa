@@ -251,7 +251,7 @@ export function PricingPage() {
         <div className="relative max-w-4xl mx-auto text-center animate-slide-up">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-bitcoin-orange-500/10 border border-bitcoin-orange-500/30 mb-6">
             <Bitcoin size={16} className="text-bitcoin-orange-400" />
-            <span className="text-sm font-medium text-bitcoin-orange-300">0% platform fees through 31 December 2026</span>
+            <span className="text-sm font-medium text-bitcoin-orange-300">{t('pricing.hero.fees')}</span>
           </div>
 
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-display font-black mb-4 leading-tight">
@@ -262,8 +262,7 @@ export function PricingPage() {
           </h1>
 
           <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            For every creator, nonprofit and cause — absorbed by Give A Bit and community support;
-            Lightning/network fees paid by supporters.
+            {t('pricing.hero.body')}
           </p>
 
           <TrustProofStrip className="mt-6" />
